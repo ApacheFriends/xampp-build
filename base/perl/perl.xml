@@ -1,0 +1,275 @@
+
+<!-- PERL 1.0
+Componentname: PERL
+
+Short Description:
+This component is able to install and configurate PERL.
+
+Created: 200612
+Modified: 200612
+Copyrighted by BitRock
+
+System variables provided by this component:
+ * perl_directory
+
+-->
+<component>
+    <name>perl</name>
+    <description>//PERL Component</description>
+    <canBeEdited>1</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <shouldPackRuleList>
+      <compareText text="${platform_name}" logic="does_not_contain" value="windows"/>
+    </shouldPackRuleList>
+
+    <parameterList>
+        <stringParameter name="perl_version" value="5.8.8" ask="0" />
+        <stringParameter name="PERL5LIB" ask="0"/>
+        <directoryParameter>
+            <ask>0</ask>
+            <default/>
+            <!--description>PERL installation directory</description-->
+            <name>perl_directory</name>
+            <value>${installdir}/perl</value>
+        </directoryParameter>
+    </parameterList>
+    <folderList>
+        <folder>
+            <description>//Program Files</description>
+            <destination>${installdir}</destination>
+            <name>perl</name>
+            <shouldPackRuleList>
+                <compareText text="${platform_name}" logic="does_not_contain" value="windows" />
+            </shouldPackRuleList>
+            <platforms>linux linux-x64 osx solaris-intel solaris-sparc aix hpux</platforms>
+            <actionList>
+                <!-- Configure Perl variables -->
+                <setInstallerVariable name="perl_root_directory" value="${perl_directory}"/>
+                <setInstallerVariable name="PERL5LIB" value="${perl_directory}/lib/${perl_version}:${perl_directory}/lib/site_perl/${perl_version}:$PERL5LIB" persist="1">
+                    <ruleList>
+                        <stringTest text="${PERL5LIB}" type="empty"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <changePermissions files="*/perl/*.pl; */perl/*.pm; */perl/*.h" permissions="755"/>
+                <setInstallerVariable name="ENV_VAR">
+                    <value>
+##### PERL ENV #####
+PERL5LIB=${PERL5LIB}
+export PERL5LIB
+${ENV_VAR}</value>
+                    <ruleList>
+                        <platformTest type="unix" />
+                    </ruleList>
+                </setInstallerVariable>
+                <!--
+                grep -ir "build/output" *|awk -F: '{printf $1 "\n"}'|uniq|grep -v Binary|awk -F: '{printf "*/"$1";"}'
+                +
+                */bin/perl
+                -->
+                <setInstallerVariable name="perl_files_to_change" value="@@XAMPP_PERL_FILES_TO_CHANGE@@"/>
+                <substitute>
+                    <files>${perl_files_to_change}</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                            <value>${installdir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PERL_ROOTDIR@@</pattern>
+                            <value>${perl_directory}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_COMMON_ROOTDIR@@</pattern>
+                            <value>${installdir}/common</value>
+                        </substitution>
+                    </substitutionList>
+                    <ruleList>
+                        <stringTest text="${perl_files_to_change}" type="not_empty"/>
+                    </ruleList>
+                </substitute>
+                <changePermissions files="*/perl/*.pl; */perl/*.pm; */perl/*.h" permissions="444"/>
+                <!--
+                LC_ALL=C
+                export LC_ALL
+                -->
+                <setInstallerVariable name="PERL_ENV_VAR">
+                    <value>#!/bin/sh
+echo $PATH | egrep "${installdir}" > /dev/null
+if [ $? -ne 0 ] ; then
+PATH=${PATH}
+export PATH
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+fi
+
+${ENV_VAR}
+</value>
+                     <ruleList>
+                         <isFalse value="${WRAPPER_BINARY}" />
+                     </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="PERL_ENV_VAR">
+                    <value>#!/bin/sh
+echo $PATH | egrep "${installdir}" > /dev/null
+if [ $? -ne 0 ] ; then
+PATH=${PATH}:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+export PATH
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}
+export LD_LIBRARY_PATH
+fi
+${ENV_VAR}
+</value>
+                    <ruleList>
+                        <isTrue value="${WRAPPER_BINARY}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="PERL_ARGS" value=""/>
+                <substitute>
+                    <files>${PERL_WRAPPERS}</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_PERL_ROOTDIR@@</pattern>
+                            <value>${perl_directory}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_SET_ENVIRONMENT_SCRIPT@@</pattern>
+                            <value>${SET_ENVIRONMENT_SCRIPT}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_SET_ENVIRONMENT@@</pattern>
+                            <value>${PERL_ENV_VAR}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>${PERL_WRAPPERS}</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <!-- 5785 .perl.setenv does not prepend to path -->
+                        <substitution>
+                            <pattern>:\$PATH</pattern>
+                            <value></value>
+                        </substitution>
+                        <substitution>
+                            <pattern>:\$LD_LIBRARY_PATH</pattern>
+                            <value></value>
+                        </substitution>
+                        <!-- LD_LIBRARY_PATH is removed above, so we remove the placeholder as well -->
+                        <substitution>
+                            <pattern>:*@@XAMPP_LD_LIBRARY_PATH@@</pattern>
+                            <value></value>
+                        </substitution>
+                        <substitution>
+                            <pattern>:*@@XAMPP_DYLD_LIBRARY_PATH@@</pattern>
+                            <value></value>
+                        </substitution>
+                        <substitution>
+                            <pattern>:\$PERL5LIB</pattern>
+                            <value></value>
+                        </substitution>
+                    </substitutionList>
+                    <ruleList>
+                        <isTrue value="${WRAPPER_BINARY}" />
+                    </ruleList>
+                </substitute>
+            </actionList>
+            <distributionFileList>
+                <distributionDirectory origin="perl"/>
+            </distributionFileList>
+        </folder>
+    </folderList>
+    <initializationActionList>
+        <setInstallerVariable name="WRAPPER_BINARY" value="@@XAMPP_BIN_WRAPPER@@"/>
+        <setInstallerVariable name="ENV_BINARY" value="/bin/env" persist="1">
+            <ruleList>
+                <fileTest path="/bin/env" condition="exists"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="ENV_BINARY" value="/usr/bin/env" persist="1">
+            <ruleList>
+                <fileTest path="/usr/bin/env" condition="exists"/>
+            </ruleList>
+        </setInstallerVariable>
+    </initializationActionList>
+    <readyToInstallActionList>
+        <setInstallerVariable>
+            <name>PERL_WRAPPERS</name>
+            <value>
+                ${perl_directory}/bin/perl
+                ${perl_directory}/bin/perl${perl_version}
+                ${perl_directory}/bin/a2p
+            </value>
+            <ruleList>
+                <compareText text="${WRAPPER_BINARY}" logic="equals" value="0"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>PERL_WRAPPERS</name>
+            <value>
+                ${perl_directory}/bin/.perl.setenv
+                ${perl_directory}/bin/.perl${perl_version}.setenv
+                ${perl_directory}/bin/.a2p.setenv
+            </value>
+            <ruleList>
+                <compareText text="${WRAPPER_BINARY}" logic="equals" value="1"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="WRAPPERS" value="${PERL_WRAPPERS};${WRAPPERS}"/>
+        <setInstallerVariable name="PATH" value="${perl_directory}/bin:${PATH}"/>
+        <setInstallerVariable name="LD_LIBRARY_PATH" value="${perl_directory}/lib:${LD_LIBRARY_PATH}"/>
+        <setInstallerVariable name="DYLD_FALLBACK_LIBRARY_PATH" value="${perl_directory}/lib:${DYLD_FALLBACK_LIBRARY_PATH}"/>
+    </readyToInstallActionList>
+    <postInstallationActionList>
+        <writeFile>
+            <path>${perl_directory}/bin/.perl.argv</path>
+            <text>${PERL_ARGS}
+</text>
+        </writeFile>
+        <addFilesToUninstaller files="${perl_directory}/bin/.perl.argv"/>
+        <substitute>
+            <files>${WRAPPERS}</files>
+            <type>exact</type>
+            <substitutionList>
+                <substitution>
+                    <pattern>@@XAMPP_SET_ENVIRONMENT_SCRIPT@@</pattern>
+                    <value>${SET_ENVIRONMENT_SCRIPT}</value>
+                </substitution>
+            </substitutionList>
+        </substitute>
+
+<!--                <setInstallerVariableFromRegEx text="${WRAPPERS}" substitution="/.\1.setenv;" name="WRAPPERS_CONFIGS" pattern="/([a-zA-Z0-9/./-/_]+);" />-->
+
+<!---->
+
+<!--                <substitute>-->
+
+<!--                        <files>${WRAPPERS_CONFIGS}</files>-->
+
+<!--                        <type>exact</type>-->
+
+<!--                        <substitutionList>-->
+
+<!--                                <substitution>-->
+
+<!--                                        <pattern>@@XAMPP_SET_ENVIRONMENT@@</pattern>-->
+
+<!--                                        <value>${SET_ENVIRONMENT_SCRIPT}</value>-->
+
+<!--                                </substitution>-->
+
+<!---->
+
+<!--                        </substitutionList>-->
+
+<!--                        <ruleList>-->
+
+<!--                                <compareText value="${WRAPPER_BINARY}" logic="does_not_equal" text="0" />-->
+
+<!--                        </ruleList>-->
+
+<!--                </substitute>-->
+    </postInstallationActionList>
+</component>
+

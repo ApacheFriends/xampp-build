@@ -1,0 +1,809 @@
+msgid "Please choose a number for Port"
+msgstr ""
+
+msgid "The installer detected that the installation folder ${wordpress_installation_directory} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "Re-enter"
+msgstr ""
+
+msgid "Default email provider:"
+msgstr ""
+
+msgid "Creating Database"
+msgstr ""
+
+msgid "${mysql_database_type} Information"
+msgstr ""
+
+msgid "Please configure Drupal installation"
+msgstr ""
+
+msgid "Database Installation"
+msgstr ""
+
+msgid "Drupal"
+msgstr ""
+
+msgid "Uninstall ${product_fullname} service"
+msgstr ""
+
+msgid "Bitnami Joomla ${project.version} Stack"
+msgstr ""
+
+msgid "Configuration Report"
+msgstr ""
+
+msgid "GMail password"
+msgstr ""
+
+msgid "SSL Port"
+msgstr ""
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr ""
+
+msgid "Login must not have capital letters"
+msgstr ""
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr ""
+
+msgid "Starting Subversion server"
+msgstr ""
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+
+msgid "${product_fullname} admin user creation"
+msgstr ""
+
+msgid "Please enter your database root username"
+msgstr ""
+
+msgid "Please select which database configuration you wish to use"
+msgstr ""
+
+msgid "BitRock Nginx"
+msgstr ""
+
+msgid "The installer detected that the installation folder ${joomla_installation_directory} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr ""
+
+msgid "New Database"
+msgstr ""
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr ""
+
+msgid "Unable to get free disk space."
+msgstr ""
+
+msgid "Unable to start Apache"
+msgstr ""
+
+msgid "SMTP Host"
+msgstr ""
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr ""
+
+msgid "DB Prefix"
+msgstr ""
+
+msgid "${mysql_database_type} Server root password"
+msgstr ""
+
+msgid "Select a folder"
+msgstr ""
+
+msgid "Default mail server configuration."
+msgstr ""
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr ""
+
+msgid "Password must contain both letters and numbers"
+msgstr ""
+
+msgid "IP / Hostname"
+msgstr ""
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr ""
+
+msgid "Bitnami RubyStack"
+msgstr ""
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+
+msgid "Secure connection"
+msgstr ""
+
+msgid "Login and password must not be the same"
+msgstr ""
+
+msgid "No, I will do this after installation"
+msgstr ""
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr ""
+
+msgid "Web Server Port"
+msgstr ""
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr ""
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr ""
+
+msgid "Launch ${product_fullname}"
+msgstr ""
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr ""
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr ""
+
+msgid "Stopping services."
+msgstr ""
+
+msgid "Set the database name and user name which will be created or used."
+msgstr ""
+
+msgid "${product_fullname} Subversion Service"
+msgstr ""
+
+msgid "Your real name"
+msgstr ""
+
+msgid "Please enter a valid IP address or hostname"
+msgstr ""
+
+msgid "Running database migration"
+msgstr ""
+
+msgid "WordPress"
+msgstr ""
+
+msgid "${mysql_database_type} Server port"
+msgstr ""
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr ""
+
+msgid "Do you want to configure mail support? This is required so your application can send notifications via email."
+msgstr ""
+
+msgid "Apache Web Server Port"
+msgstr ""
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr ""
+
+msgid "Create databases for the rails project."
+msgstr ""
+
+msgid "Web Server Domain"
+msgstr ""
+
+msgid "Nginx Port"
+msgstr ""
+
+msgid "Installation folder cannot contain spaces."
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "${product_fullname} database root user creation"
+msgstr ""
+
+msgid "Stop ${product_fullname} service"
+msgstr ""
+
+msgid "Configure SMTP Settings"
+msgstr ""
+
+msgid "Web Server port"
+msgstr ""
+
+msgid "Manager tool"
+msgstr ""
+
+msgid "Yes, please prompt me"
+msgstr ""
+
+msgid "${mysql_database_type}"
+msgstr ""
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr ""
+
+msgid "Waiting Subversion to start."
+msgstr ""
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+
+msgid "Web Server domain"
+msgstr ""
+
+msgid "DB User Password"
+msgstr ""
+
+msgid "${product_fullname} Service"
+msgstr ""
+
+msgid "Installing RubyGems, please be patient."
+msgstr ""
+
+msgid "sphinx Server port"
+msgstr ""
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr ""
+
+msgid "Populating database."
+msgstr ""
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr ""
+
+msgid "Licenses destination"
+msgstr ""
+
+msgid "SSL"
+msgstr ""
+
+msgid "Bitnami Drupal Stack"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Sample data for Joomla (English)"
+msgstr ""
+
+msgid "Shutting down services."
+msgstr ""
+
+msgid "Installing gems, please be patient."
+msgstr ""
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr ""
+
+msgid "${product_fullname} Apache Service"
+msgstr ""
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr ""
+
+msgid "The installer detected that the installation folder ${drupal_installation_directory} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr ""
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr ""
+
+msgid "Bitnami WordPress Stack"
+msgstr ""
+
+msgid "Hostname"
+msgstr ""
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr ""
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr ""
+
+msgid "Create Admin account"
+msgstr ""
+
+msgid "TLS"
+msgstr ""
+
+msgid "Blog name"
+msgstr ""
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr ""
+
+msgid "Re-enter password"
+msgstr ""
+
+msgid "DB User Name"
+msgstr ""
+
+msgid "Login"
+msgstr ""
+
+msgid "Install ${product_fullname} as service"
+msgstr ""
+
+msgid "Restarting Apache"
+msgstr ""
+
+msgid "Installation Report"
+msgstr ""
+
+msgid "Start ${product_fullname} service"
+msgstr ""
+
+msgid "Quick Start Guide"
+msgstr ""
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr ""
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr ""
+
+msgid "Installation Type"
+msgstr ""
+
+msgid "${mysql_database_type} Service"
+msgstr ""
+
+msgid "GMail address"
+msgstr ""
+
+msgid "Uninstall ${product_fullname}"
+msgstr ""
+
+msgid "Updating mysql directory permissions"
+msgstr ""
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr ""
+
+msgid "Set the password for your new Rails application's databases."
+msgstr ""
+
+msgid "Unable to add text to httpd.conf"
+msgstr ""
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr ""
+
+msgid "Subversion Server Port"
+msgstr ""
+
+msgid "Open ${product_fullname} in Browser"
+msgstr ""
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr ""
+
+msgid "GMail"
+msgstr ""
+
+msgid "Please enter a password"
+msgstr ""
+
+msgid "${mysql_database_type} Credentials"
+msgstr ""
+
+msgid "Starting application."
+msgstr ""
+
+msgid "DB Name"
+msgstr ""
+
+msgid "Hostname or IP Address"
+msgstr ""
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr ""
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr ""
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Select installation type"
+msgstr ""
+
+msgid "Use ${product_fullname}"
+msgstr ""
+
+msgid "Installation folder"
+msgstr ""
+
+msgid "PhpMyAdmin"
+msgstr ""
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr ""
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr ""
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr ""
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr ""
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr ""
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr ""
+
+msgid "Please enter your database root user password"
+msgstr ""
+
+msgid "Memcached Server port"
+msgstr ""
+
+msgid "Starting Apache."
+msgstr ""
+
+msgid "http://bitnami.com/forums"
+msgstr ""
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr ""
+
+msgid "Please configure WordPress installation"
+msgstr ""
+
+msgid "Subversion Server port"
+msgstr ""
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+
+msgid "Ruby is not installed in your Stack. This module requires to have Ruby installed."
+msgstr ""
+
+msgid "This will create a sample Rails project."
+msgstr ""
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr ""
+
+msgid "SQLite"
+msgstr ""
+
+msgid "Joomla!"
+msgstr ""
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr ""
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr ""
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr ""
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr ""
+
+msgid "Site name"
+msgstr ""
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr ""
+
+msgid "You need to provide a non-empty password"
+msgstr ""
+
+msgid "Configuring database"
+msgstr ""
+
+msgid "SMTP Port"
+msgstr ""
+
+msgid "Provides sample data for Joomla. English only."
+msgstr ""
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr ""
+
+msgid "www.bitnami.com"
+msgstr ""
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Sample Rails Application"
+msgstr ""
+
+msgid "Ruby On Rails"
+msgstr ""
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+
+msgid "Please enter a password to use for the database root user"
+msgstr ""
+
+msgid "Creating web application."
+msgstr ""
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr ""
+
+msgid "Please configure Joomla! installation"
+msgstr ""
+
+msgid "Uninstalling services."
+msgstr ""
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr ""
+
+msgid "Bitnami Website"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Please confirm your password"
+msgstr ""
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr ""
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr ""
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr ""
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr ""
+
+msgid "Bitnami eZ Publish Stack"
+msgstr ""
+
+msgid "The installer detected that the installation folder ${ezpublish_installation_directory} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "Creating databases - this may take a minute"
+msgstr ""
+
+msgid "eZ Publish is a CMS made specifically for web publishing, intranets, e-commerce, extranets, and portals.\n    "
+msgstr ""
+
+msgid "Sample data for eZ Publish (English)"
+msgstr ""
+
+msgid "Provides sample data for eZ Publish. English only."
+msgstr ""
+
+msgid "eZ Publish"
+msgstr ""
+
+msgid "Unable to bind to port ${serverPort}. ${process_binding_message}You can stop the running process or select a different port."
+msgstr ""
+
+msgid "This port is already in use by the \"${process_binding_port}\" process. "
+msgstr ""
+
+msgid "Unable to bind to the server port. Please make sure that ${serverName} is not running."
+msgstr ""
+
+msgid "Unable to find a server running at given port number. Please select another one."
+msgstr ""
+
+msgid "Please choose a correct value number for the ports (only digits are allowed)"
+msgstr ""
+
+msgid "Please provide the SMTP configuration parameters"
+msgstr ""
+
+msgid "Timeout waiting for text into files"
+msgstr ""
+
+msgid "The SMTP host and user cannot contain spaces."
+msgstr ""
+
+msgid "URL decoding too complex"
+msgstr ""
+
+msgid "ImageMagick"
+msgstr ""
+
+msgid "The version of glibc installed in the system ${linux_libc_version} is not compatible. You can find more information here:\n\nhttps://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/check-glibc-linux/\n\nPlease use this installer in an operating system with glibc greater than ${bitnamisettings_minimum_glibc_version}."
+msgstr ""
+
+msgid "The version of libstdc++ installed in the system could be older than expected and doesn't include a glibcxx compatible version. You can find more information here:\n\https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/check-libstdcplusplus-linux/\n\nWe detected the glibcxx ${linux_libcxx_version} version. Please use this installer in an operating system with glibcxx greater than ${bitnamisettings_minimum_glibcxx_version}."
+msgstr ""
+
+msgid "GhostScript"
+msgstr ""
+
+msgid "Redmine+Agile"
+msgstr ""
+
+msgid "${product_fullname} Manager Tool"
+msgstr ""
+
+msgid "Apply the best Agile practices in your projects with Redmine+Agile."
+msgstr ""
+
+msgid "Agile plugin"
+msgstr ""
+
+msgid "Only / is supported. Please note that once the application is moved to / you cannot revert the changes automatically with this tool."
+msgstr ""
+
+msgid "Configure SSL Settings"
+msgstr ""
+
+msgid "The email can not be empty when the SMTP settings are configured."
+msgstr ""
+
+msgid "You are trying to install a 64bit application on a 32bit operating system. It is recommended that you use a 32bit instead."
+msgstr ""
+
+msgid "You don't have enough free disk space to accomplish the upgrade process. Please select another directory for a fresh installation or get more free space (required at least ${upgrade_required_diskspace_mb}MB)"
+msgstr ""
+
+msgid "We have detected an outdated version in that directory. The installer will upgrade your current installation"
+msgstr ""
+
+msgid "Found previous installation"
+msgstr ""
+
+msgid "Restoring database..."
+msgstr ""
+
+msgid "Upgrade process finished successfuly"
+msgstr ""
+
+msgid "Preforming tasks for upgrade..."
+msgstr ""
+
+msgid "Please wait. This could take a while."
+msgstr ""
+
+msgid "Backing up database..."
+msgstr ""
+
+msgid "The installer was not able to connect to the MySQL server. Please make sure MySQL is running."
+msgstr ""
+
+msgid "Please enter the existing MySQL password"
+msgstr ""
+
+msgid "The installer was not able to connect to the MySQL server. Please make sure MySQL is running and introduce a valid password to connect to the MySQL server."
+msgstr ""
+
+msgid "Creating backup of the previous installation..."
+msgstr ""
+
+msgid "Upgrade result"
+msgstr ""
+
+msgid "The installer cannot create the backup file of your current installation in the following path: ${bitnamiBackupZip}. The installation will finish without upgrading it"
+msgstr ""
+
+msgid "Installing osqa dependencies"
+msgstr ""
+
+msgid "Portuguese"
+msgstr ""
+
+msgid "Brazilian Portuguese"
+msgstr ""
+
+msgid "Bosnian"
+msgstr ""
+
+msgid "Norwegian"
+msgstr ""
+
+msgid "Galician"
+msgstr ""
+
+msgid "Catalan"
+msgstr ""
+
+msgid "Lithuanian"
+msgstr ""
+
+msgid "Turkish"
+msgstr ""
+
+msgid "Vietnamese"
+msgstr ""
+
+msgid "Slovene"
+msgstr ""
+
+msgid "Danish"
+msgstr ""
+
+msgid "Hungarian"
+msgstr ""
+
+msgid "Ukrainian"
+msgstr ""
+
+msgid "Slovak"
+msgstr ""
+
+msgid "Czech"
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "Hebrew"
+msgstr ""
+
+msgid "Japanese"
+msgstr ""
+
+msgid "Korean"
+msgstr ""
+
+msgid "Dutch"
+msgstr ""
+
+msgid "Polish"
+msgstr ""
+
+msgid "Romanian"
+msgstr ""
+
+msgid "Swedish"
+msgstr ""
+
+msgid "Chinese"
+msgstr ""
+
+msgid "Chinese/Taiwan"
+msgstr ""
+
+msgid "Serbian"
+msgstr ""
+
+msgid "Italian"
+msgstr ""
+
+msgid "Moodle Microsoft Plugins"
+msgstr ""
+
+msgid "Integration with Microsoft services like Onenote and Office365"
+msgstr ""
+
+msgid "The installer is unable to detect your glibcxx version. You can find how to proceed at https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/check-libstdcplusplus-linux/. Please ensure that you have the minimum version required \"${bitnamisettings_minimum_glibcxx_version}\" before proceeding. Then launch the installer with the option --disable_glibcxx_version_check 1"
+msgstr ""

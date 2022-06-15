@@ -1,0 +1,224 @@
+config = {
+  dldefaultno
+  dlprefs   = \.(tar\.|t)gz$;\.tar\.bz2$;\.zip$;\.Z$
+  lastcheck = "2015-01-19 12:54"
+  verbose
+}
+
+prog archive_tar = {
+  version   = 1.3.13
+  dlversion = 1.3.2
+  url       = http://pear.php.net/package/Archive_Tar/download
+  regex     = Archive_Tar-(__VER__)
+}
+prog bzip2 = {
+  version   = 1.0.6
+  dlversion = 1.0.5
+  url       = http://www.bzip.org/downloads.html
+  regex     = bzip2-(__VER__)\.tar
+}
+prog cracklib = {
+  version   = 2.9.2
+  dlversion = 2.8.12
+  url       = http://sourceforge.net/project/showfiles.php?group_id=130213&package_id=143120
+  regex     = cracklib-(__VER__)\.tar
+}
+prog expat = {
+  version   = 2.1.0
+  dlversion = 2.0.1
+  url       = http://sourceforge.net/project/showfiles.php?group_id=10127&package_id=10780
+  regex     = expat-(__VER__)\.tar
+}
+prog freetype = {
+  version   = 2.5.5
+  dlversion = 2.3.7
+  url       = http://www.freetype.org/index.html
+  regex     = "FreeType (__VER__) has been released"
+}
+prog gd = {
+  version   = 2.1.1
+  dlversion = 2.0.35
+  url       = https://bitbucket.org/libgd/gd-libgd/downloads
+  regex     = libgd-(__VER__)\.tar
+}
+prog gettext = {
+  version   = 0.19.4
+  dlversion = 0.14.5
+  url       = ftp://ftp.gnu.org/gnu/gettext/
+  regex     = gettext-(__VER__)\.tar\.gz
+}
+prog ghostscript = {
+  version   = 9.09
+  dlversion = 8.56
+  url       = http://sourceforge.net/project/showfiles.php?group_id=1897&package_id=108733
+  regex     = ghostscript-(__VER__)\.tar
+}
+prog imap = {
+  version   = 2007f
+  dlversion = 2007e
+  url       = http://www.washington.edu/imap/documentation/RELNOTES.html
+  regex     = imap-(__VER__)
+}
+prog jpegsrc = {
+  version   = 9a
+  dlversion = 6b
+  url       = http://www.ijg.org/
+  regex     = jpegsrc.v(__VER__)\.tar
+}
+prog libevent = {
+  version   = 2.0.22
+  dlversion = 1.4.8
+  url       = http://monkey.org/~provos/libevent/
+  regex     = libevent-(__VER__)-stable
+}
+prog libiconv = {
+  version   = 1.14
+  dlversion = 1.12
+  url       = http://www.gnu.org/software/libiconv/#downloading
+  regex     = libiconv-(__VER__)\.tar
+}
+prog libmcrypt = {
+  version   = 2.5.8
+  dlversion = 2.5.8
+  url       = http://sourceforge.net/project/showfiles.php?group_id=87941&package_id=91774
+  regex     = files/Libmcrypt/(__VER__)
+}
+prog libpng = {
+  version   = 1.6.16
+  dlversion = 1.2.34
+  url       = http://www.libpng.org/pub/png/libpng.html
+  regex     = libpng-(__VER__)\.tar
+}
+prog libwmf = {
+  version   = 0.2.8.4
+  dlversion = 0.2.8.4
+  url       = http://sourceforge.net/project/showfiles.php?group_id=10501&package_id=11096
+  regex     = files/libwmf/(__VER__)
+}
+prog libxml2 = {
+  version   = 2.9.2
+  dlversion = 2.7.2
+  url       = ftp://xmlsoft.org/libxml2/
+  regex     = libxml2-sources-(__VER__)\.tar
+}
+prog mod_fastcgi = {
+  version   = 2.4.6
+  dlversion = 2.4.6
+  url       = http://www.fastcgi.com/drupal/node/19
+  regex     = "mod_fastcgi is (__VER__)."
+}
+prog mysql-python = {
+  version   = 1.2.4b4
+  dlversion = 1.2.2
+  url       = http://sourceforge.net/projects/mysql-python/files/
+  regex     = "Download MySQL-python-(__VER__).tar.gz"
+}
+prog nagios_plugins = {
+  version   = 2.0.3
+  dlversion = 1.4.12
+  url       = http://nagios-plugins.org/
+  regex     = "Nagios Plugins (__VER__) Released"
+}
+prog ncurses = {
+  version   = 5.9
+  dlversion = 5.6
+  url       = http://ftp.gnu.org/pub/gnu/ncurses/
+  regex     = ncurses-(__VER__)\.tar
+}
+prog neon = {
+  version   = 0.30.1
+  dlversion = 0.30.1
+  url       = http://www.webdav.org/neon/
+  regex     = neon-(__VER__)\.tar
+}
+prog pcre = {
+  version   = 8.36
+  dlversion = 7.7
+  url       = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
+  regex     = pcre-(__VER__)\.tar
+}
+prog pear = {
+  version   = 1.9.5
+  dlversion = 1.6.2
+  url       = http://pear.php.net/package/PEAR/download
+  regex     = PEAR-(__VER__)
+}
+prog pecl_apc = {
+  version   = 3.1.13
+  dlversion = 3.0.16
+  url       = http://pecl.php.net/package/APC
+  regex     = APC-(__VER__)\.tgz
+}
+prog pecl_crack = {
+  version   = 0.4
+  dlversion = 0.4
+  url       = http://pecl.php.net/package/crack
+  regex     = crack-(__VER__)
+}
+prog pecl_http = {
+  version   = 2.2.0RC1
+  dlversion = 1.6.0
+  url       = http://pear.php.net/package/pecl_http
+  regex     = pecl_http-(__VER__)\.tgz
+}
+prog pecl_phar = {
+  version   = 2.0.0
+  dlversion = 1.2.3
+  url       = http://pecl.php.net/package/phar
+  regex     = stable.*\n.*\n.*phar-(__VER__)\.tgz
+}
+prog pecl_svn = {
+  version   = 1.0.2
+  dlversion = 0.3
+  url       = http://pecl.php.net/package/svn
+  regex     = svn-(__VER__)\.tgz
+}
+prog php_perl = {
+  version   = 1.0.1
+  dlversion = 1.0.0
+  url       = http://pecl.php.net/package/perl
+  regex     = perl-(__VER__)\.tgz
+}
+prog pyopenssl = {
+  version   = 0.9
+  dlversion = 0.6
+  url       = http://sourceforge.net/projects/pyopenssl/files/pyopenssl/
+  regex     = pyOpenSSL-(__VER__)\.tar\.gz
+}
+prog pysqlite = {
+  version   = 2.6.3
+  dlversion = 2.3.5
+  url       = https://pypi.python.org/pypi/pysqlite
+  regex     = pysqlite-(__VER__)\.tar\.gz
+}
+prog readline = {
+  version   = 6.3
+  dlversion = 5.2
+  url       = http://tiswww.case.edu/php/chet/readline/rltop.html
+  regex     = readline-(__VER__)\.tar
+}
+prog setuptools = {
+  version   = 12.0.3
+  dlversion = 0.6c8
+  url       = http://pypi.python.org/pypi/setuptools
+  regex     = setuptools-(__VER__)\.tar
+}
+prog structures_graph = {
+  version   = 1.0.4
+  dlversion = 1.0.2
+  url       = http://pear.php.net/package/Structures_Graph/download
+  regex     = Structures_Graph-(__VER__)
+}
+prog swig = {
+  version   = 3.0.4
+  dlversion = 1.3.31
+  url       = http://sourceforge.net/project/showfiles.php?group_id=1645&package_id=1608&release_id=657650
+  regex     = swig-(__VER__)\.tar\.gz
+}
+prog zlib = {
+  version   = 1.2.8
+  dlversion = 1.2.3
+  url       = http://www.zlib.net/
+  regex     = zlib-(__VER__)\.tar
+}
+

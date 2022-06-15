@@ -1,0 +1,245 @@
+<componentGroup>
+    <name>bitnamisettings</name>
+    <description>//Bitnami settings</description>
+    <show>0</show>
+
+    <componentList>
+	<include file="base-logrotate.xml"/>
+	<include file="base-monit.xml" />
+    </componentList>
+
+    <initializationActionList>
+      <setInstallerVariable name="installdir" value="${env(SYSTEMDRIVE)}\Bitnami\${product_shortname}-${product_version}"  >
+	    <ruleList>
+		<platformTest type="windows" />
+	    </ruleList>
+	</setInstallerVariable>
+	<setInstallerVariable name="bitnamisettings_minimum_memory" value="2000" >
+	    <ruleList>
+		<componentTest name="ruby" logic="exists"/>
+	    </ruleList>
+	</setInstallerVariable>
+        <setInstallerVariable name="bitnamisettings_minimum_memory" value ="2000" >
+	    <ruleList>
+		<componentTest name="java" logic="exists"/>
+	    </ruleList>
+	</setInstallerVariable>
+        <actionGroup>
+            <actionList>
+                <readFile path="/etc/redhat-release" name="redhat_release_file"/>
+                <setInstallerVariable name="linux_distribution_version" value ="8" >
+                    <ruleList>
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>.*Ootpa.*</pattern>
+                            <text>${redhat_release_file}</text>
+                        </regExMatch>
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <compareText text="${linux_distribution}" logic="equals" value="redhat"/>
+                <compareText text="${linux_distribution_version}" logic="equals" value="unknown"/>
+                <fileExists path="/etc/redhat-release"/>
+            </ruleList>
+        </actionGroup>
+        <throwError>
+            <text>Bitnami installers do not support Fedora 32, CentOS 8, RHEL 8 or any newer version of those distributions</text>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <ruleGroup>
+                    <ruleList>
+                        <compareText text="${linux_distribution}" logic="equals" value="redhat"/>
+                        <compareVersions version1="${linux_distribution_version}" logic="greater_or_equal" version2="8"/>
+                    </ruleList>
+                </ruleGroup>
+                <ruleGroup>
+                    <ruleList>
+                        <compareText text="${linux_distribution}" logic="equals" value="fedora"/>
+                        <compareVersions version1="${linux_distribution_version}" logic="greater_or_equal" version2="32"/>
+                    </ruleList>
+                </ruleGroup>
+            </ruleList>
+        </throwError>
+    </initializationActionList>
+    <preInstallationActionList>
+        <actionGroup abortOnError="0" showMessageOnError="0">
+            <actionList>
+                <setInstallerVariable name="bitnamisettings_total_memory" value="0"/>
+                <mathExpression abortOnError="0" showMessageOnError="0" variable="bitnamisettings_total_memory" text="${machine_total_memory}+${machine_swap_memory}" />
+                <actionGroup>
+                    <actionList>
+                        <showQuestion variable="question_swap" default="yes">
+                            <text>${product_fullname} requires at least ${bitnamisettings_minimum_memory}MB of memory and the installer has detected ${bitnamisettings_total_memory}MB of memory. This may prevent the application from installing, working properly or cause it to stop functioning due to lack of memory. Visit the following link to learn how to increase the swap space.
+
+https://bitnami.com/lowmemory
+
+Continue with installation?</text>
+                        </showQuestion>
+                        <exit>
+                            <ruleList>
+                                <isFalse value="${question_swap}" />
+                            </ruleList>
+                        </exit>
+                    </actionList>
+                    <ruleList>
+                        <compareValues value1="${bitnamisettings_total_memory}" logic="does_not_equal" value2="0" />
+                        <compareValues value1="${bitnamisettings_total_memory}" logic="less" value2="${bitnamisettings_minimum_memory}" />
+                    </ruleList>
+                </actionGroup>
+                <showWarning>
+                    <text>${product_fullname} requires at least ${bitnamisettings_minimum_memory}MB of memory and the installer is not able to detect the machine memory. This may prevent the application from installing, working properly or cause it to stop functioning due to lack of memory. Visit the following link to learn how to increase the swap space.
+
+https://bitnami.com/lowmemory</text>
+                    <ruleList>
+                        <compareValues value1="${machine_total_memory}" logic="equals" value2="0" />
+                    </ruleList>
+                </showWarning>
+            </actionList>
+            <ruleList>
+                <platformTest type="linux" />
+            </ruleList>
+        </actionGroup>
+	<throwError>
+	    <text>${bitnamisettings_windowsxp_support_error}</text>
+	    <ruleEvaluationLogic>and</ruleEvaluationLogic>
+	    <ruleList>
+            <isFalse value="${bitnamisettings_windowsxp_support}" />
+            <componentTest name="apache" logic="exists"/>
+            <ruleGroup>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                    <compareText text="${windows_os_name}" logic="equals" value="Windows XP" />
+                    <compareText text="${windows_os_name}" logic="equals" value="Windows 2003" />
+                </ruleList>
+            </ruleGroup>
+	    </ruleList>
+	</throwError>
+	<throwError>
+        <text>You are trying to install a 64bit application on a 32bit operating system. It is recommended that you use a 32bit instead.</text>
+	    <ruleEvaluationLogic>and</ruleEvaluationLogic>
+            <ruleList>
+                <platformTest type="windows-x86"/>
+                <compareText text="${project.installerFileName}" logic="contains" value="windows-x64" />
+		    </ruleList>
+	</throwError>
+      	<actionGroup>
+	    <actionList>
+		<showQuestion>
+		    <text>WARNING: You are trying to install a 32bit application on a 64bit operating system. This will cause problems if you do not have certain 32bit compatibility libraries installed. It is recommended that you use a 64bit version instead. You can find more information about this issue here:
+
+https://docs.bitnami.com/installer/faq/linux-faq/get-started/understand-system-requirements/
+
+Do you still want to continue?</text>
+		    <default>no</default>
+		    <variable>bitnamisettings_32on64</variable>
+		</showQuestion>
+		<exit>
+		    <ruleList>
+			<isFalse value="${bitnamisettings_32on64}" />
+		    </ruleList>
+		</exit>
+	    </actionList>
+	    <ruleList>
+	        <isFalse value="${disable_platform_arch_check}"/>
+		<platformTest type="linux-x64" />
+		<compareText text="${bitnami_platform_arch}" logic="equals" value="linux" />
+	    </ruleList>
+	</actionGroup>
+	<actionGroup>
+	    <actionList>
+		<setInstallerVariable name="antivirus_url" value="https://bitnami.com/antivirus" />
+		<setInstallerVariable name="antivirus_url" value="http://apachefriends.org/en/faq-xampp-windows.html#antivirus" >
+		    <ruleList>
+			<compareText text="${product_fullname}" logic="contains" value="XAMPP" />
+		    </ruleList>
+		</setInstallerVariable>
+		<showQuestion variable="baseAntivirus" default="yes">
+		    <text>It seems you have an antivirus running. In some cases, this may slow down or interfere the installation of the software. Please visit the following link to learn more about this.
+
+${antivirus_url}
+
+Continue with installation?</text>
+		</showQuestion>
+		<exit>
+		    <ruleList>
+			<isFalse value="${baseAntivirus}" />
+		    </ruleList>
+		</exit>
+	    </actionList>
+	    <ruleList>
+		<platformTest type="windows" />
+                <isTrue value="${show_antivirus_warning}" />
+                <antivirusTest type="enabled" />
+                <antivirusTest type="disabled" product="windows_defender" />
+	    </ruleList>
+	</actionGroup>
+        <throwError>
+            <text>The version of glibc installed in the system ${linux_libc_version} is not compatible. You can find more information here:
+
+https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/check-glibc-linux/
+
+Please use this installer in an operating system with glibc greater than ${bitnamisettings_minimum_glibc_version}.</text>
+            <ruleList>
+                <platformTest type="linux" />
+                <isFalse value="${disable_glibc_version_check}"/>
+                <compareVersions>
+                    <version1>${linux_libc_version}</version1>
+                    <logic>less</logic>
+                    <version2>${bitnamisettings_minimum_glibc_version}</version2>
+                </compareVersions>
+            </ruleList>
+        </throwError>
+        <setInstallerVariableFromScriptOutput>
+            <name>linux_libcxx_version</name>
+            <exec>/sbin/ldconfig</exec>
+            <execArgs>-p | grep libstdc | awk '{print $4}' | xargs grep -aoE 'GLIBCXX_([0-9]+)\.([0-9]+)\.([0-9]+)' | grep -oE '([0-9]+)\.([0-9]+)\.([0-9]+)' | sort -u -t . -k 3 -n | tail -n 1</execArgs>
+            <customErrorMessage>The installer is unable to detect your glibcxx version. You can find how to proceed at https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/check-libstdcplusplus-linux/. Please ensure that you have the minimum version required "${bitnamisettings_minimum_glibcxx_version}" before proceeding. Then launch the installer with the option --disable_glibcxx_version_check 1</customErrorMessage>
+            <ruleList>
+                <platformTest type="linux" />
+                <isFalse value="${disable_glibcxx_version_check}"/>
+            </ruleList>
+        </setInstallerVariableFromScriptOutput>
+        <throwError>
+            <text>The version of libstdc++ installed in the system could be older than expected and doesn't include a glibcxx compatible version. You can find more information here:
+
+https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/check-libstdcplusplus-linux/
+
+We detected the glibcxx ${linux_libcxx_version} version. Please use this installer in an operating system with glibcxx greater than ${bitnamisettings_minimum_glibcxx_version}.</text>
+            <ruleList>
+                <platformTest type="linux" />
+                <isFalse value="${disable_glibcxx_version_check}"/>
+                <compareVersions>
+                    <version1>${linux_libcxx_version}</version1>
+                    <logic>less</logic>
+                    <version2>${bitnamisettings_minimum_glibcxx_version}</version2>
+                </compareVersions>
+            </ruleList>
+        </throwError>
+    </preInstallationActionList>
+    <preBuildActionList>
+        <setInstallerVariable>
+            <name>bitnami_platform_arch</name>
+            <value>${platform_name}</value>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <compareText text="${bitnami_platform_arch}" logic="equals" value=""/>
+                <isNotDefined variable="bitnami_platform_arch"/>
+            </ruleList>
+        </setInstallerVariable>
+    </preBuildActionList>
+    <parameterList>
+        <stringParameter name="disable_platform_arch_check" value="0" ask="0" />
+        <stringParameter name="disable_glibc_version_check" value="0" ask="0" />
+        <stringParameter name="disable_glibcxx_version_check" value="0" ask="0" />
+        <stringParameter name="bitnamisettings_minimum_glibcxx_version" default="3.4.9" value="" ask="0" />
+        <stringParameter name="bitnami_platform_arch" value="" ask="0" />
+        <stringParameter name="bitnami_platform_osx_arch" default="x86" value="" ask="0" />
+        <stringParameter name="bitnamisettings_minimum_memory" default="1000" value="" ask="0" />
+        <stringParameter name="bitnamisettings_minimum_glibc_version" default="2.5" value="" ask="0" />
+        <booleanParameter name="bitnamisettings_windowsxp_support" value="0" ask="0" />
+        <stringParameter name="bitnamisettings_windowsxp_support_error" value="" ask="0" default="${product_fullname} is not supported on Windows XP and Windows 2003. Please use a newer version of Windows." />
+        <stringParameter name="bitnamisettings_frontend_type" default="apache" value="apache" ask="0" />
+        <booleanParameter name="show_antivirus_warning" default="1" ask="0" description="Whether or not to show the antivirus warning"/>
+    </parameterList>
+</componentGroup>

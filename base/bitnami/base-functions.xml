@@ -1,0 +1,3060 @@
+<!-- base-functions
+Componentname: basefunctions
+
+Short Description:
+
+Created: 200911
+Modified: 200911
+Copyrighted by BitRock
+
+
+-->
+<component>
+    <name>basefunctions</name>
+    <description>//BaseFunctions</description>
+    <canBeEdited>1</canBeEdited>
+    <selected>1</selected>
+    <show>0</show>
+    <functionDefinitionList>
+        <!-- check if a URL has a correct format -->
+        <ruleDefinition name="isValidURL">
+            <parameterList>
+                <stringParameter name="url"/>
+                <stringParameter name="protocols" default="http https"/>
+                <booleanParameter name="validateHost" default="0"/>
+                <booleanParameter name="validateRequest" default="0"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="valid_url" value="0"/>
+                <setInstallerVariable name="valid_url_pattern" value="^([a-z0-9]+):\/\/((?:[a-zA-Z0-9-]+\.)*[a-zA-Z0-9]+)(?:\:(\d+))?(\/.*?)?(?:\?(.*))?$"/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariableFromRegEx name="url_protocol" pattern="${valid_url_pattern}" substitution="\1" text="${url}"/>
+                        <setInstallerVariableFromRegEx name="url_hostname" pattern="${valid_url_pattern}" substitution="\2" text="${url}"/>
+                        <setInstallerVariableFromRegEx name="url_port" pattern="${valid_url_pattern}" substitution="\3" text="${url}"/>
+                        <setInstallerVariable name="is_valid_protocol" value="0"/>
+                        <foreach variables="protocol" values="${protocols}">
+                            <actionList>
+                                <setInstallerVariable name="is_valid_protocol" value="1">
+                                    <ruleList>
+                                        <compareText text="${url_protocol}" logic="equals" value="${protocol}"/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                            </actionList>
+                        </foreach>
+                        <!-- Check if the URL is valid -->
+                        <setInstallerVariable name="valid_url" value="1"/>
+                        <setInstallerVariable name="valid_url" value="0">
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                                <ruleGroup>
+                                    <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                                    <!-- Error if url not empty and not in range -->
+                                    <ruleList>
+                                        <stringTest text="${url_port}" type="not_empty"/>
+                                        <ruleGroup>
+                                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                                            <ruleList>
+                                                <compareValues value1="${url_port}" logic="less" value2="1"/>
+                                                <compareValues value1="${url_port}" logic="greater" value2="65535"/>
+                                            </ruleList>
+                                        </ruleGroup>
+                                    </ruleList>
+                                </ruleGroup>
+                                <isFalse value="${is_valid_protocol}"/>
+                                <!-- This requires internet connection to work -->
+                                <!-- We will currently stick with RegExp by default as the way for validating the host name -->
+                                <ruleGroup>
+                                    <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                                    <ruleList>
+                                        <isTrue value="${validateHost}"/>
+                                        <hostValidation condition="is_not_valid" type="hostname" host="${url_hostname}"/>
+                                    </ruleList>
+                                </ruleGroup>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <!-- Validate request -->
+                        <actionGroup>
+                            <actionList>
+                                <createTimeStamp>
+                                    <format>%Y%m%d%H%M%S</format>
+                                    <variable>timestamp</variable>
+                                </createTimeStamp>
+                                <setInstallerVariable name="installer_http_code" value="0"/>
+                                <httpGet url="${url}" filename="${system_temp_directory}/http_get_${timestamp}.txt" abortOnError="0" showMessageOnError="0"/>
+                                <setInstallerVariable name="valid_url" value="0">
+                                    <ruleList>
+                                        <compareText text="${installer_http_code}" logic="does_not_equal" value="200"/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${valid_url}"/>
+                                <isTrue value="${validateRequest}"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <regExMatch pattern="${valid_url_pattern}" logic="matches" text="${url}"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+            <ruleList>
+                <isTrue value="${valid_url}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <ruleDefinition name="isDefined">
+            <parameterList>
+                <stringParameter name="variable" default="" />
+                <stringParameter name="allowEmptyValues" value="1"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="result" value="1"/>
+                <setInstallerVariable name="result" value="0">
+                    <ruleList>
+                        <compareText text="${${variable}}" logic="contains" nocase="1" value="***unknown variable ${variable}"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="result" value="0">
+                    <ruleList>
+                        <isTrue value="${result}"/>
+                        <isFalse value="${allowEmptyValues}"/>
+                        <compareText text="${${variable}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <ruleDefinition name="isNotDefined">
+            <parameterList>
+                <stringParameter name="variable" default="" />
+                <stringParameter name="allowEmptyValues" value="1"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="result" value="1"/>
+                <setInstallerVariable name="result" value="0">
+                    <ruleList>
+                        <isDefined variable="${variable}" allowEmptyValues="${allowEmptyValues}"/>
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+        <!-- @function baseGetStackKey - Get stack key from "properties.ini"
+             @param installdir - Installation directory
+             @param variable - Variable to store the result
+        -->
+        <actionDefinition name="baseGetStackKey">
+            <parameterList>
+                <directoryParameter name="installdir"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariable name="stack_key" value=""/>
+                <!-- Try to get from "properties.ini" if possible -->
+                <iniFileGet file="${installdir}/properties.ini" section="General" key="base_stack_key" variable="stack_key">
+                    <ruleList>
+                        <fileTest path="${installdir}/properties.ini" condition="exists"/>
+                    </ruleList>
+                </iniFileGet>
+                <!-- If the Nami binary exists, we're dealing with a Nami installation -->
+                <setInstallerVariable name="stack_key" value="nami">
+                    <ruleList>
+                        <fileTest path="${installdir}/nami/bin/provisioner" condition="exists"/>
+                        <stringTest text="${stack_key}" type="empty"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <!-- If it is empty, we're dealing with a XAMPP stack -->
+                <setInstallerVariable name="stack_key" value="xampp">
+                    <ruleList>
+                        <stringTest text="${stack_key}" type="empty"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <!-- Store the key in the result variable -->
+                <setInstallerVariable name="${variable}" value="${stack_key}"/>
+            </actionList>
+        </actionDefinition>
+        <!-- @function baseGetStackName - Get stack name from "properties.ini"
+             @param installdir - Installation directory
+             @param variable - Variable to store the result
+        -->
+        <actionDefinition name="baseGetStackName">
+            <parameterList>
+                <directoryParameter name="installdir"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariable name="stack_name" value=""/>
+                <!-- Try to get from "properties.ini" if possible -->
+                <iniFileGet file="${installdir}/properties.ini" section="General" key="base_stack_name" variable="stack_name">
+                    <ruleList>
+                        <fileTest path="${installdir}/properties.ini" condition="exists"/>
+                    </ruleList>
+                </iniFileGet>
+                <!-- Store the name in the result variable -->
+                <setInstallerVariable name="${variable}" value="${stack_name}"/>
+            </actionList>
+        </actionDefinition>
+        <!-- @function baseSort - Sort a TCL list
+             @param {string} text - List to sort
+             @param {string} variable - Variable to store the sorted list
+        -->
+        <actionDefinition name="baseSort">
+            <parameterList>
+                <stringParameter name="text"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <tclEval>
+                    <code><![CDATA[
+set text [installbuilder::substText {${text}}]
+installbuilder::setVariable sorted_text [lsort $text]
+]]></code>
+                </tclEval>
+                <setInstallerVariable name="${variable}" value="${sorted_text}"/>
+                <globalVariables names="${variable}"/>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @function baseGlob - Find a list of files matching a glob pattern
+             @param {string} pattern - Pattern to match files
+             @param {string} basePath - Working directory for executing glob
+        -->
+        <actionDefinition name="baseGlob">
+            <parameterList>
+                <stringParameter name="pattern"/>
+                <stringParameter name="variable"/>
+                <stringParameter name="basePath" default="/"/>
+                <booleanParameter name="filesOnly" default="1"/>
+            </parameterList>
+            <actionList>
+                <tclEval>
+                    <code><![CDATA[
+set pattern [installbuilder::substText {${pattern}}]
+set basePath [installbuilder::substText {${basePath}}]
+set filesOnly [installbuilder::substText {${filesOnly}}]
+if {![string is boolean $filesOnly]} {
+    set filesOnly 0
+}
+set files {}
+set pwd [pwd]
+cd $basePath
+# Separate all patterns
+foreach uniquePattern [split $pattern "; \n"] {
+    if {[string trim $uniquePattern] != ""} {
+        # Now that we have a pattern, find matching files
+        foreach file [lsort [glob -nocomplain [string trim $uniquePattern -]]] {
+            if {$filesOnly && ![file isfile $file]} {
+                continue
+            }
+            lappend files $file
+        }
+    }
+}
+set varName [installbuilder::substText {${variable}}]
+installbuilder::setVariable $varName $files
+]]></code>
+                </tclEval>
+                 <globalVariables names="${variable}"/>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @function baseAddBndiagnosticMetadata - Add bndiagnostic metadata to properties.ini
+             @param {string} name - Component name
+             @param {string} logsPattern - Pattern to match log files
+             @param {string} confPattern - Pattern to match configuration files
+        -->
+        <actionDefinition name="baseAddBndiagnosticMetadata">
+            <parameterList>
+                <stringParameter name="name"/>
+                <stringParameter name="logsPattern" default=""/>
+                <stringParameter name="confPattern" default=""/>
+                <stringParameter name="aclPattern" default=""/>
+                <stringParameter name="privPattern" default=""/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="components" value=""/>
+                <iniFileGet file="${installdir}/properties.ini" section="Support" key="installed_components" variable="components">
+                    <ruleList>
+                        <fileExists path="${installdir}/properties.ini"/>
+                    </ruleList>
+                </iniFileGet>
+                <iniFileGet file="${installdir}/properties.ini" section="Support" key="installed_components" variable="components"/>
+                <!-- Append, but do not leave weird spaces -->
+                <if>
+                    <conditionRuleList>
+                        <stringTest text="${components}" type="not_empty"/>
+                    </conditionRuleList>
+                    <actionList>
+                        <setInstallerVariable name="components" value="${components} ${name}"/>
+                    </actionList>
+                    <elseActionList>
+                        <setInstallerVariable name="components" value="${name}"/>
+                    </elseActionList>
+                </if>
+                <iniFileSet file="${installdir}/properties.ini" section="Support" key="installed_components" value="${components}"/>
+                <!-- Set logs, conf, acl and priv patterns -->
+                <foreach variables="type" values="logs conf acl priv">
+                    <actionList>
+                        <iniFileSet file="${installdir}/properties.ini" section="Support" key="${name}_${type}" value="${${type}Pattern}">
+                            <ruleList>
+                                <stringTest text="${${type}Pattern}" type="not_empty"/>
+                            </ruleList>
+                        </iniFileSet>
+                    </actionList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+      <actionDefinition name="countCharactersFromString">
+        <parameterList>
+          <stringParameter name="name" />
+          <stringParameter name="string" />
+        </parameterList>
+        <actionList>
+	    <setInstallerVariable name="string_var" value="${string}" />
+	    <setInstallerVariable name="counter" value="0" />
+	    <while>
+		<actionList>
+		    <mathExpression text="${counter}+1" variable="counter" />
+		    <setInstallerVariableFromRegEx text="${string_var}" name="string_var" substitution="" pattern="^." />
+		</actionList>
+		<conditionRuleList>
+		    <compareTextLength text="${string_var}" logic="does_not_equal" length="0"/>
+		</conditionRuleList>
+	    </while>
+	    <setInstallerVariable name="${name}" value="${counter}" />
+            <globalVariables names="${name}" />
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="generateRandomNumber">
+        <parameterList>
+          <stringParameter name="variable" />
+          <stringParameter name="length" />
+        </parameterList>
+	<actionList>
+	    <setInstallerVariable>
+		<name>randomdigit</name>
+		<value></value>
+	    </setInstallerVariable>
+	    <while>
+		<actionList>
+		    <mathExpression>
+			<text>int(rand() * 1000000000)</text>
+			<variable>randomdigit0</variable>
+		    </mathExpression>
+		    <setInstallerVariable>
+			<name>randomdigit</name>
+			<value>${randomdigit}${randomdigit0}</value>
+		    </setInstallerVariable>
+		</actionList>
+		<conditionRuleList>
+		    <compareTextLength>
+			<length>${length}</length>
+			<logic>less</logic>
+			<text>${randomdigit}</text>
+		    </compareTextLength>
+		</conditionRuleList>
+	    </while>
+	    <setInstallerVariable name="${variable}" value="${randomdigit}" />
+	    <globalVariables names="${variable}" />
+	</actionList>
+      </actionDefinition>
+
+      <actionDefinition name="baseRemoveLibstdcIfExists">
+        <parameterList>
+        </parameterList>
+        <actionList>
+          <actionGroup>
+            <actionList>
+              <setInstallerVariable name="libstdc_libs" value="" />
+              <findFile baseDirectory="/usr/lib" variable="libstdc_libs" pattern="libstdc++.*">
+                <ruleList>
+                  <fileTest path="/usr/lib" condition="exists"/>
+                </ruleList>
+              </findFile>
+              <findFile baseDirectory="/usr/lib64" variable="libstdc_libs" pattern="libstdc++.*">
+                <ruleList>
+                  <fileTest path="/usr/lib64" condition="exists"/>
+                </ruleList>
+              </findFile>
+              <deleteFile path="${installdir}/common/lib/libstdc++.*" >
+                <ruleList>
+                  <compareText text="${libstdc_libs}" logic="does_not_equal" value=""/>
+                </ruleList>
+              </deleteFile>
+            </actionList>
+            <ruleList>
+              <platformTest type="linux"/>
+            </ruleList>
+          </actionGroup>
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="baseBitnamiModuleBasicSubstitutions">
+        <parameterList>
+          <stringParameter name="appDir" />
+          <stringParameter name="appName" />
+        </parameterList>
+        <actionList>
+          <substitute>
+            <files>*/ctl.sh</files>
+            <type>exact</type>
+            <substitutionList>
+              <substitution>
+                <pattern>@@XAMPP_RUBY_APPLICATION_ROOTDIR@@</pattern>
+                <value>${appDir}</value>
+              </substitution>
+              <substitution>
+                <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                <value>${installdir}</value>
+              </substitution>
+              <substitution>
+                <pattern>ruby_application</pattern>
+                <value>${appName}</value>
+              </substitution>
+            </substitutionList>
+          </substitute>
+        </actionList>
+      </actionDefinition>
+
+        <actionDefinition name="baseLoadGeneralStackConfigurationFromFile">
+            <parameterList>
+                <stringParameter name="baseStackPropertiesFile" default="${installdir}/properties.ini" />
+                <stringParameter name="baseStackName" />
+                <stringParameter name="baseStackVersion" />
+                <stringParameter name="baseStackPlatform" />
+                <stringParameter name="baseStackInstallDir" />
+            </parameterList>
+            <actionList>
+                <foreach variables="key var">
+                    <values>
+                        base_stack_name "${baseStackName}"
+                        base_stack_version "${baseStackVersion}"
+                        base_stack_platform "${baseStackPlatform}"
+                        installdir "${baseStackInstallDir}"
+                    </values>
+                    <actionList>
+                        <actionGroup>
+                            <actionList>
+                                <iniFileGet>
+                                    <file>${baseStackPropertiesFile}</file>
+                                    <section>General</section>
+                                    <key>${key}</key>
+                                    <variable>${var}</variable>
+                                </iniFileGet>
+                                <setInstallerVariable name="${var}" value="${${var}}" persist="1"/>
+                                <globalVariables names="${var}"/>
+                            </actionList>
+                            <ruleList>
+                                <isDefined variable="${var}"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <fileExists path="${baseStackPropertiesFile}"/>
+                    </ruleList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="baseSaveGeneralStackConfigurationToFile">
+            <parameterList>
+                <stringParameter name="baseStackPropertiesFile" default="${installdir}/properties.ini" />
+                <stringParameter name="baseStackName" />
+                <stringParameter name="baseStackKey" />
+                <stringParameter name="baseStackVersion" />
+                <stringParameter name="baseStackPlatform" />
+                <stringParameter name="baseStackInstallDir" />
+                <stringParameter name="baseStackService" value="" />
+            </parameterList>
+            <actionList>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>installdir</key>
+                    <value>${baseStackInstallDir}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_stack_name</key>
+                    <value>${baseStackName}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_stack_key</key>
+                    <value>${baseStackKey}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_stack_version</key>
+                    <value>${baseStackVersion}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_stack_platform</key>
+                    <value>${baseStackPlatform}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_stack_service</key>
+                    <value>${baseStackService}</value>
+                    <ruleList>
+                        <platformTest type="unix" />
+                    </ruleList>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>require_root_privileges</key>
+                    <value>1</value>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <compareText text="${installer_root_install}" logic="equals" value="1"/>
+                    </ruleList>
+                </iniFileSet>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="baseLoadUserAccountConfigurationFromFile">
+            <parameterList>
+                <stringParameter name="baseStackPropertiesFile" default="${installdir}/properties.ini" />
+                <stringParameter name="baseUser" />
+                <stringParameter name="baseFirstName" />
+                <stringParameter name="baseLastName" />
+                <stringParameter name="baseUsername" />
+                <stringParameter name="baseEmail" />
+            </parameterList>
+            <actionList>
+                <foreach variables="key var">
+                    <values>
+                        base_first_name "${baseFirstName}"
+                        base_last_name "${baseLastName}"
+                        base_username "${baseUsername}"
+                        base_user "${baseUser}"
+                        base_email "${baseEmail}"
+                    </values>
+                    <actionList>
+                        <actionGroup>
+                            <actionList>
+                                <iniFileGet>
+                                    <file>${baseStackPropertiesFile}</file>
+                                    <section>General</section>
+                                    <key>${key}</key>
+                                    <variable>${var}</variable>
+                                </iniFileGet>
+                                <setInstallerVariable name="${var}" value="${${var}}" persist="1"/>
+                                <globalVariables names="${var}"/>
+                            </actionList>
+                            <ruleList>
+                                <isDefined variable="${var}"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <fileExists path="${baseStackPropertiesFile}"/>
+                    </ruleList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="baseSaveUserAccountConfigurationToFile">
+            <parameterList>
+                <stringParameter name="baseStackPropertiesFile" default="${installdir}/properties.ini"/>
+                <stringParameter name="baseFirstName" default="First Name" />
+                <stringParameter name="baseLastName" default="Last Name" />
+                <stringParameter name="baseUsername" default="User Name" />
+                <stringParameter name="baseUser" default="user" />
+                <stringParameter name="baseEmail" default="user@example.com" />
+            </parameterList>
+            <actionList>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_first_name</key>
+                    <value>${baseFirstName}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_last_name</key>
+                    <value>${baseLastName}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_username</key>
+                    <value>${baseUsername}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_user</key>
+                    <value>${baseUser}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${baseStackPropertiesFile}</file>
+                    <section>General</section>
+                    <key>base_email</key>
+                    <value>${baseEmail}</value>
+                </iniFileSet>
+            </actionList>
+        </actionDefinition>
+
+            <!-- Extract data from file setting variables from regexp outputs -->
+            <actionDefinition name="baseExtractInfoFromFile">
+                <parameterList>
+                    <stringParameter name="path" />
+                    <stringParameter name="pairsSet" />
+                </parameterList>
+                <actionList>
+                    <readFile>
+                        <name>script_text</name>
+                        <path>${path}</path>
+                    </readFile>
+                    <foreach variables="var regexp" values="${pairsSet.escape_backslashes}">
+                    <actionList>
+                        <globalVariables names="${var}"/>
+                        <setInstallerVariableFromRegEx>
+                            <text>${script_text}</text>
+                            <name>${var}</name>
+                            <substitution>\1</substitution>
+                            <pattern>${regexp}</pattern>
+                        </setInstallerVariableFromRegEx>
+                        </actionList>
+                    </foreach>
+                </actionList>
+            </actionDefinition>
+
+        <!-- Extract data from file setting variables from xpath selectors -->
+        <actionDefinition name="baseExtractInfoFromXmlFile">
+            <parameterList>
+                <stringParameter name="path" />
+                <stringParameter name="pairsSet" />
+            </parameterList>
+            <actionList>
+                <foreach variables="var selector" values="${pairsSet.escape_backslashes}">
+                    <actionList>
+                        <globalVariables names="${var}"/>
+                        <xmlFileGet>
+                            <attribute></attribute>
+                            <element>${selector}</element>
+                            <file>${path}</file>
+                            <variable>${var}</variable>
+                        </xmlFileGet>
+                    </actionList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="baseValidateNotForbiddenUsername">
+            <parameterList>
+                <stringParameter name="username" value="" default=""/>
+                <stringParameter name="forbiddenUsernames" value="" default=""/>
+            </parameterList>
+            <actionList>
+                <foreach variables="forbidden_username" values="${forbiddenUsernames}">
+                    <actionList>
+                        <throwError>
+                            <text>Username '${username}' is reserved. Please use a different user name.</text>
+                            <ruleList>
+                                <compareText logic="does_not_equal" text="${forbidden_username}" value=""/>
+                                <compareText logic="equals" text="${username}" value="${forbidden_username}"/>
+                            </ruleList>
+                        </throwError>
+                    </actionList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="baseValidateNotForbiddenPassword">
+            <parameterList>
+                <stringParameter name="password" value="" default=""/>
+                <stringParameter name="forbiddenPasswords" value="" default=""/>
+            </parameterList>
+            <actionList>
+                <throwError>
+                    <text>Password is weak. Please choose a stronger password.</text>
+                    <ruleList>
+                        <compareText logic="does_not_equal" text="${forbidden_password}" value=""/>
+                        <compareText logic="contains" text="${forbiddenPasswords}" value="${password}"/>
+                    </ruleList>
+                </throwError>
+            </actionList>
+        </actionDefinition>
+
+        <!-- Autogenerates PHP apps variables
+               @param applicationId          : It will create a unique ID for setting the variables
+               @param applicationName        : Sill set some custom variables, applicationId if not defined
+               @param applicationPassword    : Base application password
+               @param databaseName           : Name of the database
+               @param databaseUser           : Owner of the database
+               @param databasePassword       : Password for the database user
+               @param link                   : Link to the app (prefix)
+               @param site                   : Machine address
+               @param url                    : HTTP url to the app
+               @param httpsUrl               : HTTPS url to the app
+               @param installationDirectory  : Installation directory for the app
+
+             All the variables will be returned into app(${applicationId}):
+               @return database_name         : Return databaseName               (default: bitnami_${applicationName})
+               @return database_user         : Return databaseUser               (default: bn_${applicationName})
+               @return database_password     : Return databasePassword           (default: 10 length random)
+               @return database_password_md5 : Return databasePassword in MD5
+               @return application_password  : Return applicationPassword        (default: ${app(${applicationID}).database_password})
+               @return application_password  : Return applicationPassword in MD5
+               @return installdir            : Return installationDirectory      (default: ${installdir}/apps/${applicationName})
+               @return link                  : Return link                       (default: ${applicationName})
+               @return url                   : Return url                        (default: http://${app(${applicationId}).site}/${app(${applicationId}).link}/)
+               @return httpsUrl              : Return httpsUrl                   (default: https://${app(${applicationId}).site}/${app(${applicationId}).link}/)
+        -->
+      <actionDefinition name="newPHPApp">
+        <parameterList>
+          <stringParameter name="applicationId" default="${project.shortName}"/>
+	  <stringParameter name="applicationName" value =""/>
+          <stringParameter name="applicationPassword" value=""/>
+          <stringParameter name="databasePassword" value=""/>
+          <stringParameter name="databaseUser" value=""/>
+          <stringParameter name="databaseName" value=""/>
+          <stringParameter name="link" value=""/>
+          <stringParameter name="installationDirectory" value=""/>
+          <stringParameter name="site" value=""/>
+          <stringParameter name="url" value=""/>
+          <stringParameter name="httpsUrl" value=""/>
+        </parameterList>
+        <actionList>
+          <!-- Set autogenerated values -->
+	  <setInstallerVariable name="applicationName" value="${applicationId}" >
+	      <ruleList>
+		  <compareText text="${applicationName}" logic="equals" value=""/>
+	      </ruleList>
+	  </setInstallerVariable>
+          <generateRandomValue variable="random_database_password" length="10"/>
+          <setInstallerVariable name="app(${applicationId}).database_password" value="${random_database_password}" persist="1"/>
+          <setInstallerVariable name="app(${applicationId}).application_password" value="${random_database_password}" persist="1"/>
+	  <setInstallerVariable name="app(${applicationId}).database_user" value="bn_${applicationName}" persist="1"/>
+	  <setInstallerVariable name="app(${applicationId}).database_name" value="bitnami_${applicationName}" persist="1"/>
+	  <setInstallerVariable name="app(${applicationId}).installdir" value="${installdir}/apps/${applicationName}" persist="1"/>
+	  <setInstallerVariable name="app(${applicationId}).link" value="${applicationName}" persist="1"/>
+	  <setInstallerVariable name="app(${applicationId}).site" value="127.0.0.1" persist="1"/>
+
+          <foreach variables="setting parameter" values="database_password databasePassword application_password applicationPassword database_user databaseUser database_name databaseName link link installdir installationDirectory site site">
+            <actionList>
+              <!-- If any of the settings was provided, overwrite the default value -->
+              <setInstallerVariable name="app(${applicationId}).${setting}" value="${${parameter}}" persist="1" >
+                <ruleList>
+                  <compareText text="${${parameter}}" logic="does_not_equal" value=""/>
+                </ruleList>
+              </setInstallerVariable>
+              <!-- Set the variable as global -->
+              <globalVariables names="app(${applicationId}).${setting}"/>
+            </actionList>
+          </foreach>
+	  <actionGroup>
+	      <actionList>
+		  <logMessage text="MySQL database user name should be no longer than 16" />
+		  <setInstallerVariableFromRegEx>
+		      <text>${app(${applicationId}).database_user}</text>
+		      <pattern>(.{1,16}).*</pattern>
+		      <name>app(${applicationId}).database_user</name>
+		      <substitution>\1</substitution>
+		  </setInstallerVariableFromRegEx>
+		  <logMessage text="Database user name: ${app(${applicationId}).database_user}" />
+	      </actionList>
+	      <ruleList>
+		  <compareTextLength text="${app(${applicationId}).database_user}" logic="greater" length="16" />
+	      </ruleList>
+	  </actionGroup>
+	  <!-- We treat url differently, as its default value depends on site, which could be provided -->
+          <setInstallerVariable name="app(${applicationId}).url" value="${url}">
+            <ruleList>
+              <compareText text="${url}" logic="does_not_equal" value=""/>
+            </ruleList>
+          </setInstallerVariable>
+          <actionGroup>
+            <actionList>
+              <setInstallerVariable name="app(${applicationId}).url" value="http://${app(${applicationId}).site}:${web_server_port}/${app(${applicationId}).link}/" persist="1"/>
+              <setInstallerVariable name="app(${applicationId}).url" value="http://${app(${applicationId}).site}/${app(${applicationId}).link}/" persist="1">
+                <ruleList>
+                  <compareText text="${web_server_port}" logic="equals" value="80"/>
+                </ruleList>
+              </setInstallerVariable>
+            </actionList>
+            <ruleList>
+              <compareText text="${url}" logic="equals" value=""/>
+            </ruleList>
+          </actionGroup>
+
+          <globalVariables names="app(${applicationId}).url"/>
+
+          <setInstallerVariable name="app(${applicationId}).httpsUrl" value="${httpsUrl}">
+              <ruleList>
+                  <compareText text="${httpsUrl}" logic="does_not_equal" value=""/>
+              </ruleList>
+          </setInstallerVariable>
+          <actionGroup>
+              <actionList>
+                  <setInstallerVariable name="app(${applicationId}).httpsUrl" value="https://${app(${applicationId}).site}:${web_server_ssl_port}/${app(${applicationId}).link}/" persist="1"/>
+                  <setInstallerVariable name="app(${applicationId}).httpsUrl" value="https://${app(${applicationId}).site}/${app(${applicationId}).link}/" persist="1">
+                      <ruleList>
+                          <compareText text="${web_server_ssl_port}" logic="equals" value="443"/>
+                      </ruleList>
+                  </setInstallerVariable>
+              </actionList>
+              <ruleList>
+                  <compareText text="${httpsUrl}" logic="equals" value=""/>
+              </ruleList>
+          </actionGroup>
+
+          <globalVariables names="app(${applicationId}).httpsUrl"/>
+
+	  <md5 text="${app(${applicationId}).database_password}" variable="app(${applicationId}).database_password_md5"/>
+          <globalVariables names="app(${applicationId}).database_password_md5"/>
+
+	  <md5 text="${app(${applicationId}).application_password}" variable="app(${applicationId}).application_password_md5"/>
+          <globalVariables names="app(${applicationId}).application_password_md5"/>
+
+          <!-- Until we clean all the the code, define some variables that may still be used -->
+          <setInstallerVariable name="bitnamimodulelink_url" value="${applicationId}"/>
+          <setInstallerVariable name="bitnamimodulelink_url" value="${app(${applicationId}).link}">
+              <ruleList>
+                  <stringTest text="${app(${applicationId}).link}" type="not_empty"/>
+              </ruleList>
+          </setInstallerVariable>
+
+          <globalVariables names="bitnamimodulelink_url"/>
+        </actionList>
+
+      </actionDefinition>
+
+      <actionDefinition name="newAppVariables">
+        <parameterList>
+          <stringParameter name="applicationId" />
+          <stringParameter name="applicationName" value =""/>
+          <stringParameter name="databasePassword" value=""/>
+          <stringParameter name="applicationPassword" value=""/>
+          <stringParameter name="databaseUser" value=""/>
+          <stringParameter name="databaseName" value=""/>
+          <stringParameter name="link" value=""/>
+          <stringParameter name="installationDirectory" value=""/>
+          <stringParameter name="site" value=""/>
+          <stringParameter name="url" value=""/>
+          <stringParameter name="httpsUrl" value=""/>
+        </parameterList>
+        <actionList>
+            <newPHPApp applicationId="${applicationId}"
+                applicationName="${applicationName}"
+                databasePassword="${databasePassword}"
+                applicationPassword="${applicationPassword}"
+                databaseUser="${databaseUser}"
+                databaseName="${databaseName}"
+                link="${link}"
+                installationDirectory="${installationDirectory}"
+                site="${site}"
+                url="${url}"
+                httpsUrl="${httpsUrl}" />
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="createApplicationDatabase">
+          <parameterList>
+            <stringParameter name="applicationId" default="${project.shortName}"/>
+            <stringParameter name="collation" default="utf8_general_ci"/>
+          </parameterList>
+          <actionList>
+            <createDirectory path="${app(${applicationId}).installdir}/scripts" />
+            <writeFile>
+                <path>${app(${applicationId}).installdir}/scripts/createdb.php</path>
+                <text>&lt;?php
+//createdb.php
+//
+//script used to create the necessary databases to run ${applicationId}
+//it won't overwrite any existent database
+
+if ($db=($GLOBALS["___mysqli_ston"] = mysqli_connect('${database_hostname}', 'root', '${database_root_password}', null, ${database_port}))) {
+    mysqli_query($GLOBALS["___mysqli_ston"], "create database ${app(${applicationId}).database_name} collate ${collation}");
+    mysqli_query($GLOBALS["___mysqli_ston"], "CREATE USER '${app(${applicationId}).database_user}'@'${database_client_hostname}' IDENTIFIED BY '${app(${applicationId}).database_password.password}';");
+    mysqli_query($GLOBALS["___mysqli_ston"], "CREATE USER '${app(${applicationId}).database_user}'@'127.0.0.1' IDENTIFIED BY '${app(${applicationId}).database_password.password}';");
+    mysqli_query($GLOBALS["___mysqli_ston"], "GRANT ALL PRIVILEGES ON ${app(${applicationId}).database_name}.* TO '${app(${applicationId}).database_user}'@'${database_client_hostname}';");
+    mysqli_query($GLOBALS["___mysqli_ston"], "GRANT ALL PRIVILEGES ON ${app(${applicationId}).database_name}.* TO '${app(${applicationId}).database_user}'@'127.0.0.1';");
+    mysqli_query($GLOBALS["___mysqli_ston"], "flush privileges");
+}
+else {
+    die("There was an error creating the database or setting the appropriate privileges");
+}
+?&gt;</text>
+                <ruleList>
+                    <fileTest path="${app(${applicationId}).installdir}/scripts/createdb.php" condition="not_exists" />
+                </ruleList>
+            </writeFile>
+            <runProgram progressText="Creating databases - this may take a minute" abortOnError="0">
+                <program>${php_binary_directory}/php</program>
+                <programArguments>-c "${php_configuration_directory}" "${app(${applicationId}).installdir.unix}/scripts/createdb.php"</programArguments>
+                <ruleList>
+                    <platformTest type="unix"/>
+                </ruleList>
+            </runProgram>
+            <runProgram progressText="Creating databases - this may take a minute" abortOnError="0">
+                <program>${php_binary_directory}\php</program>
+                <programArguments>-c "${php_configuration_directory}" "${app(${applicationId}).installdir.dos}\scripts\createdb.php"</programArguments>
+                <ruleList>
+                    <platformTest type="windows"/>
+                </ruleList>
+            </runProgram>
+            <deleteFile path="${app(${applicationId}).installdir}/scripts/createdb.php" abortOnError="0" />
+          </actionList>
+        </actionDefinition>
+
+
+
+    <actionDefinition name="baseRecursiveChown" >
+            <parameterList>
+                <stringParameter name="owner" value="" />
+                <stringParameter name="group" value="" />
+                <!-- Use quotes if the list components could have spaces -->
+                <stringParameter name="files" value="" />
+            </parameterList>
+            <actionList>
+                <foreach variables="file_path" values="${files}">
+                    <actionList>
+                        <actionGroup>
+                            <actionList>
+                                <runProgram>
+                                    <program>chown</program>
+                                    <programArguments>-R ${owner}:${group} ${file_path}</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${file_path}" />
+                                <userTest username="${owner}" logic="exists" />
+                                    </ruleList>
+                                </runProgram>
+                                <runProgram>
+                                    <program>chown</program>
+                                    <programArguments>-R root:${group} ${file_path}</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${file_path}" />
+                                        <userTest username="${owner}" logic="not_exists" />
+                                    </ruleList>
+                                </runProgram>
+                            </actionList>
+                            <ruleList>
+                                <stringTest text="${group}" type="not_empty" />
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <runProgram>
+                                    <program>chown</program>
+                                    <programArguments>-R ${owner} ${file_path}</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${file_path}" />
+                                        <userTest username="${owner}" logic="exists" />
+                                    </ruleList>
+                                </runProgram>
+                            </actionList>
+                            <ruleList>
+                                <stringTest text="${group}" type="empty" />
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <compareText text="${installer_root_install}" logic="equals" value="1"/>
+                    </ruleList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="baseRecursiveChmod" >
+            <parameterList>
+                <stringParameter name="path" value="" />
+                <stringParameter name="pattern" value="" />
+                <stringParameter name="permissions" value="" />
+                <stringParameter name="type" value=""/>
+            </parameterList>
+            <actionList>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="file_type" value=""/>
+                        <setInstallerVariable name="file_type" value=" -type d ">
+                            <ruleList>
+                                <compareText logic="equals" text="${type}" value="directories"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="file_type" value=" -type f ">
+                            <ruleList>
+                                <compareText logic="equals" text="${type}" value="files"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="file_name" value=""/>
+                        <setInstallerVariable name="file_name" value=" -name ${pattern} ">
+                            <ruleList>
+                                <compareText logic="does_not_equal" text="${pattern}" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+
+			<runProgram>
+			    <abortOnError>0</abortOnError>
+			    <showMessageOnError>0</showMessageOnError>
+			    <program>find</program>
+			    <programArguments>${path} ${file_name} ${file_type} -print0 | xargs -0 chmod ${permissions}</programArguments>
+			</runProgram>
+		    </actionList>
+		    <ruleList>
+			<platformTest type="unix" />
+		    </ruleList>
+		</actionGroup>
+	    </actionList>
+	</actionDefinition>
+
+        <actionDefinition name="baseServerSelection" >
+            <parameterList>
+                <stringParameter name="httpServer"  value="apache" />
+            </parameterList>
+            <actionList>
+                <componentSelection>
+                    <deselect>apache,apachephp,mysqlapache,apacheservice,apachewriteproperties,iis,iisphp,common,iisfastcgi</deselect>
+                </componentSelection>
+                <setInstallerVariable name="php_install_nts" value="1">
+                    <ruleList>
+                        <compareText text="${httpServer}" value="iis" logic="equals" />
+                    </ruleList>
+                </setInstallerVariable>
+                <componentSelection>
+                    <select>iis,iisfastcgi,iisphp</select>
+                    <ruleList>
+                        <compareText text="${httpServer}" value="iis" logic="equals" />
+                    </ruleList>
+                </componentSelection>
+                <componentSelection>
+                    <select>common,apache,apachephp,mysqlapache,apacheservice,apachewriteproperties</select>
+                    <ruleList>
+                        <compareText text="${httpServer}" value="apache" logic="equals" />
+                    </ruleList>
+                </componentSelection>
+                <setInstallerVariable name="php_install_nts" value="0">
+                    <ruleList>
+                        <compareText text="${httpServer}" value="apache" logic="equals" />
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="createSystemUser">
+            <parameterList>
+                <stringParameter name="username" value="" />
+                <stringParameter name="groupname" value="" />
+                <stringParameter name="createHome" value="0" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="groupname" value="${username}" >
+                    <ruleList>
+                        <stringTest text="${groupname}" type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+                <actionGroup>
+                    <actionList>
+                        <readFile>
+                            <path>/etc/group</path>
+                            <name>groupFile</name>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>1</showMessageOnError>
+                        </readFile>
+                        <addGroup>
+                            <groupname>${groupname}</groupname>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>1</showMessageOnError>
+                            <ruleList>
+                                <compareText text="${groupFile}" logic="does_not_contain" value="^${groupname}:"/>
+                            </ruleList>
+                        </addGroup>
+                        <addUser>
+                            <username>${username}</username>
+                            <groupname>${groupname}</groupname>
+                            <isSystemUser>1</isSystemUser>
+                            <createHome>${createHome}</createHome>
+                            <ruleList>
+                                <userTest username="${username}" logic="not_exists"/>
+                            </ruleList>
+                        </addUser>
+                    </actionList>
+                    <ruleList>
+                        <isTrue value="${installer_root_install}"/>
+                        <platformTest type="unix" />
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition>
+            <name>checkForSymlinkRecursively</name>
+            <parameterList>
+                <stringParameter name="directory"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariable name="${variable}" value="0" />
+                <while>
+                    <actionList>
+                        <setInstallerVariable name="${variable}" value="1">
+                            <ruleList>
+                                <fileTest condition="is_symlink" path="${directory}" />
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="previous_directory" value="${directory}" />
+                        <dirName path="${directory}" variable="directory" />
+                        <break>
+                            <ruleList>
+                                <compareText logic="equals" text="${directory}" value="${previous_directory}" />
+                            </ruleList>
+                        </break>
+                    </actionList>
+                </while>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition>
+            <name>checkDirectoryTraversableRecursively</name>
+            <parameterList>
+                <stringParameter name="directory"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariable name="${variable}" value="0" />
+                <while>
+                    <actionList>
+			<actionGroup>
+			    <actionList>
+				<getPermissions file="${directory}" variable="permissions" />
+				<setInstallerVariable name="${variable}" value="1">
+				    <ruleList>
+                                        <regExMatch>
+                                            <logic>does_not_match</logic>
+                                            <pattern>[1357]$</pattern>
+                                            <text>${permissions}</text>
+					</regExMatch>
+				    </ruleList>
+				</setInstallerVariable>
+			    </actionList>
+			    <ruleList>
+				<fileExists path="${directory}" />
+			    </ruleList>
+			</actionGroup>
+			<setInstallerVariable name="previous_directory" value="${directory}" />
+                        <dirName path="${directory}" variable="directory" />
+			<break>
+			    <ruleList>
+				<compareText logic="equals" text="${directory}" value="${previous_directory}" />
+			    </ruleList>
+			</break>
+		    </actionList>
+		</while>
+	    </actionList>
+	</actionDefinition>
+
+    <actionDefinition>
+        <name>addServerToMainScript</name>
+        <parameterList>
+            <stringParameter name="serverName"/>
+            <stringParameter name="scriptPath"/>
+            <stringParameter name="serviceInstallScriptName" default="serviceinstall.bat"/>
+            <stringParameter name="serviceRunScriptName" default="servicerun.bat"/>
+        </parameterList>
+        <actionList>
+            <stringModify text="${serverName}" variable="serverName_cap" logic="toupper" />
+            <substitute>
+                <files>${installdir}/ctlscript.sh</files>
+                <type>exact</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_SCRIPT</pattern>
+                        <value>#${serverName}_code_start
+${serverName_cap}_SCRIPT=${scriptPath}
+#${serverName}_code_end
+#RUBY_APPLICATION_SCRIPT</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_HELP</pattern>
+                        <value>#${serverName}_code_start
+        if test -x $${serverName_cap}_SCRIPT; then
+            echo "       $0 (start|stop|restart|status) ${serverName}"
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_HELP</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_START</pattern>
+                        <value>#${serverName}_code_start
+        elif [ "x$2" = "x${serverName}" ]; then
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT start
+            ${serverName_cap}_ERROR=$?
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_START</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_GENERIC_START</pattern>
+                        <value>#${serverName}_code_start
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT start
+            ${serverName_cap}_ERROR=$?
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_GENERIC_START</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_STOP</pattern>
+                        <value>#${serverName}_code_start
+        elif [ "x$2" = "x${serverName}" ]; then
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT stop
+            ${serverName_cap}_ERROR=$?
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_STOP</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_GENERIC_STOP</pattern>
+                        <value>#${serverName}_code_start
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT stop
+            ${serverName_cap}_ERROR=$?
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_GENERIC_STOP</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_RESTART</pattern>
+                        <value>#${serverName}_code_start
+        elif [ "x$2" = "x${serverName}" ]; then
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT stop
+            sleep 2
+            $${serverName_cap}_SCRIPT start
+            ${serverName_cap}_ERROR=$?
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_RESTART</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_STATUS</pattern>
+                        <value>#${serverName}_code_start
+        elif [ "x$2" = "x${serverName}" ]; then
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT status
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_STATUS</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_GENERIC_STATUS</pattern>
+                        <value>#${serverName}_code_start
+        if test -x $${serverName_cap}_SCRIPT; then
+            $${serverName_cap}_SCRIPT status
+        fi
+        #${serverName}_code_end
+        #RUBY_APPLICATION_GENERIC_STATUS</value>
+                    </substitution>
+                    <substitution>
+                        <pattern>#RUBY_APPLICATION_ERROR</pattern>
+                        <value>#${serverName}_code_start
+    if [ "x$${serverName_cap}_ERROR" != "x" ] &amp;&amp; [ $${serverName_cap}_ERROR -gt 0 ]; then
+        ERROR=$${serverName_cap}_ERROR
+    fi
+    #${serverName}_code_end
+    #RUBY_APPLICATION_ERROR</value>
+                    </substitution>
+                </substitutionList>
+                <ruleList>
+                    <platformTest type="unix" />
+                </ruleList>
+            </substitute>
+            <actionGroup>
+                <actionList>
+                    <dirName>
+                        <path>${scriptPath}</path>
+                        <variable>scriptPath</variable>
+                        <ruleList>
+                            <fileTest condition="is_not_directory" path="${scriptPath}"/>
+                        </ruleList>
+                    </dirName>
+                    <substitute>
+                        <files>${installdir}/servicerun.bat;${installdir}/serviceinstall.bat</files>
+                        <type>exact</type>
+                        <substitutionList>
+                            <substitution>
+                                <pattern>rem RUBY_APPLICATION_INSTALL</pattern>
+                                <value>rem ${serverName}_code_start
+if exist ${scriptPath.dos}\${serviceInstallScriptName} (start /MIN ${scriptPath.dos}\${serviceInstallScriptName} INSTALL)
+rem ${serverName}_code_end
+rem RUBY_APPLICATION_INSTALL</value>
+                            </substitution>
+                            <substitution>
+                                <pattern>rem RUBY_APPLICATION_REMOVE</pattern>
+                                <value>rem ${serverName}_code_start
+if exist ${scriptPath.dos}\${serviceInstallScriptName} (start /MIN ${scriptPath.dos}\${serviceInstallScriptName})
+rem ${serverName}_code_end
+rem RUBY_APPLICATION_REMOVE</value>
+                            </substitution>
+                            <substitution>
+                                <pattern>rem RUBY_APPLICATION_START</pattern>
+                                <value>rem ${serverName}_code_start
+if exist ${scriptPath.dos}\${serviceRunScriptName} (start /MIN ${scriptPath.dos}\${serviceRunScriptName} START)
+rem ${serverName}_code_end
+rem RUBY_APPLICATION_START</value>
+                            </substitution>
+                            <substitution>
+                                <pattern>rem RUBY_APPLICATION_STOP</pattern>
+                                <value>rem ${serverName}_code_start
+if exist ${scriptPath.dos}\${serviceRunScriptName} (start /MIN ${scriptPath.dos}\${serviceRunScriptName} STOP)
+rem ${serverName}_code_end
+rem RUBY_APPLICATION_STOP</value>
+                            </substitution>
+                        </substitutionList>
+                    </substitute>
+                </actionList>
+                <ruleList>
+                    <platformTest type="windows"/>
+                </ruleList>
+            </actionGroup>
+        </actionList>
+    </actionDefinition>
+
+   	<actionDefinition>
+        <name>removeServerFromMainScript</name>
+        <parameterList>
+            <stringParameter name="serverName"/>
+        </parameterList>
+        <actionList>
+            <actionGroup>
+                <actionList>
+                    <readFile path="${installdir}/ctlscript.sh" name="main_script"/>
+                    <foreach values="1 2 3 4 5 6 7 8 9 10 11 12" variables="iteration" >
+                        <actionList>
+                            <setInstallerVariableFromRegEx text="${main_script}" name="main_script" pattern="^(.*)\#${serverName}_code_start.*\#${serverName}_code_end\s*\n(.*)$" substitution="\1\2" />
+                        </actionList>
+                    </foreach>
+                    <writeFile path="${installdir}/ctlscript.sh" text="${main_script}"/>
+                </actionList>
+                <ruleList>
+                    <platformTest type="unix"/>
+                    <fileExists path="${installdir}/ctlscript.sh"/>
+                </ruleList>
+            </actionGroup>
+            <actionGroup>
+                <actionList>
+                    <readFile path="${installdir}/serviceinstall.bat" name="install_script"/>
+                    <readFile path="${installdir}/servicerun.bat" name="run_script"/>
+                    <setInstallerVariableFromRegEx text="${install_script}" name="install_script" pattern="^(.*)rem ${product_shortname}_code_start.*rem ${product_shortname}_code_end\s*\n(.*)$" substitution="\1\2"/>
+                    <setInstallerVariableFromRegEx text="${install_script}" name="install_script" pattern="^(.*)rem ${product_shortname}_code_start.*rem ${product_shortname}_code_end\s*\n(.*)$" substitution="\1\2"/>
+                    <setInstallerVariableFromRegEx text="${run_script}" name="run_script" pattern="^(.*)rem ${product_shortname}_code_start.*rem ${product_shortname}_code_end\s*\n(.*)$" substitution="\1\2"/>
+                    <setInstallerVariableFromRegEx text="${run_script}" name="run_script" pattern="^(.*)rem ${product_shortname}_code_start.*rem ${product_shortname}_code_end\s*\n(.*)$" substitution="\1\2"/>
+                    <writeFile path="${installdir}/serviceinstall.bat" text="${install_script}"/>
+                    <writeFile path="${installdir}/servicerun.bat" text="${run_script}"/>
+                </actionList>
+                <ruleList>
+                    <platformTest type="windows"/>
+                    <fileTest path="${installdir}/serviceinstall.bat" condition="exists"/>
+                    <fileTest path="${installdir}/servicerun.bat" condition="exists"/>
+                </ruleList>
+            </actionGroup>
+
+        </actionList>
+	</actionDefinition>
+
+	<actionDefinition>
+	    <name>addLogrotate</name>
+	    <parameterList>
+		<stringParameter name="name" default=""/>
+		<stringParameter name="logs" default=""/>
+		<stringParameter name="schedule" default="weekly"/>
+		<stringParameter name="rotate" default="150"/>
+		<stringParameter name="additionalOptions" default=""/>
+		<stringParameter name="text" default=""/>
+		<stringParameter name="logrotateDirectory" default="${installdir}/config/logrotate/logrotate.d" />
+	    </parameterList>
+	    <actionList>
+		<actionGroup>
+		    <actionList>
+			<writeFile>
+			    <path>${logrotateDirectory}/${name}.conf</path>
+			    <text>${logs} {
+  ${schedule}
+  rotate ${rotate}
+  dateext
+  compress
+  copytruncate
+  missingok
+  ${additionalOptions}
+}
+</text>
+                                 <ruleList>
+				     <stringTest text="${text}" type="empty" />
+				     <platformTest type="linux" />
+				 </ruleList>
+			</writeFile>
+			<writeFile>
+			    <path>${logrotate_directory}/${name}.conf</path>
+			    <text>${text}</text>
+			    <ruleList>
+				<stringTest text="${text}" type="not_empty" />
+				<platformTest type="linux" />
+			    </ruleList>
+			</writeFile>
+		    </actionList>
+		    <ruleList>
+                        <fileTest path="${logrotateDirectory}" condition="exists" />
+		    </ruleList>
+		</actionGroup>
+	    </actionList>
+	</actionDefinition>
+	<actionDefinition>
+	    <name>addMonit</name>
+	    <parameterList>
+		<stringParameter name="name" default=""/>
+		<stringParameter name="processName" default=""/>
+		<stringParameter name="dirName" default="" />
+		<stringParameter name="pidFile" default=""/>
+		<stringParameter name="startCommand" default=""/>
+		<stringParameter name="stopCommand" default=""/>
+		<stringParameter name="additionalOptions" default=""/>
+		<stringParameter name="monitDirectory" default="${installdir}/config/monit/conf.d" />
+	    </parameterList>
+	    <actionList>
+		<actionGroup>
+		    <actionList>
+			<setInstallerVariable name="processName" value="${name}" >
+			    <ruleList>
+				<stringTest text="${processName}" type="empty" />
+			    </ruleList>
+			</setInstallerVariable>
+			<setInstallerVariable name="dirName" value="${name}" >
+			    <ruleList>
+				<stringTest text="${dirName}" type="empty" />
+			    </ruleList>
+			</setInstallerVariable>
+			<setInstallerVariable name="startCommand" value="${installdir}/${dirName}/scripts/ctl.sh start" >
+			    <ruleList>
+				<stringTest text="${startCommand}" type="empty" />
+			    </ruleList>
+			</setInstallerVariable>
+			<setInstallerVariable name="stopCommand" value="${installdir}/${dirName}/scripts/ctl.sh stop" >
+			    <ruleList>
+				<stringTest text="${stopCommand}" type="empty" />
+			    </ruleList>
+			</setInstallerVariable>
+			<writeFile>
+			    <path>${monitDirectory}/${name}.conf</path>
+			    <text>check process ${processName}
+  with pidfile "${pidFile}"
+  start program = "${startCommand}" with timeout 90 seconds
+  stop program = "${stopCommand}" with timeout 90 seconds
+  ${additionalOptions}
+</text>
+                                <ruleList>
+				    <fileTest path="${monitDirectory}/${name}.conf" condition="not_exists" />
+				    <platformTest type="linux" />
+				</ruleList>
+			</writeFile>
+		    </actionList>
+		    <ruleList>
+                        <fileTest path="${monitDirectory}" condition="exists" />
+		    </ruleList>
+		</actionGroup>
+	    </actionList>
+	</actionDefinition>
+	<actionDefinition>
+	    <name>launchManager</name>
+	    <parameterList>
+	    </parameterList>
+	    <actionList>
+		<actionGroup>
+		    <actionList>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <program>${installdir}/manager-osx.app/Contents/MacOS/installbuilder.sh</program>
+                            <programArguments>--background &amp;</programArguments>
+                            <ruleList>
+                                <platformTest type="osx" />
+                            </ruleList>
+                        </runProgram>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <program>${installdir}/manager-${platform_name}.run</program>
+                            <programArguments>--background &amp;</programArguments>
+                            <ruleList>
+                                <platformTest type="linux" />
+                            </ruleList>
+                        </runProgram>
+                        <runProgram>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <program>explorer</program>
+                            <programArguments>"${installdir}\manager-windows.exe" 2&gt; NUL &gt; NUL &amp;</programArguments>
+                            <ruleList>
+                                <platformTest type="windows" />
+                            </ruleList>
+                        </runProgram>
+        	    </actionList>
+                    <ruleList>
+                        <compareText text="${installer_ui}" logic="equals" value="gui"/>
+                    </ruleList>
+		</actionGroup>
+	    </actionList>
+	</actionDefinition>
+    <actionDefinition name="getUserAndGroup">
+        <parameterList>
+            <stringParameter name="user" value=""/>
+            <stringParameter name="group" value=""/>
+            <stringParameter name="file" value=""/>
+        </parameterList>
+        <actionList>
+            <globalVariables names="${user} ${group}"/>
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariableFromScriptOutput>
+                        <name>${user}</name>
+                        <exec>stat</exec>
+                        <execArgs>-c %U ${file}</execArgs>
+                    </setInstallerVariableFromScriptOutput>
+                    <setInstallerVariableFromScriptOutput>
+                        <name>${group}</name>
+                        <exec>stat</exec>
+                        <execArgs>-c %G ${file}</execArgs>
+                    </setInstallerVariableFromScriptOutput>
+                </actionList>
+                <ruleList>
+                    <platformTest type="linux"/>
+                </ruleList>
+            </actionGroup>
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariableFromScriptOutput>
+                        <name>${user}</name>
+                        <exec>ls</exec>
+                        <execArgs>-l ${file} | awk '{print $3}'</execArgs>
+                    </setInstallerVariableFromScriptOutput>
+                    <setInstallerVariableFromScriptOutput>
+                        <name>${group}</name>
+                        <exec>ls</exec>
+                        <execArgs>-l ${file} | awk '{print $4}'</execArgs>
+                    </setInstallerVariableFromScriptOutput>
+                </actionList>
+                <ruleList>
+                    <platformTest type="osx"/>
+                </ruleList>
+            </actionGroup>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition name="checkRubyVersion">
+        <parameterList>
+            <stringParameter name="rubyVersion" value="2.1.0"/>
+        </parameterList>
+        <actionList>
+            <throwError text="You are trying to install a Ruby ${rubyVersion} based application in a Bitnami stack that is not supported. Please download and install Ruby Stack ${rubyVersion} version at bitnami.com site" >
+                <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                <ruleList>
+                    <fileTest path="${installdir}/ruby/lib/ruby/gems/${rubyVersion}" condition="not_exists" />
+                    <ruleGroup>
+                        <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                        <ruleList>
+                            <compareText text="${base_stack_name}" logic="contains" value="Mega" />
+                            <compareText text="${base_stack_name}" logic="contains" value="Ruby" />
+                        </ruleList>
+                    </ruleGroup>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition name="crontab">
+        <parameterList>
+            <stringParameter name="action" default="add"/>
+            <stringParameter name="crontabUser" default="${system_username}"/>
+            <stringParameter name="schedule" default="* * * * *"/>
+            <stringParameter name="job" default=""/>
+            <stringParameter name="jobUser" default="${system_username}"/>
+            <stringParameter name="id" default=""/>
+            <stringParameter name="logFile" default=""/>
+            <booleanParameter name="installAsUser" default="0"/>
+        </parameterList>
+        <actionList>
+            <!-- Add logFile if it is set -->
+            <setInstallerVariable name="job" value="${job} 2>&amp;1 >> ${logFile}">
+                <ruleList>
+                    <stringTest text="${logFile}" type="not_empty"/>
+                </ruleList>
+            </setInstallerVariable>
+            <!-- Only add/remove cron job if cron module (base-crontab.xml) is enabled -->
+            <if>
+                <conditionRuleList>
+                    <isTrue value="${crontab_install}"/>
+                </conditionRuleList>
+                <actionList>
+                    <setInstallerVariable name="tmpCrontabFile" value="/tmp/tmpTask" />
+                    <setInstallerVariable name="runCommandAsUser" value=""/>
+                    <setInstallerVariable name="crontabTask" value="${schedule} su ${jobUser} -s /bin/sh -c &quot;${job}&quot; #${id}"/>
+                    <actionGroup>
+                        <actionList>
+                            <setInstallerVariable name="crontabTask" value="${schedule} ${job} #${id}"/>
+                            <setInstallerVariable name="runCommandAsUser" value="-u ${jobUser}"/>
+                        </actionList>
+                        <ruleList>
+                            <isTrue value="${installAsUser}"/>
+                        </ruleList>
+                    </actionGroup>
+
+                    <!-- Check if exist current crontab -->
+
+                    <!-- Get current crontab tasks -->
+                    <setInstallerVariableFromScriptOutput>
+                        <exec>crontab</exec>
+                        <execArgs>-l ${runCommandAsUser}</execArgs>
+                        <name>currentTasks</name>
+                        <abortOnError>0</abortOnError>
+                        <showMessageOnError>0</showMessageOnError>
+                    </setInstallerVariableFromScriptOutput>
+
+                    <!-- If exit code is 0, means that already exist crontab tasks -->
+                    <if>
+                        <conditionRuleList>
+                            <compareText text="${program_exit_code}" logic="equals" value="0"/>
+                        </conditionRuleList>
+                        <actionList>
+                            <!-- Write temp file with current task, to work with it -->
+                            <writeFile>
+                                <path>${tmpCrontabFile}</path>
+                                <text>${currentTasks}</text>
+                            </writeFile>
+
+                            <!-- Delete existing job -->
+                            <substitute>
+                                <files>${tmpCrontabFile}</files>
+                                <type>regexp</type>
+                                <substitutionList>
+                                    <substitution pattern="^.*#${id}$" value="" />
+                                </substitutionList>
+                            </substitute>
+
+                            <!-- Add the new one -->
+                            <addTextToFile>
+                                <file>${tmpCrontabFile}</file>
+                                <text>&#xA;${crontabTask}</text><!-- Don't remove newline -->
+                                <ruleList>
+                                    <compareText text="${action}" logic="equals" value="add"/>
+                                </ruleList>
+                            </addTextToFile>
+
+                            <!-- Add newline at the end of the file -->
+                            <addTextToFile>
+                                <file>${tmpCrontabFile}</file>
+                                <text>&#xA;</text><!-- Don't remove newline -->
+                            </addTextToFile>
+                        </actionList>
+                        <elseActionList>
+                            <!-- If doesn't exist tasks and we want to add a new one, just add an entry -->
+
+                            <!-- Write temp file with the new task -->
+                            <writeFile>
+                                <path>${tmpCrontabFile}</path>
+                                <text>${crontabTask}&#xA;</text><!-- Don't remove newline -->
+                                <ruleList>
+                                    <compareText text="${action}" logic="equals" value="add"/>
+                                </ruleList>
+                            </writeFile>
+                        </elseActionList>
+                    </if>
+
+                    <!-- Add/update task to crontab -->
+
+                    <!-- Red-hat doesn't detect if the same user that run command is the same in -u parameter -->
+                    <setInstallerVariable name="asRootUser" value="" />
+                    <setInstallerVariable name="asRootUser" value="-u ${crontabUser}" >
+                        <ruleList>
+                            <isTrue value="${installer_is_root_install}"/>
+                        </ruleList>
+                    </setInstallerVariable>
+                    <setInstallerVariable name="asRootUser" value="${runCommandAsUser}" >
+                        <ruleList>
+                            <isTrue value="${installAsUser}"/>
+                        </ruleList>
+                    </setInstallerVariable>
+
+                    <runProgram>
+                        <program>crontab</program>
+                        <programArguments>${asRootUser} ${tmpCrontabFile}</programArguments>
+                        <abortOnError>0</abortOnError>
+                        <showMessageOnError>0</showMessageOnError>
+                    </runProgram>
+
+                    <!-- Delete temporary file with task -->
+                    <deleteFile path="${tmpCrontabFile}">
+                        <abortOnError>0</abortOnError>
+                        <showMessageOnError>0</showMessageOnError>
+                    </deleteFile>
+                </actionList>
+              </if>
+
+             <!-- Write/remove cron job in config directory -->
+             <runProgram>
+                 <program>mkdir</program>
+                 <programArguments>-p ${installdir}/config/crontab</programArguments>
+                 <abortOnError>0</abortOnError>
+                 <showMessageOnError>0</showMessageOnError>
+             </runProgram>
+             <writeFile>
+                 <path>${installdir}/config/crontab/${id}.cron</path>
+                 <text>${schedule} ${jobUser} ${job} #${id}</text>
+                 <abortOnError>0</abortOnError>
+                 <showMessageOnError>0</showMessageOnError>
+                 <ruleList>
+                     <compareText text="${action}" logic="equals" value="add"/>
+                 </ruleList>
+             </writeFile>
+             <actionGroup>
+                 <actionList>
+                     <deleteFile>
+                         <path>${installdir}/config/crontab/${id}.cron</path>
+                         <abortOnError>0</abortOnError>
+                         <showMessageOnError>0</showMessageOnError>
+                         <ruleList>
+                             <compareText text="${action}" logic="equals" value="remove"/>
+                         </ruleList>
+                     </deleteFile>
+                     <deleteFile>
+                         <path>${installdir}/config/crontab</path>
+                         <ruleList>
+                             <fileTest path="${installdir}/config/crontab" condition="is_empty"/>
+                         </ruleList>
+                     </deleteFile>
+                     <deleteFile>
+                         <path>${installdir}/config</path>
+                         <ruleList>
+                             <fileTest path="${installdir}/config" condition="is_empty"/>
+                         </ruleList>
+                     </deleteFile>
+                 </actionList>
+             </actionGroup>
+         </actionList>
+     </actionDefinition>
+
+    <actionDefinition name="addUniqueScheduleTask">
+        <parameterList>
+            <stringParameter name="action" default="add"/>
+            <stringParameter name="schedule" default="MINUTE"/>
+            <stringParameter name="freq" default="5"/>
+            <stringParameter name="command" default=""/>
+            <stringParameter name="name" default="" allowEmptyValue="0" />
+            <stringParameter name="id" default="" ask="0" />
+        </parameterList>
+        <actionList>
+            <actionGroup>
+                <actionList>
+                    <actionGroup>
+                        <actionList>
+                            <!-- Cheking if schedule id already exists -->
+                            <setInstallerVariableFromScriptOutput>
+                                <exec>schtasks</exec>
+                                <execArgs>/Query /TN ${name}</execArgs>
+                                <name>found</name>
+                                <abortOnError>0</abortOnError>
+                                <showMessageOnError>0</showMessageOnError>
+                            </setInstallerVariableFromScriptOutput>
+                            <if>
+                                <conditionRuleList>
+                                    <compareText text="${found}" logic="equals" value=""/>
+                                </conditionRuleList>
+                                <actionList>
+                                    <setInstallerVariable name="${id}" value="${name}" persist="1"/>
+                                </actionList>
+                                <elseActionList>
+                                    <setInstallerVariable>
+                                        <name>count</name>
+                                        <value>0</value>
+                                    </setInstallerVariable>
+                                    <while>
+                                        <conditionRuleList>
+                                            <compareText text="${found}" logic="does_not_equal" value=""/>
+                                        </conditionRuleList>
+                                        <actionList>
+                                            <mathExpression>
+                                                <text>${count}+1</text>
+                                                <variable>count</variable>
+                                            </mathExpression>
+                                            <setInstallerVariableFromScriptOutput>
+                                                <exec>schtasks</exec>
+                                                <execArgs>/Query /TN ${name}-${count}</execArgs>
+                                                <name>found</name>
+                                                <abortOnError>0</abortOnError>
+                                                <showMessageOnError>0</showMessageOnError>
+                                            </setInstallerVariableFromScriptOutput>
+                                        </actionList>
+                                    </while>
+                                    <setInstallerVariable name="${id}" value="${name}-${count}" persist="1"/>
+                                </elseActionList>
+                            </if>
+                            <runProgram>
+                                <program>schtasks</program>
+                                <programArguments>/Create /SC ${schedule} /MO ${freq} /TN ${${id}} /F /TR "${command}"</programArguments>
+                            </runProgram>
+                            <globalVariables names="${id}"/>
+                        </actionList>
+                        <ruleList>
+                            <compareText text="${action}" logic="equals" value="add"/>
+                        </ruleList>
+                    </actionGroup>
+                    <runProgram>
+                        <program>schtasks</program>
+                        <programArguments>/Delete /F /TN ${id}</programArguments>
+                        <ruleList>
+                            <compareText text="${action}" logic="equals" value="remove"/>
+                        </ruleList>
+                    </runProgram>
+                </actionList>
+                <ruleList>
+                    <platformTest type="windows"/>
+                </ruleList>
+            </actionGroup>
+        </actionList>
+    </actionDefinition>
+
+    <actionDefinition name="baseAddOsxService">
+        <parameterList>
+            <stringParameter name="serviceName" allowEmptyValue="0"/>
+            <stringParameter name="scriptPath" value="" default=""/>
+            <stringParameter name="scriptArguments" value="" default=""/>
+            <stringParameter name="userName" value="" default=""/>
+            <stringParameter name="userGroup" value="" default=""/>
+        </parameterList>
+        <actionList>
+            <actionGroup>
+                <actionList>
+                    <createDirectory path="/Library/LaunchDaemons" />
+                    <changeOwnerAndGroup group="wheel" owner="root" files="/Library/LaunchDaemons" />
+                    <changePermissions permissions="755" files="/Library/LaunchDaemons" />
+                </actionList>
+                <ruleList>
+                    <fileTest path="/Library/LaunchDaemons" condition="not_exists" />
+                </ruleList>
+            </actionGroup>
+
+            <setInstallerVariable name="plistScriptArguments" value=""/>
+            <setInstallerVariable name="plistUserName" value=""/>
+            <setInstallerVariable name="plistUserGroup" value=""/>
+
+            <stringModify text="${scriptArguments}" logic="trim" variable="scriptArguments"/>
+            <stringModify text="${userName}" logic="trim" variable="userName"/>
+            <stringModify text="${userGroup}" logic="trim" variable="userGroup"/>
+
+            <setInstallerVariable name="plistUserName" value="&lt;key&gt;UserName&lt;/key&gt;&#10;&lt;string&gt;${userName}&lt;/string&gt;">
+                <ruleList>
+                    <compareText text="${userName}" logic="does_not_equal" value=""/>
+                </ruleList>
+            </setInstallerVariable>
+            <setInstallerVariable name="plistUserGroup" value="&lt;key&gt;UserGroup&lt;/key&gt;&#10;&lt;string&gt;${userGroup}&lt;/string&gt;">
+                <ruleList>
+                    <compareText text="${userGroup}" logic="does_not_equal" value=""/>
+                </ruleList>
+            </setInstallerVariable>
+
+            <foreach variables="arg">
+                <values>${scriptArguments}</values>
+                <actionList>
+                    <setInstallerVariable name="plistScriptArguments" value="&lt;string&gt;${arg}&lt;/string&gt;&#10;${plistScriptArguments}"/>
+                </actionList>
+            </foreach>
+
+            <setInstallerVariable name="plistFileContent">
+                <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+        &lt;key&gt;Label&lt;/key&gt;
+        &lt;string&gt;${serviceName}&lt;/string&gt;
+        &lt;key&gt;ProgramArguments&lt;/key&gt;
+        &lt;array&gt;
+                &lt;string&gt;${scriptPath}&lt;/string&gt;
+                ${plistScriptArguments}
+        &lt;/array&gt;
+	&lt;key&gt;RunAtLoad&lt;/key&gt;
+        &lt;true/&gt;
+        ${plistUserName}
+        ${plistUserGroup}
+&lt;/dict&gt;
+&lt;/plist&gt;
+                </value>
+            </setInstallerVariable>
+
+            <writeFile>
+                <path>/Library/LaunchDaemons/${serviceName}.plist</path>
+                <text>${plistFileContent}</text>
+            </writeFile>
+        </actionList>
+    </actionDefinition>
+
+    <actionDefinition name="baseRemoveOsxService">
+        <parameterList>
+            <stringParameter name="serviceName" allowEmptyValue="0"/>
+        </parameterList>
+        <actionList>
+            <runProgram showMessageOnError="0" abortOnError="0">
+                <program>launchctl</program>
+                <programArguments>unload /Library/LaunchDaemons/${serviceName}.plist</programArguments>
+            </runProgram>
+            <deleteFile path="/Library/LaunchDaemons/${serviceName}.plist"/>
+        </actionList>
+    </actionDefinition>
+
+    <actionDefinition name="baseCheckPort" >
+        <parameterList>
+            <stringParameter name="serverName" allowEmptyValue="0"/>
+            <stringParameter name="serverType" value="bundled" default="bundled"/>
+            <booleanParameter name="showProcessBinding" value="1" default="1"/>
+            <!-- Allowed values: bundled, existing -->
+            <stringParameter name="serverPort" allowEmptyValue="0"/>
+            <stringParameter name="serverIp" value="" default=""/>
+            <booleanParameter name="serverRequiredRunning" value="" default=""/>
+            <stringParameter name="reservedPorts" value="" default=""/>
+        </parameterList>
+        <actionList>
+            <throwError>
+                <text>Please choose a correct value number for the ports (only digits are allowed)</text>
+                <ruleList>
+                    <stringTest text="${serverPort}" type="not_digit" />
+                </ruleList>
+            </throwError>
+            <setInstallerVariable name="process_binding_port" value=""/>
+            <getProcessUsingPort>
+                <port>${serverPort}</port>
+                <variable>process_binding_port</variable>
+            </getProcessUsingPort>
+            <setInstallerVariable name="process_binding_message" value=""/>
+            <setInstallerVariable name="process_binding_message" value="${tr('This port is already in use by the &quot;${process_binding_port}&quot; process. ')}">
+                <ruleList>
+                    <compareText text="${serverIp}" logic="equals" value=""/>
+                    <compareText text="${process_binding_port}" logic="does_not_equal" value=""/>
+                    <isTrue value="${showProcessBinding}" />
+                </ruleList>
+            </setInstallerVariable>
+
+            <throwError>
+                <text>Unable to bind to port ${serverPort}. ${process_binding_message}You can stop the running process or select a different port.</text>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                    <ruleGroup>
+                        <ruleList>
+                            <compareText text="${serverIp}" logic="equals" value=""/>
+                            <portTest port="${serverPort}" condition="cannot_bind"/>
+                            <compareText text="${serverType}" logic="equals" value="bundled"/>
+                        </ruleList>
+                    </ruleGroup>
+                    <ruleGroup>
+                        <ruleList>
+                            <compareText text="${serverIp}" logic="does_not_equal" value=""/>
+                            <portTest condition="cannot_bind" port="${serverPort}" ip="${serverIp}" />
+                            <compareText text="${serverType}" logic="equals" value="bundled"/>
+                        </ruleList>
+                    </ruleGroup>
+                    <compareText text="${reservedPorts}" logic="contains" value=" ${serverPort} "/>
+                </ruleList>
+            </throwError>
+            <throwError>
+                <text>Unable to find a server running at given port number. Please select another one.</text>
+                <ruleList>
+                    <portTest port="${serverPort}" condition="can_bind"/>
+                    <compareText text="${serverType}" logic="equals" value="existing"/>
+                    <isTrue value="${serverRequiredRunning}" />
+                </ruleList>
+            </throwError>
+            <throwError>
+                <text>Unable to bind to the server port. Please make sure that ${serverName} is not running.</text>
+                <ruleList>
+                    <portTest port="${serverPort}" condition="cannot_bind"/>
+                    <compareText text="${serverType}" logic="equals" value="existing"/>
+                    <isFalse value="${serverRequiredRunning}" />
+                </ruleList>
+            </throwError>
+
+        </actionList>
+    </actionDefinition>
+
+    <!--Make a substitution using a regular expression that affects multiple lines-->
+    <!--This won't evaluate $ {} that the text may contain (outside of the matched text)-->
+    <actionDefinition name="substituteWithRegExSafe">
+        <parameterList>
+            <stringParameter name="pattern" allowEmptyValue="0"/>
+            <stringParameter name="substitution" value="" default=""/>
+            <stringParameter name="file" allowEmptyValue="0"/>
+        </parameterList>
+        <actionList>
+            <readFile>
+                <name>file_content</name>
+                <path>${file}</path>
+            </readFile>
+            <setInstallerVariableFromRegEx>
+                <name>text_to_substitute</name>
+                <pattern>^.*?(${pattern}).*$</pattern>
+                <substitution>\1</substitution>
+                <text>${file_content}</text>
+            </setInstallerVariableFromRegEx>
+            <substitute>
+                <files>${file}</files>
+                <type>exact</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>${text_to_substitute}</pattern>
+                        <value>${substitution}</value>
+                    </substitution>
+                </substitutionList>
+            </substitute>
+            <substitute>
+                <files>${file}</files>
+                <type>exact</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>@@BITNAMI_MATCHED_TEXT@@</pattern>
+                        <value>${text_to_substitute}</value>
+                    </substitution>
+                </substitutionList>
+            </substitute>
+        </actionList>
+    </actionDefinition>
+
+    <!--Blocks the installation until a string is present in one of the files of a list.
+        UNIX only, for Windows check T28828-->
+    <actionDefinition name="waitForTextInFile">
+        <parameterList>
+            <stringParameter name="timeInterval" default="3000" allowEmptyValue="0" />
+            <stringParameter name="timeout" default="300000" allowEmptyValue="0" />
+            <stringParameter name="text" allowEmptyValue="0"/>
+            <!--Use doublequotes for each directory to enable support for path with directories-->
+            <stringParameter name="files" allowEmptyValue="0" />
+        </parameterList>
+        <actionList>
+            <setInstallerVariable name="matched" value="0"/>
+            <setInstallerVariable name="loop_counter" value="0" />
+            <while>
+                <actionList>
+                    <wait ms="${timeInterval}"/>
+                    <mathExpression>
+                        <text>${loop_counter}+${timeInterval}</text>
+                        <variable>loop_counter</variable>
+                    </mathExpression>
+                    <foreach values="${files}" variables="file">
+                        <actionList>
+                            <actionGroup>
+                                <actionList>
+                                    <actionGroup>
+                                        <actionList>
+                                            <setInstallerVariable name="matched" value="1"/>
+                                        </actionList>
+                                        <ruleList>
+                                            <fileContentTest logic="contains" path="${file}" text="${text}"/>
+                                        </ruleList>
+                                    </actionGroup>
+                                </actionList>
+                                <ruleList>
+                                    <fileTest condition="exists" path="${file}"/>
+                                </ruleList>
+                            </actionGroup>
+                        </actionList>
+                    </foreach>
+                </actionList>
+                <conditionRuleList>
+                    <isFalse value="${matched}"/>
+                    <compareValues value1="${loop_counter}" logic="less" value2="${timeout}" />
+                </conditionRuleList>
+            </while>
+            <throwError>
+                <text>Timeout waiting for text "${text}" in files</text>
+                <ruleList>
+                    <isFalse value="${matched}"/>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition name="generateUUID">
+        <parameterList>
+            <stringParameter name="variable" />
+        </parameterList>
+        <actionList>
+            <generateRandomValue variable="random_value" length="32" />
+            <setInstallerVariableFromRegEx text="${random_value}" substitution="\1-\2-\3-\4-\5" pattern="^(.{8})(.{4})(.{4})(.{4})(.{12}).*$" name="uuid"/>
+            <throwError>
+                <text>Generated UUID does not have the right length</text>
+                <ruleList>
+                    <compareTextLength>
+                        <length>36</length>
+                        <logic>does_not_equal</logic>
+                        <text>${uuid}</text>
+                    </compareTextLength>
+                </ruleList>
+            </throwError>
+            <setInstallerVariable name="${variable}" value="${uuid}" />
+            <globalVariables names="${variable}" />
+        </actionList>
+    </actionDefinition>
+
+    <!--For the moment InstallBuilder doesn't support uppercase entities when decoding URL-->
+    <actionDefinition name="bitnamiUrlDecode">
+        <parameterList>
+            <stringParameter name="variable" allowEmptyValue="0"/>
+            <stringParameter name="text" allowEmptyValue="0"/>
+        </parameterList>
+        <actionList>
+            <setInstallerVariable name="counter" value="0"/>
+            <setInstallerVariable name="max_loop_counter" value="30"/>
+            <while>
+                <actionList>
+                    <globalVariables names="${variable}"/>
+                    <setInstallerVariableFromRegEx>
+                        <name>match</name>
+                        <pattern>^.*(%[A-F0-9]{2}).*$</pattern>
+                        <substitution>\1</substitution>
+                        <text>${text}</text>
+                    </setInstallerVariableFromRegEx>
+                    <stringModify logic="tolower" text="${match}" variable="lowercase_match"/>
+                    <urlDecode>
+                        <variable>lowercase_match_decoded</variable>
+                        <text>${lowercase_match}</text>
+                    </urlDecode>
+                    <setInstallerVariableFromRegEx>
+                        <name>text</name>
+                        <pattern>(.*)${match}(.*)</pattern>
+                        <substitution>\1${lowercase_match_decoded}\2</substitution>
+                        <text>${text}</text>
+                    </setInstallerVariableFromRegEx>
+                    <mathExpression text="${counter}+1" variable="counter" />
+                </actionList>
+                <conditionRuleList>
+                    <compareValues>
+                        <value1>${counter}</value1>
+                        <logic>less</logic>
+                        <value2>${max_loop_counter}</value2>
+                    </compareValues>
+                    <regExMatch>
+                        <logic>matches</logic>
+                        <pattern>%[A-F0-9]{2}</pattern>
+                        <text>${text}</text>
+                    </regExMatch>
+                </conditionRuleList>
+            </while>
+            <throwError>
+                <text>URL decoding too complex</text>
+                <ruleList>
+                    <regExMatch>
+                        <logic>matches</logic>
+                        <pattern>%[A-F0-9]{2}</pattern>
+                        <text>${text}</text>
+                    </regExMatch>
+                </ruleList>
+            </throwError>
+            <setInstallerVariable name="${variable}" value="${text}"/>
+        </actionList>
+    </actionDefinition>
+
+    <actionDefinition name="manageService">
+        <parameterList>
+            <stringParameter name="service" default="" />
+            <stringParameter name="action" default="" description="//start/stop/restart" />
+            <stringParameter name="waitForPort" default="" />
+            <stringParameter name="waitForPortTimeout" default="30000" />
+        </parameterList>
+        <actionList>
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariable name="programArgumentsToStart" value="start ${service} &gt; /dev/null 2&gt; /dev/null" />
+                    <setInstallerVariable name="programArgumentsToStop" value="stop ${service} &gt; /dev/null 2&gt; /dev/null" />
+                    <setInstallerVariable name="programToRun" value="${installdir}/ctlscript.sh"/>
+                    <actionGroup>
+                        <actionList>
+                            <setInstallerVariable name="programArgumentsToStart" value="bitnami ${programArgumentsToStart}"/>
+                            <setInstallerVariable name="programArgumentsToStop" value="bitnami ${programArgumentsToStop}"/>
+                            <setInstallerVariable name="programToRun" value="service"/>
+                        </actionList>
+                        <ruleList>
+                            <fileTest condition="not_exists" path="${installdir}/ctlscript.sh"/>
+                            <compareText text="${installation_type}" logic="equals" value="nami"/>
+                        </ruleList>
+                    </actionGroup>
+
+                    <actionGroup>
+                        <actionList>
+                            <setInstallerVariable name="pathToServiceScript" value="${installdir}/servicerun.bat" />
+                            <setInstallerVariable name="pathToServiceScript" value="${installdir}/${service}/scripts/servicerun.bat" >
+                                <ruleList>
+                                    <stringTest text="${service}" type="not_empty" />
+                                    <fileExists path="${installdir}/${service}/scripts/servicerun.bat" />
+                                </ruleList>
+                            </setInstallerVariable>
+                            <setInstallerVariable name="pathToServiceScript" value="${installdir}/${service}/scripts/ctl.bat" >
+                                <ruleList>
+                                    <stringTest text="${service}" type="not_empty" />
+                                    <fileExists path="${installdir}/${service}/scripts/ctl.bat" />
+                                </ruleList>
+                            </setInstallerVariable>
+                            <setInstallerVariable name="programArgumentsToStart">
+                                <value>START</value>
+                            </setInstallerVariable>
+                            <setInstallerVariable name="programArgumentsToStop">
+                                <value>STOP</value>
+                            </setInstallerVariable>
+                            <setInstallerVariable name="programToRun" value="${pathToServiceScript.dos}" />
+                        </actionList>
+                        <ruleList>
+                            <platformTest type="windows" />
+                        </ruleList>
+                    </actionGroup>
+
+                    <actionGroup>
+                        <actionList>
+                            <runProgram>
+                                <abortOnError>0</abortOnError>
+                                <showMessageOnError>0</showMessageOnError>
+                                <program>${programToRun}</program>
+                                <programArguments>${programArgumentsToStop}</programArguments>
+                                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                                <ruleList>
+                                    <compareText text="${action}" logic="equals" value="stop" />
+                                    <compareText text="${action}" logic="equals" value="restart" />
+                                </ruleList>
+                            </runProgram>
+                            <waitForPort port="${waitForPort}" timeout="${waitForPortTimeout}" state="free">
+                                <ruleList>
+                                    <stringTest text="${waitForPort}" type="not_empty" />
+                                    <ruleGroup ruleEvaluationLogic="or">
+                                        <ruleList>
+                                            <compareText text="${action}" logic="equals" value="stop" />
+                                            <compareText text="${action}" logic="equals" value="restart" />
+                                        </ruleList>
+                                    </ruleGroup>
+                                </ruleList>
+                            </waitForPort>
+                            <runProgram>
+                                <abortOnError>0</abortOnError>
+                                <showMessageOnError>0</showMessageOnError>
+                                <program>${programToRun}</program>
+                                <programArguments>${programArgumentsToStart}</programArguments>
+                                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                                <ruleList>
+                                    <compareText text="${action}" logic="equals" value="start" />
+                                    <compareText text="${action}" logic="equals" value="restart" />
+                                </ruleList>
+                            </runProgram>
+                            <waitForPort port="${waitForPort}" timeout="${waitForPortTimeout}" state="in_use">
+                                <ruleList>
+                                    <stringTest text="${waitForPort}" type="not_empty" />
+                                    <ruleGroup ruleEvaluationLogic="or">
+                                        <ruleList>
+                                            <compareText text="${action}" logic="equals" value="start" />
+                                            <compareText text="${action}" logic="equals" value="restart" />
+                                        </ruleList>
+                                    </ruleGroup>
+                                </ruleList>
+                            </waitForPort>
+                        </actionList>
+                    </actionGroup>
+                </actionList>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <!-- Only works if unix, or if windows and the directory ${installdir}/${service}/scripts exists -->
+                <ruleList>
+                    <platformTest type="unix"/>
+                    <ruleGroup>
+                        <ruleList>
+                            <platformTest type="windows"/>
+                            <fileExists path="${installdir}/${service}/scripts"/>
+                        </ruleList>
+                    </ruleGroup>
+                </ruleList>
+            </actionGroup>
+        </actionList>
+    </actionDefinition>
+        <actionDefinition name="baseGetCurlLocation">
+            <parameterList>
+                <stringParameter name="locationVariable" allowEmptyValue="0"/>
+            </parameterList>
+            <actionList>
+                <if>
+                    <conditionRuleList>
+                        <!-- XAMPP includes cURL in another path -->
+                        <isDefined variable="bitnami_platform_name"/>
+                        <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                    </conditionRuleList>
+                    <actionList>
+                        <!-- XAMPP installation -->
+                        <setInstallerVariable name="curl_path" value="${installdir}/bin/curl"/>
+                        <setInstallerVariable name="curl_path" value="${installdir.dos}\apache\bin\curl.exe">
+                            <ruleList>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <elseActionList>
+                        <!-- Bitnami installation -->
+                        <setInstallerVariable name="common_root_directory" value="${installdir}/common">
+                            <ruleList>
+                                <isNotDefined variable="common_root_directory"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="curl_path" value="${common_root_directory}/bin/curl"/>
+                        <setInstallerVariable name="curl_path" value="${common_root_directory.dos}\bin\curl.exe">
+                            <ruleList>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <!-- Will happen in installations with native adapter (amiamazonubuntu) -->
+                        <setInstallerVariable name="curl_path" value="/usr/bin/curl">
+                            <ruleList>
+                                <platformTest type="unix"/>
+                                <fileTest path="${curl_path}" condition="not_exists"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </elseActionList>
+                </if>
+                <throwError text="cURL not found! Looking for: ${curl_path}">
+                    <ruleList>
+                        <fileTest path="${curl_path}" condition="not_exists"/>
+                    </ruleList>
+                </throwError>
+                <setInstallerVariable name="${locationVariable}" value="${curl_path}"/>
+                <globalVariables names="${locationVariable}"/>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="curlHttpRequest">
+            <parameterList>
+                <stringParameter name="variable"/>
+                <stringParameter name="url"/>
+                <stringParameter name="cookiesFile" default=""/>
+                <stringParameter name="filename" default=""/>
+                <stringParameter name="flags" default=""/>
+            </parameterList>
+            <actionList>
+                <!-- Configure parameters and validate -->
+                <setInstallerVariable name="curl_params" value="${flags}"/>
+                <setInstallerVariable name="curl_params" value="${curl_params} --head">
+                    <ruleList>
+                        <compareText text="${method}" logic="equals" value="HEAD"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <baseGetCurlLocation locationVariable="curl_path"/>
+                <foreach variables="param value">
+                    <values>
+                        cookie "${cookiesFile.escape_backslashes}"
+                        cookie-jar "${cookiesFile.escape_backslashes}"
+                        output "${filename.escape_backslashes}"
+                    </values>
+                    <actionList>
+                        <setInstallerVariable name="curl_params" value="${curl_params} --${param} &quot;${value}&quot;">
+                            <ruleList>
+                                <compareText text="${value}" logic="does_not_equal" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                </foreach>
+                <!-- Run cURL with the provided configuration options -->
+                <runProgram abortOnError="0" program="${curl_path}" programArguments="${curl_params} &quot;${url}&quot;"/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="${variable}" value="${program_stdout}"/>
+                        <globalVariables names="${variable}"/>
+                    </actionList>
+                    <ruleList>
+                        <stringTest text="${variable}" type="not_empty"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="curlHttpPost">
+            <parameterList>
+                <stringParameter name="variable"/>
+                <stringParameter name="url"/>
+                <stringParameter name="cookiesFile" default=""/>
+                <stringParameter name="filename" default=""/>
+                <stringParameter name="data" default=""/>
+                <stringParameter name="flags" default="--location --silent"/>
+            </parameterList>
+            <actionList>
+                <!-- Parse data parameter -->
+                <setInstallerVariable name="dataParameters" value=""/>
+                <actionGroup>
+                    <actionList>
+                        <foreach variables="dataParameter dataParameterValue" values="${data}">
+                            <actionList>
+                                <setInstallerVariable name="dataParameters" value="${dataParameters}&amp;">
+                                    <ruleList>
+                                        <compareText text="${dataParameters}" logic="does_not_equal" value=""/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                                <urlEncode text="${dataParameter}" variable="encodedDataParameter"/>
+                                <urlEncode text="${dataParameterValue}" variable="encodedDataParameterValue"/>
+                                <setInstallerVariable name="dataParameters" value="${dataParameters}${encodedDataParameter}=${encodedDataParameterValue}"/>
+                            </actionList>
+                        </foreach>
+                        <!-- Create a file with the cURL data parameters-->
+                        <generateRandomValue length="10" variable="dataParametersFileId"/>
+                        <setInstallerVariable name="dataParametersFilePath" value="${system_temp_directory}/curl_data_${dataParametersFileId}.txt"/>
+                        <writeFile path="${dataParametersFilePath}" text="${dataParameters}"/>
+                        <setInstallerVariable name="flags" value="${flags} --data &quot;@${dataParametersFilePath}&quot;"/>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${data}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <!-- Call common cURL function and delete the created file -->
+                <curlHttpRequest variable="${variable}" url="${url}" cookiesFile="${cookiesFile}" filename="${filename}" flags="${flags}"/>
+                <deleteFile path="${dataParametersFilePath}"/>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="curlHttpGet">
+            <parameterList>
+                <stringParameter name="variable"/>
+                <stringParameter name="url"/>
+                <stringParameter name="cookiesFile" default=""/>
+                <stringParameter name="filename" default=""/>
+                <stringParameter name="data" default=""/>
+                <stringParameter name="flags" default="--location --silent"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="flags" value="${flags} --get --request GET"/>
+                <!-- Make use of curlHttpPost since it parses the "data" parameter -->
+                <curlHttpPost variable="${variable}" url="${url}" cookiesFile="${cookiesFile}" filename="${filename}" data="${data}" flags="${flags}"/>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="setInstallerVariableFromCurlRequest">
+            <parameterList>
+                <stringParameter name="name"/>
+                <stringParameter name="url"/>
+                <stringParameter name="cookiesFile" default=""/>
+                <stringParameter name="filename" default=""/>
+                <stringParameter name="data" default=""/>
+                <stringParameter name="flags" default="--location --silent"/>
+                <stringParameter name="method" default="post"/>
+            </parameterList>
+            <actionList>
+                <if>
+                    <conditionRuleList>
+                        <compareText text="${method}" logic="equals" value="get" nocase="1"/>
+                    </conditionRuleList>
+                    <actionList>
+                        <curlHttpGet variable="${name}" url="${url}" cookiesFile="${cookiesFile}" filename="${filename}" data="${data}" flags="${flags}"/>
+                    </actionList>
+                    <elseActionList>
+                        <curlHttpPost variable="${name}" url="${url}" cookiesFile="${cookiesFile}" filename="${filename}" data="${data}" flags="${flags}"/>
+                    </elseActionList>
+                </if>
+            </actionList>
+        </actionDefinition>
+        <!--
+            @rule isValidBitnamiInstall - Checks if a directory contains a valid Bitnami installation
+            @param {directory} path     - Installation directory
+            @return {boolean}           - Result (Default: 0)
+        -->
+        <ruleDefinition name="isValidBitnamiInstall">
+            <parameterList>
+                <directoryParameter name="path"/>
+            </parameterList>
+            <ruleList>
+                <fileTest path="${path}" condition="is_directory"/>
+                <fileTest path="${path}/properties.ini" condition="is_file"/>
+                <fileContentTest path="${path}/properties.ini" logic="contains" text="installdir="/>
+            </ruleList>
+        </ruleDefinition>
+        <!--
+            @rule isValidXamppInstall - Checks if a directory contains a valid XAMPP installation
+            @param {directory} path     - Installation directory
+            @return {boolean}           - Result (Default: 0)
+        -->
+        <ruleDefinition name="isValidXamppInstall">
+            <parameterList>
+                <directoryParameter name="path"/>
+            </parameterList>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <ruleGroup>
+                    <ruleList>
+                        <!-- Note that XAMPP portable may not have a "properties.ini" file -->
+                        <platformTest type="windows"/>
+                        <fileTest path="${path}/xampp-control.exe" condition="is_file"/>
+                        <fileTest path="${path}/xampp-control.ini" condition="is_file"/>
+                    </ruleList>
+                </ruleGroup>
+                <ruleGroup>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <fileTest path="${path}/xampp" condition="is_file"/>
+                        <fileTest path="${path}/properties.ini" condition="is_file"/>
+                        <fileTest path="${path}/ctlscript.sh" condition="is_file"/>
+                    </ruleList>
+                </ruleGroup>
+            </ruleList>
+        </ruleDefinition>
+        <!--
+            @rule isValidNamiInstall    - Checks if a directory contains a valid Bitnami installation
+            @param {directory} path     - Installation directory
+            @return {boolean}           - Result (Default: 0)
+        -->
+        <ruleDefinition name="isValidNamiInstall">
+            <parameterList>
+                <directoryParameter name="path"/>
+            </parameterList>
+            <ruleList>
+                <fileTest path="${path}" condition="is_directory"/>
+                <fileTest path="${path}/nami/bin/provisioner" condition="exists"/>
+            </ruleList>
+        </ruleDefinition>
+        <!-- getFolderSize returns the 'folders' size
+
+             Warning: This is a recursive function. More 'folders' contains, more it will take
+
+             @param folders      - Paths to the directories where the data is. They have to be separated by spaces, use "quotes" and use 'unix' format.
+             @param extraSize    - Extra size to be added (in MB). Default: 0 MB
+             @param message      - Message to be shown in the progress dialog
+
+             @return ${variable} - Its content is the name of the string where the 'folders' size is stored (in MB).
+        -->
+        <actionDefinition name="getFolderSize">
+            <parameterList>
+                <stringParameter name="folders" value=""/>
+                <stringParameter name="extraSize" value="0"/>
+                <stringParameter name="variable" value="totalSize"/>
+                <stringParameter name="message" value="Calculating folders size"/>
+            </parameterList>
+            <actionList>
+                <logMessage text="[base-functions:getFolderSize] ${message}"/>
+                <globalVariables names="${variable}"/>
+                <showProgressDialog>
+                    <title>${message}</title>
+                    <actionList>
+                        <setInstallerVariable name="auxSize" value="0"/>
+                        <setInstallerVariable name="folder_size" value="0"/>
+                        <foreach variables="folder" values="${folders}">
+                            <actionList>
+                                <logMessage text="[base-functions:getFolderSize] started calculating size of ${folder}"/>
+                                <!-- Unix case: Use internal tcl -->
+                                <actionGroup>
+                                    <actionList>
+                                        <getDiskUsage>
+                                            <variable>folder_size</variable>
+                                            <units>KB</units>
+                                            <files>${folder}</files>
+                                        </getDiskUsage>
+                                    </actionList>
+                                    <ruleList>
+                                        <platformTest type="unix"/>
+                                        <fileTest condition="exists" path="${folder}"/>
+                                    </ruleList>
+                                </actionGroup>
+                                <!-- Windows case: Use visual basic to increase performance -->
+                                <actionGroup>
+                                    <actionList>
+                                        <logMessage text="[base-functions:getFolderSize] Generating ${system_temp_directory}/getSize.vbs file with the following content:"/>
+                                        <logMessage>
+                                            <text>Dim filespec, msg
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+Set objFolder = objFSO.GetFolder("${folder.dos}")
+Wscript.Echo "bytes: " &amp; objFolder.Size</text>
+                                        </logMessage>
+                                        <writeFile>
+                                            <encoding>utf-8</encoding>
+                                            <path>${system_temp_directory}/getSize.vbs</path>
+                                            <text>Dim filespec, msg
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+Set objFolder = objFSO.GetFolder("${folder.dos}")
+Wscript.Echo "bytes: " &amp; objFolder.Size</text>
+                                        </writeFile>
+                                        <setInstallerVariableFromScriptOutput>
+                                            <exec>cscript.exe</exec>
+                                            <execArgs>//NOLOGO "${system_temp_directory}/getSize.vbs"</execArgs>
+                                            <name>script_output</name>
+                                        </setInstallerVariableFromScriptOutput>
+                                        <setInstallerVariableFromRegEx>
+                                            <name>folder_size</name>
+                                            <pattern>^.*bytes:\s*(\d*).*$</pattern>
+                                            <substitution>\1</substitution>
+                                            <text>${script_output}</text>
+                                        </setInstallerVariableFromRegEx>
+                                        <deleteFile path="${system_temp_directory}/getSize.vbs"/>
+                                    </actionList>
+                                    <ruleList>
+                                        <platformTest type="windows"/>
+                                        <fileTest condition="exists" path="${folder}"/>
+                                    </ruleList>
+                                </actionGroup>
+                                <!-- Common process -->
+                                <mathExpression text="${auxSize}+${folder_size}" variable="auxSize"/>
+                                <logMessage text="[base-functions:getFolderSize] finished calculating size of ${folder}"/>
+                            </actionList>
+                        </foreach>
+                        <!-- KB to MB (Linux) or Bytes to KB (Windows) -->
+                        <mathExpression text="${auxSize}/1000" variable="auxSize"/>
+                        <!-- KB to MB (Windows) -->
+                        <mathExpression text="${auxSize}/1000" variable="auxSize">
+                            <ruleList>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                        </mathExpression>
+                    </actionList>
+                </showProgressDialog>
+                <logMessage text="[base-functions:getFolderSize] Installed files size: ${auxSize} MB" />
+                <logMessage text="[base-functions:getFolderSize] Extra space: ${extraSize} MB" />
+                <mathExpression text="${auxSize}+${extraSize}" variable="${variable}"/>
+                <logMessage text="[base-functions:getFolderSize] Total required space: ${${variable}} MB" />
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="stopManager">
+            <actionList>
+                <logMessage text="[base-functions:stopManager] Stopping manager tool"/>
+                <!-- Patch to kill the manager before uninstalling an app - T7906
+                     Check tools/manager/manager-core.xml for specific variables
+                -->
+                <setInstallerVariable name="managerExecutable" value="manager-${platform_name}.${platform_exec_suffix}"/>
+                <logMessage text="[base-functions:stopManager] manager: ${managerExecutable}"/>
+                <kill path="${manager_installation_directory}" name="${managerExecutable}" abortOnError="0" showMessageOnError="0">
+                    <ruleList>
+                        <platformTest type="windows" />
+                    </ruleList>
+                </kill>
+                <runProgram program="pkill" abortOnError="0" showMessageOnError="0"
+                    programArguments="-f ${manager_installation_directory}/${managerExecutable}">
+                    <ruleList>
+                        <platformTest type="unix" />
+                    </ruleList>
+                </runProgram>
+                <logMessage text="[base-functions:stopManager] Stopped"/>
+            </actionList>
+        </actionDefinition>
+        <!-- @rule fitsSize - Checks if a size fits under a specific path
+             @param {string} path    - Paths to check
+             @param {string} size    - Name of the variable to return
+             @param {string} logic   - fits or does_not_fit
+             @return {boolean}       - Fit or not fit
+        -->
+        <ruleDefinition name="fitsSize">
+            <parameterList>
+                <stringParameter name="path"/>
+                <stringParameter name="size"/>
+                <stringParameter name="logic" default="fits"/>
+            </parameterList>
+            <actionList>
+                <logMessage text="[base-functions:fitsSize] Checking if ${size} ${logic} under ${path}"/>
+                <setInstallerVariable name="checkLogic" value="less">
+                    <ruleList>
+                        <compareText value="${logic}" text="fits"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="checkLogic" value="greater_or_equal">
+                    <ruleList>
+                        <compareText value="${logic}" text="does_not_fit"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="result" value="1"/>
+                <setInstallerVariable name="result" value="0">
+                    <ruleList>
+                        <checkFreeDiskSpace logic="${checkLogic}" units="MB" path="${path}" size="${size}"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <logMessage text="[base-functions:fitsSize] There is ${checkLogic} free disk space than ${size} in ${path}: (${logic}: ${result})"/>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+        <!-- @function stopInstallationServices - Stop all the services on Windows
+        -->
+        <actionDefinition name="stopInstallationServices">
+            <actionList>
+              <actionGroup>
+                <actionList>
+                  <logMessage text="[base-functions:stopInstallationServices] Stopping all the services"/>
+                  <runProgram>
+                    <progressText>Stopping services.</progressText>
+                    <program>${installdir}/servicerun.bat</program>
+                    <programArguments>STOP</programArguments>
+                  </runProgram>
+                  <logMessage text="[base-functions:stopInstallationServices] Finished"/>
+                </actionList>
+                <ruleList>
+                  <platformTest type="windows" />
+                </ruleList>
+              </actionGroup>
+            </actionList>
+        </actionDefinition>
+        <!-- @function removeInstallationServices - Remove all the services on Windows
+        -->
+        <actionDefinition name="removeInstallationServices">
+            <actionList>
+                <logMessage text="[base-functions:removeInstallationServices] Removing all the services"/>
+                <actionGroup>
+                    <actionList>
+                        <runProgram>
+                            <progressText>Uninstalling services.</progressText>
+                            <program>${installdir}/serviceinstall.bat</program>
+                            <programArguments>REMOVE</programArguments>
+                        </runProgram>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="windows" />
+                    </ruleList>
+                </actionGroup>
+                <logMessage text="[base-functions:removeInstallationServices] Finished"/>
+            </actionList>
+        </actionDefinition>
+        <!-- @function setInstallerVariableBackslash - setInstallerVariable with backslash support
+             @param {string} name    - Variable name
+             @param {string} value   - Content
+             @global {variable} name - Content with backslash replacement
+        -->
+        <actionDefinition name="setInstallerVariableBackslash">
+            <parameterList>
+                <stringParameter name="name"/>
+                <stringParameter name="value"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${name}"/>
+                <setInstallerVariableFromRegEx>
+                    <name>${name}</name>
+                    <pattern>/</pattern>
+                    <substitution>\</substitution>
+                    <text>${value}</text>
+                </setInstallerVariableFromRegEx>
+            </actionList>
+        </actionDefinition>
+        <!-- @function killProcess - Kill a process
+             @param {string} name - Process name
+        -->
+        <actionDefinition name="killProcess">
+            <parameterList>
+                <stringParameter name="name"/>
+                <stringParameter name="path"/>
+            </parameterList>
+            <actionList>
+                <logMessage text="[base-functions:killProcess] Started"/>
+                <!-- Fix path -->
+                <setInstallerVariableBackslash name="killPath" value="${path}">
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </setInstallerVariableBackslash>
+                <setInstallerVariable name="killPath" value="${path}/${name}">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <logMessage text="[base-functions:killProcess] Killing ${name} at ${killPath}"/>
+                <!-- Program selector -->
+                <kill name="${name}" path="${killPath}" abortOnError="0" showMessageOnError="0">
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </kill>
+                <runProgram program="pkill" programArguments="-f ${killPath}" abortOnError="0" showMessageOnError="0">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </runProgram>
+                <logMessage text="[base-functions:killProcess] Killed"/>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @function calculateTextLength - Calculate the length of the variable
+             @param {string} text - Text to calculate its length
+             @param {string} variable - Variable to host the length
+        -->
+        <actionDefinition name="baseCalculateTextLength">
+            <parameterList>
+                <stringParameter name="text"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <tclEval>
+                    <code><![CDATA[
+set length [string length [installbuilder::substText {${text}}]]
+installbuilder::setVariable [installbuilder::substText {${variable}}] $length
+]]>
+                    </code>
+                </tclEval>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @function baseSerialize - Serialize a string
+             @param {string} text - String to serialize
+             @param {string} variable - Variable with the string serialized
+        -->
+        <actionDefinition name="baseSerializeText">
+            <parameterList>
+                <stringParameter name="text"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <baseCalculateTextLength text="${text}" variable="text_length"/>
+                <setInstallerVariable name="${variable}" value="s:${text_length}:&quot;${text}&quot;;"/>
+                <globalVariables names="${variable}"/>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @function escapeBasicLatin   - Escape the Basic Latin charset in the string parameter
+             @param {string} string       - String to escape
+             @param {string} variable     - Name of the variable to return
+             @return {variable} variable  - Escaped string
+        -->
+        <actionDefinition name="escapeBasicLatin">
+            <parameterList>
+                <stringParameter name="string"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <tclEval>
+                    <code><![CDATA[
+                    set string [installbuilder::substText {${string}}]
+                    set variable [installbuilder::substText {${variable}}]
+                    set escaped [regsub -all {[][ !"#$&'()*+,-./:;<=>?@\[\]\\^`{|}~]} $string {\\&}]
+                    installbuilder::setVariable $variable ${escaped}]]>
+                    </code>
+                </tclEval>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @rule isStringBasicLatin  - Checks if a string contains the characters of the Basic Latin charset (Except ' " ` and \)
+             @param {string} text      - String to check
+             @param {string} logic     - true, false (Default: true)
+             @return {boolean}         - Result (Default: 1)
+        -->
+        <ruleDefinition name="isStringBasicLatin">
+            <parameterList>
+                <stringParameter name="text"/>
+                <stringParameter name="logic" default="true"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="result" value="1"/>
+                <tclEval>
+                    <code><![CDATA[
+                    set string [installbuilder::substText {${text}}]
+                    set filtered [regsub -all {[][ !#$% &()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^_abcdefghijklmnopqrstuvwxyz{|}~]} $string {}]
+                    set isBasicLatin [expr {[string length $filtered] > 0}]
+                    installbuilder::setVariable result ${isBasicLatin}]]>
+                    </code>
+                    <ruleList>
+                        <compareText text="${logic}" logic="equals" value="false"/>
+                    </ruleList>
+                </tclEval>
+                <tclEval>
+                    <code><![CDATA[
+                    set string [installbuilder::substText {${text}}]
+                    set filtered [regsub -all {[][ !#$% &()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^_abcdefghijklmnopqrstuvwxyz{|}~]} $string {}]
+                    set isBasicLatin [expr {[string length $filtered] == 0}]
+                    installbuilder::setVariable result ${isBasicLatin}]]>
+                    </code>
+                    <ruleList>
+                        <compareText text="${logic}" logic="equals" value="true"/>
+                    </ruleList>
+                </tclEval>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <!-- @rule doesRegistryKeyExist  - Checks if an entry in the Windows registry exists
+             @param {string} key         - Registry key to check
+             @param {string} name        - Entry name to check
+             @return {boolean}           - Result (Default: 0)
+        -->
+        <ruleDefinition name="doesRegistryKeyExist">
+            <parameterList>
+                <stringParameter name="key"/>
+                <stringParameter name="name"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="result" value="0"/>
+                <registryGet key="${key}" name="${name}" variable="value" />
+                <setInstallerVariable name="result" value="1" >
+                    <ruleList>
+                        <stringTest text="${value}" type="not_empty" />
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <!-- @rule isFileRenamePending  - Checks if a file matching a pattern is pending renaming or deletion when Windows reboots
+             @param {string} pattern    - Pattern of the path to check
+             @return {boolean}          - Result (Default: 0)
+        -->
+        <ruleDefinition name="isFileRenamePending">
+            <parameterList>
+                <stringParameter name="pattern"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="result" value="0"/>
+                <setInstallerVariable name="session_manager_key" value="HKLM\SYSTEM\CurrentControlSet\Control\Session Manager"/>
+                <setInstallerVariable name="pending_file_rename_entry" value="PendingFileRenameOperations"/>
+                <logMessage text="[base-functions:isFileRenamePending] Checking the &quot;${session_manager_key}\${pending_file_rename_entry}&quot; registry entry."/>
+                <logMessage text="[base-functions:isFileRenamePending] The registry key does not exist. The file is not pending renaming or deletion.">
+                    <ruleList>
+                        <doesRegistryKeyExist key="HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" name="PendingFileRenameOperations" negate="1"/>
+                    </ruleList>
+                </logMessage>
+                <actionGroup>
+                    <actionList>
+                        <logMessage text="[base-functions:isFileRenamePending] The registry key does exist. Checking if the file is pending renaming or deletion."/>
+                        <registryGet key="HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" name="PendingFileRenameOperations" variable="files" />
+                        <logMessage text="[base-functions:isFileRenamePending] Registry entry content: ${files}"/>
+                        <foreach variables="origin destination" values="${files}">
+                            <actionList>
+                                <logMessage text="[base-functions:isFileRenamePending] Checking if ${origin} matches ${pattern}"/>
+                                <actionGroup>
+                                    <actionList>
+                                        <logMessage text="[base-functions:isFileRenamePending] ${origin} matches ${pattern}. The file is pending renaming or deletion."/>
+                                        <setInstallerVariable name="result" value="1"/>
+                                        <break />
+                                    </actionList>
+                                    <ruleList>
+                                        <regExMatch logic="matches" pattern="${pattern}" text="${origin}" />
+                                    </ruleList>
+                                </actionGroup>
+                            </actionList>
+                        </foreach>
+                        <logMessage text="[base-functions:isFileRenamePending] Any file in the registry key matches ${pattern}. The file is not pending renaming or deletion.">
+                            <ruleList>
+                                <isFalse value="${result}"/>
+                            </ruleList>
+                        </logMessage>
+                    </actionList>
+                    <ruleList>
+                        <doesRegistryKeyExist key="${session_manager_key}" name="${pending_file_rename_entry}"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <!-- @function pathToPattern      - Escapes the backslashes in a Windows path
+             @param {string} path         - Windows path to transform
+             @param {string} variable     - Name of the variable to return
+             @return {variable} variable  - Transformed path
+             @example <pathToPattern path="${installdir}" variable="pattern"/> => C:\Program Files\App -> C:\\Program Fies\\App
+        -->
+        <actionDefinition name="pathToPattern">
+            <parameterList>
+                <stringParameter name="path"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <logMessage text="[base-functions:pathToPattern] Path: ${path}"/>
+                <setInstallerVariableFromRegEx name="${variable}" text="${path}" pattern="\\" substitution="\\\\"/>
+                <logMessage text="[base-functions:pathToPattern] Escaped path: ${${variable}}"/>
+            </actionList>
+        </actionDefinition>
+
+        <!-- @function baseName           - Get the base directory of a path
+             @param {string} path         - Windows path to transform
+             @param {string} variable     - Name of the variable to return
+             @return {variable} variable  - Transformed path
+             @example <baseName path="C:\Program Files\App" variable="installdirbase"/> => C:\Program Files
+             @example <baseName path="/tmp/dir/a" variable="tmpdir"/> => /tmp
+             @example <baseName path="test/dir/a" variable="testdir"/> => test
+        -->
+        <actionDefinition name="baseName">
+            <parameterList>
+                <stringParameter name="path"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <actionGroup>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                    <actionList>
+                        <setInstallerVariableFromRegEx name="_letter" text="${path.unix}" pattern="([A-Z]:).*" substitution="\1">
+                            <ruleList>
+                                <regExMatch text="${path.unix}" pattern="^[A-Z]:"/>
+                            </ruleList>
+                        </setInstallerVariableFromRegEx>
+                        <setInstallerVariableFromRegEx name="path" text="${path.unix}" pattern="[A-Z]:(.*)" substitution="\1"/>
+                        <setInstallerVariableFromRegEx name="path" text="${path.unix}" pattern="\\" substitution="/"/>
+                    </actionList>
+                </actionGroup>
+                <setInstallerVariable name="_subdir" value="${path.unix}"/>
+                <!-- Get base dir -->
+                <while>
+                    <actionList>
+                        <setInstallerVariable name="_tmpdir" value="${path}"/>
+                        <dirName path="${path}" variable="path"/>
+                        <break>
+                            <ruleList>
+                                <compareText logic="equals" text="${_tmpdir}" value="${path}"/>
+                            </ruleList>
+                        </break>
+                        <setInstallerVariable name="_subdir" value="${_tmpdir}"/>
+                    </actionList>
+                </while>
+                <!-- Set result based on the platform -->
+                <setInstallerVariable name="${variable}" value="${_subdir}"/>
+                <actionGroup>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                    <actionList>
+                        <setInstallerVariableFromRegEx name="${variable}" text="${_subdir}" pattern="/" substitution="\"/>
+                        <setInstallerVariableFromRegEx name="${variable}" text="${_letter}${_subdir}" pattern="/" substitution="\">
+                            <ruleList>
+                                <regExMatch text="${path.unix}" pattern="^[A-Z]:"/>
+                            </ruleList>
+                        </setInstallerVariableFromRegEx>
+                    </actionList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+        <!-- The baseName action above does not really obtain the UNIX basename, but this action does -->
+        <actionDefinition name="fileName">
+            <parameterList>
+                <stringParameter name="path"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariableFromRegEx name="${variable}" pattern=".*/([^/]+)" substitution="\1" text="${path}"/>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="baseGetFirstElement">
+            <parameterList>
+                <stringParameter name="list"/>
+                <stringParameter name="variable"/>
+            </parameterList>
+            <actionList>
+                <globalVariables names="${variable}"/>
+                <foreach variables="element" values="${list}">
+                    <actionList>
+                        <setInstallerVariable name="${variable}" value="${element}"/>
+                        <break/>
+                    </actionList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+    </functionDefinitionList>
+</component>

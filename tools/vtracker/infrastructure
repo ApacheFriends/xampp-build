@@ -1,0 +1,250 @@
+config = {
+  dldefaultno
+  dlprefs   = \.(tar\.|t)gz$;\.tar\.bz2$;\.zip$;\.7z$;\.Z$
+  lastcheck = "2022-06-07 12:50"
+  verbose
+}
+
+prog apache = {
+  version   = 2.4.53
+  dlversion = 2.4.53
+  url       = http://httpd.apache.org/download.cgi
+  regex     = httpd-(__VER__).tar.gz
+  url       = https://github.com/apache/httpd/tags
+  regex     = /tag/([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog curl = {
+  version   = 7.83.0
+  dlversion = 7.83.0
+  url       = http://curl.haxx.se/download.html
+  regex     = ([0-9]+\.[0-9]+\.0)
+  url       = https://github.com/curl/curl/releases
+  regex     = curl-([0-9]+\.[0-9]+\.0).tar.gz
+}
+prog geos = {
+  version   = 3.10.3
+  dlversion = 3.10.3
+  url       = https://libgeos.org/usage/download/
+  regex     = geos-([0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC))).tar.bz2
+  url       = https://github.com/libgeos/geos/tags
+  regex     = /tag/([0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog git = {
+  version   = 2.36.1
+  dlversion = 2.36.1
+  url       = http://git-scm.com/downloads
+  regex     = RelNotes/(__VER__)\.txt
+  url       = https://github.com/git/git/tags
+  regex     = /tag/v([0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog lego = {
+  version   = 4.7.0
+  dlversion = 4.7.0
+  url       = https://github.com/xenolf/lego/releases
+  regex     = /tag/v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog MariaDB = {
+  version   = 10.4.25
+  dlversion = 10.4.25
+  url       = https://mariadb.org/download/
+  regex     = >(10.4.[0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))<
+  url       = https://github.com/MariaDB/server/tags
+  regex     = /tag/mariadb-(10.4__VER__)
+}
+prog mariadb-connector-java = {
+  version   = 3.0.5
+  dlversion = 3.0.5
+  url       = https://mariadb.com/kb/en/library/about-mariadb-connector-j/
+  regex     = "MariaDB Connector/J (__VER__)"
+  url       = https://github.com/mariadb-corporation/mariadb-connector-j/releases
+  regex     = /tag/([0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog mysql-connector-java = {
+  version   = 8.0.29
+  dlversion = 8.0.29
+  url       = https://dev.mysql.com/downloads/connector/j/
+  regex     = "Connector/J (__VER__)"
+  url       = https://github.com/mysql/mysql-connector-j/tags
+  regex     = /tag/([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog MySQL57 = {
+  version   = 5.7.38
+  dlversion = 5.7.38
+  url       = http://dev.mysql.com/downloads/mysql/5.7.html#downloads
+  regex     = "td class=\"col3\">([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))</td"
+  url       = https://github.com/mysql/mysql-server/tags
+  regex     = /tag/mysql-(5.7[0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog MySQL8 = {
+  version   = 8.0.29
+  dlversion = 8.0.29
+  url       = http://dev.mysql.com/downloads/mysql/
+  regex     = "td class=\"col3\">([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))</td"
+  url       = https://github.com/mysql/mysql-server/tags
+  regex     = /tag/mysql-([0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog openldap = {
+  version   = 2.6.2
+  dlversion = 2.6.2
+  url       = https://www.openldap.org/software/download/
+  regex     = "OpenLDAP-(__VER__) is currently available."
+  url       = https://github.com/openldap/openldap/tags
+  regex     = "OpenLDAP ([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))"
+}
+prog openssl = {
+  version   = 1.1.1o
+  dlversion = 1.1.1o
+  url       = ftp://ftp.openssl.org/source/
+  regex     = openssl-(1.1__VER__)\.tar.gz
+  url       = https://github.com/openssl/openssl/tags
+  regex     = "OpenSSL (1.1__VER__) release"
+}
+prog opensslLTS = {
+  version   = 3.0
+  dlversion = 3.0
+  url       = https://www.openssl.org/source/
+  regex     = "The latest stable version is the (__VER__)"
+}
+prog perl = {
+  version   = 5.36.0
+  dlversion = 5.36.0
+  url       = https://github.com/Perl/perl5/tags
+  regex     = /tag/v([0-9]\.[0-9](2|4|6|8|0)\.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://www.perl.org/get.html
+  regex     = "currently (__VER__)\\."
+}
+prog perl-windows = {
+  version   = 5.32.1.1
+  dlversion = 5.32.1.1
+  url       = http://strawberryperl.com/releases.html
+  regex     = ([0-9]*\.[0-9]*\.[0-9]*\.?[0-9]*)
+}
+prog PHP74 = {
+  comment   = BITROCK_DETECTED_DATE=2022-06-07_13:35
+  version   = 7.4.30
+  dlversion = 7.4.29
+  url       = http://www.php.net/
+  regex     = /downloads.php#v(7.4.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://github.com/php/php-src/tags
+  regex     = /tag/php-(7.4.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog PHP80 = {
+  version   = 8.0.19
+  dlversion = 8.0.19
+  url       = http://www.php.net/
+  regex     = /downloads.php#v(8.0[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://github.com/php/php-src/tags
+  regex     = /tag/php-(8.0[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog PHP81 = {
+  version   = 8.1.6
+  dlversion = 8.1.6
+  url       = http://www.php.net/
+  regex     = /downloads.php#v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://github.com/php/php-src/tags
+  regex     = /tag/php-([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog portablegit = {
+  version   = 2.36.1
+  dlversion = 2.36.1
+  url       = https://git-scm.com/download/win
+  regex     = \(<strong>(__VER__)</strong>\)
+  url       = https://github.com/git-for-windows/git/releases/
+  regex     = Git-([0-9\.]+(?!.*(alpha|beta|rc|rc1|ALPHA|BETA|RC)))-64-bit.exe
+}
+prog postgis = {
+  version   = 3.2.1
+  dlversion = 3.2.1
+  url       = https://postgis.net/source/
+  regex     = postgis-(__VER__).tar.gz
+  url       = https://github.com/postgis/postgis/tags
+  regex     = /tag/([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog postgres-connector-java = {
+  version   = 42.3.6
+  dlversion = 42.3.6
+  url       = https://jdbc.postgresql.org/download.html
+  regex     = postgresql-(__VER__).jar
+  url       = https://github.com/pgjdbc/pgjdbc/tags
+  regex     = /tag/REL([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog postgresql = {
+  version   = 14.3
+  dlversion = 14.3
+  url       = http://www.postgresql.org/ftp/source/
+  regex     = >v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))</a>
+  transform = "s/_/./g; $_"
+  url       = https://github.com/postgres/postgres/tags
+  regex     = /tag/REL_([0-9\\_]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog sqlite = {
+  version   = 3.38.5
+  dlversion = 3.38.5
+  url       = https://www.sqlite.org/download.html
+  regex     = "for SQLite version ([0-9]+\\.[0-9]+\\.[0-9]+)."
+  url       = https://github.com/sqlite/sqlite/tags
+  regex     = /tag/version-([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog subversion = {
+  version   = 1.14.2
+  dlversion = 1.14.2
+  url       = http://subversion.apache.org/download.cgi#supported-releases
+  regex     = subversion-([0-9\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC))).tar.gz
+}
+prog tomcat10 = {
+  version   = 10.0.21
+  dlversion = 10.0.21
+  url       = http://tomcat.apache.org/
+  regex     = "Tomcat (10.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC))) Released"
+  url       = https://dlcdn.apache.org/tomcat/tomcat-10/
+  regex     = v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC|M)))
+}
+prog tomcat85 = {
+  version   = 8.5.79
+  dlversion = 8.5.79
+  url       = http://tomcat.apache.org/
+  regex     = "the release of version (8.5.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))"
+  url       = https://dlcdn.apache.org/tomcat/tomcat-8/
+  regex     = v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC|M)))
+}
+prog tomcat9 = {
+  version   = 9.0.63
+  dlversion = 9.0.63
+  url       = http://tomcat.apache.org/
+  regex     = "Tomcat (9.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC))) Released"
+  url       = https://dlcdn.apache.org/tomcat/tomcat-9/
+  regex     = v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC|M)))
+}
+prog tomcatMajor = {
+  version   = 10
+  dlversion = 10
+  url       = http://tomcat.apache.org/
+  regex     = "Tomcat ([0-9][0-9])\\.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)) Released"
+}
+prog tomcatnative = {
+  version   = 1.2.33
+  dlversion = 1.2.33
+  url       = https://tomcat.apache.org/download-native.cgi
+  regex     = tomcat-native-([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog varnish = {
+  version   = 6.0.10
+  dlversion = 6.0.10
+  url       = https://varnish-cache.org/releases/index.html
+  regex     = varnish-(6.0.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC))).tgz
+  url       = https://github.com/varnishcache/varnish-cache/tags
+  regex     = /tag/varnish-(6.0.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog varnishLTS = {
+  version   = 6.0
+  dlversion = 6.0
+  url       = https://varnish-cache.org/
+  regex     = "(__VER__) LTS"
+}
+prog windows-apache = {
+  version   = 2.4.53
+  dlversion = 2.4.53
+  url       = https://www.apachelounge.com/download/VC15/
+  regex     = "httpd (__VER__)"
+}
+

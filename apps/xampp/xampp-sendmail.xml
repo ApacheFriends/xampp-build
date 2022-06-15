@@ -1,0 +1,21 @@
+<component>
+    <name>xampp_sendmail</name>
+    <description>Fake Sendmail</description>
+    <canBeEdited>1</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+
+
+    <folderList>
+        <folder>
+          <description>//XAMPP Files</description>
+          <destination>${installdir}/</destination>
+          <name>xampp_sendmail_folder</name>
+          <distributionFileList>
+            <distributionDirectory origin="xampp/sendmail"/>
+          </distributionFileList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+    </postInstallationActionList>
+</component>

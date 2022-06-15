@@ -1,0 +1,981 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-02-01 12:33+0200\n"
+"PO-Revision-Date: 2012-02-01 21:41+0200\n"
+"Last-Translator: Mircea <popmircea74@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2) ;\n"
+"X-Generator: Pootle 2.1.6\n"
+
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr ""
+"Pentru a accesa ${product_fullname}, du-te la \n"
+"http://localhost:${web_server_port} din browserul tău."
+
+msgid "Please choose a number for Port"
+msgstr "Vă rog să alegeți un număr de Port"
+
+msgid "Default email provider:"
+msgstr "Furnizorul implicit de email:"
+
+msgid "Re-enter"
+msgstr "Re-introduceți"
+
+msgid "Creating Database"
+msgstr "Crearea Bazei de date"
+
+msgid "${mysql_database_type} Information"
+msgstr "Informații ${mysql_database_type}"
+
+msgid "Please configure Drupal installation"
+msgstr "Vă rog să configurați instalarea Drupal"
+
+msgid "Database Installation"
+msgstr "Instalarea Bazei de date"
+
+msgid "Drupal"
+msgstr "Drupal"
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Doriți să păstrați baza de date din Joomla ? Aceasta va fi salvată în  "
+"${installdir}/backups"
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "Dezinstalarea serviciului ${product_fullname}"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr "Joomla ${project.version} packaged by Bitnami"
+
+msgid "Configuration Report"
+msgstr "Raportul de configurare"
+
+msgid "GMail password"
+msgstr "Parola contului GMail"
+
+msgid "SSL Port"
+msgstr "Portul SSL"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "Învață mai multe despre Bitnami Cloud Hosting"
+
+msgid "Login must not have capital letters"
+msgstr "Numele de login nu trebuie să aibă litere mari"
+
+msgid "Do you want to keep the redmine database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Doriți să păstrați baza de date din Redmine ? Aceasta va fi salvată în  "
+"${installdir}/backups"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "Doresc să folosesc o bază de date existentă din ${mysql_database_type}"
+
+msgid "Starting Subversion server"
+msgstr "Pornesc serverul Subversion"
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"Vă rog să introduceți portul serverului web Apache la care se va citi. "
+"Numărul portului introdus nu poate fi folosit de alt proces ce rulează pe "
+"server."
+
+msgid "${product_fullname} admin user creation"
+msgstr "Crearea utilizatorului admin ${product_fullname}"
+
+msgid "Please enter your database root username"
+msgstr "Vă rog introuceți numele de utilizator root pentru baza de date"
+
+msgid "Installing Thin Cluster as services."
+msgstr "Instalarea Thin Cluster ca serviciu."
+
+msgid "Please select which database configuration you wish to use"
+msgstr "Vă rog să selectați care bază de date doriți să o utilizați"
+
+msgid "BitRock Nginx"
+msgstr "BitRock Nginx"
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"Installerul a detectat că dosarul de instalare ${app(wordpress).installdir} "
+"nu e gol. Vă rog să vă asigurați că orice versiune veche a aplicației este "
+"dezinstalată, întrucât continuarea instalării o poate distruge pe cea deja "
+"instalată. Doriți să continuați ?"
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"Installerul a detectat că dosarul de instalare ${app(wordpress).installdir} "
+"nu e gol. Vă rog să vă asigurați că orice versiune veche a aplicației este "
+"dezinstalată, întrucât continuarea instalării o poate distruge pe cea deja "
+"instalată. Doriți să continuați ?"
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "Timpul maxim de conectare la ${mysql_database_type} a expirat. Instalarea a fost oprită."
+
+msgid "New Database"
+msgstr "Bază de date nouă"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr ""
+"Calea dosarului de instalare e prea lungă.Numărul maxim de caractere permis "
+"este ${base_installdir_max_characters}."
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "Închid serviciile ( asta poate dura câteva minute )"
+
+msgid "Unable to get free disk space."
+msgstr "Nu există destul spațiu pe disc."
+
+msgid "Unable to start Apache"
+msgstr "Nu se poate porni Apache"
+
+msgid "SMTP Host"
+msgstr "SMTP Host"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+"Ruby on Rails este un framework fMVC ull-stack  pentru aplicații web bazate "
+"pe baze de date care este optimizat pentru bucuria programatorului și "
+"susținerea productivității."
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr ""
+"Nu pot lega portul_mysql la ${mysql_port}. Vă rog să selectați alt port."
+
+msgid "DB Prefix"
+msgstr "DB Prefix"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr ""
+"Acel dosar nu pare să conțină o instalare corectă de "
+"${bitnami_platform_name}. Fișierul properties.ini lipsește sau nu are o "
+"instalare corectă."
+
+msgid "${mysql_database_type} Server root password"
+msgstr "Parola de root a Serverului ${mysql_database_type}"
+
+msgid "Select a folder"
+msgstr "Selectați un dosar"
+
+msgid "Default mail server configuration."
+msgstr "Configurarea implicită a serverului de email"
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr ""
+"SQLite este o bibliotecă soft ce implementează un motor de bază de date "
+"tranzacțional auto/conținut, fără server, fără configurare. "
+
+msgid "Password must contain both letters and numbers"
+msgstr "Parola trebuie să conțină combinate litere și numere"
+
+msgid "IP / Hostname"
+msgstr "IP / Hostname"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr ""
+"Dosarul de instalare trebuie să fie o cale ce conține doar litere, numere și "
+"caracterele '/', '.', '-' și '_'."
+
+msgid "Bitnami RubyStack"
+msgstr "Bitnami RubyStack"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+"Bitnami Cloud Hosting este o nouă ofertă ce îți permite să găzduiești "
+"aplicațiile Bitnami în Cloud. Verificați mai jos dacă doriți să învățați mai "
+"mult despre Bitnami în timp ce instalarea se definitivează. O fereastră "
+"nouă de browser va apărea."
+
+msgid "Hebrew"
+msgstr "Ebraică"
+
+msgid "French"
+msgstr "Franceză"
+
+msgid "Bitnami Redmine Module"
+msgstr "Bitnami Redmine Module"
+
+msgid "Login and password must not be the same"
+msgstr "Numele de Login și parola NU POT FI IDENTICE"
+
+msgid "Secure connection"
+msgstr "Conexiune securizată"
+
+msgid "No, I will do this after installation"
+msgstr "Nu, voi face asta după instalare"
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr ""
+"Instalarea Apache ca un serviciu Windows cu numele "
+"${apache_unique_service_name}"
+
+msgid "Web Server Port"
+msgstr "Portul Serverului Web"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr ""
+"Installerul va creea convenția *_production, *_development, și *_test "
+"databases bazat pe prefixul indicat de dumneavoastră."
+
+msgid "Removing Thin Cluster as services."
+msgstr "Înlăturarea Thin Cluster ca serviciu."
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr ""
+"Acest modul necesită cel puțin Bitnami RubyStack "
+"${bitnami_minimum_required_rubystack_version}. Încercați să instalați peste "
+"${base_stack_name} ${base_stack_version}. Puteți să descărcați cel mai nou "
+"Bitnami RubyStack de la  www.bitnami.com "
+
+msgid "Launch ${product_fullname}"
+msgstr "Pornesc ${product_fullname}"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "Vă rog să folosiți doar caractere ASCII alfanumerice ( litere și cifre )"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "Vă rog să folosiți doar caractere ASCII alfanumerice ( litere și cifre )"
+
+msgid "Stopping services."
+msgstr "Opresc serviciile."
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "Doresc să folosesc baza de date ${mysql_database_type} inclusă."
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr ""
+"Vă rog să alegeți un dosar ce onține o instalare de "
+"${bitnami_platform_name}."
+
+msgid "Set the database name and user name which will be created or used."
+msgstr ""
+"Indicați numele bazei de date și numele de utilizator ce vor fi creeate sau "
+"folosite"
+
+msgid "${product_fullname} Subversion Service"
+msgstr "${product_fullname} Subversion Service"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr ""
+"Se pare că nu aveți suficiente permisiuni să legați portul "
+"${apachethinmodule_port2} sau portul este deja luat de altă aplicație. Vă "
+"rog selectați alt port."
+
+msgid "Language for default data configuration"
+msgstr "Limba pentru configurarea de date implicită"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr ""
+"Instalerul nu este capabil să se conecteze la serverul ${mysql_database_type}. Asigurați-vă "
+"că ${mysql_database_type} rulează."
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "Doriți să ștergeți de asemenea și toate fișierele de date salvate ?"
+
+msgid "Development Settings"
+msgstr "Configurări de Dezvoltare"
+
+msgid "Your real name"
+msgstr "Numele dumneavoastră adevărat"
+
+msgid "Running database migration"
+msgstr "Rulez migrarea bazei de date"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "Vă rog să introduceți o adresă  IP validă sau un hostname valid."
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "${mysql_database_type} Server port"
+msgstr "Portul Serverului ${mysql_database_type} "
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+"Lungimea parolei trebuie să fie mai mare sau egală decât ${component(paramad"
+"minaccount).parameter(base_required_password_length).value}"
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr ""
+"Nu pot să instalez Apache ca serviciu cu numele "
+"${apache_unique_service_name}"
+
+msgid "Create databases for the rails project."
+msgstr "Creare bazei de date pentru proiectul rails"
+
+msgid "Do you want to configure mail support?"
+msgstr "Doriți să configurați suportul email ?"
+
+msgid "This is required so your application can send notifications via email."
+msgstr "Aceasta este necesar ca aplicați adumneavoastră să poată trimite notificări prin email."
+
+msgid "Apache Web Server Port"
+msgstr "Portul Serverului Web Apache"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr ""
+"Softul ${mysql_database_type} oferă un server de baze de date foarte rapid, multi-fir de "
+"execuție, multi-utilizator și foarte robust "
+
+msgid "Russian"
+msgstr "Rusă"
+
+msgid "New Component"
+msgstr "Componentă Nouă"
+
+msgid "Web Server Domain"
+msgstr "Web Server Domain"
+
+msgid "Thin Server Port"
+msgstr "Thin Server Port"
+
+msgid "Nginx Port"
+msgstr "Nginx Port"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "Numele dosarului de instalare nu poate conține spații."
+
+msgid "Custom"
+msgstr "Personalizat"
+
+msgid "${product_fullname} database root user creation"
+msgstr "Creearea userului de bază de date ROOT pentru ${product_fullname} "
+
+msgid "Configure SMTP Settings"
+msgstr "Configurare setări SMTP"
+
+msgid "Stop ${product_fullname} service"
+msgstr "Opresc serviciul ${product_fullname}"
+
+msgid "Web Server port"
+msgstr "Portul Serverului Web"
+
+msgid "German"
+msgstr "Germană"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "Nu găsesc fișierul ${mysql_database_type} - '${sqlFile}': nu există."
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr ""
+"Vă rog să introduceți parola ${mysql_database_type} existentă pentru ${bitnami_platform_name}"
+
+msgid "Manager tool"
+msgstr "Unealta Manager"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr ""
+"Permisiunile fișierelor și setările de configurare vor fi setate având în "
+"vedere secutitatea și performanța. Instalarea diferitelor plugin-uri, teme "
+"și update-uri pot necesita schimbări manuale sau instalarea unor servicii "
+"adiționale ca FTP.      Recomandat dacă pachetul va fi instalat pe un server "
+"public."
+
+msgid "Yes, please prompt me"
+msgstr "Da, vă rog să mă întrebați"
+
+msgid "Czech"
+msgstr "Cehă"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr "Prefix invalid. Alegeți alt prefix."
+
+msgid "Portuguese/Brazilian"
+msgstr "Portugheză/Braziliană"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "Chineză"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"Încercați să instalați un modul de 32biți peste o instalare de 64biți. "
+"Aceasta nu este posibil. Vă rugăm să descărcați modulul corect de la "
+"bitnami.com"
+
+msgid "Launch Redmine application."
+msgstr "Pornesc aplicația Redmine"
+
+msgid "Waiting Subversion to start."
+msgstr "Aștept să pornească Subversion"
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+"Lungimea numelui de utilizator trebuie să fie mai mare decât ${component(par"
+"amadminaccount).parameter(base_required_username_length).value}"
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr ""
+"Creearea bazei de date / inițializare contului de utilizator. Necesită puțin "
+"mai mult timp."
+
+msgid "Web Server domain"
+msgstr "Web Server domain"
+
+msgid "Bulgarian"
+msgstr "Bulgară"
+
+msgid "DB User Password"
+msgstr "DB User Password"
+
+msgid "Production settings"
+msgstr "Setări de producție"
+
+msgid "${product_fullname} Service"
+msgstr "Serviciul ${product_fullname}"
+
+msgid "Bitnami WordPress Module"
+msgstr "Modulul Bitnami WordPress"
+
+msgid "Installing RubyGems, please be patient."
+msgstr "Instalez RubyGems, vă rog să așteptați."
+
+msgid "sphinx Server port"
+msgstr "sphinx Server port"
+
+msgid "Populating database."
+msgstr "Popularea bazei de date."
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr ""
+"Se va încerca instalarea unei baze de date noi și se va suprascrie orice "
+"dupplicat existent. Doriți să continuați ?"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "Serviciul ${mysql_database_type} ${product_fullname}"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+"Nu există suficient spațiu liber pe ${installdir}. Aveți nevoie de cel puțin "
+"${base_needed_space} MB înainte de a instala ${product_fullname}"
+
+msgid "Licenses destination"
+msgstr "Destinația Licențelor"
+
+msgid "Drupal packaged by Bitnami"
+msgstr "Drupal packaged by Bitnami"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Shutting down services."
+msgstr "Închid serviciile."
+
+msgid "None"
+msgstr "Nimic"
+
+msgid "Sample data for Joomla (English)"
+msgstr "Date mostră pentru Joomla ( în Engleză )"
+
+msgid "Installing gems, please be patient."
+msgstr "Se instalează gems, vă rog să așteptați până se termină."
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "Vă rog să introduceți informațiile bazei de date ${mysql_database_type}:"
+
+msgid "${product_fullname} Apache Service"
+msgstr "Serviciul Apache ${product_fullname} "
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr ""
+"Numele gazdei ce va fi folosit pentru crearea URL-urilor interne. Dacă "
+"această valoare este incorectă, este posibil să nu mai puteți accesa "
+"instalarea WordPress de pe alte calculatoare."
+
+msgid "Romanian"
+msgstr "Română"
+
+msgid "Dutch"
+msgstr "Germană"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr "Creează contul \"root\" ${mysql_database_type}"
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"Installerul a detectat că dosarul de instalare "
+"${app(drupal).installdir} nu e gol. Vă rog să vă asigurați că orice "
+"versiune veche a aplicației este dezinstalată, întrucât continuarea "
+"instalării o poate distruge pe cea deja instalată. Doriți să continuați ?"
+
+msgid "Populating database. This may take some time."
+msgstr "Popularea bazei de date. Aceasta poate necesita un timp mai indelungat"
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr ""
+"Vă rog introduceți adresa IP sau hostname pentru baza dumbeavoastră de date."
+
+msgid "WordPress packaged by Bitnami"
+msgstr "WordPress packaged by Bitnami"
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr ""
+"Vă rog introduceți portul cu care Serverul Subversion va lucra implicit."
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr ""
+"Vă rog introduceți portul cu care Serverul Apache inclus va lucra implicit."
+
+msgid "Hostname"
+msgstr "Hostname"
+
+msgid "Create Admin account"
+msgstr "Creați contul Admin"
+
+msgid "English"
+msgstr "Engleză"
+
+msgid "TLS"
+msgstr "TLS"
+
+msgid "Re-enter password"
+msgstr "Reintroduceți parola"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr ""
+"Calea ${mysql_binary_directory} pare să fie invalidă. Vă rog să verificați "
+"dacă dosarul conține fișierele necesare."
+
+msgid "Blog name"
+msgstr "Numele blogului"
+
+msgid "DB User Name"
+msgstr "Numele utilizatorului DB"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr ""
+"Nu se poate găsi fișierul ${mysql_database_type} '${sqlFile}': nu se poate citi de către "
+"utilizatorul curent."
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Thin Processes"
+msgstr "Procesele Thin"
+
+msgid "Install ${product_fullname} as service"
+msgstr "Instalează  ${product_fullname}  ca serviciu."
+
+msgid "Restarting Apache"
+msgstr "Repornire Apache"
+
+msgid "Installation Report"
+msgstr "Raportul de instalare"
+
+msgid "Start ${product_fullname} service"
+msgstr "Pornește serviciul ${product_fullname}"
+
+msgid "Quick Start Guide"
+msgstr "Ghid rapid de învățare"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr ""
+"Dorești să fii întrebat pentru a personaliza aplicațiile alese din acest "
+"instaler ?"
+
+msgid "Select your language for default data configuration:"
+msgstr "Selectați limba pentru configurares de date implicită:"
+
+msgid "Please select the use of this Stack"
+msgstr "Vă rog să selectați folosirea acestui Stack. "
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr ""
+"Adresa IP sau hostname a serverului dumneavoastră. Dacă această valoare este "
+"incorectă, este posibil să nu puteți accesa instalare Joomla! de pe alte "
+"calculatoare."
+
+msgid "Serbian"
+msgstr "Sîrbă"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr "Tipul de instalare"
+
+msgid "Swedish"
+msgstr "Suedeză"
+
+msgid "${mysql_database_type} Service"
+msgstr "Serviciul ${mysql_database_type}"
+
+msgid "GMail address"
+msgstr "Adresa GMail"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "Dezinstalez ${product_fullname}"
+
+msgid "Portuguese"
+msgstr "Portugheză"
+
+msgid "Updating mysql directory permissions"
+msgstr "Actualizarea permisiunilor dosarului mysql"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr "Puneți parola pentru noua bază de date a aplicațiilor Rails"
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr ""
+"Instalarea Serverului Subversion ca serviciu Windows cu numele "
+"${SubversionUniqueServiceName}"
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr ""
+"Se pare că nu aveți permisiuni suficiente să preluați portul sau portul este "
+"deja preluat de altă aplicație. Vă rog selectați alt port."
+
+msgid "Unable to add text to httpd.conf"
+msgstr "Nu puteți adăuga text în httpd.conf."
+
+msgid "Subversion Server Port"
+msgstr "Portul Serverului Subversion"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr "Deschide ${product_fullname} în browser"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "Deploy ${product_shortname} to the Cloud in One Click"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr ""
+"Se pare că nu aveți permisiuni suficiente să preluați portul "
+"${apachethinmodule_port1} sau portul este deja preluat de altă aplicație. "
+"Vă rog selectați alt port."
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr ""
+"Redmine este o aplicație web flexibilă pentru managementul proiectelor. "
+"Scrisă folosind framework-ul Ruby on Rails  este multiplatformă și mutibază "
+"de date."
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "Definiție de Identificator '${id}' ${mysql_database_type} necunoscută"
+
+msgid "Thin port nr 1"
+msgstr "Port nr 1 - Thin "
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Thin port nr 2"
+msgstr "Port nr 2 - Thin"
+
+msgid "Number of thin servers"
+msgstr "Numărul serverelor thin"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "Credențiale ${mysql_database_type}"
+
+msgid "Please enter a password"
+msgstr "Vă rog introduceți o parolă"
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Doriți să păstrați baza de date Drupal ? Aceasta va fi salvată în "
+"${installdir}/backups"
+
+msgid "Starting application."
+msgstr "Pornește aplicația."
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr ""
+"Vă rog să introduceți o parolă corectă pentru a vă conecta la serverul "
+"${mysql_database_type}."
+
+msgid "DB Name"
+msgstr "Numele bazei de date (DB)"
+
+msgid "Hostname or IP Address"
+msgstr "Hostname sau Addresa IP "
+
+msgid "Korean"
+msgstr "Coreeană"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "Dosarul de fișiere binare al ${mysql_database_type}"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "Nu pot instala ${mysql_database_type} ca serviciu cu numele ${mysql_unique_service_name}"
+
+msgid "Password"
+msgstr "Parola"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr ""
+"Nu pot accesa portul cu numărul indicat. Vă rog selectați alt număr de port."
+
+msgid "Select installation type"
+msgstr "Selectați tipul instalării"
+
+msgid "Installation type"
+msgstr "Tipul instalării"
+
+msgid "Use ${product_fullname}"
+msgstr "Folosiți ${product_fullname}"
+
+msgid "Installation folder"
+msgstr "Dosarul de instalare"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "Așteptați ca ${mysql_database_type} să pornească."
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr ""
+"WordPress este o platformă de publicare a blogurilor personale cu centrare "
+"pe estetică, standarde web și manevrabilitate."
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr ""
+"Datorită lipsei unei resurse a sistemului ( procesor sau memorie), "
+"instalarea nu poate să se conecteze la serverul local de ${mysql_database_type}. Doriți să "
+"reîncercați conectarea la serverul ${mysql_database_type} și să continue instalarea ?"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "Aștept ca să ponească ${mysql_database_type}."
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr ""
+"Instalarea nu poate găsi spațiu suficient pe ${installdir}. Vă rog "
+"verificați dacă este suficient spațiu liber pentru a instala "
+"${product_fullname}"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "Inițializez baza de date ${mysql_database_type}. Aceasta poate dura câteva minute bune."
+
+msgid "Please enter your database root user password"
+msgstr "Vă ro introduceți parola userului \"root\" al bazei de date"
+
+msgid "Memcached Server port"
+msgstr "Memcached Server port"
+
+msgid "Starting Apache."
+msgstr "Pornesc Apache."
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "Nu se poate scrie fișierul : ${apache_server_directory}/conf/ssi.conf"
+
+msgid "Please configure WordPress installation"
+msgstr "Vă rog să configurați instalarea WordPress"
+
+msgid "Subversion Server port"
+msgstr "Portul serverului Subversion "
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+"Nu se poate realiza conectarea la baza de date "
+"${mysql_hostname}:${mysql_port}. Vă rog verificați dacă parametrii sunt "
+"corecți și configurarea ${mysql_database_type} acceptă conexiuni TCP/IP."
+
+msgid "Please select the ports for Thin servers. Those will be added to the Apache configuration file."
+msgstr ""
+"Vă rog selectați porturile pentru serverele Thin. Acestea vor fi aăugate "
+"in fișierul de configurare Apache."
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr ""
+"Ruby nu este instalat în Stack. Acest modul necesită Ruby deja instalat."
+
+msgid "Polish"
+msgstr "Poloneză"
+
+msgid "This will create a sample Rails project."
+msgstr "Aceasta va creea un proiect mostră Ruby."
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"Vă rog introduceți portul cu care va lucra serverul de baza de date ${mysql_database_type}. "
+"Numărul de port introdus va trebui să nu fie folosit de nici o altă "
+"aplicație ce rulează pe server."
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr ""
+"Instalarea ${mysql_database_type} ca serviciu Windows cu numele ${mysql_unique_service_name}"
+
+msgid "Bitnami Drupal Module"
+msgstr "Modulul Bitnami Drupal"
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "Inițializarea bazei de date. Aceasta necesită un timp mai indelungat."
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Doriți să păstrați baza de date ${appName} ? Aceasta va fi salvată în "
+"${installdir}/backups"
+
+msgid "Joomla!"
+msgstr "Joomla!"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "Imposibil de configurat utilizatorul autorizat  phpmyadmin"
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "Închid serverul ${mysql_database_type}."
+
+msgid "${product_fullname} Thin Service"
+msgstr "Serviciul Thin ${product_fullname}"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr ""
+"Dosarul selectat nu este gol. Vă rog selectați alt dosar care să fie gol."
+
+msgid "Site name"
+msgstr "Numele site-ului"
+
+msgid "Japanese"
+msgstr "Japoneză"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr ""
+"Introduceți numele de domeniu deținut sau adresa IP a serverului web "
+"(www.exemplu.com)"
+
+msgid "You need to provide a non-empty password"
+msgstr "Este necesar să furnizați o parolă nevidă."
+
+msgid "Configuring database"
+msgstr "Configurarea bazei de date"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr "Furnizează date eșantion pentru Joomla în limba engleză."
+
+msgid "SMTP Port"
+msgstr "SMTP Port"
+
+msgid "Chinese/Taiwan"
+msgstr "Chineză/Taiwaneză"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr ""
+"Din  motive de securitate este recomandat să nu puneți o parolă vidă pentru "
+"parola utilizatorului \"root\" al ${mysql_database_type}. Doriți să puneți o parolă pentru "
+"userul \"root\" al ${mysql_database_type} ?"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "Email Address"
+msgstr "Adresa Email"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Doriți să păstrați baza de date wordpress ? Aceasta va fi salvată în "
+"${installdir}/backups"
+
+msgid "Sample Rails Application"
+msgstr "Aplicație Rails demonstrativă"
+
+msgid "Italian"
+msgstr "Italiană"
+
+msgid "Ruby On Rails"
+msgstr "Ruby On Rails"
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+"Drupal este un CMS ce permite utilizatorului  sau comunităților de "
+"utilizatori o  ușoară publicare, conducere și organizare a unei largi "
+"varietăți de conținut pe site. În general, Drupal este folosit pentru "
+"portalurile web ale comunităților, sitr-uri de discuții, site-uri de firmă, "
+"aplicații intranet, sit-uri sau blog-uri personale, aplicații de e-comerț, "
+"dosare de resurse și site-uri de rețele de socializare."
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr ""
+"Validează schimbările în permisiunile fișierelor și a setărilor de "
+"configurare ce face ușoară instalarea de plug-in, teme și update-uri pentru "
+"anumite aplicații, dar nu este optimă din unct de vedere al securității. "
+"Recomandată dacă folosiți acest stack pentru scopuri de dezvoltare sau în "
+"interiorul companiei."
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+"Dosarul proiectului ${rubystack_project_directory}/${samplerails_application"
+"_name}-${product_version} există deja. Vă rog alegeți alt prefix."
+
+msgid "Please enter a password to use for the database root user"
+msgstr ""
+"Vă rog introduceți o parolă de folosit pentru utilizatorul \"root\" al bazei "
+"de date"
+
+msgid "Creating web application."
+msgstr "Creearea aplicației web"
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "Vă rog alegeți un dosar pentru a instala ${product_fullname}"
+
+msgid "Please configure Joomla! installation"
+msgstr "Vă rog configurați instalarea Joomla!"
+
+msgid "Uninstalling services."
+msgstr "Dezinstalarea serviciilor."
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr ""
+"phpMyAdmin este o unealtă scrisă în PHP cu scopul de a gestiona "
+"administrarea serverului ${mysql_database_type} prin rețeaua Web."
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr "Modulul Bitnami Joomla ${project.version}"
+
+msgid "Redmine packaged by Bitnami"
+msgstr "Redmine packaged by Bitnami"
+
+msgid "Bitnami Website"
+msgstr "Bitnami Website"
+
+msgid "Username"
+msgstr "Nume utilizator"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"Încercați să instalați un modul pe 64 biți într-o instalare de 32 biți. Nu "
+"se poate. Vă rog să descărcați modulul potrivit de la bitnami.com"
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+"Joomla! este cel mai premiat CMS ce se poate folosi pentru site-uri "
+"personale, de firmă  sau portaluri, sit-uri pentru firme mici, non-profit "
+"sau de organizație, aplicații guvernamentale, intraneturi și extraneturi de "
+"corporație, sit-uri pentru școli și biserici, portaluri bazate pe "
+"comunități."
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "Vă rog folosiți doar caractere alfanumerice"
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "Vă rog folosiți doar caractere alfanumerice"
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "Vă rog folosiți doar caractere alfanumerice"
+
+msgid "Please confirm your password"
+msgstr "Vă rog reintroduceți parola"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr ""
+"Vă rog introduceți numărul portului pe care Serverul Apache inclus îl va "
+"folosi pentru accesul SSL."
+
+msgid "Spanish"
+msgstr "Spaniolă"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""

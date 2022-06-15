@@ -1,0 +1,147 @@
+<component>
+    <name>phpautodetection</name>
+    <description>//PHP Autodetection</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+
+    <functionDefinitionList>
+        <actionDefinition name="getExtensionDirectory">
+            <parameterList>
+                <stringParameter name="binaryDirectory" default=""/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariableFromScriptOutput>
+                    <name>phpExtensionsOutput</name>
+                    <exec>${binaryDirectory}/php</exec>
+                    <execArgs>-i | grep extension_dir</execArgs>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                </setInstallerVariableFromScriptOutput>
+                <setInstallerVariableFromRegEx>
+                    <name>phpExtensionsDirectory</name>
+                    <pattern>^.*?extension_dir\s+=>\s+(/[^\s]+)\s.*$</pattern>
+                    <substitution>\1</substitution>
+                    <text>${phpExtensionsOutput}</text>
+                </setInstallerVariableFromRegEx>
+                <globalVariables names="phpExtensionsDirectory"/>
+            </actionList>
+        </actionDefinition>
+      <actionDefinition name="autodetectPHP">
+	<parameterList>
+          <stringParameter name="targetPlatform" default="" description="Target Platform"/>
+          <stringParameter name="binaryDirectory" default="" description="Autodetected Binary Directory"/>
+          <stringParameter name="configurationDirectory" default="" description="Autodetected Configuration Directory"/>
+          <stringParameter name="extensionsDirectory" default="" description="Autodetected Extensions Directory"/>
+	</parameterList>
+	<actionList>
+          <setInstallerVariable name="php_autodetected" value="0"/>
+          <globalVariables names="php_autodetected"/>
+          <globalVariables names="${binaryDirectory} ${configurationDirectory} ${extensionsDirectory}"/>
+
+          <!-- RedHat START -->
+          
+          <actionGroup>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <actionList>              
+              <setInstallerVariable name="php_autodetected" value="1"/>
+              <setInstallerVariable name="${configurationDirectory}" value="/etc" persist="1"/>
+              <setInstallerVariable name="${binaryDirectory}" value="/usr/bin" persist="1"/>
+              <getExtensionDirectory binaryDirectory="${${binaryDirectory}}"/>
+              <setInstallerVariable name="${extensionsDirectory}" value="${phpExtensionsDirectory}" persist="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="redhat"/>
+              <compareText text="${targetPlatform}" logic="equals" value="fedora"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- RedHat END -->
+
+          <!-- XAMP START -->
+          
+          <actionGroup>
+            <actionList>
+	      <setInstallerVariable name="xampp_root" value="/opt/lampp" >
+		<ruleList>
+		  <platformTest type="linux"/>
+		</ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="xampp_root" value="/Applications/XAMPP/xamppfiles" >
+		<ruleList>
+		  <platformTest type="osx"/>
+		</ruleList>
+              </setInstallerVariable>
+	      <actionGroup>
+		  <actionList>
+		      <registryGet key="HKEY_LOCAL_MACHINE\SOFTWARE\xampp" name="Install_Dir" variable="xampp_root">
+		      </registryGet>
+		      <setInstallerVariable name="xampp_root" value="${installdir}" >
+			  <ruleList>
+			      <stringTest text="${xampp_root}" type="empty" />
+			  </ruleList>
+		      </setInstallerVariable>
+		      <setInstallerVariable name="xampp_root" value="${installdir}" >
+			  <ruleEvaluationLogic>or</ruleEvaluationLogic>
+			  <ruleList>
+			      <fileExists path="${installdir}/php" />
+			  </ruleList>
+		      </setInstallerVariable>
+		  </actionList>
+		  <ruleList>
+		      <platformTest type="windows"/>
+		  </ruleList>
+	      </actionGroup>
+              <setInstallerVariable name="php_autodetected" value="1"/>
+	      <actionGroup>
+		<actionList>
+		  <setInstallerVariable name="${configurationDirectory}" value="${xampp_root}/etc"/>
+		  <setInstallerVariable name="${binaryDirectory}" value="${xampp_root}/bin"/>
+          <getExtensionDirectory binaryDirectory="${${binaryDirectory}}"/>
+          <setInstallerVariable name="${extensionsDirectory}" value="${phpExtensionsDirectory}" persist="1"/>
+		</actionList>
+		<ruleList>
+		  <platformTest type="unix"/>
+		</ruleList>		
+	      </actionGroup>
+	      <actionGroup>
+		<actionList>
+		  <setInstallerVariable name="${configurationDirectory}" value="${xampp_root}\php"/>
+		  <setInstallerVariable name="${binaryDirectory}" value="${xampp_root}\php"/>
+		  <setInstallerVariable name="${extensionsDirectory}" value="${xampp_root}\php\ext"/>
+		</actionList>
+		<ruleList>
+		  <platformTest type="windows"/>
+		</ruleList>		
+	      </actionGroup>
+
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="xampp"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- XAMP END -->
+          
+          <!-- Ubuntu START -->
+          
+          <actionGroup>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <actionList>              
+              <setInstallerVariable name="php_autodetected" value="1"/>
+              <setInstallerVariable name="${configurationDirectory}" value="/etc/php5" persist="1"/>
+              <setInstallerVariable name="${binaryDirectory}" value="/usr/bin" persist="1"/>
+              <getExtensionDirectory binaryDirectory="${${binaryDirectory}}"/>
+              <setInstallerVariable name="${extensionsDirectory}" value="${phpExtensionsDirectory}" persist="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="ubuntu"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- Ubuntu END -->
+          
+	</actionList>
+      </actionDefinition>
+  </functionDefinitionList>
+</component>

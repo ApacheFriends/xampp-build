@@ -1,0 +1,462 @@
+<project>
+  <vendor>Bitnami</vendor>
+  <productUrlHelpLink>https://community.bitnami.com</productUrlHelpLink>
+  <productUrlInfoAbout>http://apachefriends.org</productUrlInfoAbout>
+  <productDisplayIcon>${installdir}/install/xampp.ico</productDisplayIcon>
+  <fullName>XAMPP</fullName>
+  <requireInstallationByRootUser>1</requireInstallationByRootUser>
+  <shortName>xamppstack</shortName>
+  <windowsARPRegistryPrefix>xampp</windowsARPRegistryPrefix>
+  <windowsSoftwareRegistryPrefix>xampp</windowsSoftwareRegistryPrefix>
+  <version>@@XAMPP_VERSION@@</version>
+  <installerFilename>xampp-${platform_name}-${product_version}-installer.${platform_exec_suffix}</installerFilename>
+  <allowComponentSelection>1</allowComponentSelection>
+  <showFileUnpackingProgress>0</showFileUnpackingProgress>
+  <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
+  <enableRollback>0</enableRollback>
+  <osxApplicationBundleIcon>images/xampp.icns</osxApplicationBundleIcon>
+  <leftImage>images/xampp-left.png</leftImage>
+  <logoImage>images/xampp-top-right.png</logoImage>
+  <uninstallerDirectory>${xampp_installdir_root}</uninstallerDirectory>
+  <height>393</height>
+
+  <slideShowLoop>yes</slideShowLoop>
+  <slideShowTiming>10</slideShowTiming>
+  <slideShowImageList>
+      <slideShowImage path="images/xampp-slide1.png" />
+  </slideShowImageList>
+
+  <preInstallationActionList>
+      <actionGroup>
+          <actionList>
+              <setInstallerVariable name="xampp_installdir_root" value="/opt/lampp" persist="1"/>
+              <setInstallerVariable name="xampp_files_installdir" value="/opt/lampp" persist="1"/>
+              <setInstallerVariable name="installdir" value="/opt/lampp"/>
+          </actionList>
+          <ruleList>
+              <platformTest type="linux"/>
+          </ruleList>
+      </actionGroup>
+      <actionGroup>
+          <actionList>
+              <setInstallerVariable name="xampp_installdir_root" value="/Applications/XAMPP" persist="1"/>
+              <setInstallerVariable name="xampp_files_installdir" value="/Applications/XAMPP/xamppfiles" persist="1"/>
+              <setInstallerVariable name="installdir" value="/Applications/XAMPP/xamppfiles"/>
+          </actionList>
+          <ruleList>
+              <platformTest type="osx"/>
+          </ruleList>
+      </actionGroup>
+      <actionGroup>
+          <actionList>
+              <readFile name="installed_version" path="${xampp_files_installdir}/lib/VERSION"/>
+              <stringModify variable="installed_version" logic="trim" text="${installed_version}"/>
+              <actionGroup>
+                  <actionList>
+                      <setInstallerVariable name="project.component(xampp_core_files).canBeEdited" value="1"/>
+                      <setInstallerVariable name="project.component(xampp_core_files).selected" value="0"/>
+                  </actionList>
+                  <ruleList>
+                      <compareVersions version1="${installed_version}" logic="less_or_equal" version2="${project.version}"/>
+                  </ruleList>
+              </actionGroup>
+              <setInstallerVariable name="project.installationType" value="upgrade">
+                  <ruleList>
+                      <platformTest type="linux"/>
+                      <fileExists path="${installdir}/uninstall"/>
+                  </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="project.installationType" value="upgrade">
+                  <ruleList>
+                      <platformTest type="osx"/>
+                      <fileExists path="${installdir}/uninstall.app"/>
+                  </ruleList>
+              </setInstallerVariable>
+          </actionList>
+          <ruleList>
+              <fileExists path="${xampp_files_installdir}/lib/VERSION"/>
+          </ruleList>
+      </actionGroup>
+  </preInstallationActionList>
+  <parameterList>
+      <booleanParameter name="start_xampp_services" default="0" ask="0" cliOptionName="start-xampp-services" />
+      <directoryParameter name="installdir" value="" ask="0"/>
+      <labelParameter name="readonly_installdir" description="XAMPP will be installed to ${xampp_installdir_root}" title="Installation Directory"/>
+  </parameterList>
+  <componentList>
+    <include file="base-functions.xml" />
+<include file="common-native-adapter.xml"/>
+    <include file="mysql-functions.xml" />
+    <include file="apache-functions.xml" />
+    <include file="php-functions.xml" />
+    <include file="environment-autodetection-functions.xml" />
+    <include file="bitnami-functions.xml"/>
+    <include file="xampp-module-adapter.xml"/>
+    <!-- Disable the virtualhost stuff for now -->
+    <!--
+    <include file="apache-bitnami.xml" />
+    -->
+    <include file="native-apache-adapter.xml"/>
+    <include file="native-mysql-adapter.xml"/>
+    <include file="native-proftpd-adapter.xml"/>
+    <component>
+        <name>xampp_core_files</name>
+        <canBeEdited>0</canBeEdited>
+        <description>XAMPP Core Files</description>
+	<detailedDescription>Apache, MySQL, PHP, Perl and their required dependencies.</detailedDescription>
+        <folderList>
+            <folder>
+                <description>//XAMPP Files</description>
+                <destination>${xampp_files_installdir}/</destination>
+                <name>xampp_core_folder</name>
+                <distributionFileList>
+                    <distributionDirectory origin="${xampp_distribution_files}/*" allowWildcards="1">
+                        <excludeFiles>${xampp_distribution_files}/postgresql
+                        ${xampp_distribution_files}/build
+                        ${xampp_distribution_files}/include
+                        ${xampp_distribution_files}/man
+                        ${xampp_distribution_files}/docs
+                        ${xampp_distribution_files}/manual
+                        ${xampp_distribution_files}/info
+                        </excludeFiles>
+                        <onPackingFilterList>
+                            <fileNameFilter pattern="${xampp_distribution_files}/(lib|modules)/.*\.(a|la)$" logic="does_not_match" patternType="regexp"/>
+                            <fileNameFilter pattern="${xampp_distribution_files}/share/doc" logic="does_not_match" patternType="glob"/>
+                            <fileNameFilter pattern="${xampp_distribution_files}/share/man" logic="does_not_match" patternType="glob"/>
+                            <fileNameFilter pattern="${xampp_distribution_files}/share/openssl/man" logic="does_not_match" patternType="glob"/>
+                        </onPackingFilterList>
+                    </distributionDirectory>
+                    <distributionDirectory origin="${build_project_directory}/phpmyadmin"/>
+                </distributionFileList>
+                <actionList>
+                    <createSystemUser username="mysql" groupname="mysql" />
+                    <substitute>
+                        <files>${xampp_files_installdir}/share/xampp-control-panel/*;${xampp_files_installdir}/share/lampp/*;${xampp_files_installdir}/share/xampp/*;${xampp_files_installdir}/etc/*;${xampp_files_installdir}/etc/extra/*;${xampp_files_installdir}/htdocs/xampp/*;${xampp_files_installdir}/htdocs/xampp/contrib/*;${xampp_files_installdir}/xampp</files>
+                        <type>exact</type>
+                        <substitutionList>
+                            <substitution pattern="@@BITNAMI_XAMPP_ROOT@@" value="${xampp_files_installdir}"/>
+                        </substitutionList>
+                    </substitute>
+                    <actionGroup>
+                        <actionList>
+                            <substitute>
+                                <files>${xampp_files_installdir}/htdocs/xampp/start.php;${xampp_files_installdir}/htdocs/xampp/index.php</files>
+                                <type>exact</type>
+                                <substitutionList>
+                                    <substitution>
+                                        <pattern>['start-head']</pattern>
+                                        <value>['start-head-osx']</value>
+                                    </substitution>
+                                    <substitution>
+                                        <pattern>['global-xampp']</pattern>
+                                        <value>['global-xampp-osx']</value>
+                                    </substitution>
+                                </substitutionList>
+                            </substitute>
+                            <substitute>
+                                <files>${xampp_files_installdir}/htdocs/xampp/head.php</files>
+                                <type>exact</type>
+                                <substitutionList>
+                                    <substitution>
+                                        <pattern>head-linux.gif</pattern>
+                                        <value>head-macosx.gif</value>
+                                    </substitution>
+                                </substitutionList>
+                            </substitute>
+                        </actionList>
+                        <ruleList>
+                            <platformTest type="osx"/>
+                        </ruleList>
+                    </actionGroup>
+
+                    <substitute>
+                        <files>${xampp_files_installdir}/etc/httpd.conf</files>
+                        <type>regexp</type>
+                        <substitutionList>
+                            <substitution>
+                                <pattern>^Group\s+.*</pattern>
+                                <value>Group daemon</value>
+                            </substitution>
+                            <substitution>
+                                <pattern>^User\s+.*</pattern>
+                                <value>User daemon</value>
+                            </substitution>
+                        </substitutionList>
+                    </substitute>
+                    <substitute>
+                        <files>${xampp_files_installdir}/etc/proftpd.conf</files>
+                        <type>regexp</type>
+                        <substitutionList>
+                            <substitution>
+                                <pattern>^#Group\s+.*</pattern>
+                                <value>#Group daemon</value>
+                            </substitution>
+                            <substitution>
+                                <pattern>^User\s+.*</pattern>
+                                <value>User daemon</value>
+                            </substitution>
+                            <substitution>
+                                <pattern>^UserPassword\s+nobody\s+</pattern>
+                                <value>UserPassword daemon </value>
+                            </substitution>
+                        </substitutionList>
+                    </substitute>
+                    <substitute>
+                        <files>${xampp_files_installdir}/etc/my.cnf</files>
+                        <type>regexp</type>
+                        <substitutionList>
+                            <substitution pattern="^\s*user\s*=\s*.*" value="user = mysql"/>
+                        </substitutionList>
+                    </substitute>
+
+                    <substitute>
+                        <files>${xampp_files_installdir}/htdocs/xampp/lang/*</files>
+                        <type>exact</type>
+                        <encoding>utf-8</encoding>
+                        <substitutionList>
+                            <substitution pattern="@@BITNAMI_XAMPP_ROOT@@" value="${xampp_files_installdir}"/>
+                        </substitutionList>
+                    </substitute>
+                    <actionGroup>
+                        <actionList>
+                            <createSymLink target="${xampp_files_installdir}/xampp" linkName="${xampp_files_installdir}/lampp"/>
+                            <createSymLink target="${xampp_files_installdir}/share/xampp" linkName="${xampp_files_installdir}/share/lampp"/>
+                            <addFilesToUninstaller files="${xampp_files_installdir}/lampp;${xampp_files_installdir}/share/lampp"/>
+                        </actionList>
+                        <ruleList>
+                            <platformTest type="linux"/>
+                        </ruleList>
+                    </actionGroup>
+                </actionList>
+            </folder>
+
+            <!--<folder>
+                <description>//XAMPP Files</description>
+                <destination>${installdir}/</destination>
+                <name>xampp_manager_folder</name>
+                <distributionFileList>
+                    <distributionDirectory origin="${build_project_directory}/XAMPP Control.app"/>
+                </distributionFileList>
+                <shouldPackRuleList>
+                    <compareText text="${platform_name}" logic="equals" value="osx"/>
+                </shouldPackRuleList>
+            </folder>-->
+
+        </folderList>
+        <postInstallationActionList>
+            <setInstallerVariable name="phpmyadmin_tmp_folder" value="${xampp_files_installdir}/phpmyadmin/tmp"/>
+            <!-- The $cfg[‘TempDir’] (./tmp/)is not accessible T28031 -->
+            <createDirectory path="${phpmyadmin_tmp_folder}"/>
+            <baseRecursiveChown files="${phpmyadmin_tmp_folder}" owner="bitnami" group="${web_server_group}"/>
+            <baseRecursiveChmod path="${phpmyadmin_tmp_folder}" type="directories" permissions="775" />
+
+            <foreach>
+                <variables>dir</variables>
+                <values>logs htdocs/xampp/sqlite var/proftpd htdocs/xampp/lang.tmp htdocs/xampp/guestbook.dat htdocs/webalizer phpmyadmin/config.inc.php</values>
+                <actionList>
+                    <baseRecursiveChown owner="daemon" group="daemon" files="${xampp_files_installdir}/${dir}"/>
+                </actionList>
+            </foreach>
+            <foreach>
+                <variables>dir</variables>
+                <values>var/mysql</values>
+                <actionList>
+                    <baseRecursiveChown owner="mysql" group="mysql" files="${xampp_files_installdir}/${dir}"/>
+                </actionList>
+            </foreach>
+
+
+            <createDirectory path="${xampp_files_installdir}/temp"/>
+            <changePermissions permissions="777" files="${xampp_files_installdir}/temp" />
+            <baseRecursiveChown owner="daemon" group="daemon" files="${xampp_files_installdir}/temp"/>
+
+            <actionGroup>
+                <actionList>
+                    <!-- Using the XAMPP panel breaks if we do not set daemon user to the temporary directory as it takes the one from the user launching the manager -->
+                    <createDirectory path="${xampp_files_installdir}/temp/mysql"/>
+                    <baseRecursiveChown owner="mysql" group="mysql" files="${xampp_files_installdir}/temp/mysql"/>
+                    <substitute>
+                        <files>${xampp_files_installdir}/etc/my.cnf</files>
+                        <type>regexp</type>
+                        <substitutionList>
+                            <substitution pattern="#tmpdir\s*=\s*/tmp/.*" value="tmpdir = ${xampp_files_installdir}/temp/mysql"/>
+                        </substitutionList>
+                    </substitute>
+                    <foreach>
+                        <variables>dir</variables>
+                        <values>bin cgi-bin etc htdocs logs manager-osx.app</values>
+                        <actionList>
+                            <createSymLink target="xamppfiles/${dir}" linkName="${xampp_installdir_root}/${dir}"/>
+                            <addFilesToUninstaller files="${xampp_installdir_root}/${dir}"/>
+                        </actionList>
+                    </foreach>
+                    <touchFile path="${xampp_installdir_root}/etc/xampp/rights_fixed"/>
+                </actionList>
+                <ruleList>
+                    <platformTest type="osx"/>
+                </ruleList>
+            </actionGroup>
+            <!-- Enable utf8mb4 encoding -->
+            <configureUtf8mb4Encoding mysqlCfgFile="${xampp_installdir_root}/etc/my.cnf"/>
+        </postInstallationActionList>
+    </component>
+    <component>
+        <name>xampp_developer_files</name>
+        <canBeEdited>1</canBeEdited>
+        <description>XAMPP Developer Files</description>
+	<detailedDescription>Build files for development: include, man, docs and share folders.</detailedDescription>
+        <folderList>
+            <folder>
+                <description>//XAMPP Files</description>
+                <destination>${xampp_files_installdir}/</destination>
+                <name>xampp_developer_folder</name>
+                <distributionFileList>
+                    <distributionDirectory origin="${xampp_distribution_files}/build"/>
+                    <distributionDirectory origin="${xampp_distribution_files}/include"/>
+                    <distributionDirectory origin="${xampp_distribution_files}/man"/>
+                    <distributionDirectory origin="${xampp_distribution_files}/docs"/>
+                    <distributionDirectory origin="${xampp_distribution_files}/manual"/>
+                    <distributionDirectory origin="${xampp_distribution_files}/info"/>
+                    <distributionDirectory origin="${xampp_distribution_files}/share">
+                        <onPackingFilterList>
+                            <fileNameFilter pattern="${xampp_distribution_files}/share/doc*;${xampp_distribution_files}/share/man*;${xampp_distribution_files}/share/openssl/man*" logic="matches" patternType="glob"/>
+                        </onPackingFilterList>
+                    </distributionDirectory>
+
+                    <distributionDirectory origin="${xampp_distribution_files}/lib">
+                        <onPackingFilterList>
+                            <fileNameFilter pattern="*.a;*.la" logic="matches" patternType="glob"/>
+                        </onPackingFilterList>
+                    </distributionDirectory>
+                    <distributionDirectory origin="${xampp_distribution_files}/modules">
+                        <onPackingFilterList>
+                            <fileNameFilter pattern="*.a;*.la" logic="matches" patternType="glob"/>
+                        </onPackingFilterList>
+                    </distributionDirectory>
+                </distributionFileList>
+            </folder>
+        </folderList>
+    </component>
+    <include file="manager.xml" />
+  </componentList>
+
+
+  <finalPageActionList>
+      <actionGroup show="0" run="1">
+          <actionList>
+              <runProgram program="${xampp_files_installdir}/ctlscript.sh" programArguments="start mysql" />
+          </actionList>
+          <ruleList>
+              <isTrue value="${start_xampp_services}" />
+          </ruleList>
+      </actionGroup>
+      <actionGroup progressText="Launch ${product_fullname}">
+	  <actionList>
+	      <launchBrowser url="http://${web_server_domain_name}" />
+	      <runProgram>
+		  <program>${installdir}/manager-osx.app/Contents/MacOS/installbuilder.sh</program>
+		  <programArguments>&amp;</programArguments>
+		  <ruleList>
+		      <platformTest type="osx" />
+		  </ruleList>
+	      </runProgram>
+	      <runProgram>
+		  <program>${installdir}/manager-${platform_name}.run</program>
+		  <programArguments>&amp;</programArguments>
+		  <ruleList>
+		      <platformTest type="linux" />
+		  </ruleList>
+	      </runProgram>
+	  </actionList>
+	  <ruleList>
+	      <compareText value="${installer_ui}" text="gui" logic="equals" />
+          <isFalse value="${start_xampp_services}" />
+	  </ruleList>
+      </actionGroup>
+<!--    <actionGroup>
+      <progressText>Do you want to start the Control Panel now?</progressText>
+      <actionList>
+	<runProgram>
+	  <program>${installdir}/xampp-control.exe</program>
+	  <programArguments>&amp;</programArguments>
+	  <ruleList>
+	    <platformTest>
+	      <type>windows</type>
+	    </platformTest>
+	  </ruleList>
+	</runProgram>
+      </actionList>
+    </actionGroup>-->
+  </finalPageActionList>
+
+  <preUninstallationActionList>
+      <runProgram program="${xampp_files_installdir}/ctlscript.sh" programArguments="stop" abortOnError="0" showMessageOnError="0"/>
+      <deleteFile path="${xampp_files_installdir}/lib/instantclient"/>
+  <!--    <showQuestion>
+	  <text>Remove the ${installdir.dos}\htdocs folder too?</text>
+	  <variable>confirm_remove</variable>
+      </showQuestion>
+      <actionGroup>
+	  <actionList>
+	      <deleteFile path="${installdir.dos}\htdocs" />
+	  </actionList>
+	  <ruleList>
+	      <compareText text="${confirm_keep}" logic="equals" value="remove"/>
+	  </ruleList>
+      </actionGroup>-->
+      <foreach abortOnError="0" showMessageOnError="0">
+          <variables>dir</variables>
+          <values>tmp logs ctlscript.sh apache2 htdocs/bitnami.css htdocs/applications.html htdocs/img mysql/scripts mysql/README.txt apache2/README.txt</values>
+          <actionList>
+              <deleteFile path="${xampp_files_installdir}/${dir}"/>
+          </actionList>
+      </foreach>
+
+  </preUninstallationActionList>
+  <postUninstallationActionList>
+      <foreach abortOnError="0" showMessageOnError="0">
+          <variables>dir</variables>
+          <values>var/proftpd etc/xampp lib phpmyadmin share htdocs/webalizer htdocs/xampp</values>
+          <actionList>
+              <deleteFile abortOnError="0" showMessageOnError="0" path="${xampp_files_installdir}/${dir}"/>
+          </actionList>
+      </foreach>
+      <deleteFile abortOnError="0" showMessageOnError="0" path="${xampp_files_installdir}/backup">
+          <ruleList>
+              <fileTest path="${xampp_files_installdir}/backup" condition="is_empty"/>
+          </ruleList>
+      </deleteFile>
+  </postUninstallationActionList>
+  <readyToInstallActionList>
+      <setInstallerVariable name="ssl_certificate_file" value="${xampp_files_installdir}/etc/ssl.crt/server.crt"/>
+      <setInstallerVariable name="ssl_certificate_key_file" value="${xampp_files_installdir}/etc/ssl.key/server.key"/>
+      <setInstallerVariable name="target_platform" value="xampp"/>
+      <!--      <createDirectory path="${installdir}"/>
+           <adaptPlatform nativePlatformType="xampp" onlyPopulateVariables="0"/>-->
+  </readyToInstallActionList>
+  <postInstallationActionList>
+      <addFilesToUninstaller files="${xampp_files_installdir}/lib/VERSION"/>
+      <addFilesToUninstaller files="${xampp_files_installdir}/properties.ini"/>
+      <writeFile path="${xampp_files_installdir}/lib/VERSION" text="${project.version}"/>
+  </postInstallationActionList>
+  <preBuildActionList>
+      <enableAdapterComponents/>
+      <actionGroup>
+          <actionList>
+              <setInstallerVariable name="xampp_distribution_files" value="${build_project_directory}/lampp"/>
+          </actionList>
+          <ruleList>
+              <compareText text="${platform_name}" logic="contains" value="linux"/>
+          </ruleList>
+      </actionGroup>
+      <actionGroup>
+          <actionList>
+              <setInstallerVariable name="xampp_distribution_files" value="${build_project_directory}/xamppfiles"/>
+          </actionList>
+          <ruleList>
+              <compareText text="${platform_name}" logic="equals" value="osx"/>
+          </ruleList>
+      </actionGroup>
+      <createDirectory path="${xampp_distribution_files}/docs"/>
+  </preBuildActionList>
+</project>

@@ -1,0 +1,864 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-07 13:07+0200\n"
+"PO-Revision-Date: 2011-12-08 08:21+0200\n"
+"Last-Translator: Sang-jae <phrack@naver.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
+
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr ""
+"웹 브라우저에서 http://localhost:${web_server_port}로 접속하면 ${product_fullname}이 "
+"실행됩니다."
+
+msgid "Please choose a number for Port"
+msgstr "포트 번호를 선택하여 주십시오."
+
+msgid "Default email provider:"
+msgstr "기본 이메일 서비스 제공자"
+
+msgid "Re-enter"
+msgstr "재입력"
+
+msgid "Creating Database"
+msgstr "데이터베이스 구성"
+
+msgid "${mysql_database_type} Information"
+msgstr "${mysql_database_type} 정보"
+
+msgid "Please configure Drupal installation"
+msgstr "Drupal 설치 정보를 설정하세요."
+
+msgid "Database Installation"
+msgstr "데이터베이스 설치"
+
+msgid "Drupal"
+msgstr "Drupal"
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr "Joomla!의 데이터베이스를 보관하시겠습니까? 보관된 내용은 ${installdir}/backups에 저장됩니다."
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "${product_fullname} 서비스 제거"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr "Joomla ${project.version} packaged by Bitnami"
+
+msgid "Configuration Report"
+msgstr "설정 정보"
+
+msgid "GMail password"
+msgstr "GMail 패스워드"
+
+msgid "SSL Port"
+msgstr "SSL 포트 번호"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "Bitnami 클라우드 호스팅에 대해 살펴보기"
+
+msgid "Login must not have capital letters"
+msgstr "로그인 이름에 대문자를 사용할 수 없습니다."
+
+msgid "Do you want to keep the redmine database? It will be saved at ${installdir}/backups"
+msgstr "redmine의 데이터베이스를 보관하시겠습니까? 보관된 내용은 ${installdir}/backups에 저장됩니다."
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "이미 설치된 ${mysql_database_type} 데이터베이스를 사용합니다."
+
+msgid "Starting Subversion server"
+msgstr "Subversion 서버를 구동합니다."
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"Apache 서버가 사용할 Listen 포트 번호를 입력하여 주십시오. 포트 번호는 다른 프로세스가 사용하지 않는 것이어야 합니다."
+
+msgid "${product_fullname} admin user creation"
+msgstr "${product_fullname} 관리자 계정을 생성합니다."
+
+msgid "Please enter your database root username"
+msgstr "데이터베이스의 root 계정명을 입력하세요."
+
+msgid "Installing Thin Cluster as services."
+msgstr "Thin Cluster를 서비스로 등록합니다."
+
+msgid "Please select which database configuration you wish to use"
+msgstr "사용하고 싶은 데이터베이스 설정을 선택하세요."
+
+msgid "BitRock Nginx"
+msgstr "BitRock Nginx"
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"${app(wordpress).installdir}가 비어있지 않습니다. 이전 버전이 제대로 제거 되었는지 확인하여 주십시오. 설치를 "
+"계속할 경우, 현재 설치하는 버전이 정상 동작하지 않을 수 있습니다. 그래도 설치를 계속 진행 하시겠습니까?"
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"${app(joomla).installdir}가 비어있지 않습니다. 이전 버전이 제대로 제거 되었는지 확인하여 주십시오. "
+"설치를 계속할 경우, 현재 설치하는 버전이 정상 동작하지 않을 수 있습니다. 그래도 설치를 계속 진행 하시겠습니까?"
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "${mysql_database_type} 접속 시간이 초과하였습니다. 설치를 중지합니다."
+
+msgid "New Database"
+msgstr "신규 데이터베이스"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr "설치 경로 이름이 너무 깁니다. 최대 길이는 ${base_installdir_max_characters}자 입니다."
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "서비스를 종료합니다. (몇 분 걸릴 수 있습니다.)"
+
+msgid "Unable to get free disk space."
+msgstr "디스크 용량이 부족합니다."
+
+msgid "Unable to start Apache"
+msgstr "Apache를 구동하지 못했습니다."
+
+msgid "SMTP Host"
+msgstr "SMTP 호스트"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+"Ruby on Rails는 데이터베이스를 사용하는 웹 어플이케이션을 위한 MVC 프레임워크로, 개발자의 행복과 지속적인 생산성을 위해 "
+"최적화되었습니다."
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr "mysql_port로 ${mysql_port}를 사용할 수 없습니다. 다른 포트 번호를 선택하세요."
+
+msgid "DB Prefix"
+msgstr "DB 접두어"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr ""
+"${bitnami_platform_name}에 필요한 파일이 설치되지 않았습니다. properties.ini 파일이 없거나 제대로 설치가 "
+"되지 않았습니다."
+
+msgid "${mysql_database_type} Server root password"
+msgstr "${mysql_database_type} 서버의 root 패스워드"
+
+msgid "Select a folder"
+msgstr "폴더 선택"
+
+msgid "Default mail server configuration."
+msgstr "기본 메일 서버 설정"
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr "SQLite는 독립적이고 별도의 서버나 설정이 필요없으며, 트랜잭션 처리가 가능한 SQL 데이타베이스 엔진 라이브러리입니다."
+
+msgid "Password must contain both letters and numbers"
+msgstr "패스워드에는 문자와 숫자가 반드시 포함되어야 합니다."
+
+msgid "IP / Hostname"
+msgstr "IP / 호스트명"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr "설치 경로에는 문자, 숫자, '/', '.', '-', '_' 만 사용 가능합니다."
+
+msgid "Bitnami RubyStack"
+msgstr "Bitnami RubyStack"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+"Bitnami 클라우드 호스팅은 Bitnami 어플리케이션을 클라우스 환경에서 사용할 수 있는 환경을 제공합니다. 설치를 계속하면서 "
+"자세한 사항을 살펴보고 싶다면 아래의 체크 박스를 활성화해 주십시오. 웹 브라우저를 통해 살펴보실 수 있습니다."
+
+msgid "Hebrew"
+msgstr "히브리어"
+
+msgid "French"
+msgstr "프랑스어"
+
+msgid "Bitnami Redmine Module"
+msgstr "Bitnami Redmine Module"
+
+msgid "Login and password must not be the same"
+msgstr "로그인명과 패스워드를 동일하게 사용할 수 없습니다."
+
+msgid "Secure connection"
+msgstr "보안 접속"
+
+msgid "No, I will do this after installation"
+msgstr "아니오, 설치 후에 직접 하겠습니다."
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr "Apache를 ${apache_unique_service_name}라는 이름으로 서비스 등록합니다."
+
+msgid "Web Server Port"
+msgstr "웹 서버 포트 번호"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr "인스톨러가 접두어를 기반으로 *_production, *_development, *_test databases를 생성합니다. "
+
+msgid "Removing Thin Cluster as services."
+msgstr "Thin Cluster 서비스를 제거합니다."
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr ""
+"이 모듈은 Bitnami Ruby 스택 ${bitnami_minimum_required_rubystack_version} 이상을 필요로 "
+"합니다. 현재 ${base_stack_name} ${base_stack_version}를 설치하려고 합니다. "
+"www.bitnami.com에서 Bitnami Ruby 스택의 최신 버전을 다운로드 받으십시오."
+
+msgid "Launch ${product_fullname}"
+msgstr "${product_fullname} 구동"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "ASCII 문자의 알파벳과 숫자만 사용 가능합니다."
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "ASCII 문자의 알파벳과 숫자만 사용 가능합니다."
+
+msgid "Stopping services."
+msgstr "서비스 정지"
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "함께 제공되는 ${mysql_database_type} 데이터베이스를 사용합니다."
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "${bitnami_platform_name} 설치 경로를 포함한 폴더를 선택하세요."
+
+msgid "Set the database name and user name which will be created or used."
+msgstr "사용할 데이터베이스 이름과 사용자명을 입력하세요."
+
+msgid "${product_fullname} Subversion Service"
+msgstr "${product_fullname} Subversion 서비스"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr ""
+"${apachethinmodule_port2} 포트를 사용할 권한이 없거나 이미 사용중입니다. 다른 포트 번호를 선택하세요."
+
+msgid "Language for default data configuration"
+msgstr "기본 데이터 설정에 사용할 언어"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr "인스톨러가 ${mysql_database_type} 서버에 접속할 수 없습니다. ${mysql_database_type}이 정상 동작 중인지 확인하세요."
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "저장된 데이터도 모두 삭제하시겠습니까?"
+
+msgid "Development Settings"
+msgstr "개발 관련 설정"
+
+msgid "Your real name"
+msgstr "이름"
+
+msgid "Running database migration"
+msgstr "데이터베이스 마이그레이션 실행"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "정확한 IP 주소나 호스트명을 입력하세요."
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "${mysql_database_type} Server port"
+msgstr "${mysql_database_type} 서버 포트 번호"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+"패스워드 길이는 ${component(paramadminaccount).parameter(base_required_password_len"
+"gth).value}자 이상이어야 합니다."
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr "Apache를 ${apache_unique_service_name}라는 이름으로 서비스 등록하지 못했습니다."
+
+msgid "Create databases for the rails project."
+msgstr "rails 프로젝트가 사용할 데이터베이스를 생성합니다."
+
+msgid "Do you want to configure mail support?" 
+msgstr "사용하시겠습니까?"
+
+msgid "This is required so your application can send notifications via email."
+msgstr "어플리케이션에서 통보가 가능하도록 이메일 지원 기능을"
+
+msgid "Apache Web Server Port"
+msgstr "Apache 서버 포트 번호"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr "${mysql_database_type}은 빠르고, 멀티 쓰레드와 다중 사용자를 지원하는 견고한 SQL 데이터베이스 서버입니다."
+
+msgid "Russian"
+msgstr "러시아어"
+
+msgid "New Component"
+msgstr "신규 컴포넌트"
+
+msgid "Web Server Domain"
+msgstr "웹 서버 도메인"
+
+msgid "Thin Server Port"
+msgstr "Thin 서버 포트 번호"
+
+msgid "Nginx Port"
+msgstr "Nginx 포트 번호"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "설치 경로에 공백을 허용하지 않습니다."
+
+msgid "Custom"
+msgstr "사용자 정의"
+
+msgid "${product_fullname} database root user creation"
+msgstr "${product_fullname} 데이터베이스 root 계정 생성"
+
+msgid "Configure SMTP Settings"
+msgstr "SMTP 설정"
+
+msgid "Stop ${product_fullname} service"
+msgstr "${product_fullname} 서비스 정지"
+
+msgid "Web Server port"
+msgstr "웹 서버 포트 번호"
+
+msgid "German"
+msgstr "독일어"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "${mysql_database_type} 파일 '${sqlFile}'을 참조할 수 없습니다. 해당 파일이 존재하지 않습니다."
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr "${bitnami_platform_name}에서 사용할 ${mysql_database_type} 패스워드를 입력하세요."
+
+msgid "Manager tool"
+msgstr "관리자 도구"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr ""
+"파일 권한과 환경 설정들은 보안과 퍼포먼스를 고려하여 설정됩니다. 특정 플러그인이나 테마를 설치하거나 업데이트를 할 경우, 직접 수정을 "
+"해야하거나 이 스택이 공개 서버에 설치되는 경우라면 FTP 같은 서비스를 추가적으로 설치해야할 수 있습니다."
+
+msgid "Yes, please prompt me"
+msgstr "예, 알려주십시오."
+
+msgid "Czech"
+msgstr "체코어"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr "접두어가 올바르지 않습니다. 다른 것을 사용하세요."
+
+msgid "Portuguese/Brazilian"
+msgstr "포르투갈어/브라질어"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "중국어"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "64bit 환경에 32bit 모듈 설치는 지원되지 않습니다. 정확한 버전을 bitnami.com에서 다운로드 받으십시오."
+
+msgid "Launch Redmine application."
+msgstr "Redmine 어플리케이션 구동"
+
+msgid "Waiting Subversion to start."
+msgstr "Subversion 구동 대기"
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+"사용자 계정명의 길이는 ${component(paramadminaccount).parameter(base_required_username"
+"_length).value}자 이상이어야 합니다."
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr "데이터베이스 생성하고 사용자 계정을 초기화하고 있습니다. 시간이 걸릴 수 있습니다."
+
+msgid "Web Server domain"
+msgstr "웹 서버 도메인"
+
+msgid "Bulgarian"
+msgstr "불가리아어"
+
+msgid "DB User Password"
+msgstr "DB 사용자 패스워드"
+
+msgid "Production settings"
+msgstr "운영 환경 설정"
+
+msgid "${product_fullname} Service"
+msgstr "${product_fullname} 서비스"
+
+msgid "Bitnami WordPress Module"
+msgstr "Bitnami WordPress 모듈"
+
+msgid "Installing RubyGems, please be patient."
+msgstr "RubyGems를 설치합니다."
+
+msgid "sphinx Server port"
+msgstr "sphinx 서버 포트 번호"
+
+msgid "Populating database."
+msgstr "데이터베이스 추출"
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr "데이터베이스가 새로 설치됩니다. 만약 기존에 동일한 데이터베이스가 있다면 덮어 쓰게 됩니다. 계속하시겠습니까?"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "${product_fullname} ${mysql_database_type} 서비스"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+"${installdir}에 용량이 부족합니다. ${product_fullname}를 설치하기 위해 최소 "
+"${base_needed_space} MB가 필요합니다."
+
+msgid "Licenses destination"
+msgstr "라이선스 대상"
+
+msgid "Drupal packaged by Bitnami"
+msgstr "Drupal packaged by Bitnami"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Shutting down services."
+msgstr "서비스 종료"
+
+msgid "None"
+msgstr "없음"
+
+msgid "Installing gems, please be patient."
+msgstr "gems를 설치합니다."
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "${mysql_database_type} 데이터베이스 정보를 입력하세요."
+
+msgid "${product_fullname} Apache Service"
+msgstr "${product_fullname} Apache 서비스"
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr ""
+"호스트명은 내부 URL을 생성하는데 사용됩니다. 만약 호스트명이 정확하지 않다면 다른 컴퓨터에서 설치된 WordPress로 접근하지 못할 "
+"수 있습니다."
+
+msgid "Romanian"
+msgstr "루마니아어"
+
+msgid "Dutch"
+msgstr "네덜란드어"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr "${mysql_database_type} 'root' 계정 생성"
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"${app(drupal).installdir}가 비어있지 않습니다. 이전 버전이 제대로 제거 되었는지 확인하여 주십시오. "
+"설치를 계속할 경우, 현재 설치하는 버전이 정상 동작하지 않을 수 있습니다. 그래도 설치를 계속 진행 하시겠습니까?"
+
+msgid "Populating database. This may take some time."
+msgstr "데이터베이스를 추출하고 있습니다. 시간이 걸릴 수 있습니다."
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "데이터베이스에 사용되는 IP 주소나 호스트명을 입력하세요."
+
+msgid "WordPress packaged by Bitnami"
+msgstr "WordPress packaged by Bitnami"
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr "Subversion 서버가 사용할 기본 Listen 포트 번호를 입력하여 주십시오."
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "함께 제공된 Apache 서버가 사용할 기본 Listen 포트 번호를 입력하여 주십시오."
+
+msgid "Hostname"
+msgstr "호스트명"
+
+msgid "Create Admin account"
+msgstr "Admin 계정 생성"
+
+msgid "English"
+msgstr "영어"
+
+msgid "TLS"
+msgstr "TLS"
+
+msgid "Re-enter password"
+msgstr "패스워드 재입력"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr "${mysql_binary_directory} 경로가 올바르지 않습니다. 해당 경로에 필요한 바이너리가 있는지 확인하세요."
+
+msgid "Blog name"
+msgstr "블로그명"
+
+msgid "DB User Name"
+msgstr "DB 사용자명"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr "${mysql_database_type} 파일 '${sqlFile}'을 참조할 수 없습니다. 현재 사용자 계정은 읽기 권한이 없습니다. "
+
+msgid "Login"
+msgstr "로그인 계정명"
+
+msgid "Thin Processes"
+msgstr "Thin 프로세스"
+
+msgid "Install ${product_fullname} as service"
+msgstr "${product_fullname}를 서비스로 등록합니다."
+
+msgid "Restarting Apache"
+msgstr "Apache 재구동"
+
+msgid "Installation Report"
+msgstr "설치 정보"
+
+msgid "Start ${product_fullname} service"
+msgstr "${product_fullname} 서비스 구동"
+
+msgid "Quick Start Guide"
+msgstr "퀵 스타트 가이드"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr "선택한 어플리케이션의 커스터마이징 방법을 보시겠습니까?"
+
+msgid "Select your language for default data configuration:"
+msgstr "기본 데이터 설정 시 사용할 언어를 선택하세요."
+
+msgid "Please select the use of this Stack"
+msgstr "이 스택의 사용 용도를 선택하세요."
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr ""
+"호스트명은 내부 URL을 생성하는데 사용됩니다. 만약 호스트명이 정확하지 않다면 다른 컴퓨터에서 설치된 Joomla!로 접근하지 못할 수 "
+"있습니다."
+
+msgid "Serbian"
+msgstr "세르비아어"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr "설치 유형"
+
+msgid "Swedish"
+msgstr "스웨덴어"
+
+msgid "${mysql_database_type} Service"
+msgstr "${mysql_database_type} 서비스"
+
+msgid "GMail address"
+msgstr "GMail 주소"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "${product_fullname} 제거"
+
+msgid "Portuguese"
+msgstr "포르투갈어"
+
+msgid "Updating mysql directory permissions"
+msgstr "${mysql_database_type} 디렉토리 권한 갱신"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr "Rails 어플리케이션 데이터베이스에 사용할 패스워드를 설정하세요."
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr "Subversion을 ${SubversionUniqueServiceName}라는 이름으로 서비스 등록합니다."
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr "해당 포트 번호를 사용할 권한이 없거나 이미 사용중입니다. 다른 포트 번호를 선택하세요."
+
+msgid "Unable to add text to httpd.conf"
+msgstr "httpd.conf에 추가할 수 없습니다."
+
+msgid "Subversion Server Port"
+msgstr "Subversion 서버 포트 번호"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr "브라우저에서 ${product_fullname}를 실행"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "Bitnami 클라우드 호스팅"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr ""
+"${apachethinmodule_port1} 포트를 사용할 권한이 없거나 이미 사용중입니다. 다른 포트 번호를 선택하세요."
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr ""
+"Redmine은 프로젝트 관리를 유연하게 할 수 있는 웹 어플리케이션입니다. Ruby on Rails 프레임워크로 개발되었고 크로스 "
+"플랫폼, 크로스 데이터베이스를 지원합니다."
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "'${id}'는 알 수 없는 ${mysql_database_type} definition identifier 입니다."
+
+msgid "Thin port nr 1"
+msgstr "Thin 1 포트"
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Thin port nr 2"
+msgstr "Thin 2 포트"
+
+msgid "Number of thin servers"
+msgstr "thin 서버 개수"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "${mysql_database_type} 인증 정보"
+
+msgid "Please enter a password"
+msgstr "패스워드를 입력하세요."
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr "Drupal의 데이터베이스를 보관하시겠습니까? 보관된 내용은 ${installdir}/backups에 저장됩니다."
+
+msgid "Starting application."
+msgstr "어플이케이션을 구동합니다."
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "${mysql_database_type} 서버에 접속하기 위한 올바른 패스워드를 입력하세요."
+
+msgid "DB Name"
+msgstr "DB명"
+
+msgid "Hostname or IP Address"
+msgstr "호스트명 혹은 IP 주소"
+
+msgid "Korean"
+msgstr "한국어"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "${mysql_database_type} 바이너리 디렉토리"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "${mysql_database_type}을 ${mysql_unique_service_name}라는 이름으로 서비스 등록하지 못했습니다."
+
+msgid "Password"
+msgstr "패스워드"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr "해당 포트 번호로 바인드할 수 없습니다. 다른 포트 번호를 선택하세요."
+
+msgid "Select installation type"
+msgstr "설치 유형을 선택하세요."
+
+msgid "Installation type"
+msgstr "설치 유형"
+
+msgid "Use ${product_fullname}"
+msgstr "${product_fullname} 사용"
+
+msgid "Installation folder"
+msgstr "설치 경로"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "${mysql_database_type} 구동 대기"
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr "WordPress는 미려하고, 사용성 높고, 웹 표준을 따르는 개인 블로그를 만들기 위한 출판 플랫폼입니다."
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr ""
+"시스템 리소스(CPU 혹은 메모리) 부족으로 로컬 ${mysql_database_type} 서버에 접속하지 못함에 따라 설치가 중단되었습니다. 접속을 재시도하여 설치를 "
+"계속하시겠습니까?"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "${mysql_database_type} 구동 대기"
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr "${installdir}에 용량이 부족합니다. ${product_fullname}를 설치하는데 필요한 용량이 있는지 확인하세요."
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "${mysql_database_type} 데이터베이스를 초기화합니다. 몇 분 걸릴 수 있습니다."
+
+msgid "Please enter your database root user password"
+msgstr "데이터베이스 root 계정의 패스워드를 입력하세요."
+
+msgid "Memcached Server port"
+msgstr "Memcached 서버 포트 번호"
+
+msgid "Starting Apache."
+msgstr "Apache를 구동합니다."
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "${apache_server_directory}/conf/ssi.conf 파일을 쓸 수 없습니다."
+
+msgid "Please configure WordPress installation"
+msgstr "WordPress 설치 정보를 설정하세요."
+
+msgid "Subversion Server port"
+msgstr "Subversion 서버 포트 번호"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+"데이터베이스 ${mysql_hostname}:${mysql_port}로 접속할 수 없습니다. 파라미터가 올바른지, ${mysql_database_type}이 "
+"TCP/IP 접속을 허용하도록 설정되어 있는지 확인해 주십시오."
+
+msgid "Please select the ports for Thin servers. Those will be added to the Apache configuration file."
+msgstr "Thin 서버에서 사용할 포트들을 선택하세요. 이 내용은 Apache 설정 파일에 추가됩니다."
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr "스택에 Ruby가 설치되어 있지 않습니다. 이 모듈을 설치하기 위해서는 Ruby가 설치되어 있어야 합니다."
+
+msgid "Polish"
+msgstr "폴란드어"
+
+msgid "This will create a sample Rails project."
+msgstr "Rails 샘플 프로젝트를 생성합니다."
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"${mysql_database_type} 데이터베이스 서버가 사용할 Listen 포트 번호를 입력하여 주십시오. 포트 번호는 다른 프로세스가 사용하지 않는 것이어야 "
+"합니다."
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr "${mysql_database_type}을 ${mysql_unique_service_name}라는 이름으로 서비스 등록합니다."
+
+msgid "Bitnami Drupal Module"
+msgstr "Bitnami Drupal 모듈"
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "데이터베이스를 초기화하고 있습니다. 시간이 걸릴 수 있습니다."
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr "${appName}의 데이터베이스를 보관하시겠습니까? 보관된 내용은 ${installdir}/backups에 저장됩니다."
+
+msgid "Joomla!"
+msgstr "Joomla!"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "phpmyadmin의 인가된 사용자로 설정할 수 없습니다."
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "${mysql_database_type} 종료"
+
+msgid "${product_fullname} Thin Service"
+msgstr "${product_fullname} Thin 서비스"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "해당 폴더가 비어있지 않습니다. 다른 폴더를 선택하세요."
+
+msgid "Site name"
+msgstr "사이트명"
+
+msgid "Japanese"
+msgstr "일본어"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr "웹 서버의 도메인 혹은 IP 주소를 입력하여 주십시오. (예: www.example.com)"
+
+msgid "You need to provide a non-empty password"
+msgstr "패스워드는 필수 입력 항목입니다."
+
+msgid "Configuring database"
+msgstr "데이터베이스 구성"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr "Joomla 영문 샘플 데이터를 제공합니다."
+
+msgid "SMTP Port"
+msgstr "SMTP 포트 번호"
+
+msgid "Chinese/Taiwan"
+msgstr "중국어/대만어"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr "보안상 ${mysql_database_type}의 root 계정 패스워드를 설정할 것을 권장합니다. ${mysql_database_type}의 root 계정 패스워드를 설정하시겠습니까?"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "Email Address"
+msgstr "이메일 주소"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr "wordpress의 데이터베이스를 보관하시겠습니까? 보관된 내용은 ${installdir}/backups에 저장됩니다."
+
+msgid "Sample Rails Application"
+msgstr "Rails 샘플 어플리케이션"
+
+msgid "Italian"
+msgstr "이탈리아어"
+
+msgid "Ruby On Rails"
+msgstr "Ruby On Rails"
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+"Drupal은 개인이나 커뮤니티 사용자들이 웹 환경에서 쉽게 컨텐츠를 출판, 관리, 구성할 수 있게 하는 컨텐츠 관리 플랫폼입니다. "
+"Drupal은 커뮤니티의 웹 포탈, 기업의 웹 사이트, 인트라넷 어플리케이션, 개인 웹 사이트나 블로그, 매니아 사이트, 전자 상거래 "
+"어플리케이션, 리소스 디렉토리, 소셜 네트워크 사이트 등에서 사용됩니다."
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr ""
+"플러그인과 테마를 설치하거나 특정 어플리케이션의 업데이트를 쉽게 하기 위해서 파일 권한과 설정 변경을 가능하게 합니다. 단, 이 방법은 "
+"보안 측면에서는 최상의 선택이 아닐 수 있습니다. 사내에서 사용하거나 개발 용도로 사용할 경우에 권장합니다."
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+"프로젝트 디렉토리 ${rubystack_project_directory}/${samplerails_application_name}-${p"
+"roduct_version}가 이미 존재합니다. 다른 접두어를 사용하세요."
+
+msgid "Please enter a password to use for the database root user"
+msgstr "데이터베이스 root 계정의 패스워드를 입력하세요."
+
+msgid "Creating web application."
+msgstr "웹 어플리케이션 생성"
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "${product_fullname}의 설치 경로를 선택하세요."
+
+msgid "Please configure Joomla! installation"
+msgstr "Joomla! 설치 정보를 설정하세요."
+
+msgid "Uninstalling services."
+msgstr "서비스 제거"
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr "phpMyAdmin는 ${mysql_database_type}을 웹 화면으로 관리하기 위해 PHP로 만들어진 관리 툴입니다."
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr "Bitnami Joomla ${project.version} 모듈"
+
+msgid "Redmine packaged by Bitnami"
+msgstr "Redmine packaged by Bitnami"
+
+msgid "Bitnami Website"
+msgstr "Bitnami 웹사이트"
+
+msgid "Username"
+msgstr "사용자명"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "32bit 환경에 64bit 모듈 설치는 지원되지 않습니다. 정확한 버전을 bitnami.com에서 다운로드 받으십시오."
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+"Joomla!는 수상 경력이 있는 컨텐츠 관리 시스템입니다. 주로 개인이나 기업 사이트, 포털, 소규모 웹 사이트, 비영리 단체의 웹 "
+"사이트, 정부 어플이케이션, 기업의 인트라넷, 익스트라넷, 학교 및 교회의 웹 사이트, 커뮤니티 포털 등에 사용됩니다."
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "알파벳과 숫자만 입력 가능합니다."
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "알파벳과 숫자만 입력 가능합니다."
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "알파벳과 숫자만 입력 가능합니다."
+
+msgid "Please confirm your password"
+msgstr "패스워드를 재입력"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr "아파치 서버에서 사용할 SSL 포트 번호를 입력하세요."
+
+msgid "Spanish"
+msgstr "스페인어"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""

@@ -1,0 +1,26 @@
+<componentGroup>
+    <name>xampp_tools</name>
+    <description>Program Languages</description>
+    <canBeEdited>0</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+    <componentList>
+      <include file="xampp-phpmyadmin.xml"/>
+      <include file="xampp-webalizer.xml"/>
+      <include file="xampp-sendmail.xml"/>
+    </componentList>
+    <postInstallationActionList>
+      <deleteFile path="${installdir}/htdocs/xampp/navilinks/01_phpmyadmin.tools">
+	<ruleList>
+	  <isFalse value="${component(xampp_tools).component(xampp_phpmyadmin).selected}"/>
+	</ruleList>
+      </deleteFile>
+      <deleteFile path="${installdir}/htdocs/xampp/navilinks/03_webalizer.tools">
+	<ruleList>
+	  <isFalse value="${component(xampp_tools).component(xampp_webalizer).selected}"/>
+	</ruleList>
+      </deleteFile>
+
+    </postInstallationActionList>
+
+</componentGroup>

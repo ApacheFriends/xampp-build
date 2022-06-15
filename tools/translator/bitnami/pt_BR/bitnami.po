@@ -1,0 +1,592 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Maria Allesina <mallesina@pobox.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Sample data for Joomla (English)"
+msgstr "Dados de amostra de Joomla (inglês)"
+
+msgid "Set the database name and user name which will be created or used."
+msgstr "Defina o nome do banco de dados e o nome do usuário que será criado ou usado."
+
+msgid "None"
+msgstr "Nenhum"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "Diretório Binário MyL"
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "Escolha uma pasta que contém uma instalação de ${bitnami_platform_name}."
+
+msgid "Please choose a number for Port"
+msgstr "Escolha um número para a Porta"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "Impossível reinstalar ${mysql_database_type} como um serviço com o nome ${mysql_unique_service_name}"
+
+msgid "Re-enter"
+msgstr "Insira novamente"
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "Insira suas informações do banco de dados ${mysql_database_type}:"
+
+msgid "Default email provider:"
+msgstr "Provedor de e-mail padrão:"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "${product_fullname} Apache Service"
+msgstr "Serviço Apache ${product_fullname}"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr "O instalador não foi capaz de se conectar ao servidor do ${mysql_database_type}. Certifique-se de que o ${mysql_database_type} está sendo executado."
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr "Impossível anexar ao número de porta fornecido. Selecione um outro."
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr "Hostname que será usado para criar os URLs internos. Se este valor estiver incorreto, você poderá não ser capaz de acessar sua instalação do WordPress de outros computadores."
+
+msgid "Your real name"
+msgstr "Seu nome real"
+
+msgid "Select installation type"
+msgstr "Selecione o tipo de instalação"
+
+msgid "${mysql_database_type} Information"
+msgstr "Informações do MYSQL"
+
+msgid "Development Settings"
+msgstr "Configurações de desenvolvimento"
+
+msgid "Installation type"
+msgstr "Tipo de instalação"
+
+msgid "Use ${product_fullname}"
+msgstr "Usar ${product_fullname}"
+
+msgid "Please configure Drupal installation"
+msgstr "Configure a instalação Drupal"
+
+msgid "Installation folder"
+msgstr "Pasta de instalação"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "Aguardando que o ${mysql_database_type} inicie."
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "Database Installation"
+msgstr "Instalação do banco de dados"
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr "WordPress é uma plataforma de publicação de blog pessoal com um foco em estética, padrões da web e utilidade."
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr "Quer manter o banco de dados Joomla!? Ele será salvo em ${installdir}/backups"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "Insira um endereço de IP ou hostname válido"
+
+msgid "Drupal"
+msgstr "Drupal"
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr "Devido à falta de recursos do sistema (CPU ou memória), a instalação não foi capaz de se conectar ao servidor local do ${mysql_database_type}. Gostaria de tentar se conectar novamente ao servidor do ${mysql_database_type} e continuar a instalação?"
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr "O instalador detectou que a pasta de instalação ${app(drupal).installdir} não está vazia. Certifique-se de que qualquer versão anterior do aplicativo tenha sido desinstalada, pois continuar a instalação pode corromper a versão atual. Deseja continuar?"
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr "O instalador não conseguiu obter o espaço livre atual em ${installdir}. Verifique se há espaço livre suficiente para instalar o ${product_fullname}"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "Iniciando o Banco de dados ${mysql_database_type}. Isso poderá levar alguns minutos."
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr "Impossível instalar o Apache como um serviço com o nome ${apache_unique_service_name}"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr "O comprimento da senha deve ser igual ou superior ao $component(paramadminaccount).parameter(base_required_password_length).value}"
+
+msgid "Please enter your database root user password"
+msgstr "Insira sua senha de usuário raiz do banco de dados"
+
+msgid "${mysql_database_type} Server port"
+msgstr "Porta do Servidor do ${mysql_database_type}"
+
+msgid "WordPress packaged by Bitnami"
+msgstr "Pilha de Bitnami WordPress"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr "Pilha de Bitnami Joomla ${project.version}"
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "Desinstalar o serviço ${product_fullname}"
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "Insira o endereço IP ou o hostname de seu banco de dados"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr "O software ${mysql_database_type} oferece um servidor de banco de dados SQL robusto, de vários usuários, de cadeias múltiplas e muito rápido."
+
+msgid "Apache Web Server Port"
+msgstr "Porta do servidor da web do Apache"
+
+msgid "Do you want to configure mail support?" 
+msgstr "Deseja configurar o suporte de correio?"
+
+msgid "This is required so your application can send notifications via email."
+msgstr "Isso é necessário para que seu aplicativo possa enviar notificações por e-mail."
+
+msgid "Web Server Domain"
+msgstr "Domínio do servidor da web"
+
+msgid "GMail password"
+msgstr "Senha do GMail"
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "Impossível gravar o arquivo: ${apache_server_directory}/conf/ssi.conf"
+
+msgid "Please configure WordPress installation"
+msgstr "Configure a instalação do WordPress"
+
+msgid "Hostname"
+msgstr "Hostname"
+
+msgid "SSL Port"
+msgstr "Porta SSL"
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "Insira a porta que o Servidor Apache incluído escutará por padrão."
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "Saiba mais sobre o Hosting de Cloud Bitnami"
+
+msgid "Login must not have capital letters"
+msgstr "O login não deve conter letras maiúsculas"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "Desejo usar um banco de dados existente do ${mysql_database_type}"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "A plasta de instalação não pode conter espaços."
+
+msgid "Create Admin account"
+msgstr "Criar conta Admin"
+
+msgid "TLS"
+msgstr "TSL"
+
+msgid "Custom"
+msgstr "Personalizado"
+
+msgid "Blog name"
+msgstr "Nome do blog"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr "Impossível conectar ao banco de dados ${mysql_hostname}:${mysql_port}. Verifique se os parâmetros estão corretos e se a sua configuração do ${mysql_database_type} aceita conexões TCP/IP."
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr "O caminho ${mysql_binary_directory} parece ser inválido. Verifique se o diretório contém os binários necessários."
+
+msgid "Re-enter password"
+msgstr "Insira novamente a senha"
+
+msgid "${product_fullname} admin user creation"
+msgstr "Criação de usuário admin do ${product_fullname} "
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr "Não é possível obter o arquivo '${sqlFile}' do ${mysql_database_type}: o arquivo não pode ser lido pelo usuário atual"
+
+msgid "DB User Name"
+msgstr "Nome de usuário do BD"
+
+msgid "Stop ${product_fullname} service"
+msgstr "Parar o serviço de ${product_fullname} "
+
+msgid "Configure SMTP Settings"
+msgstr "Configurar ajustes de SMTP"
+
+msgid "Please enter your database root username"
+msgstr "Insira seu nome de usuário raiz do banco de dados"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr "Instalando o ${mysql_database_type} como um serviço Windows com o nome ${mysql_unique_service_name}"
+
+msgid "Please select which database configuration you wish to use"
+msgstr "Selecione qual configuração de banco de dados deseja usar"
+
+msgid "Bitnami Drupal Module"
+msgstr "Módulo Bitnami Drupal "
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr "O instalador detectou que a pasta de instalação ${app(wordpress).installdir} não está vazia. Certifique-se de que qualquer versão anterior do aplicativo esteja desinstalada, pois continuar a instalação poderá corromper a versão atual. Deseja continuar?"
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr "O instalador detectou que a pasta de instalação ${app(joomla).installdir} não está vazia. Certifique-se de que qualquer versão anterior do aplicativo esteja desinstalada, pois continuar a instalação poderá corromper a versão atual. Deseja continuar?"
+
+msgid "Joomla!"
+msgstr "Joomla!"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "Impossível definir o usuário autorizado phpmyadmin"
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "Fechando o ${mysql_database_type}"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "Não é possível obter o arquivo do ${mysql_database_type} '${sqlFile}': ele não existe"
+
+msgid "Install ${product_fullname} as service"
+msgstr "Instalar ${product_fullname} como serviço"
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "A conexão do ${mysql_database_type} expirou. A instalação foi interrompida."
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "A pasta selecionada não está vazia. Selecione uma pasta diferente."
+
+msgid "Site name"
+msgstr "Nome do site"
+
+msgid "Start ${product_fullname} service"
+msgstr "Iniciar serviço do ${product_fullname}"
+
+msgid "New Database"
+msgstr "Novo banco de dados"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr "Insira o nome de domínio ou o endereço IP de seu servidor da web (www.example.com)"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr "O caminho do diretório de instalação é longo demais. O número máximo de caracteres permitidos é ${base_installdir_max_characters}."
+
+msgid "You need to provide a non-empty password"
+msgstr "Você precisa fornecer uma senha não vazia"
+
+msgid "Configuring database"
+msgstr "Configurando o banco de dados"
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr "Insira a senha do ${mysql_database_type} existentes para ${bitnami_platform_name}"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr "Fornece dados de amostra do Joomla. Apenas inglês."
+
+msgid "Unable to get free disk space."
+msgstr "Impossível obter espaço em disco livre."
+
+msgid "SMTP Port"
+msgstr "Porta SMTP"
+
+msgid "Manager tool"
+msgstr "Ferramenta de gerente"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr "Gostaria de ser solicitado a personalizar seus aplicativos escolhidos dentro deste instalador?"
+
+msgid "Unable to start Apache"
+msgstr "Impossível iniciar o Apache"
+
+msgid "SMTP Host"
+msgstr "Host SMTP"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr "Por motivos de segurança, recomenda-se definir uma senha que não seja em branco para o usuário raiz do ${mysql_database_type}. Deseja definir uma senha para o usuário raiz do ${mysql_database_type}?"
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr "Hostname ou endereço IP de seu servidor. Se este valor estiver incorreto, você poderá não ser capaz de acessar sua instalação do Joomla! em outros computadores."
+
+msgid "Yes, please prompt me"
+msgstr "Sim, lembre-me."
+
+msgid "Please select the use of this Stack"
+msgstr "Selecione o uso desta Pilha"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr "As permissões de arquivo e os ajustes de configuração serão definidos tendo em mente a segurança e o desempenho. Instalar certos plugins, temas e atualizações poderá exigir alterações manuais ou a instalação de serviços adicionais como FTP. Recomendado se esta pilha for empregada em um servidor público."
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr "Impossível conectar o mysql_port a ${mysql_port}. Selecione um outro."
+
+msgid "Installation Type"
+msgstr "Tipo de instalação"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Email Address"
+msgstr "Endereço de e-mail"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr "Deseja manter o banco de dados do Wordpress? Ele será salvo em ${installdir}/backups"
+
+msgid "${mysql_database_type} Service"
+msgstr "Serviço do ${mysql_database_type}"
+
+msgid "GMail address"
+msgstr "Endereço do GMail"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "Você está tentando instalar um módulo de 32 bits em uma instalação de 64 bits. Isso não é suportado. Faça o download do módulo correto em bitnami.com"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "Desinstalar ${product_fullname}"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr "A pasta não parece conter uma instalação válida de ${bitnami_platform_name}. O arquivo file.properties.ini está faltando ou não é uma instalação válida."
+
+msgid "Updating mysql directory permissions"
+msgstr "Atualizando as permissões de diretório do mysql"
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr "O comprimento do nome de usuário deve ser maior do que ${component(paramadminaccount).parameter(base_required_username_length).value}"
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr "Drupal é uma plataforma de gerenciamento de conteúdo que permite que uma pessoa ou comunidade de usuários facilmente publiquem, gerenciem e organizem uma ampla variedade de conteúdo em um site. De forma geral, o Drupal é usado para portais da web comunitários, sites de discussão, websites corporativos, aplicativos de intranet, websites ou blogs pessoais, sites de fãs, aplicativos de comércio eletrônico, diretórios de recursos e sites de networking social."
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr "Habilita alterações para permissões de arquivo e ajustes de configuração que facilitam a instalação de plugins, temas e atualizações para determinados aplicativos, mas que não são ideais de um ponto de vista de segurança. Recomendado se você estiver usando esta pilha para fins de desenvolvimento ou dentro de sua empresa."
+
+msgid "${mysql_database_type} Server root password"
+msgstr "Senha raiz de servidor ${mysql_database_type}"
+
+msgid "Web Server domain"
+msgstr "Domínio do servidor da web"
+
+msgid "Select a folder"
+msgstr "Selecione uma pasta"
+
+msgid "Default mail server configuration."
+msgstr "Configuração do servidor de correio padrão."
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "Escolha uma pasta para instalar ${product_fullname}"
+
+msgid "Password must contain both letters and numbers"
+msgstr "A senha deve conter letras e números"
+
+msgid "IP / Hostname"
+msgstr "IP / Hostname"
+
+msgid "Production settings"
+msgstr "Configurações de produção"
+
+msgid "DB User Password"
+msgstr "Senha de usuário de BD"
+
+msgid "Please configure Joomla! installation"
+msgstr "Configure a instalação do Joomla!"
+
+msgid "${product_fullname} Service"
+msgstr "Serviço ${product_fullname}"
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr "phpMyAdmin é uma ferramenta escrita em PHP destinada a tratar a administração do ${mysql_database_type} na web."
+
+msgid "Unable to add text to httpd.conf"
+msgstr "Impossível adicionar texto ao httpd.conf"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr "O diretório de instalação deve ser um caminho contendo apenas letras, números e os caracteress '/', '.', '-' e '_'."
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr "Parece que você não tem permissões suficientes para conectar à porta ou a porta já está tomada por um outro aplicativo. Selecione um outro."
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr "Módulo Bitnami Joomla ${project.version}"
+
+msgid "Bitnami WordPress Module"
+msgstr "Módulo Bitami WordPress"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr "Bitnami Cloud Hosting é uma nova oferta que lhe permite hospedar seus aplicativos Bitnami na Nuvem. Marque abaixo se deseja saber mais sobre o Bitnami enquanto espera que a instalação termine. Uma janela de navegador aparecerá."
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr "A configuração tentará instalar novos bancos de dados e sobrescreverá qualquer duplicação existente. Deseja continuar?"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr "Não há espaço livre em disco suficiente em  ${installdir}. Você precisa de pelo menos ${base_needed_space} MB para instalar o ${product_fullname}"
+
+msgid "Secure connection"
+msgstr "Conexão segura"
+
+msgid "Login and password must not be the same"
+msgstr "O login e a senha não devem ser os mesmos"
+
+msgid "Bitnami Website"
+msgstr "Website do Bitnami"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "Hospedagem de nuvem do Bitnami"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "Serviço do ${mysql_database_type} do ${product_fullname}"
+
+msgid "Username"
+msgstr "Nome de usuário"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "Você está tentando instalar um módulo de 64 bits em uma instalação de 32 bits. Isso não é suportado. Faça o download do módulo correto em bitnami.com"
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "Identificador  '${id}' de definição do ${mysql_database_type} desconhecido"
+
+msgid "No, I will do this after installation"
+msgstr "Não, farei isso depois da instalação"
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr "Instalando o Apache como serviço do Windows com nome ${apache_unique_service_name}"
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr "Joomla! é um sistema de gerenciamento de conteúdo premiado que pode ser usado para elaborar websites ou portais pessoais/corporativos, websites de pequenos negócios, websites organizacionais e sem fins lucrativos, aplicativos governamentais, intranets e extranets corporativas, websites de escolas e igrejas e portais baseados em comunidades"
+
+msgid "Web Server Port"
+msgstr "Porta do servidor da web"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "Use apenas caracteres alfanuméricos"
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "Use apenas caracteres alfanuméricos"
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "Use apenas caracteres alfanuméricos"
+
+msgid "Please confirm your password"
+msgstr "Confirme sua senha"
+
+msgid "Drupal packaged by Bitnami"
+msgstr "Pilha do Bitnami Drupal"
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "Use apenas caracteres alfanuméricos ascii"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "Use apenas caracteres alfanuméricos ascii"
+
+msgid "Launch ${product_fullname}"
+msgstr "Iniciar  ${product_fullname}"
+
+msgid "Please enter a password"
+msgstr "Insira uma senha"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "Credenciais do ${mysql_database_type}"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr "Insira a porta que o Servidor Apache embutido usará para acesso SSL."
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr "Deseja manter o banco de dados Drupal? Será salvo em  ${installdir}/backups"
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "Desejo usar o banco de dados embutido do ${mysql_database_type}"
+
+msgid "Hostname or IP Address"
+msgstr "Hostname ou endereço IP"
+
+msgid "DB Name"
+msgstr "Nome do BD"
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "Insira uma senha válida para conectar ao servidor ${mysql_database_type}."
+
+msgid "Congratulations!"
+msgstr "Parabéns!"
+
+msgid "You are now running ${product_fullname} virtual appliance."
+msgstr "Agora você está executando o aplicativo virtual ${product_fullname}."
+
+msgid "Access my application"
+msgstr "Acessar meu aplicativo"
+
+msgid "Bitnami Wiki"
+msgstr "Wiki do Bitnami"
+
+msgid "Bitnami Forums"
+msgstr "Fóruns do Bitnami"
+
+msgid "Want more from the cloud?"
+msgstr "Quer mais da nuvem?"
+
+msgid "Bitnami Cloud Hosting simplifies the process of deploying and managing web applications on the Amazon Cloud. It provides:"
+msgstr "O Hosting de nuvem do Bitnami simplifica o processo de aplicar e gerenciar aplicativos da web no Amazon Cloud. Ele fornece:"
+
+msgid "Automatic backups"
+msgstr "Backups automáticos"
+
+msgid "To add more than one Bitnami app to your server"
+msgstr "Para adicionar mais um aplicativo Bitnami a seu servidor"
+
+msgid "To be able to specify the size of your disk"
+msgstr "Para poder especificar o tamanho de seu disco"
+
+msgid "To resize your server in one click"
+msgstr "Para redimensionar seu servidor em um clique"
+
+msgid "Monitoring of Apache and ${mysql_database_type}"
+msgstr "Monitoração do Apache e do ${mysql_database_type}"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""
+
+msgid "Please enter the Zope configuration parameters you wish to use."
+msgstr "Insira os parâmetros de configuraçâo do Zope que você desaja usar."
+
+msgid "Unable to bind to the given port number. Please select another Zope ZeoDB Server Port."
+msgstr "Não é possível ligar para o número de porta dada. Selecione outro porta do servidor Zope ZeoDB."
+
+msgid "Zope Server Port:"
+msgstr "Porta do servidor Zope:"
+
+msgid "Compiling eggs"
+msgstr "Compilando Python eggs"
+
+msgid "Plone is a free and open source content management system built on top of the Zope application server. Plone can be used for any kind of website, including blogs, internet sites, webshops and internal websites."
+msgstr "Plone is a free and open source content management system built on top of the Zope application server. Plone can be used for any kind of website, including blogs, internet sites, webshops and internal websites."
+
+msgid "Unable to bind to the given port number. Please select another Zope Server Port."
+msgstr "Não é possível ligar para o número de porta dada. Selecione outro porta do servidor Zope."
+
+msgid "Installing Plone"
+msgstr "Instalando Plone"
+
+msgid "Plone Port Configuration"
+msgstr "Configuraçâo da porta do Plone"
+
+msgid "Zope ZeoDB Server Port:"
+msgstr "Porta do servidor Zope ZeoDB:"
+
+msgid "Creating instance"
+msgstr "A criação de instância"
+
+msgid "Zope Server Port and Zope ZeoDB Server Port cannot be the same port. Please select another Zope ZeoDB Server Port."
+msgstr "A porta do servidor Zope Zope eo ZeoDB servidor não pode ser a mesma porta. Selecione outra porta para o servidor ZeoDB Zope."

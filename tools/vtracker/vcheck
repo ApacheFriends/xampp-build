@@ -1,0 +1,2802 @@
+#!/usr/bin/env perl
+
+eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
+# $Id: vcheck,v 1.2 2009-02-24 09:40:46 antonio Exp $
+
+#      Copyright (C) 1999-2001 by Marco G"otze, <gomar@mindless.com>.
+#   This program is distributed under the terms of the Artistic License.
+
+$VERSION = '1.2.1';
+
+# TODO: see POD
+
+=head1 NAME
+
+B<vcheck> - latest program version checker and auto-downloader
+
+=head1 SYNOPSIS
+
+  vcheck [options]
+
+B<vcheck> is a tool for checking for latest versions of programs at HTTP
+and FTP locations given a list of URLs and (Perl-style) regular 
+expressions to match, and to optionally download them automatically.
+
+For a complete list of command line options, run
+
+  $ vcheck --help
+
+=head1 DESCRIPTION
+
+B<vcheck>'s behavior can be influenced by both command line options and
+a configuration file, which at the same time serves as its data file,
+holding records of programs to check for.  This config file is, by default
+(see L<"FILES">), F<~/.vcheck>.  It is structured according to a syntax
+which is printed in detail when run as
+
+  $ vcheck --grammar
+
+Details about both the grammar in general and the meaning of involved keyword
+can be found in L<"GRAMMAR">.  An example of what a config file looks like in
+principle can be found in L<"EXAMPLES">.
+
+The basic purpose of B<vcheck> is to check for new versions of programs
+listed in its config file.  The script is able to cope with all kinds of
+common version numbers, including words like "pre" or "alpha", etc.
+When a new version was found, the config file is updated accordingly.
+
+Furthermore, B<vcheck> can be used to download files automatically if a new
+version is/was found, and even delete obsolete versions found locally
+automatically.  A special field in each program's record in the config file
+tells it which version has last been downloaded.  Where necessary or desired,
+the download can be disabled for specific programs, or disabled in general and
+allowed in special cases.  Besides, you can specify preferences (both in
+general and on a per-program basis) as to what kind of files to download if new
+versions are available, say, in different formats.
+
+B<vcheck> also has features to limit the scope of programs to check or
+download to a subset, such as defined by:
+
+=over 2
+
+=item *
+
+a regular expression names have to match
+
+=item *
+
+a minimal urgency (which can be defined on a per-program basis, as levels
+of B<high>, B<medium>, and B<low>)
+
+=item *
+
+those programs which haven't yet been downloaded since a new latest version
+was found 
+
+=item *
+
+those programs which previous queries failed for (optionally, a certain
+minimum number of times)
+
+=item *
+
+a conjunctive combination of several of these conditions
+
+=back
+
+In case you're behind a firewall, an HTTP(-based) proxy can be defined in a
+number of ways (precendence in this order):
+
+=over 2
+
+=item *
+
+a specific HTTP or FTP proxy, respectively, defined in the config file
+
+=item *
+
+a common HTTP+FTP proxy defined in the config file
+
+=item *
+
+a specific HTTP or FTP proxy, defined via the environment variables
+$http_proxy/$HTTP_PROXY and $ftp_proxy/$FTP_PROXY, respectively (each
+in this order of precendence)
+
+=back
+
+B<vcheck> uses ANSI escape sequences to visually enhance its output.
+Success messages are usually printed in green, error messages are yellow
+or red (signalling severity).  This feature can be disabled temporarily by
+using the corresponding command line switch, or permanently, via a setting
+in the configuration file (see L<"CONFIGURATION SECION">).
+
+=cut
+
+require 5.005;
+
+require File::Copy;
+require Getopt::Long;
+require LWP::UserAgent;
+require HTTP::Request;
+use Fcntl ':flock';
+use File::Basename;
+
+#-----8<--------------------------------------------------------------------
+
+# The following stuff has been included from various external modules of
+# mine in order to keep this script stand-alone and compact.  The
+# corresponding modules (with varying degrees of documentation) are
+# available on request.
+
+# version parsing regex templates and suchlike
+%sub_vers = ();
+my $no = 0;
+for (qw(pre+prerelease+preview+test))
+{
+  @sub_vers{split /\+/} = (--$no) x (@{[/\+/g]}+1)
+}
+$re_ver =
+  "(?i:[0-9._-]|(?<![a-z])(?:[a-z]|@{[join '|', keys %sub_vers]})(?![a-z]))+";
+
+# function comparing two version "numbers" given as strings and returning
+# cmp-like results
+sub ver_comp($$) {
+  local $_;
+  @_ = map {
+    [split /[._-]|(?:(?<=\w)(?<!\d)(?=\d)|(?<=\d)(?=\w)(?!\d))/, $_ || ''] } @_;
+  return !@{$_[0]} && @{$_[1]} ? -1 : (@{$_[0]} ? 1 : 0)
+    unless @{$_[0]} && @{$_[1]};
+  while (@{$_[0]} && @{$_[1]}) {
+    my($a, $b) = (lc shift(@{$_[0]}), lc shift @{$_[1]});
+    for (\($a, $b)) {
+      my $c = $$_ =~ /^\d+/ ? $& : $$_;
+      $$_ = $sub_vers{lc $$_} ? $sub_vers{lc $$_} : $c
+    }
+    # we need to somehow implement the order 0 < a < ... < z < 1 < ... < 9
+    if ($a =~ /^-*[1-9]/ && $b =~ /^-*[1-9]/) {  # #.0# vs. #.# -> cmp
+      $_ = $a <=> $b
+    } elsif ($a =~ /^-*\d/ && $b !~ /^-*\d/) {
+      $_ = 1
+    } elsif ($a !~ /^-*\d/ && $b =~ /^-*\d/) {
+      $_ = -1
+    } else {
+      $_ = $a cmp $b
+    }
+    return $_ if $_
+  }
+  for (0, 1) {  # either array's empty now
+    if (@{$_[$_]}) {
+      shift @{$_[$_]} while (@{$_[$_]} > 1 && $_[$_][0] =~ /\d+/ && !$&);
+      return $sub_vers{$_[$_][0]} ? -1+2*$_ : 1-2*$_
+    }
+  }
+}
+
+# usage:   &eprint $string [...]
+# purpose: print all of its parameter, but replaces /§[A-Z]/ codes by ANSI
+#          escapes beforehand (see implementation for what styles are
+#          supported); literal `§'s have to be quoted by a `§' each; if
+#          $no_ANSI has a true value, format codes are eliminated, but no
+#          ANSI enrichtment is done
+sub eprint {
+  # Bold, Underline, Normal, Red, Green, Yellow
+  my %table = qw(B 1 U 4 N 0 R 1;31;20 G 1;32;20 Y 1;33;20);
+  print map { 
+    s/(?<!§)((§§)*)§([A-Z])/$1 . ($no_ANSI ? '' : "\033[$table{$3}m")/eg;
+    s/§§/§/g;
+    $_
+  } @{[@_]}
+}
+
+#---------------------------------------------------------------------------
+
+# parser module for non-recursive, sectionized configuration files
+
+$eager_quote = undef;  # influences &quote_str's behavior
+
+sub check_grammar(%) {
+  my %grammar = @_;
+  my $err = 'Internal error: corrupt grammar';
+  local $_;
+  for my $sec (keys %grammar) {  # check grammar
+    return "$err (section name `$sec' isn't lowercase)" if $sec ne lc $sec;
+    return "$err (section `$sec')"
+      if $grammar{$sec}{type} !~ /^blocks?$/;
+    return "$err (section `$sec' void)"
+      unless $grammar{$sec}{keywords};
+    for (qw(sortblocks sortkeywords)) {
+      return "$err (invalid `$_' in section `$sec')"
+        if defined $grammar{$sec}{$_} && !ref $grammar{$sec}{$_}
+    }
+    for my $key (keys %{$grammar{$sec}{keywords}}) {
+      return "$err (keyword `$_' in section `$sec' isn't lowercase)"
+        if $key ne lc $key;
+      return "$err (section `$sec', keyword `$key')"
+        if ($grammar{$sec}{keywords}{$key}{type} || '') !~ /^(bool|string)$/
+    }
+  }
+  return undef
+}
+
+sub oops {  # save lots of &die's with basically the same message
+  local $_ = shift;
+  $_ = length($_ || '') ? ":\n  $_." : '.';
+  s/`(\w+)'/`§B$1§N'/g;
+  eprint "Syntax error in config file@{[defined $. ? \", line $.\" : '']}$_\n";
+  exit 1
+}
+
+sub print_grammar(%) {
+  my %grammar = @_;
+  local $_ = check_grammar %grammar and oops $_;
+  my %had;
+  print "\n  Configuration file grammar:\n";
+  for my $sec (sort keys %grammar) {
+    eprint "\n    §B$sec§N " .
+      ($grammar{$sec}{type} eq 'blocks' ? "§UNAME§N " : '') . "= {\n";
+    $had{NAME} ||= $grammar{$sec}{type} eq 'blocks';
+    my $max = 0;
+    map { $max = length $_ if $grammar{$sec}{keywords}{$_}{type} ne 'bool' &&
+      length $_ > $max } keys %{$grammar{$sec}{keywords}};
+    for my $key (sort keys %{$grammar{$sec}{keywords}}) {
+      my %spec = %{$grammar{$sec}{keywords}{$key}};
+      if ($spec{type} eq 'bool') {
+        $had{optional} = 1;
+        eprint "      [§B$key§N]\n"
+      } else {
+        print "      " . ($spec{required} ? ' ' : '[');
+        eprint sprintf("§B%-${max}s§N = ", $key);
+        if ($spec{allowed}) {
+          eprint sprintf('(%s)', join('|', map { "§B$_§N" } @{$spec{allowed}}))
+        } else {
+          eprint "§UVALUE§N";
+          $had{VALUE} = 1;
+        }
+        unless ($spec{required}) {
+          $had{optional} = 1;
+          print ']'
+        }
+        print +($spec{required} && !$spec{blank} ? ' ' : '') . ' (non-blank)'
+          unless $spec{allowed} || $spec{blank};
+        print ' (multiple allowed)' if $spec{multiple};
+        if ($spec{validate}) {
+          $had{validate} = 1;
+          print ' (*)'
+        }
+        print "\n"
+      }
+    }
+    print "    }\n"
+  }
+  print "\n";
+  $_ = $had{NAME} ? "§UNAME§N" : '';
+  $_ .= ($_ ? ' and ' : '') . "§UVALUE§N";
+  if ($_) {
+    eprint <<EOT;
+  $_ designate@{[$_ = / and / ? '' : 's']} parameter strings.  A parameter string is either
+  a sequence of characters excluding white space and double quotes, or an
+  arbitrary string surrounded by double quotes (`"').  In the latter case,
+  if the string itself contains double quotes or backslashes, these have to
+  be escaped each by a backslash (`\\').
+  The parser ignores arbitrary amounts of white space between tokens.
+EOT
+    print "\n" if ($had{nonblank} || $had{validate})
+  }
+  print "  [Square brackets] designate optional fields.\n";
+  print "  (*) marks items which special validation rules apply for.\n"
+    if $had{validate};
+  print "\n  Config fields explained:\n\n";
+  for my $sec (sort keys %grammar) {
+    eprint "    §B$sec§N" . ($grammar{$sec}{help} ? ": $grammar{$sec}{help}" :
+      '') . "\n";
+    my $max = 0;
+    map { $max = length $_ if length $_ > $max }
+      keys %{$grammar{$sec}{keywords}};
+    $max++;
+    for my $key (sort keys %{$grammar{$sec}{keywords}}) {
+      eprint sprintf("      %-@{[4+$max]}s %s\n", "§B$key§N:",
+        $grammar{$sec}{keywords}{$key}{help})
+        if $grammar{$sec}{keywords}{$key}{help}
+    }
+  }
+  print "\n"
+}
+
+sub parse_config($%) {
+  my($file, %grammar, %res) = @_;
+  local $_ = check_grammar %grammar and oops $_;
+
+  my($expect, $section, $secname, $keyword) = ('') x 4;
+  while (<$file>) {
+    while (/\S/) {
+      s/^\s+//;
+      if ($expect) {  # specific expectations?
+        if (ref $expect eq 'SCALAR') {  # expect string
+          if (s/^([^"]\S*|"([^"]|(?<=\\)")*")//) {
+            my $s = $&;
+            $$expect = $s =~ /^"/ ? &unquote_str($s) : $s;
+            oops "Duplicate section name `$secname' for section of type " .
+              "`$section'" if $grammar{$section}{type} eq 'blocks' &&
+              $grammar{$section}{unique} && !$keyword &&
+              exists $res{$section}{$secname};
+            if ($keyword) {
+              my %spec = %{$grammar{$section}{keywords}{$keyword}};
+              if ($spec{type} eq 'string') {
+                oops "Field `$keyword' must not be blank"
+                  if !$spec{blank} && $$expect !~ /\S/;
+                $$expect =~ s/^\s+|\s+$//g if $spec{trim};
+                $$expect = (local $_ = $$expect, &{$spec{decode}})
+                  if $spec{decode};
+                if ($spec{allowed}) {
+                  my $ok;
+                  for my $s (@{$spec{allowed}}) {
+                    next unless $$expect eq $s;
+                    $ok = 1;
+                    last
+                  }
+                  unless ($ok) {
+                    my $s = join ', ', map { "`$_'" } @{$spec{allowed}};
+                    $s =~ s/(?<=, )(?=[^,]+$)/and /;
+                    $s =~ s/,// unless $s =~ /,.*?,/g;
+                    oops "Illegal value for field `$keyword'.  Legal values " .
+                      "are:\n    $s"
+                  }
+                }
+                if ($spec{validate}) {
+                  my $msg;
+                  local $_ = $$expect;
+                  oops "Invalid value for field `$keyword':\n    $msg"
+                    if length($msg = (&{$spec{validate}} || ''))
+                }
+              }
+            }
+            $expect = $keyword ? '' : '=';
+            $keyword = '';
+            next
+          }
+          oops "String expected but none (or improperly escaped one) found"
+        } elsif (s/^(\Q$expect\E)//) {
+          $expect = '';
+          if ($1 eq '=') {
+            if ($keyword) {
+              if ($grammar{$section}{type} eq 'blocks') {
+                $expect = $grammar{$section}{keywords}{$keyword}{multiple} ?
+                  \$res{$section}{$secname}{$keyword}
+                    [@{$res{$section}{$secname}{$keyword}}] :
+                  \$res{$section}{$secname}{$keyword}
+              } else {
+                $expect = $grammar{$section}{keywords}{$keyword}{multiple} ?
+                  \$res{$section}{$keyword}[@{$res{$section}{$keyword}}] :
+                  \$res{$section}{$keyword}
+              }
+            } else {
+              $expect = '{';
+            }
+            next
+          } elsif ($1 eq '{') {
+            $expect = '';
+            next
+          }
+        }
+        oops "`$expect' expected"
+      } elsif (!$section) {  # outside any sections
+        if (s/^(@{[join '|', keys %grammar]})(?!\w)//i) {  # 
+          $section = lc $1;
+          if ($grammar{$section}{type} eq 'block') {
+            if (exists $res{$section}) {
+              oops "Multiple `$section' sections aren't allowed"
+                if $grammar{$section}{unique}
+            } else {
+              $res{$section} = {}
+            }
+          }
+          $expect = $grammar{$section}{type} eq 'blocks' ? \$secname : '=';
+          next
+        }
+        /\S+/;
+        oops "Unknown section identifier: `§B$&§N'"
+      } elsif ($grammar{$section}) {
+        if (!length $keyword) {  # inside some section, but no current keyword
+          if (s/^\}//) {
+            for my $key (grep { $grammar{$section}{keywords}{$_}{required} }
+              keys %{$grammar{$section}{keywords}})
+            {
+               oops "Section lacks required field `$key'"
+                 unless length $secname ? exists
+                 $res{$section}{$secname}{$key} : exists $res{$section}{$key}
+            }
+            $section = $secname = '';
+            next
+          } elsif (s/^(@{[join '|', keys %{$grammar{$section}{keywords}}]})
+            (?!\w)//ix)
+          {
+            $keyword = lc $1;
+            oops "Duplicate field `$keyword'"
+              if ($grammar{$section}{keywords}{$keyword}{type} eq 'bool' ||
+              !$grammar{$section}{keywords}{$keyword}{multiple}) &&
+              ((length $secname && exists $res{$section}{$secname}{$keyword}) ||
+              (!length $secname && exists $res{$section}{$keyword}));
+            if ($grammar{$section}{keywords}{$keyword}{type} eq 'bool') {
+              if (length $secname) {
+                $res{$section}{$secname}{$keyword} = 1
+              } else {
+                $res{$section}{$keyword} = 1
+              }
+              $keyword = '';
+            } else {
+              $expect = '=';
+            }
+            next
+          }
+          /\S+/;
+          oops "Unknown keyword `§B$&§N' in section `$section'"
+        }
+        oops "Error in section `$section'"
+      }
+      oops "Oops, internal parser error"
+    }
+  }
+  oops "Unexpected end of file" if $section || $expect;
+  return %res
+}
+
+sub write_config($$$) {
+  sub print_keywords($$$) {  # $handle_ref, $grammar_ref, $data_ref
+    my($f, $w) = (shift, 0);
+    my %g = %{shift()};
+    my %d = %{shift()};
+    local $_;
+    for (grep { exists $d{$_} && $g{keywords}{$_}{type} ne 'bool' }
+         keys %{$g{keywords}})
+    {
+      $w = length $_ if length $_ > $w
+    }
+    my @data;
+    if ($g{sortkeywords}) {
+      @data = &{$g{sortkeywords}}(\%{$g{keywords}}, \%d)
+    } else {
+      for my $key (sort { lc $a cmp lc $b } keys %d) {
+        if ($g{keywords}{$key}{multiple}) {
+          push @data, [$key, $_] for (@{$d{$key}})
+        } else {
+          push @data, [$key, $d{$key}]
+        }
+      }
+    }
+    for my $data (@data) {
+      $_ = $$data[1];
+      $_ = &{$g{keywords}{$$data[0]}{encode}}
+        if $g{keywords}{$$data[0]}{type} ne 'bool' &&
+           $g{keywords}{$$data[0]}{encode};
+      printf $f "  %-${w}s%s\n", $$data[0],
+        $g{keywords}{$$data[0]}{type} eq 'bool' ? '' : ' = ' . &quote_str($_)
+    }
+  }
+
+  my $file = shift;
+  my %grammar = %{shift()};
+  my %data = %{shift()};
+  local $_ = check_grammar %grammar and oops $_;
+
+  for my $sec (sort { lc $a cmp lc $b } grep { $data{$_} } keys %grammar) {
+    if ($grammar{$sec}{type} eq 'blocks') {
+      my $sort;
+      if ($grammar{$sec}{sortblocks}) {
+        $sort = sub { &{$grammar{$sec}{sortblocks}}([$a, $data{$sec}{$a}],
+                                                    [$b, $data{$sec}{$b}]) }
+      } else {
+        $sort = sub { lc $a cmp lc $b }
+      }
+      for (sort $sort keys %{$data{$sec}}) {
+        print $file "$sec @{[&quote_str($_)]} = {\n";
+        print_keywords $file, $grammar{$sec}, $data{$sec}{$_};
+        print $file "}\n"
+      }
+      print $file "\n"
+    } else {
+      print $file "$sec = {\n";
+      print_keywords $file, $grammar{$sec}, $data{$sec};
+      print $file "}\n\n"
+    }
+  }
+}
+
+sub create_vim_syntax_file($$;$) {
+  my %grammar = %{shift()};
+  local $_ = check_grammar %grammar and oops $_;
+  my $synname = shift;
+  my $outfile = shift || "$synname.vim";
+
+  open SFILE, ">$outfile" or die "Failed to open `$outfile' for writing.\n";
+  my $oldsel = select SFILE;
+  print<<EOT;
+" Vim syntax file
+" Language: $synname config file format
+" This file has been auto-generated by &Gomar::Config::create_vim_syntax_file.
+
+syn clear
+syn case ignore
+
+" general syntax elements
+
+syn match ${synname}StrSpecial contained "\\\\\\\\\\|\\\\\\""
+syn match ${synname}StrError contained "\\\\[^\\\\"]"
+syn match ${synname}Error contained "}" nextgroup=${synname}SecID skipwhite skipempty
+syn region ${synname}Error contained start="[^} \\t]" end="}" nextgroup=${synname}SecID skipwhite skipempty
+syn region ${synname}GlobalError contained start="[^ \\t]" end="\\<\$"
+syn region ${synname}BlockError contained start=".{"hs=e end="\\<\$"
+
+" at MAIN LEVEL
+
+EOT
+  for (keys %grammar) {
+    print "syn keyword ${synname}SecID @{[lc $_]} nextgroup=$synname" .
+      ($grammar{$_}{type} eq 'block' ? 'Assign' : 'Name') . ucfirst(lc $_) .
+      ",${synname}GlobalError skipwhite skipempty\n"
+  }
+  print "\n";
+  for my $blk (keys %grammar) {
+    print "\" @{[uc $blk]} section\n\n";
+    # keywords...
+    my $s = join ' ', grep { $grammar{$blk}{keywords}{$_}{type} eq 'bool' }
+      keys %{$grammar{$blk}{keywords}};
+    print "syn keyword ${synname}@{[ucfirst lc $blk]}Field contained $s " .
+      "nextgroup=${synname}@{[ucfirst lc $blk]}Field skipwhite skipempty\n"
+      if $s;
+    $s = join ' ', grep { $grammar{$blk}{keywords}{$_}{type} eq 'string' &&
+      !$grammar{$blk}{keywords}{$_}{allowed} } keys %{$grammar{$blk}{keywords}};
+    print "syn keyword ${synname}@{[ucfirst lc $blk]}Field contained $s " .
+      "nextgroup=${synname}@{[ucfirst lc $blk]}AssignString,${synname}Error " .
+      "skipwhite skipempty\n" if $s;
+    my @arr;
+    for (grep { $grammar{$blk}{keywords}{$_}{type} eq 'string' &&
+      $grammar{$blk}{keywords}{$_}{allowed} } keys %{$grammar{$blk}{keywords}})
+    {
+      print "syn keyword ${synname}@{[ucfirst lc $blk]}Field contained " .
+        lc($_) . " nextgroup=${synname}@{[ucfirst lc $blk]}Assign" .
+        ucfirst(lc $_) . ",${synname}Error skipwhite skipempty\n";
+      push @arr, $_
+    }
+    print "\n";
+    # values...
+    print "syn region $synname@{[ucfirst lc $blk]}ValueString contained " .
+      "start=+\"+ end=+\"+ contains=${synname}StrSpecial,${synname}StrError " .
+      " oneline nextgroup=${synname}@{[ucfirst lc $blk]}Field skipwhite " .
+      "skipempty\n";
+    print "syn match $synname@{[ucfirst lc $blk]}ValueString contained " .
+      '"[^" \t}][^" \t]*"' . " nextgroup=$synname@{[ucfirst lc $blk]}Field " .
+      "skipwhite skipempty\n";
+    for (@arr) {
+      print "syn match $synname@{[ucfirst lc $blk]}Value@{[ucfirst lc $_]} " .
+        'contained "\(\"\=\)\<\(' . join('\|',
+        @{$grammar{$blk}{keywords}{$_}{allowed}}) . '\)\>\1" nextgroup=' .
+        "$synname@{[ucfirst lc $blk]}Field skipwhite skipempty\n"
+    }
+    print "\n";
+    # block syntax...
+    if ($grammar{$blk}{type} eq 'blocks') {
+      print "syn region ${synname}Name@{[ucfirst lc $blk]} contained " .
+        "start=+\"+ end=+\"+ contains=${synname}StrSpecial,${synname}StrError" .
+        " oneline nextgroup=${synname}Assign@{[ucfirst lc $blk]}," .
+        "${synname}GlobalError skipwhite skipempty\n";
+      print "syn match ${synname}Name@{[ucfirst lc $blk]} " . '"[^" ]\+" ' .
+        "nextgroup=${synname}Assign@{[ucfirst lc $blk]},${synname}" .
+        "GlobalError skipwhite skipempty\n"
+    }
+    print "syn region ${synname}Block@{[ucfirst lc $blk]} contained start=" .
+      '"{" end="}"' . " matchgroup=${synname}Delimiter contains=$synname" .
+      "@{[ucfirst lc $blk]}Field,${synname}BlockError nextgroup=$synname" .
+      "SecID,${synname}GlobalError skipwhite skipempty\n";
+    print "syn match ${synname}Assign@{[ucfirst lc $blk]} contained \"=\" " .
+      "nextgroup=${synname}Block@{[ucfirst lc $blk]},${synname}GlobalError " .
+      "skipwhite skipempty\n";
+    # value assignments...
+    print "syn match $synname@{[ucfirst lc $blk]}AssignString contained " .
+      "\"=\" nextgroup=$synname@{[ucfirst lc $blk]}ValueString,$synname" .
+      "GlobalError skipwhite skipempty\n";
+    for (@arr) {
+      print "syn match $synname@{[ucfirst lc $blk]}Assign@{[ucfirst lc $_]} " .
+        "contained \"=\" nextgroup=$synname@{[ucfirst lc $blk]}Value" .
+        "@{[ucfirst lc $_]} skipwhite skipempty\n"
+    }
+    print "\n";
+  }
+  # syncing...
+  print "\" syncing\n\n";
+  for (keys %grammar) {
+    print "syn sync match ${synname}Sync grouphere ${synname}Block" .
+      "@{[ucfirst lc $_]} \"\\<@{[lc $_]}\\>" .
+      ($grammar{$_}{type} eq 'block' ? '\s*="' : '\s\=\S\=.*="') . "\n"
+  }
+  print "syn sync match ${synname}Sync groupthere NONE \"}\"\n\n";
+  # default color links...
+  print<<EOT;
+" default color links
+
+hi link ${synname}SecID Type
+hi link ${synname}StrSpecial SpecialChar
+hi link ${synname}Error Error
+hi link ${synname}GlobalError ${synname}Error
+hi link ${synname}BlockError ${synname}Error
+hi link ${synname}StrError ${synname}Error
+hi link ${synname}Delimiter Delimiter
+
+EOT
+  for my $blk (keys %grammar) {
+    print<<EOT;
+hi link $synname@{[ucfirst lc $blk]}Field Identifier
+hi link ${synname}Assign@{[ucfirst lc $blk]} ${synname}Assign
+hi link $synname@{[ucfirst lc $blk]}AssignString ${synname}Assign
+hi link $synname@{[ucfirst lc $blk]}ValueString String
+EOT
+    print "hi link ${synname}Name@{[ucfirst lc $blk]} Statement\n"
+      if $grammar{$blk}{type} eq 'blocks';
+    for (grep { $grammar{$blk}{keywords}{$_}{type} eq 'string' &&
+      $grammar{$blk}{keywords}{$_}{allowed} } keys %{$grammar{$blk}{keywords}})
+    {
+      print "hi link $synname@{[ucfirst lc $blk]}Assign@{[ucfirst lc $_]} " .
+        "${synname}Assign\n";
+      print "hi link $synname@{[ucfirst lc $blk]}Value@{[ucfirst lc $_]} " .
+        "Identifier\n";
+    }
+    print "\n"
+  }
+  print<<EOT;
+let b:current_syntax = "$synname"
+EOT
+  select $oldsel;
+  close SFILE;
+  $outfile
+}
+
+sub quote_str($) {
+  local $_ = shift;
+  $_ = '' unless defined $_;
+  return $_ if !$eager_quote && length $_ && !/"|\s/;
+  s/["\\]/\\$&/g;
+  "\"$_\""
+}
+
+sub unquote_str($) {
+  local $_ = shift;
+  $_ = '' unless defined $_;
+  s/^\s*"|"\s*$//g;
+  s/\\"/"/g;
+  s/\\\\/\\/g;
+  $_
+}
+
+#-------------------------------------------------------------------->8-----
+
+$0 =~ m#([^/.]+)[^/]*$#;
+my %opts = (
+  progname        => $1,
+  file            => "$ENV{HOME}/.$1",
+  timeout         => 90,
+  error_tolerance => 10  # number of errors before suggesting a check of record
+);
+
+my %urgs = qw(high 3 medium 2 low 1);  # urgencies
+
+# the config file's grammar
+my %grammar = (
+  config => {
+    type => 'block',
+    help => "configuration options affecting the script's behavior",
+    keywords => {
+      defaulturgency => {
+        type => 'string',
+        trim => 1,
+        decode => sub { lc },
+        allowed => [sort { $urgs{$b} <=> $urgs{$a} } keys %urgs],
+        help => 'default urgency'
+      },
+      deleteold => {
+        type => 'bool',
+        help => "delete old versions found in d/l dir by default--CAUTION"
+      },
+      dldefaultno => {
+        type => 'bool',
+        help => "skip download by default when using the `-d' option"
+      },
+      dldir => {
+        type => 'string',
+        validate => sub {
+          if (m#^/#) {
+            return (-d && -w && -x) ? 0 : 'Directory not accessible/writable'
+          } else {
+            return 'Not an absolute path'
+          }
+        },
+        help => "absolute path of a directory where to put d/l'ed files"
+      },
+      dlexec => {
+        type => 'string',
+        help => 'command to be executed after a \'Usuccessful\' download'
+      },
+      dlprefs => {
+        type => 'string',
+        decode => sub { [split /;/] },
+        encode => sub { join ';', @$_ },
+        help => "`;'-separated list of REs defining download preferences"
+      },
+      dlretry => {
+        type => 'string',
+        decode => sub { /\S+/ ? $& : $_ },
+        validate => sub { /\D/ ? 'Not a valid number' : 0 },
+        help => 'number of retries if download truncation detected'
+      },
+      eagerquote => {
+        type => 'bool',
+        help => 'when updating the data file, quote §Ueverything§N'
+      },
+      echoexec => {
+        type => 'bool',
+        help => "echo command lines executed via `newverexec', `dlexec'"
+      },
+      ftpproxy => {
+        type => 'string',
+        help => "HTTP-based FTP proxy URL or `server:port'"
+      },
+      httpproxy => {
+        type => 'string',
+        help => "HTTP proxy URL or `server:port'"
+      },
+      lastcheck => {
+        type => 'string',
+        trim => 1,
+        validate => sub { /^\d{4}-\d\d-\d\d \d\d:\d\d$/ ? 0 :
+          "Not in format `yyyy-mm-dd hh:mm'" },
+        help => "start date/time of the last check (`yyyy-mm-dd hh:mm')"
+      },
+      newverexec => {
+        type => 'string',
+        help => 'command to be executed upon a new version'
+      },
+      nocache => {
+        type => 'bool',
+        help => "conserve memory by not caching retrieved documents"
+      },
+      plain => {
+        type => 'bool',
+        help => "generate plain (as opposed to ANSI) output"
+      },
+      proxy => {
+        type => 'string',
+        help => "common HTTP+FTP proxy URL or `server:port'"
+      },
+      sortby => {
+        type => 'string',
+        trim => 1,
+        decode => sub { lc },
+        allowed => [qw(name url)],
+        help => "when updating the data file, sort by VALUE"
+      },
+      xfersum => {
+        type => 'bool',
+        help => "print total of amount of data received"
+      },
+      timeout => {
+        type => 'string',
+        decode => sub { /\S+/ ? $& : $_ },
+        validate => sub { /\D/ ? 'Not a valid number' : 0 },
+        help => "timeout (secs) when retrieving URLs (default: $opts{timeout}s)"
+      },
+      verbose => {
+        type => 'bool',
+        help => "also print version numbers that haven't changed"
+      }
+    }
+  },
+  prog => {
+    type => 'blocks',
+    unique => 1,
+    help => "program record, one per program that's to be checked",
+    keywords => {
+      comment => {
+        type => 'string',
+        multiple => 1,
+        help => 'arbitrary comment string'
+      },
+      rev => {
+        type => 'string',
+        multiple => 1,
+        help => 'revision of the product'
+      },
+      deleteold => {
+        type => 'string',
+        trim => 1,
+        decode => sub { lc },
+        allowed => [qw(yes no)],
+        help => 'delete old versions found in d/l directory--CAUTION'
+      },
+      disabled => {
+        type => 'bool',
+        help => 'exclude a program record from being paid attention to'
+      },
+      dl => {
+        type => 'string',
+        trim => 1,
+        decode => sub { lc },
+        allowed => [qw(yes no)],
+        help => "overrides `dldefaultno' or `-d', respectively"
+      },
+      dldir => {
+        type => 'string',
+        validate => sub {
+          if (m#^/#) {
+            return (-d && -w && -x) ? 0 : 'Directory not accessible/writable'
+          } else {
+            return 0  # can't check presence lacking global $dldir value
+          }
+        },
+        help => "d/l directory (absolute, or relative to global \$dldir)"
+      },
+      dlexec => {
+        type => 'string',
+        blank => 1,
+        help => 'command to be executed after a \'Usuccessful\' download'
+      },
+      dlexplicit => {
+        type => 'string',
+        multiple => 1,
+        trim => 1,
+        validate => sub { m#^(ftp|http|https)://.*?[^/]$#i ? 0 : 'Not an FTP or HTTP file URL' },
+        help => 'explicit file URL to download from'
+      },
+      dlintermediate => {
+        type => 'bool',
+        help => "download all versions x: `dlversion' < x <= `version'"
+      },
+      dlprefs => {
+        type => 'string',
+        decode => sub { [split /;/] },
+        encode => sub { join ';', @$_ },
+        help => "`;'-separated list of REs defining download preferences"
+      },
+      dlreferrer => {
+        type => 'string',
+        blank => 1,
+        help => 'HTTP referrer to use when downloading a package'
+      },
+      dlversion => {
+        type => 'string',
+        blank => 1,
+        help => 'last downloaded version (set automatically upon d/l)'
+      },
+      errors => {
+        type => 'string',
+        decode => sub { /\S+/ ? $& : $_ },
+        validate => sub { /\D/ ? 'Not a valid number' : 0 },
+        help => 'counts errors during version checks; reset on success'
+      },
+      lastcheck => {
+        type => 'string',
+        trim => 1,
+        validate => sub { /^\d{4}-\d\d-\d\d \d\d:\d\d$/ ? 0 :
+          "Not in format `yyyy-mm-dd hh:mm'" },
+        help => "start date/time of the last check (`yyyy-mm-dd hh:mm')"
+      },
+      newverexec => {
+        type => 'string',
+        blank => 1,
+        help => 'command to be executed upon a new version'
+      },
+      regex => {
+        type => 'string',
+        required => 1,
+        multiple => 1,
+        help => 'regular expression recognizing versions of the program'
+      },
+      transform => {
+        type => 'string',
+        multiple => 1,
+        help => 'code transforming a version number in $_'
+      },
+      urgency => {
+        type => 'string',
+        trim => 1,
+        decode => sub { lc },
+        allowed => [sort { $urgs{$b} <=> $urgs{$a} } keys %urgs],
+        help => "urgency, paid attention when running with `-u'"
+      },
+      url => {
+        type => 'string',
+        required => 1,
+        multiple => 1,
+        trim => 1,
+        validate => sub { m#^(ftp|http|https|file)://#i ? 0 : 'Not an FTP or HTTP URL' },
+        help => 'URL of an HTML/FTP document or directory§B/§N'
+      },
+      version => {
+        type => 'string',
+        blank => 1,
+        help => "latest version as matched by regex, auto-updated"
+      }
+    },
+    sortkeywords => sub {
+      my %g = %{shift()};
+      my %d = %{{%{shift()}}};
+      my @res;
+      local $_;
+      if ($d{disabled}) {
+        push @res, [disabled => undef];
+        delete $d{disabled}
+      }
+      if ($d{comment}) {
+        push @res, [comment => $_] for (@{$d{comment}});
+        delete $d{comment}
+      }
+      for my $key (grep { !/^(url|regex|transform|dlexplicit)$/ }
+        (qw(disabled comment version dlversion dldir urgency), sort keys %d))
+      {
+         next unless exists $d{$key};
+         if ($g{$key}{multiple}) {
+           push @res, [$key, $_] for (@{$d{$key}})
+         } else {
+           push @res, [$key, $d{$key}]
+         }
+         delete $d{$key}
+      }
+      my $maxidx = -1;
+      for (qw(url regex transform)) {
+        $maxidx = $#{$d{$_}} if $#{$d{$_}} > $maxidx
+      }
+      for my $idx (0..$maxidx) {
+        for (qw(url regex transform)) {
+          push @res, [$_, $d{$_}[$idx]] if $idx < @{$d{$_}}
+        }
+      }
+      if ($d{dlexplicit}) {
+        push @res, [dlexplicit => $_] for (@{$d{dlexplicit}})
+      }
+      wantarray ? @res : [@res]
+    }
+  }
+);
+
+my $xfersum = 0;  # bytes transferred
+
+# options & parameters...
+&Getopt::Long::Configure(qw(bundling pass_through));
+&Getopt::Long::GetOptions(\%opts, qw(catch-up|c file|f=s download|d errors|e:i
+  errors! force list|l match|m=s no-update|n older-than|o=s plain! xfersum|s
+  xfersum! syntax urgency|u=s verbose|v verbose! grammar|g help|h version|V
+  create-vim-syntax-file));
+if ($opts{'create-vim-syntax-file'}) {
+  if (!-e 'vcheck.vim') {
+    $_ = create_vim_syntax_file \%grammar, 'vcheck';
+    print STDERR "Created Vim syntax file `$_'.\nSee the man page for " .
+      "information on how to enable syntax highlighting\nfor vcheck config " .
+      "files in Vim.\n";
+    exit 0
+  } else {
+    print STDERR "File `vcheck.vim' exists, nothing done.\n";
+    exit -1
+  }
+}
+$no_ANSI = $opts{plain} || !-t STDOUT;
+if ($opts{version}) {
+  print "vcheck v$VERSION\n";
+  exit 0
+}
+if (@ARGV || $opts{help}) {
+  while (<DATA>) {
+    next unless s/^<H>//..s#^</H>##;
+    s#/#\\/#g;
+    eprint &enrich_help(eval "qq/$_/")
+  }
+  exists $opts{grammar} ? seek DATA, 0, 0 : exit @ARGV  # grammar requested?
+}
+if (exists $opts{grammar}) {
+  for my $sec (keys %grammar) {  # textually enrich `help' strings in grammar
+    for my $key (keys %{$grammar{$sec}{keywords}}) {
+      $grammar{$sec}{keywords}{$key}{help} =
+        &enrich_help($grammar{$sec}{keywords}{$key}{help})
+    }
+  }
+  print_grammar %grammar;
+  while (<DATA>) {
+    next unless s/^<G>//..s#^</G>##;
+    s#/#\\/#g;
+    eprint &enrich_help(eval "qq/$_/")
+  }
+  exit @ARGV
+}
+if ($opts{urgency} && !$urgs{$opts{urgency}}) {
+  eprint "Invalid `§B--urgency§N' specified, try `§B--help§N'.\n";
+  exit 1
+}
+if ($opts{'older-than'}) {
+  if ($opts{'older-than'} !~ s/^\s*(\d{4}-\d\d-\d\d(\s+\d\d:\d\d)?)\s*$/$1/) {
+    eprint "Invalid `§B--older-than§N' value, try `§B--help§N'.\n";
+    exit 1
+  }
+  $opts{'older-than'} =~ s/\s+/ /g
+}
+$opts{file} = '-' if $opts{''};
+
+my $fchar = '[\w.:/?+~-]';  # characters that may occur in file names
+
+unless ($opts{'no-update'} || $opts{syntax}) {
+  open LOCKFILE, ">$opts{file}.lock" or die "Oops.\n";
+  eval { $_ = flock LOCKFILE, LOCK_EX | LOCK_NB };
+  if ($@) {
+    close LOCKFILE;
+    unlink "$opts{file}.lock";
+    $opts{lockfailed} = 1
+  } elsif (!$_) {
+    die "Config file lock busy--another instance is running.  Aborting.\n"
+  }
+}
+
+# parse data file...
+open FILE, $opts{file} or die "Couldn't open data file, " .  "`$opts{file}',";
+my %res;
+%res = parse_config \*FILE, %grammar;
+close FILE;
+my %data = %{$res{prog}};
+my %config = %{$res{config}};
+
+if ($opts{syntax}) {
+  $_ = scalar keys %data;
+  $_ = $_ ? ("$_ program record" . ($_ != 1 ? 's' : '')) : 'no program records';
+  my($dis, $err) = (0, 0);
+  for (keys %data) {
+    if ($data{$_}{disabled}) {
+      $dis++;
+      next  # don't include disabled records in high-error count
+    }
+    $err++ if $data{$_}{errors} >= $opts{error_tolerance}
+  }
+  my $extra = $dis ? "$dis disabled" : '';
+  $extra .= $extra ? ", $err w/high error count" : '';
+  print "Syntax OK (found $_" . ($extra ? " ($extra)" : '') . ").\n";
+  exit 0
+}
+
+# change %opts with respect to %config, if necessary
+if ($_ = $config{httpproxy} || $config{proxy} ||
+    $ENV{http_proxy} || $ENV{HTTP_PROXY})
+{
+  $_ = "http://$_" unless m#^\w+://#;
+  $opts{httpproxy} = $_
+}
+if ($_ = $config{ftpproxy} || $config{proxy} ||
+    $ENV{ftp_proxy} || $ENV{FTP_PROXY})
+{
+  $_ = "ftp://$_" unless m#^\w+://#;
+  $opts{ftpproxy} = $_
+}
+$no_ANSI = $opts{plain} = 1
+  if $config{plain} && !(exists $opts{plain} && !$opts{plain});
+$eager_quote = $config{eagerquote};
+$opts{verbose} = 1
+  if $config{verbose} && !(exists $opts{verbose} && !$opts{verbose});
+$grammar{prog}{sortblocks} = sub {
+    ${${$_[0]}[1]}{url}[0] cmp ${${$_[1]}[1]}{url}[0]
+  } if $config{sortby} eq 'url';
+
+if ($opts{'catch-up'} && !$opts{list}) {
+  eprint "Catch-up: setting `§Bdlversion§N' = `§Bversion§N'...\n"
+    unless $opts{download}
+}
+$config{lastcheck} = &fmt_date if !$opts{'catch-up'} || $opts{download};
+
+my $ua = new LWP::UserAgent;
+$ua->agent("vcheck/$VERSION");
+$ua->proxy('http', $opts{httpproxy}) if $opts{httpproxy};
+$ua->proxy('ftp', $opts{ftpproxy}) if $opts{ftpproxy};
+$ua->timeout($config{timeout} || $opts{timeout});
+
+# main loop...
+my(%urls, @dls);
+$| = 1;
+for my $name (
+  sort { lc $a cmp lc $b }
+  grep { !$opts{match} || ($opts{match} =~ /^!/ ? !/$'/i : /$opts{match}/i) }
+  grep { !$opts{'older-than'} ||
+         ($data{$_}{lastcheck} || '') lt $opts{'older-than'} }
+  grep { !exists $opts{errors} ||
+         ($opts{errors} || 0) < ($data{$_}{errors} || 0) }
+  grep { !$opts{urgency} || $urgs{$data{$_}{urgency} ||
+         $config{defaulturgency} || 'medium'} >= $urgs{$opts{urgency}} }
+  grep { !$data{$_}{disabled} || $opts{force} }
+  keys %data)
+{
+  if ($opts{list}) {
+    my $dl = ($data{$name}{dl} || '') ne 'no' && !$config{dldefaultno};
+    my $cv = $data{$name}{version} || '';
+    my $dv = $data{$name}{dlversion} || '';
+    my $vs = ver_comp($cv, $dv);
+    next if $opts{'catch-up'} && (!$dl || $vs <= 0);  # catch-up restricts
+    my $cc = length $cv && $data{$name}{errors} < $opts{error_tolerance} ?
+      (($dl && $vs < 0) || $data{$name}{errors} ? '§Y' : '§G') : '§R';
+    my $cd = $dl ? (length $dv ? ($vs > 0 ? '§Y' : '') : '§R') : '';
+    eprint "$name: latest: $cc" . ($data{$name}{version} || '(none)') .
+      "§N, downloaded: $cd" . ($data{$name}{dlversion} || '(none)') . "§N\n";
+    next
+  }
+  if ($opts{'catch-up'}) {
+    next if ($data{$name}{dl} || '') eq 'no' ||
+      ($config{dldefaultno} && $data{$name}{dl} ne 'yes');
+    if (ver_comp($data{$name}{dlversion} || '',
+      $data{$name}{version} || '') < 0)
+    {
+      if (!$opts{download}) {
+        $data{$name}{dlversion} = $data{$name}{version};
+        eprint "...for §B$name $data{$name}{version}§N.\n";
+        next
+      }
+    } else {
+      next
+    }
+  }
+  # check versions...
+  eprint "Checking for §B$name§N...";
+  my($maxidx, $url, $re, $trans, %versions, @vers) = (-1);
+  my @ver = ('') x 2;
+  for (qw(url regex transform)) {
+    $maxidx = $#{$data{$name}{$_}} if $#{$data{$name}{$_}} > $maxidx
+  }
+  for my $idx (0..$maxidx) {
+    %versions = ();
+    @ver = ('') x 2;
+    $url = $data{$name}{url}[$idx < @{$data{$name}{url}} ? $idx : -1];
+    $re = $data{$name}{regex}[$idx < @{$data{$name}{regex}} ? $idx : -1];
+    $trans = !@{$data{$name}{transform}} ? undef :
+      $data{$name}{transform}[$idx < @{$data{$name}{transform}} ? $idx : -1];
+    if (@vers) {
+      $$_ = &substitute_vers($$_, \@vers) for (\($url, $re))
+    }
+    $re =~ s/__VER__/$re_ver/g;
+    my $try = $maxidx ? ($idx+1) . (qw(st nd rd), ("th") x 7)[$idx%10] . ' ' :
+      '';
+    # Avoid lastcheck field for every app T10069
+    # $data{$name}{lastcheck} = &fmt_date;
+    if (exists $urls{$url}) {
+      $_ = $urls{$url}
+    } else {
+      $_ = &read_url($url);
+      $urls{$url} = $_ unless $config{nocache}
+    }
+    unless (length($_ || '')) {
+      eprint " $try§Yconnection failed or timed out§N.\n";
+      $data{$name}{errors}++;
+      last
+    } else {
+      $data{$name}{version} = '' unless defined $data{$name}{version};
+      while (s/$re//) {
+        local $_ = $1;
+        $_ = $trans ? eval $trans : $_;
+        $versions{$_}{$&} = $1;  # remember all versions
+        @ver = ($1, $_) if ver_comp($_, $ver[1]) > 0
+      }
+      unless (%versions) {
+        $data{$name}{errors}++;
+        eprint " $try§Rregex didn't match§N (" .
+          (!length($data{$name}{version} || '') || $data{$name}{errors} >=
+          $opts{error_tolerance} ? '§Rcheck of record suggested§N' :
+          'probably connection error') . ").\n";
+        last
+      } elsif ($idx == $maxidx) {
+        push @vers, [@ver];
+
+        # If several url/regex pairs are used, vcheck will keep the version detected by the last one
+        # We first add the alternative url/regexp pair, and in 2nd place the main download site
+        # If the alternative site detect a higher version, it will fail.
+        if ($vers[1][1] && ver_comp($vers[1][1], $vers[0][1]) < 0) {
+            eprint "§YVersions $vers[0][1], detected in the alternative site, is greater than version $vers[1][1] detected in main site. Please check it§N!\n";
+            $data{$name}{errors}++;
+            last
+        }
+
+        if (ver_comp($ver[1], $data{$name}{version}) > 0) {
+          eprint " new version: §G$ver[1]§N.\n";
+          $data{$name}{version} = $ver[1];
+          delete $data{$name}{errors};
+          if (my $cmd = $data{$name}{newverexec} || $config{newverexec}) {
+            $cmd = &substitute_vers($cmd, \@vers);
+            $cmd =~ s/__URL__/$url/g;
+            $cmd =~ s/__PROG__/$name/g;
+            $cmd =~ s#~/#$ENV{HOME}/#g;
+            eprint "--> Executing `§Bnewverexec§N' command";
+            print $config{echoexec} ? ": $cmd\n" : "...\n";
+            system $cmd
+          }
+        } else {
+          if (ver_comp($ver[1], $data{$name}{version}) < 0) {
+            eprint " §Ylatest version online lower than record§N!\n";
+            $data{$name}{errors}++
+          } else {
+            $data{$name}{version} = $ver[1]
+              unless length($data{$name}{version} || '');
+            print $opts{verbose} || !-t STDOUT ?
+              " $data{$name}{version} remains latest version.\n" :
+              "\015" . ' ' x (16+length $name) . "\015";  # clear current line
+            delete $data{$name}{errors}
+          }
+        }
+      } else {
+        push @vers, [@ver]
+      }
+    }
+  }
+  # download latest version if necessary and requested
+  if ($opts{download} &&
+    (!$config{dldefaultno} || ($data{$name}{dl} || '') eq 'yes') &&
+    ($data{$name}{dl} || '') ne 'no' &&
+    ver_comp($data{$name}{dlversion} || '', $ver[1]) < 0)
+  {
+    for my $curver (
+      sort { ver_comp $a, $b }
+      grep { ($data{$name}{dlintermediate} && ver_comp($_, $ver[1]) <= 0 &&
+        ver_comp($_, $data{$name}{dlversion} || '') > 0) ||
+        (!$data{$name}{dlintermediate} && !ver_comp $_, $ver[1])
+      } keys %versions)
+    {
+      # avoid multiple d/ls if both versions x.y and x-y are referenced
+      next unless ver_comp($curver, $data{$name}{dlversion} || '') > 0;
+      my $dlurl = $url;
+      if (@{$data{$name}{dlexplicit}}) {
+        eprint "Setting explicit download URL(s) for §B$name $curver§N.\n";
+        for (@{$data{$name}{dlexplicit}}) {
+          my $url = &substitute_vers($_, \@vers);
+          $url =~ m#([^/]+)/*$#;
+          push @dls, [$name, $curver, $+, $dlurl, $url, [@vers]]
+        }
+        next
+      }
+      eprint "Determining download URL for §B$name $curver§N...";
+      if (exists $urls{$dlurl}) {
+        $_ = $urls{$dlurl}
+      } else {
+        $_ = &read_url($dlurl);
+        $urls{$dlurl} = $_ unless $config{nocache}
+      }
+      eprint "\n--> §RConnection failed§N.\n" unless length ($_ || '');
+      my $vre = join '|', map quotemeta, keys %{$versions{$curver}};
+      my @list;
+      while (s#(?<!$fchar)$fchar*?($vre)$fchar*(?!$fchar)##) {
+        my($s, $file, $url) = ($`, $&);
+        next unless $file =~ /$re/;  # make sure latest regex also matches
+        next if $dlurl =~ m#^http://#i && $s !~ /\bHREF\s*=\s*"?$/is;
+        if ($file =~ m#^([a-z]+)://#i) {  # complete URL
+          $url = $file if $+ =~ /ftp|http/i
+        } elsif ($file =~ m#^/#) {  # absolute path
+          $dlurl =~ m#^\w+://[^/]+#;
+          $url = "$&$file"
+        } elsif ($dlurl =~ m#/$#) {  # d/l URL ends in a dir
+          $url = "$dlurl$file"
+        } elsif ($dlurl =~ m#^(\w+://.+?/)[^/]*$#) {  # d/l URL
+          $url = "$1/$file"
+        } elsif ($dlurl =~ m#^\w+://[^/]+$#) {  # d/l URL is just a host name
+          $url = "$dlurl/$file"
+        }
+        while ($url =~ s#[^/]+/+\.\.(/|$)##) {};
+        $file = $& if $file =~ m#[^/]+$#;
+        push @list, [$curver, $file, $dlurl, $url, [@vers]] if defined $url
+      }
+      if (@list) {
+        my $prefs = $data{$name}{dlprefs} || $config{dlprefs};
+        if (@$prefs) {
+          @list = sort {
+            my($c, $d) = map {
+              my $i = 0;
+              for my $s (@$prefs) {
+                last if /$s/i;
+                $i++
+              }
+              $i
+            } (${$a}[1], ${$b}[1]);
+            $c <=> $d
+          } @list
+      }
+        push @dls, [$name, @{$list[0]}];
+        print " done.\n"
+      } else {
+        eprint "\n--> §RFailed to determine URL§N.\n"
+      }
+    }
+  }
+}
+
+&save_data();
+
+# download if necessary and requested...
+if ($opts{download} && @dls) {
+  while (@dls) {
+    @_ = @{shift @dls};  # (name, ver, fname, URL, D/L URL, vers_ref [, retry])
+    eprint "Trying to retrieve §B@_[0, 1]§N...\n--> URL: <$_[4]>\n";
+    my $of = (exists $data{$_[0]}{dldir} && $data{$_[0]}{dldir} =~ m#^/# ?
+      "$data{$_[0]}{dldir}/" :
+      ($config{dldir} ? "$config{dldir}/" . (exists $data{$_[0]}{dldir} ?
+      "$data{$_[0]}{dldir}/" : '') : ''));
+    if (length $of && !(-d $of && -w $of && -x $of)) {
+      eprint "--> §YSkipping§N, since §Rspecified `dldir'  doesn't exist§N.\n";
+      next
+    }
+    $of .= $_[2];
+    if (-e $of && !$_[6]) {
+      eprint "--> §YSkipping§N, since §Ylocal file $of exists§N.\n";
+      next
+    }
+    my $size;
+    print '--> Download in progress...';
+    my $ref = &substitute_vers($data{$_[0]}{dlreferrer} || $_[3], $_[5]);
+    &read_url($_[4], $of, $ref);
+    if (!-e $of) {
+      eprint "--> Oops, something went wrong, §Rdidn't get anything§N.\n"
+    } elsif (!(stat $of)[7]) {
+      eprint "--> Oops, something went wrong, §Rretrieved file is empty§N" .
+        ", deleting it.\n";
+      # we don't try to -C(ontinue) because what we've received might be but
+      # and HTTP protocol error message or suchlike
+      unlink $of if -f $of;
+      if (($_[6]++) < ($config{dlretry} || 0)) {
+        eprint "--> Requeuing download (retry #$_[6]).\n";
+        push @dls, [@_]
+      }
+    } else {
+      my($chk, $deleteoldok);
+      if ($size || ($chk = &check_file($of))) {
+        if ((stat $of)[7] < ($size || 0) || (defined $chk && $chk < 0)) {
+          eprint "--> Received something, but §Rfile is truncated§N" . 
+            ", deleting it.\n";
+          unlink $of if -f $of;
+          if (($_[6]++) < ($config{dlretry} || 0)) {
+            eprint "--> Requeuing download (retry #$_[6]).\n";
+            push @dls, [@_]
+          }
+          next
+        } else {
+          eprint "--> Hooray, chances are I §Gmanaged to retrieve the " .
+            "complete file§N.\n";
+          $data{$_[0]}{dlversion} = $_[1]
+            if ver_comp($_[1], $data{$_[0]}{dlversion}) > 0;
+          $deleteoldok = 1;
+        }
+      } else {
+        eprint "--> §YReceived something§N; check whether it contents you.\n";
+        $data{$_[0]}{dlversion} = $_[1]
+          if ver_comp($_[1], $data{$_[0]}{dlversion}) > 0;
+        if (($config{deleteold} && ($data{$_[0]}{deleteold} || '') ne 'no') ||
+            ($data{$_[0]}{deleteold} || '') eq 'yes')
+        {
+          eprint "--> Warning: §YIgnoring §N§B\$deleteold§N§Y for " .
+            "uncheckable download§N.\n"
+        }
+      }
+      if (my $cmd = $data{$_[0]}{dlexec} || $config{dlexec}) {
+        $cmd = &substitute_vers($cmd, $_[5]);
+        $cmd =~ s/__DLURL__/$_[4]/g;
+        $cmd =~ s/__URL__/$_[3]/g;
+        $cmd =~ s/__PROG__/$_[0]/g;
+        $cmd =~ s/__FILE__/$of/g;
+        $cmd =~ s#~/#$ENV{HOME}/#g;
+        eprint "--> Executing `§Bdlexec§N' command";
+        print $config{echoexec} ? ": $cmd\n" : "...\n";
+        system $cmd
+      }
+      if ($deleteoldok &&
+          (($config{deleteold} && ($data{$_[0]}{deleteold} || '') ne 'no') ||
+           ($data{$_[0]}{deleteold} || '') eq 'yes'))
+      {
+        if (!$data{$_[0]}{dlintermediate} &&
+            !length($data{$_[0]}{dlexplicit} || ''))
+        {
+          my $re = &substitute_vers($data{$_[0]}{regex}[-1], $_[5]);
+          $re =~ s/__VER__/$re_ver/g;
+          &delete_old_versions(dirname($of), $re,
+            (@{$data{$_[0]}{transform}} ? $data{$_[0]}{transform}[-1] : undef),
+            $data{$_[0]}{dlversion})
+        } elsif (($data{$_[0]}{deleteold} || '') eq 'yes') {
+          eprint "--> Warning: §YIgnoring §N§B\$deleteold§N§Y due to " .
+            "inhibiting other options§N.\n"
+        }
+      }
+    }
+  }
+  &save_data()
+}
+
+unless ($opts{'no-update'} || $opts{lockfailed}) {
+  flock LOCKFILE, LOCK_UN;
+  close LOCKFILE;
+  unlink "$opts{file}.lock"
+}
+
+if ($opts{xfersum} || ($config{xfersum} && !$opts{noxfersum})) {
+  my @units = ('KiB', 'MiB', 'GiB');
+  for (0..$#units) {
+    $xfersum /= 1024;
+    if ($xfersum < 1024 || $_ == $#units) {
+      printf "Received %.1f %s.\n", $xfersum, $units[$_];
+      last
+    }
+  }
+}
+
+# update data file (unless disabled)...
+sub save_data()
+{
+  unless ($opts{'no-update'} || $opts{file} eq '-') {
+    open FILE, ">$opts{file}.tmp"
+      or die "Couldn't gain write access to file `$opts{file}.tmp',\n ";
+    write_config \*FILE, \%grammar, { config => \%config, prog => \%data };
+    close FILE;
+    if (&File::Copy::copy("$opts{file}.tmp", $opts{file})) {
+      unlink "$opts{file}.tmp"
+    } else {
+      die "Error overwriting data file, `$opts{file}',\n ";
+    }
+  }
+}
+
+sub enrich_help($)
+{
+  local $_ = shift;
+  s/((?<=`)[-~\w\/.]+(?=')|
+     (?<!\w)-\w(?!\w)|
+     __[A-Z]+__|
+     \$\w+(?![{}])\b|
+     \b$opts{progname}\b
+    )/§B$1§N/gx;
+  s/(^|(?<=[ ]))(?!(ANSI|FTP|HTML|HTTP|PERL|STDERR|STDIN|STDOUT|URL)\b)
+    [A-Z]{2,}\b/§U$&§N/gx;
+  $_
+}
+
+sub read_url($;$$)  # &read_url $url [$outfile [$referrer]]
+{
+  local($i, $t) = (1, time);
+  # Patched for PASSIVE FTP support
+  # http://cvs.openpkg.org/fileview?f=openpkg-src/vcheck/vcheck.patch&v=1.2.2.1
+  local($isftp) = (@_[0] =~ m|^ftp://|i);
+
+  sub meter($$$)
+  {
+    local $_ = shift;
+
+    print OF $_;
+    print "\010" . (qw(/ - \ |))[$i++] if -t STDOUT && time != $t;
+    $t = time;
+    $i %= 4;
+    $xfersum += length $_
+  }
+
+  my $req = HTTP::Request->new(GET => shift);
+  my $of = shift;
+  my $ref = shift;
+  $req->push_header(Referer => $ref) if $ref;
+  if (defined $of) {
+    open OF, ">$of" or return undef;
+    print ' *' if -t STDOUT;
+    local $_ = $ua->request($req, \&meter, 4096)->headers;
+    print -t STDOUT ? "\015" : "\n";
+    close OF;
+    $xfersum += length $_;
+    $_
+  } else {
+    # Patched for PASSIVE FTP support
+    # http://cvs.openpkg.org/fileview?f=openpkg-src/vcheck/vcheck.patch&v=1.2.2.1
+    #local $_ = $ua->request($req);
+    local $_;
+    delete $ENV{FTP_PASSIVE}; $_ = $ua->request($req);
+    $ENV{FTP_PASSIVE}=1;      $_ = $ua->request($req) if ($isftp and $_->{_headers}->{content-length} == 0);
+    $xfersum += length($_->headers) + length $_->content;
+    $_->content
+  }
+}
+
+sub check_file($)
+{
+  local $_ = shift;
+  my($par, $exe) = '';
+  if (/\.(t?gz|Z)$/i) { ($exe, $par) = qw(gzip -t) }
+  elsif (/\.bz2$/i) { ($exe, $par) = qw(bzip2 -t) }
+  elsif (/\.(ace|arj|rar)$/i) { ($exe, $par) = ('un' . lc $+, 't') }
+  elsif (/\.zip$/i) { ($exe, $par) = qw(unzip -t) }
+  elsif (/\.pl$/i) { ($exe, $par) = qw(perl -cwx) }
+  elsif (/\.rpm/i) { ($exe, $par) = (rpm => '--checksig --nopgp') }
+  if (defined $exe && length ($exe = `which $exe` || '')) {
+    chomp $exe;
+    return -1 if system "$exe $par '$_' >/dev/null 2>&1";
+    return 1
+  }
+  0
+}
+
+sub fmt_date()
+{
+  @_ = reverse((localtime time)[1..5]);
+  $_[0] += 1900;
+  $_[1] += 1;
+  sprintf '%04d-%02d-%02d %02d:%02d', @_
+}
+
+sub delete_old_versions($$$$)
+{
+  my($dir, $regex, $transform, $newver) = @_;
+  if (opendir DIR, $dir) {
+    my @files = grep { -f "$dir/$_" && /$regex/ } readdir DIR;
+    closedir DIR;
+    my @todel;
+    local $_;
+    for my $f (@files) {
+      $f =~ /$regex/;  # always matches
+      $_ = $1;
+      $_ = eval $transform if $transform;
+      my $vs = ver_comp($_, $newver);
+      if ($vs < 0) {
+        push @todel, "$dir/$f"
+      } elsif ($vs > 0) {
+        eprint "--> §YEven newer version found§N in d/l dir--skipping " .
+          "deletion of old files.\n";
+        return
+      }
+    }
+    return unless @todel;
+    if (@files - @todel == 1) {
+      for (@todel) {
+        eprint "--> Deleting obsolete `" . basename($_) . "'.\n";
+        unlink $_
+      }
+    } else {
+      eprint "--> §YConfusing assortment of older versions found§N--" .
+        "skipping deletion.\n"
+    }
+  }
+}
+
+sub substitute_vers($$) {
+  my $s = shift;
+  my @vers = @{shift()};
+  return $s unless defined $s && @vers;
+  $s =~ s/__RAWVER__/$vers[-1][0]/g;
+  $s =~ s/__NEWVER__/$vers[-1][1]/g;
+  $s =~ s/__RAWVER${_}__/$vers[$_-1][0]/g for (1..@vers);
+  $s =~ s/__NEWVER${_}__/$vers[$_-1][1]/g for (1..@vers);
+  $s
+}
+
+=head1 GRAMMAR
+
+When run as
+
+  vcheck --grammar
+
+B<vcheck> will print its config file's grammar, i.e., the formal structure of
+the entries therein.  The individual fields' names are printed along with short
+descriptions; details on their meaning and usage can be found below in this
+section.
+
+Per default (i.e., if the script's name has not been changed (see L<"FILES">)
+and if not overridden via C<--file>), B<vcheck> reads its configuration from
+F<~/.vcheck>.  This file will also be rewritten regularly whenever version
+information etc.Z<> about a program is updated.  In the course of such rewrites,
+entries will be sorted in a definable fashion, and a hard-coded order of
+keywords and indentation scheme will be applied.
+
+Basically, the config file may contain two types of records: a configuration
+section and any number of program sections.  A record (or section--these
+terms are used synonymously in this documentation) consists of a keyword
+marking its beginning and a name (this only goes for program sections),
+followed by an equal sign (`=') and a pair of curly braces ("{}"), between
+which the section's data is put.
+
+Section data is a sequence of settings, or fields, of a number of types, some
+of which are obligatory while others are optional, separated by white space
+(typically, line feeds, to keep things readable).  There are the following
+types of fields:
+
+=over 2
+
+=item Boolean
+
+Keywords of this type set a property based on their mere presence.  An example
+of this is the B<config> section field B<dldefaultno>:
+
+  config = {
+    dldefaultno
+  }
+
+=item string
+
+String fields consist of a keyword followed by an equal sign (`=') and a string
+representing the field's value.  If the string value contains white space or
+(double) quotation marks, it needs to be surrounded by (double) quotation marks
+(`"').  In this case, both quotation marks inside the string and backslashes
+need to be escaped by backslashes (`\').  Note that string values may not span
+several lines but have to be contained on a single one, and there may be
+validation rules as to what the value may be like.  Besides, string fields
+are typically required to be of non-zero length.
+
+An example of this type of field is the B<prog> section field B<comment>:
+
+  prog foo = {
+    [...]
+    comment = Hello!
+    comment = "Comment with white space and \"quotes\"!"
+    [...]
+  }
+
+=item string enumeration
+
+String enumerations are basically string fields with but a limited set
+of allowed values.  An example of this is the B<prog> section field B<dl>,
+whose value must be either "yes" or "no", if present:
+
+  prog foo = {
+    [...]
+    dl = yes
+    [...]
+  }
+
+=back
+
+=head2 CONFIGURATION SECTION
+
+The configuration section is optional and, if present, contains settings
+globally affecting B<vcheck>'s default behavior.  The configuration section is
+unique per file (although multiple occurrences with non-conflicting settings
+are allowed, but these will be joined into a single section once the file is
+rewritten).
+
+The keyword introducing a configuration section is B<config>.  Thus, a
+B<config> section's principal layout looks like this:
+
+  config = {
+    [...]
+  }
+
+The keywords allowed inside ("[...]") the B<config> section are explained
+in detail below (listed in alphabetical order):
+
+=over 2
+
+=item B<defaulturgency> (enumeration: I<high>, I<medium>, I<low>)
+
+Specifies the checking urgency level to assume, unless specified otherwise in
+a program's record via B<prog.urgency>.  Urgencies allow for a crude selection
+of programs to check for via the C<--urgency> command line parameter.  In
+absence of this option, the default urgency is I<medium>.
+
+=item B<deleteold> (Boolean)
+
+If included in the B<config> section, causes the script to automatically look
+for and delete versions of a program obsoleted by a new download.  May be
+overridden by B<prog.deleteold>.  I<See the latter for details.>
+
+Special note: B<I<Use at your own risk!>>
+
+=item B<dldefaultno> (Boolean)
+
+By default, don't download.  This causes the script to download only those
+programs whose B<dl> option is explicitly set to I<yes> when run with the
+C<--download> parameter.
+
+=item B<dldir> (string: absolute directory path)
+
+This option specifies an I<absolute> path (i.e., relative to the root
+directory) of a directory where to put downloaded files.  If the download
+directory isn't set via this or even more explicitly via a B<prog.dldir>
+option, downloads will end up in that directory in  which the script is
+executing.
+
+=item B<dlexec> (string)
+
+Specifies a command to be executed after any successful download (unless
+overridden for a particular program via B<prog.dlexec>).  A successful download
+in this context is one whose file type has been recognized and whose integrity
+could be confirmed.  In unizoid environments, the command is executed under
+whatever shell the environment variable $SHELL defines.
+
+The command string is subject to expansion of the following placeholders (see
+L<"PLACEHOLDERS"> for their meaning): C<__DLURL__>, C<__FILE__>, C<__NEWVER__>,
+C<__PROG__>, C<__RAWVER__>, C<__URL__>.  Additionally, `~/' will be replaced by
+the user's home directory.
+
+B<config.dlexec> may prove useful to, e.g., automatically convert, say, gzipped
+to bzipped files using a helper script, or to log downloads (see L<"HINTS">).
+
+=item B<dlprefs> (string)
+
+A semicolon- (`;'-) separated list of Perl-style regular expressions
+defining download preferences.  Each of the regular expressions is supposed
+to match a particular file type that's possible or likely to be encountered.
+The order in which the expressions occur defines their precedence (the first
+matching expression will determine which of a set of available file types
+of a given program version will be selected for download).  This value is
+the default in effect unless specific preferences are defined on a per-program
+basis using B<prog.dlprefs>.  If neither B<config.dlprefs> nor B<prog.dlprefs>
+is set, the file to be downloaded is chosen pseudo-randomly, if multiple
+pattern matches occur.
+
+For these download preferences to make any sense, file- and version-matching
+expressions need to be sufficiently non-restrictive to match several possible
+extensions.  For example, "foo-(C<__VER__>)\\.t" will match both ".tar.gz" and
+".tar.bz2" files, and setting B<dlprefs> to "\\.tar\\.bz2$;\\.tar\\.gz$" will
+cause the script to preferrably download ".tar.bz2" files.
+
+=item B<dlretry> (string: non-negative integer number)
+
+The number of times to retry downloading after a failed download.  If this
+option isn't specified, the number of retries defaults to 0.  A retry is
+considered to have failed if either the connection failed, the retrieved
+document was empty, or the file type has been recognized and its integrity
+verified.
+
+=item B<eagerquote> (Boolean)
+
+If this option is set, all string parameters of configuration file options
+will be surrounded by double quotes.  The default is to use quotes only
+where necessary (e.g., for string parameters containing white space).
+
+=item B<echoexec> (Boolean)
+
+If this option is set, commands executed thanks to B<newverexec> or B<dlexec>
+options will be echoed prior to execution.
+
+=item B<ftpproxy> (string: HTTP URL or "server:port")
+
+This option specifies a proxy to use for retrieving documents from FTP
+locations.  It specifies either the complete URL or the server and port
+(as "server:port") of the proxy, and the proxy has to be a HTTP-based FTP
+proxy.  This option takes precedence over B<config.proxy>, if specified.
+If neither B<config.ftpproxy> nor B<config.proxy> is set, the script uses the
+value the environment variables $ftp_proxy or $FTP_PROXY (in this order of
+precedence) are set to, or no FTP proxy at all.
+
+=item B<httpproxy> (string: HTTP URL or "server:port")
+
+This option specifies a proxy to use for retrieving documents from HTTP
+locations.  It specifies either the complete URL or the server and port (as
+"server:port") of the proxy.  This option takes precedence over
+B<config.proxy>, if specified.  If neither B<config.httpproxy> nor
+B<config.proxy> is set, the script uses the value the environment variables
+$http_proxy or $HTTP_PROXY (in this order of precedence) are set to, or no HTTP
+proxy at all.
+
+=item B<lastcheck> (string: date formatted as "YYYY-MM-DD HH:MM")
+
+The date and time the script was last run updating the configuration file.
+This value is generated and updated automatically.
+
+=item B<newverexec> (string)
+
+A command to be executed whenever a new version of a program is found,
+unless overridden on a per-program basis via B<prog.newverexec>.
+The command is executed under whatever shell the environment variable
+$SHELL defines.
+
+The command string is subject to expansion of the following placeholders (see
+L<"PLACEHOLDERS"> for their meaning): C<__NEWVER__>, C<__PROG__>,
+C<__RAWVER__>, C<__URL__>.  Additionally, `~/' will be replaced by the user's
+home directory.
+
+=item B<nocache> (Boolean)
+
+This option conserves some memory by not caching retrieved documents
+(those fetched from B<prog.url> locations).  By default, the script caches
+retrieved document so that program records referring to the same web page
+won't result in (unnecessary) multiple retrievals during the same session.
+
+=item B<plain> (Boolean)
+
+This option causes the script to generate plain (as opposed to ANSI-enhanced)
+output by default.  The option may be overridden by specifying C<--noplain>
+on the command line.
+
+=item B<proxy> (string: HTTP URL or "server:port")
+
+This option specifies a proxy to use for retrieving documents from both HTTP
+and FTP locations.  It specifies either the complete URL or the server and port
+(as "server:port") of the proxy.  The proxy set via this option may be
+overridden via B<config.ftpproxy> and/or B<config.httpproxy>.
+
+=item B<sortby> (enumeration: I<name>, I<url>)
+
+This option specifies whether to sort B<prog> entries by program name
+(B<prog> section identifier) or URL when rewriting the configuration file.  The
+default is to sort by name.
+
+=item B<xfersum> (Boolean)
+
+Corresponds to the command line option C<--xfersum>.  If set, the script will
+print a total of the amount of data that has been received at exit.  Can be
+overridden via the command line switch C<--noxfersum>.
+
+=item B<timeout> (string: non-negative integer number)
+
+The time (in seconds) after which attempted remote retrievals should be
+aborted.  The default is 90 seconds.
+
+=item B<verbose> (Boolean)
+
+If this option is set, the script will also print version numbers that
+haven't been obsoleted.  The default is to print only new versions (and
+error messages).  This setting can be overridden via the command line
+switch C<--noverbose>.
+
+=back
+
+=head2 PROGRAM SECTIONS
+
+Program sections each define for a single program (package, ...) an HTTP
+or FTP URL based on which the latest version of that program available can
+be determined by B<vcheck> using an additionally-defined regular expression.
+There can (hypothetically) be any number of program sections in a config file.
+
+The keyword introducing a program section is B<prog>.  Each B<prog> section is
+identified by a unique identifier (there may not be multiple B<prog> sections
+with the same identifier).  Thus, a B<config> section's principal layout looks
+like this:
+
+  prog Foo = {
+    [...]
+  }
+
+The keywords allowed inside ("[...]") a B<prog> section are explained in detail
+below (listing in alphabetical order).  All fields are optional and allowed but
+once per B<prog> section, unless explicitly stated otherwise.
+
+=over 2
+
+=item B<comment> (string; multiple allowed)
+
+An arbitrary comment string.  If multiple such entries exist for a single
+program record, their relative order will be maintained when rewriting the
+configuration file.
+
+=item B<deleteold> (enumeration: I<yes>, I<no>)
+
+This option defines whether the script should look for and delete any obsolete
+versions of a program located in its download directory after each
+'Usuccessful' download of a new version of that program.  A successful
+download in this context is any download of a file of a known type whose
+integrity could be verified.  Overrides B<config.deleteold>; the deletion of
+obsolete versions is disabled by default and only activated by
+B<config.deleteold> or B<prog.deleteold>.
+
+Any occurrence of B<prog.dlexplicit> or B<prog.dlintermediate> in a program's
+record inhibits application of B<deleteold> for that program.
+
+Special note: B<I<Use at your own risk!>>
+
+=item B<disabled> (Boolean)
+
+This option causes the program record in question to be ignored (except
+when the command line switch C<--force> is used).
+
+=item B<dl> (enumeration: I<yes>, I<no>)
+
+This option specifies whether to download the program in question when
+the script is run with the C<--download> option.  By default, a program
+will be downloaded when a new version is found and the script is run
+with said parameter, unless B<config.dldefaultno> is set.  B<prog.dl> overrides
+the latter option.
+
+=item B<dldir> (string)
+
+This option specifies a download directory on a per-program basis.  If the
+directory is absolute (i.e., relative to the root directory, as indicated
+by a leading slash), it will be treated as an absolute path, otherwise it
+will be considered relative to either B<config.dldir>, if specified, or the
+directory the script is executing in.
+
+=item B<dlexec> (string, may be zero-length)
+
+Specifies a command to be executed after any successful download of the
+program, overriding B<config.dlexec> (if set).  A successful download in this
+context is one whose file type has been recognized and whose integrity could
+be confirmed.  The command is executed under whatever shell the environment
+variable $SHELL is set to.
+
+The command string is subject to expansion of the following placeholders (see
+L<"PLACEHOLDERS"> for their meaning): C<__DLURL__>, C<__FILE__>,
+C<__NEWVER__>, C<__PROG__>, C<__RAWVER__>, C<__URL__>.  Additionally, `~/'
+will be replaced by the user's home directory.
+
+=item B<dlexplicit> (string: HTTP or FTP URL; multiple allowed)
+
+Specifies an explicit download URL.  Whenever a new version of the program in
+question is found, the URL specified via this option will be downloaded (if
+requested) instead of the one deduced from B<prog.url> and B<prog.regex>.
+
+The command string is subject to expansion of the following placeholders (see
+L<"PLACEHOLDERS"> for their meaning): C<__NEWVER__>, C<__RAWVER__>.
+
+This option can also be used to, e.g., download multiple packages on
+detection of a new version, provided that their names can be specified.
+For an example of this, see L<"EXAMPLES">.
+
+=item B<dlintermediate> (Boolean)
+
+If this option is set, intermediate versions (i.e., version referenced at
+B<url> newer than B<dlversion> but older than the most recent version
+available) will be downloaded as well if any are encountered when a new version
+of the program is found.  This option is useful for downloading patches and
+suchlike, which depend on each other consecutively.  The default is to ignore
+intermediate versions.
+
+=item B<dlprefs> (string)
+
+A semicolon- (`;'-) separated list of Perl-style regular expressions
+defining download preferences.  Each of the regular expressions is supposed
+to match a particular file type that's possible or likely to be encountered.
+The order in which the expressions occur defines their precedence (the first
+matching expression will determine which of a set of available file types of a
+given program version will be selected for download).  This value overrides
+default preferences possibly defined via B<config.dlprefs>.  If neither
+B<config.dlprefs> nor B<prog.dlprefs> is set, the file to be downloaded is
+chosen pseudo-randomly, if multiple pattern matches occur.
+
+For these download preferences to make any sense, file- and version-matching
+expressions need to be sufficiently non-restrictive to match several possible
+extensions.  For example, "foo-(C<__VER__>)\\.t" will match both ".tar.gz" and
+".tar.bz2" files, and setting `dlprefs' to "\\.tar\\.bz2$;\\.tar\\.gz$" will
+cause the script to preferrably download ".tar.bz2" files.
+
+=item B<dlreferrer> (string, may be zero-length)
+
+Specifies an HTTP referrer to use when downloading a program package.  By
+default, the version-determining document (i.e., the last B<url> value,
+with placeholders expanded) is used.
+
+=item B<dlversion> (string)
+
+This parameter stores the last downloaded version of the program in question
+and is updated whenever a new version is found (except when running in
+read-only mode).  If B<prog.transform> is set, the stored version will have
+been transformed from the one matched by B<prog.regex>.
+
+=item B<errors> (string: non-negative integer number)
+
+This field stores the number of errors during version checks and is reset
+once a check succeeds.  A high value of this field is indicative of an
+outdated URL or file name matching regular expression and will be remarked
+upon by the script.  Additionally, it is possible to limit the scope of
+an operation to erroneous records via the C<--errors> command line parameter.
+
+=item B<lastcheck> (string: date in format "YYYY-MM-DD HH:MM")
+
+This field stores the date and time the program in question was last checked
+(no matter whether successfully or unsuccessfully).
+
+=item B<newverexec> (string, may be zero-length)
+
+A command to be executed whenever a new version of a program is found,
+overriding a possible definition via B<config.newverexec>.  The command is
+executed under whatever shell the environment variable $SHELL defines.
+
+The command string is subject to expansion of the following placeholders (see
+L<"PLACEHOLDERS"> for their meaning): C<__NEWVER__>, C<__PROG__>,
+C<__RAWVER__>, C<__URL__>.  Additionally, `~/' will be replaced by the user's
+home directory.
+
+=item B<regex> (string; I<required>; multiple allowed)
+
+This I<required> field is supposed to contain a Perl-style regular expression
+matching desired versions of the program in question given the document at
+B<prog.url> as input.  Note that the regexp needn't match the complete file
+name--when considering a download, the script will auto-expand the match
+as seen fit.
+
+Regular expressions for matching programs' version numbers have to be written
+in such a way that the $1 part (see the "perlre" man page), if the entire
+expression matches, is exactly the version number.  The option is subject to
+placeholder expansion: C<__VER__> will be replaced by a pre-manufactured
+(non-greedy) regular expression matching version numbers compliant with any of
+a number of common schemes.  Note that in order to yield a $1 match as
+required, C<__VER__> still needs to be put in parentheses.  For examples of
+B<prog.regex> values, see L<"EXAMPLES">.
+
+In order to cope with particularly complex remote scenarios (such as
+version-dependent directory hierarchies), multiple B<url>, B<regex>, and
+B<transform> fields may be specified per program.  In this case, the script
+will match B<url>s and B<regex>es starting with the first and continuously
+proceeding to the next field of each type (in sync, as long as both of them are
+available, or using the last one available otherwise) and match the regexp
+against the corresponding document.  In order for this to be of any use, the
+second (and each potential later) B<url> will have to contain a C<__NEWVER__>
+or C<__RAWVER__> placeholder (see L<"PLACEHOLDERS">) which will be replaced by
+the previously matched latest [transformed] version (the same substitution is
+done for B<regex>).  The version that will finally be considered the latest for
+the program in question will be the one determined by matching the last
+B<regex> against the last B<url>s document.  For an example of how this can be
+used in practice, see L<"EXAMPLES">.
+
+Possible multiple B<transform> fields will be processed in sync with the
+respective B<url> and B<regex> fields as long as additional B<transform>
+fields are specified.  If there are more B<url> and/or B<regex> fields than
+B<transform> fields, the last-specified B<transform> expression will be used
+for further iterations.  If, on the other hand, there are more B<transform>
+than B<url>/B<regex> fields, further retrievals/matches will be done based
+on the last B<url>/B<regex>.  The author has, however, no idea how this could
+be of any use.
+
+When the config file is rewritten, multiple B<url>, B<regex>, and/or
+B<transform> fields will be interleaved to facilitate comprehension and retain
+their relative order.
+
+=item B<tranform> (string; multiple allowed)
+
+A Perl expression transforming a version number in $_ (obtained by a
+B<prog.regex> match) in some way the user deems adequate.  For examples of
+how this might come in handy, see L<"EXAMPLES">.  The return value of the
+code fragment, i.e., the value of its last expression, is used as the
+transformed version and will henceforth be the basis for version comparison
+for the program in question.
+
+=item B<urgency> (enumeration: I<high>, I<medium>, I<low>)
+
+Defines the urgency with which to check for the specified program.  Urgencies
+allow for a crude selection of programs to check for via the C<--urgency>
+command line parameter.  If there is no urgency defined, it defaults to
+either B<config.defaulturgency> (if set) or I<medium>.
+
+=item B<url> (string: HTTP or FTP URL; I<required>; multiple allowed)
+
+This I<required> field defines the HTTP or FTP URL to retrieve as the document
+to scan for in order to detect the availability of new program versions by
+matching against B<prog.regex>.  Note that if the URL is a directory
+(especially, an FTP directory which is supposed to be listed), the URL
+I<needs> to end in a slash (`/').  If the target document is an HTML page,
+its source code will be matched against B<prog.regex>, aiming at links embedded
+in the document.  An alternate download URL can be specified via
+B<prog.dlexplicit>.
+
+In order to cope with particularly complex remote scenarios (such as
+version-dependent directory hierarchies), multiple B<url>, B<regex>, and
+B<transform> fields may be specified per program.  In this case, the script
+will match B<url>s and B<regex>es starting with the first and continuously
+proceeding to the next field of each type (in sync, as long as both of them are
+available, or using the last one available otherwise) and match the regexp
+against the corresponding document.  In order for this to be of any use, the
+second (and each potential later) B<url> will have to contain a C<__NEWVER__>
+or C<__RAWVER__> placeholder (see L<"PLACEHOLDERS">) which will be replaced by
+the previously matched latest [transformed] version (the same substitution is
+done for B<regex>).  The version that will finally be considered the latest for
+the program in question will be the one determined by matching the last
+B<regex> against the last B<url>s document.  For an example of how this can be
+used in practice, see L<"EXAMPLES">.
+
+Possible multiple B<transform> fields will be processed in sync with the
+respective B<url> and B<regex> fields as long as additional B<transform>
+fields are specified.  If there are more B<url> and/or B<regex> fields than
+B<transform> fields, the last-specified B<transform> expression will be used
+for further iterations.  If, on the other hand, there are more B<transform>
+than B<url>/B<regex> fields, further retrievals/matches will be done based
+on the last B<url>/B<regex>.  The author has, however, no idea how this could
+be of any use.
+
+When the config file is rewritten, multiple B<url>, B<regex>, and/or
+B<transform> fields will be interleaved and retain their relative order.
+
+=item B<version> (string)
+
+Stores the latest known version of the program.  In contrast to
+B<prog.dlversion>, this is the latest version detected, not the latest
+version downloaded.  If a B<prog.transform> option is set, the stored version
+will have been transformed from the one matched by B<prog.regex>.
+
+=back
+
+=head2 PLACEHOLDERS
+
+In a number of string fields, certain placeholders are subject to
+substitution by run-time values.  These placeholders are (in alphabetical
+order):
+
+=over 2
+
+=item C<__DLURL__>
+
+The (file) URL from which the latest version of the respective program was
+downloaded.
+
+=item C<__FILE__>
+
+The local path to the respective latest-version download.
+
+=item C<__NEWVER__>; C<__NEWVER1__>, C<__NEWVER2__>, ...
+
+C<__NEWVER__> is replaced by the latest I<transformed> (or untransformed, if
+no B<transform> expression is in effect) version available as determined by the
+script.
+
+When using multiple B<url>/B<regex>/B<transform> fields in order to cope with
+more complex remote site hierarchies, C<__NEWVER1__>, C<__NEWVER2__>, ...  give
+access to intermediately-determined versions.  In this case, C<__NEWVER1__> is
+replaced by the version matched by the first B<url>/B<regex>/B<transform>
+tuple, C<__NEWVER2__> matches the version matched by the second
+B<url>/B<regex>/B<transform> tuple, and so on.
+
+=item C<__PROG__>
+
+The name (identifier) of the respective B<prog> section.
+
+=item C<__RAWVER__>; C<__RAWVER1__>, C<__RAWVER2__>, ...
+
+C<__RAWVER__> is replaced by the latest version available as determined by
+the script.
+
+When using multiple B<url>/B<regex> fields in order to cope with more complex
+remote site hierarchies, C<__RAWVER1__>, C<__RAWVER2__>, ...  give access to
+intermediately-determined versions.  In this case, C<__RAWVER1__> is replaced
+by the version matched by the first B<url>/B<regex> pair, C<__RAWVER2__>
+matches the version matched by the second B<url>/B<regex> pair, and so on.
+
+=item C<__URL__>
+
+The (last and expanded) URL used in order to determine the latest program
+version.
+
+=item C<__VER__>
+
+A pre-manufactured (non-greedy) regular expression matching version numbers
+compliant with any of a number of common schemes.
+
+=back
+
+=head1 HINTS
+
+=over 2
+
+=item *
+
+If you use Vim (version 5 or higher) as your editor, you can tell vcheck to
+create a Vim syntax file providing syntax highlighting within the editor by
+running the script as
+
+  vcheck --create-vim-syntax-file
+
+If you wish to have Vim apply the syntax rules automatically when editing
+"~/.vcheck", add this line:
+
+  au BufEnter */.vcheck   so $VIM/syntax/vcheck.vim
+
+or, alternatively, one with an explicit path:
+
+  au BufEnter */.vcheck   so /path/to/syntax/vcheck.vim
+
+to your "~/.vimrc" and substitute an appropriate path.  Of course you need to
+as well be sure to copy the file into the designated directory.
+
+=item *
+
+It's no problem to just check for new versions by default and run B<vcheck>
+again afterwards to download updated packages.  Running the script as
+
+  vcheck -dc
+
+or
+
+  vcheck --download --catch-up
+
+respectively, will try to download only those files whose latest downloaded
+version has been knowingly obsoleted, without checking again for new versions
+of all other programs.
+
+=item *
+
+To check only those program locations that failed during the latest
+attemptZ<>(s), run
+
+  vcheck -e
+
+or
+
+  vcheck --errors
+
+respectively.
+
+=item *
+
+If you add a line
+
+  dlretry = NUMBER
+
+to your config file's B<config> section, B<vcheck> will retry to download
+a file up to NUMBER times if it detects that it was received incompletely.
+This will be the case if:
+
+=over 2
+
+=item -
+
+the file has zero size
+
+=item -
+
+the downloaded file's extension was recognized, and a check by the respective
+decompressor etc. resulted in errors
+
+=back
+
+=item *
+
+B<vcheck> caches data retrieved from URLs (unless B<nocache> is set in 
+the config file), so if you specify I<exactly the same> URL for 
+different programs, this won't result in multiple retrievals, thus 
+improving efficiency.
+
+=item *
+
+If you're curious to know how many program records have actually been
+accumulated in your config file over time, run B<vcheck> as
+
+  vcheck --syntax
+
+This will check the config file's syntax and, as a side-effect, print the
+number of programs registered.
+
+=item *
+
+Even if you know from some other source that there B<is> a new version of
+a program B<vcheck> is configured for, you can still use that to download
+the package.  Just use its matching capabilities, e.g.:
+
+  vcheck -dm foo
+
+=item *
+
+If one of your records points to patches of some program, and you want to
+make sure you won't miss an intermediate one when downloading (and suppose
+you don't run B<vcheck> in download mode too frequently), you can add the
+boolean field B<dlintermediate> to the respective program's section in the
+config file, and B<vcheck> will try to download all versions newer than
+B<dlversion>.  Note that in those circumstances, B<dlversion> is set to the
+latest (intermediate) version the download attempt succeeded for (which means
+that, if, say, versions 1 through 3 are to be downloaded and all downloads
+except that of version 1 succeed, B<dlversion> will nevertheless be set to 3).
+A useful example for this:
+
+  prog Linux/patches = {
+    dlintermediate
+    dlprefs   = \.bz2$;\.gz$
+    dlversion = 2.3.6
+    regex     = patch-(__VER__)\.[bg]z
+    url       = ftp://ftp.kernel.org/pub/linux/kernel/v2.3/
+    version   = 2.3.9
+  }
+
+Supposing that 2.3.9 still is the latest version, running this in download
+mode will retrieve Linux kernel patches 2.3.7 through 2.3.9, F<*.bz2>
+preferred to F<*.gz> (but accepting the latter if the former is missing,
+rather than skipping the download entirely).
+
+=item *
+
+There may be complex remote site structures, involving version-dependent
+directory hierarchies, such as the layout used by the server for the AC series
+of Linux kernel patches.  The principal layout of that site looks (or used to
+look, anyway) like this:
+
+  ...
+  .../linux-2.4/2.4.8/patch-2.4.8-ac1.gz
+  .../linux-2.4/2.4.8/patch-2.4.8-ac2.gz
+  ...
+  .../linux-2.4/2.4.9/patch-2.4.9-ac1.gz
+  .../linux-2.4/2.4.9/patch-2.4.9-ac2.gz
+  ...
+
+The problem here is that the bottom-level directory's name varies depending
+on the regular Linux version an AC patch is based on.  The way to deal with
+this most conveniently in B<vcheck> looks like this:
+
+  prog Linux/patch/AC = {
+    dlintermediate
+    url       = http://www.kernel.org/.../linux-2.4/
+    regex     = (\d+\.\d+\.\d+)
+    url       = http://www.kernel.org/.../linux-2.4/__NEWVER__/
+    regex     = patch-(__VER__-ac\d+)\.gz
+  }
+
+(Note that the URLs have been abbreviated for the sake of readability.) This
+kind of configuration will cause B<vcheck> to start by retrieving the first
+B<url> field's document and match the first B<regex> against it.  It will then
+proceed with the second B<url> field's document, matching it against the second
+B<regex>, replacing its B<__NEWVER__> placeholder by the latest version
+previously matched.  The version finally determined as the current version for
+the program record is the one determined by the last match.
+
+On a side note, version numbers determined during matches further back than the
+previous one can be accessed via delimiters of the format B<__NEWVER#__>, where
+`#' is a number indicating the number (1..) of the B<url>/B<regex> pair's
+version match it should be replaced by.  For more details on the mechanism, see
+the descriptions of B<url> and B<regex> in L<"PROGRAM SECTIONS">, and
+L<"PLACEHOLDERS">.
+
+Regarding the example, it is left to the user to figure out how to extend
+the record to even automatically cope with changes to the Linux kernel's
+minor version. C<:-)>
+
+Here's another example of a three-level hierarchy, which used to fit
+the GIMP's site layout at one point in time:
+
+  prog GIMP/devel/patch = {
+    comment   = "Will download complete package if no patch available."
+    dlprefs   = patch-.*?\.bz2$;patch-.*?\.gz$;gimp-.*?\.bz2$;gimp-.*?\.gz$
+    url       = ftp://ftp.gimp.org/pub/gimp/
+    regex     = (?<!\w)v(__VER__)
+    url       = ftp://ftp.gimp.org/pub/gimp/v__NEWVER__/
+    regex     = (?<!\w)v(__VER__)
+    url       = ftp://ftp.gimp.org/pub/gimp/v__NEWVER1__/v__NEWVER__/
+    regex     = (?:patch|gimp)-(__VER__)\.[bgt]
+  }
+
+=item *
+
+If you want to retrieve some program whose version is, say, a date in format
+"dd-mm-yyyy", this will be misinterpreted by the version comparator because
+the most significant sub-"version" isn't the initial one.  You can work around
+this by specifying some Perl expression transforming the original version
+in the respective program's section, such as:
+
+  transform = "s/(\d+)-(\d+)-(\d+)/$3-$2-$1/; $_"
+
+This piece of code is given the respective version in $_, and after its
+evaluation, B<vcheck> replaces the original value by what the eval() returns.
+Alternatively, this would achieve the same:
+
+  transform = "join '-', reverse split /-/, $_"
+
+=item *
+
+Some sites use redirection scripts for download URLs.  Consider a situation
+where a downloads page lists available packages of a program, with links
+pointing to some server-side script referring your browser to some URL
+I<which is in turn redirected by HTTP means> to a final file URL (the
+PHP site, for example, used to make use of this obscure scheme at one
+time).  The way to cope with this in B<vcheck> consists in using a
+B<dlexplicit> field like this:
+
+  prog PHP = {
+    dlexplicit = http://www.php.net/distributions/php-__VER__.tar.gz
+    regex      = php-(__VER__)\.t
+    url        = http://www.php.net/downloads.php
+  }
+
+Effectively, this will use the actual B<url> field only to determine the
+current version and then paste it into a pattern of the corresponding
+download URL, thus bypassing the redirections.  The obvious disadvantage of
+this feature consists in its increased dependency on server-side access
+structures.
+
+=item *
+
+Suppose you're interested in some program distributed via more than one
+package (such as Vim, which is split into a source and a run-time package).
+The means B<vcheck> provides to cope with this once again is the
+B<dlexplicit> option:
+
+  prog Vim = {
+    dlexplicit = ftp://ftp.vim.org/pub/editors/vim/unix/vim-__VER__-src.tar.gz
+    dlexplicit = ftp://ftp.vim.org/pub/editors/vim/unix/vim-__VER__-rt.tar.gz
+    regex      = vim-(__VER__)(-src)?\.tar
+    url        = ftp://ftp.vim.org/pub/editors/vim/unix/
+  }
+
+=item *
+
+In order to have B<vcheck> keep track of what has been downloaded (and when),
+you might add something like this to your config file:
+
+  config = {
+    dlexec = "echo `date +%Y-%m-%d` '__PROG__' '__NEWVER__' >>~/.vchecklog"
+  }
+
+Note however that program-specific B<dlexec> will take precedence over this
+setting.
+
+=item *
+
+With a little creativity, B<vcheck> can be used to check not only for latest
+versions of programs or packages, but also web site updates and the like.
+Also, the B<newverexec> (see L<"GRAMMAR">) field can be used to pass a link
+to an external download tool if for some reason B<vcheck>'s abilities prove
+insufficient for a particular scenario.
+
+=back
+
+=head1 EXAMPLES
+
+Please make sure to read what's printed by B<vcheck> when run as
+
+  vcheck --help --grammar
+
+as well as L<"GRAMMAR"> before reading this section, to learn about command
+line parameters and the configuration file's grammar.  Done so?  Then read
+on...
+
+Suppose there's a config file F<~/.vcheck> with the following contents:
+
+  config = {
+    dlprefs   = \.tar\.bz2$;\.(tar\.|t)gz$;\.zip$
+    lastcheck = "1999-06-21 08:15"
+  }
+
+  prog Foo = {
+    dl      = no
+    errors  = 2
+    regex   = foo-(__VER__)\.tar
+    urgency = high
+    url     = http://www.foo.org/pub/foo/
+  }
+  prog Bar = {
+    dlversion = 0.01beta
+    regex     = (?i:bar-(__VER__)\.tar)
+    url       = http://www.bar.org/bar/index.html
+    version   = 0.01
+  }
+  prog Baz = {
+    regex   = baz-(\d+)\.tar
+    urgency = low
+    url     = ftp://ftp.baz.net/pub/source/
+    version = 123
+  }
+
+First of all, you can deduce from this what date and time B<vcheck> was
+last run at with this config file.  Trying to check for B<Foo> resulted
+in errors of some kind during the last 2 attempts, and since there's
+no version field, it has presumably never been queried successfully.  B<Foo>
+is never to be downloaded.  B<Bar>'s latest version as determined during
+one of the last checks was 0.01, but it wasn't downloaded (0.01beta is
+the version of the last download).  Finally, B<Baz> has never been downloaded
+(according to the config file, anyway).  As for downloads in general,
+F<*.tar.bz2> is preferred to F<*.tar.gz> and F<*.tgz>, which in turn are
+more desirable than F<*.zip> files.  If no target matching any of these
+extensions case-insensitively is found, nothing will be downloaded.
+
+Assume furthermore that the following references are currently mentioned
+at the respective URLs of each program:
+
+=over 2
+
+=item *
+
+for B<Foo>:
+
+  http://www.foo.org/pub/foo/foo-3.14.tar.gz
+  http://www.foo.org/pub/foo/foo-3.14.tar.bz2
+  http://www.foo.org/pub/foo/foo-3.14a.tar.gz
+  http://www.foo.org/pub/foo/foo-3.14alpha.tar.gz
+  http://www.foo.org/pub/foo/Foo-4.0.tar.gz
+
+=item *
+
+for B<Bar>:
+
+  bar-0.01.zip
+  BAR-0.01.tar.bz2
+
+=item *
+
+for B<Baz>:
+
+  http://www.baz.net/pub/download/baz-124.rpm
+
+=back
+
+Now let's discuss what some specific calls to B<vcheck>, each based on
+the above configuration, will result in.  Again, for a complete list of
+command line options (all short options have an equivalent long one),
+see S<C<`vcheck --help`>>.
+
+=over 2
+
+=item - C<$ vcheck -n> 
+
+This will check for all programs without updating the config file.  It'll
+report B<Foo 3.14> as new version (not 4.0, as B<regex> doesn't match this),
+as well as B<Baz 124>.
+
+=item - C<$ vcheck -d> 
+
+This will check for all programs, report as above and try to download the
+following file:
+
+  http://www.bar.org/bar/BAR-0.01.tar.bz2
+
+Note that B<Baz 124> isn't among, because there wasn't a link conforming
+to B<dlprefs>, and downloads of B<Foo> have been disabled explicitly.
+The B<errors> field of F<Foo> is removed since the check succeeded.
+
+=item - C<$ vcheck -c>
+
+This will set B<dlversion> = B<version> for B<Bar> and B<Baz>, without
+checking for the availability of new versions.  Effectively, this will
+prevent future calls to B<vcheck> with parameter "C<-d>" from downloading
+these files.
+
+=item - C<$ vcheck -dc>
+
+This will step through all programs that downloads haven't been disabled
+for in principle and whose B<dlversion> is lower than B<version> (i.e.,
+F<Bar> and F<Baz> in our example).  For these, B<vcheck> will requery the
+respective sites to determine a download URL, and try to download
+
+  http://www.bar.org/bar/BAR-0.01.tar.bz2
+
+as in the above example.
+
+=item - C<$ vcheck -m \!foo>
+
+will check for new versions of B<Bar> and B<Baz>.  Note that you may 
+have to quote the leading exclamation mark as well as some characters 
+used in regular expressions specified on the command line, in order to 
+prevent your shell from interpreting them.
+
+=item - C<$ check -u medium -m b>
+
+will check only for B<Bar>, as it is the only program whose B<urgency>
+is at least B<medium> and whose name contains a `b'.
+
+=item - C<$ vcheck -e>
+
+will check only for B<Foo>, since checking for that failed previously.
+
+=back
+
+=head1 NOTES
+
+=over 2
+
+=item *
+
+First of all, B<vcheck> I<isn't> perfect, and it won't do in I<all> kinds
+of situations.  Yet I think it is able to cope with most of them, and if
+there's indeed some site which B<vcheck> isn't able to determine download
+URLs from, or some version numbering scheme its heuristics choke on, you'll
+just have to deal with that manually.  But for the majority of cases,
+B<vcheck> should facilitate keeping your setup up-to-date.
+
+=item *
+
+Don't run multiple instances in non-read-only mode with the same 
+configuration file, or else one will cause the changes made by the 
+others to get lost.  B<vcheck> will prevent this situation from arising 
+by employing a lock file, provided that your Perl setup supports it.
+
+I<Don't edit> the config file while B<vcheck> is running, either, or your
+changes will be overwritten when the script rewrites the file.
+
+=back
+
+=head1 FILES
+
+=over 2
+
+=item *
+
+F<vcheck>, the script itself
+
+=item *
+
+F<~/.vcheck>, its configuration file
+
+In fact, B<vcheck> doesn't look for a config file F<~/.vcheck>, but for one
+of the same name as the script (with a possible extension stripped off).
+So if you rename the script to, say, F<foo.pl> and run it, it'll try to
+open F<~/.foo>.
+
+=item *
+
+F<~/.vcheck.lock>, lock file created when not running in read-only mode
+
+Actually, the file's name is that of the config file with an extension of
+F<.lock> added.
+
+=back
+
+=head1 ENVIRONMENT VARIABLES
+
+=over 2
+
+=item *
+
+$http_proxy/$HTTP_PROXY and $ftp_proxy/$FTP_PROXY, each in this order of
+precedence, specify the HTTP and/or (HTTP-based) FTP proxy to use, unless
+overridden.  The format is either "server:port" or a complete URL.
+
+=item *
+
+$HOME, the current user's home directory
+
+=item *
+
+$SHELL, used by Perl in unizoid environments when executing helper 
+applications
+
+=back
+
+=head1 TO DO
+
+=over 2
+
+=item *
+
+add option to config section allowing for the B<dlexec> entry to be 
+"inherited" from the config section rather than be overridden by
+per-program B<dlexec>s (also define order of execution!)
+
+=item *
+
+check behavior if an HTTP B<url>'s download link references a different
+target base directory
+
+=item *
+
+make "--list" not rewrite the config file, thus allowing for it to be
+run in parallel to another instance
+
+=item *
+
+add an option to re-download the latest version (if local file doesn't
+exist)?
+
+=item *
+
+code clean-up: array used for download specifications -> hash
+
+=item *
+
+determine and describe way of reliably matching directories consisting
+of but a version number on an FTP server independently of whether the
+page in question is received by proxy or without one
+
+=item *
+
+scenario: link description contains version, download link entirely 
+differently named
+
+=item *
+
+separate C<--force> options for overriding B<disabled>, B<dl>?
+
+=item *
+
+max download size command line parameter?
+
+=item *
+
+extend Vim syntax file generation to highlight placeholders in string
+variables' values?
+
+=item *
+
+follow HTTP redirections
+
+=item *
+
+evaluate HTTP headers after retrievals
+
+=item *
+
+resume downloads?
+
+=item *
+
+XMLize the config file format???
+
+=item *
+
+make it multi-threaded???
+
+=back
+
+=head1 RESTRICTIONS
+
+=over 2
+
+=item *
+
+All output is currently printed on STDOUT.
+
+=item *
+
+Placeholders are used but no way of escaping literal occurrences of those
+strings is provided.
+
+=item *
+
+B<dlprefs> uses semicolons as delimiters, but there's no way of escaping them
+if they are meant as a part of one of the regular expressions.
+
+=item *
+
+There's presumably little to do in order to get B<vcheck> to run in Microsoft
+Windows.  One issue worth noting is that directories (such as B<dldir>
+values) are expecedted to use unizoid delimiters (i.e., slashes (`/'))--this
+should perhaps be revised to be portable.
+
+=back
+
+=head1 BUGS
+
+Mail bug reports to the author.
+
+=head1 AUTHOR
+
+B<vcheck> is copyright (c) 1999-2001 by Marco GE<ouml>tze,
+E<lt>gomar@mindless.comE<gt>.  It is distributed under the terms of the
+Artistic License, a copy of which is included with the script's distribution.
+Use at your own risk.
+
+=cut
+
+__DATA__
+<H>
+  synopsis: latest program version checker/downloader
+
+  usage:    §B$opts{progname}§N [options]
+
+  options:
+
+      -c,       --catch-up        set `dlversion' = `version' for every checked
+                                  program in scope (does not check for new
+                                  versions (unless used in combination with
+                                  `-d')), except those that're marked not to be
+                                  downloaded
+      -d,       --download        try and download new versions automatically
+                                  (note: if there's no `dlprefs' parameter in
+                                  the config file, the first matching file
+                                  referenced in the respective document is
+                                  retrieved)
+  (*) -e [NUM], --errors[=NUM]    check only for those programs which led to an
+                                  error (or at least NUM errors) during
+                                  previous checks
+      -f FILE,  --file=FILE       use config file FILE instead of
+                                  `~/.$opts{progname}'
+                --force           overrides `disabled' program records
+      -l,       --list            list programs and their known latest,
+                                  downloaded versions (inhibits effects of
+                                  `-d', `-c')
+      -m RE,    --match=RE        checks only those programs whose names match
+                                  RE case-insensitively (RE being a Perl-style
+                                  regular expression; prepending it by a `!'
+                                  inverts the condition)
+      -n,       --no-update       don't write an updated version of the config
+                                  file
+  (*)           --plain           plain output (no ANSI escapes); implicitly
+                                  set when STDOUT isn't connected to a terminal
+      -o DATE,  --older-than=DATE check only progs whose last check was before
+                                  DATE; DATE is in the same format as the
+                                  `lastcheck' config entries, i.e.
+                                  `yyyy-mm-dd hh:mm' (the latter part being
+                                  optional)
+  (*) -s        --xfersum         print a total of the amount of data received
+                                  at exit
+                --syntax          just check the config file's syntax and exit
+      -u URG,   --urgency=URG     limit scope to files with a minimum urgency of
+                                  URG, URG being one of @{[join ', ', map { qq(`$_') } sort { $urgs{$b} <=> $urgs{$a} } keys %urgs]}
+  (*) -v,       --verbose         also print version numbers that haven't been
+                                  superceded (happens automatically if STDOUT
+                                  isn't connected to a terminal)
+
+      -g,       --grammar         print the config file grammar
+      -h,       --help            print this help
+      -V,       --version         print version information
+
+                --create-vim-syntax-file
+
+  Notes:
+
+    - Single-letter, parameterless options can be bundled arbitrarily.
+    - (*) denotes long options which can be prefixed by `no' to invert their
+      meaning (e.g., `--noplain'), to, e.g., allow for overriding of equivalent
+      parameters specified in the config file's `config' section.
+    - If more than one of the `-e', `-m', `-o', and `-u' parameters is
+      specified, the scope is limited to those programs satisfying all of the
+      given conditions.
+    - For more information on general concepts and examples, read the man
+      page or run `perldoc $opts{progname}`.
+</H>
+<G>
+  For more details concerning specific options and settings, see the man page.
+</G>

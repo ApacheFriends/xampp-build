@@ -1,0 +1,1057 @@
+<component>
+    <name>phpfunctions</name>
+    <description>//PHP Functions</description>
+    <show>0</show>
+    <selected>1</selected>
+    <functionDefinitionList>
+        <actionDefinition name="configurePhpFpm">
+	    <parameterList>
+                <stringParameter name="rootDir" default="${php_directory}" />
+                <stringParameter name="iniFile" default="${php_configuration_directory}/php.ini" />
+                <stringParameter name="fpmPort" default="9000" />
+                <stringParameter name="socket" default="${php_directory}/var/run/www.sock"/>
+                <booleanParameter name="enable" default="0" />
+                <booleanParameter name="allowAllRemoteConnections" default="0" ask="0" />
+                <stringParameter name="username" default="daemon"/>
+                <stringParameter name="group" default="daemon"/>
+                <stringParameter name="apacheConfDir" default=""/>
+                <stringParameter name="apacheHtdocsDir" default=""/>
+                <stringParameter name="getFreeFpmPort" default="1"/>
+            </parameterList>
+	    <actionList>
+                <globalVariables names="WRAPPERS php_fpm_port php_fpm_connection_mode php_fpm_socket"/>
+                <setInstallerVariable name="php_fpm_port" value="${fpmPort}" persist="1"/>
+                <setInstallerVariable name="php_fpm_port" value="9000">
+                    <ruleList>
+                        <compareText text="${fpmPort}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="php_fpm_connection_mode" value="port" persist="1"/>
+                <setInstallerVariable name="php_fpm_connection_mode" value="socket">
+                    <ruleList>
+                        <compareText text="${socket}" logic="does_not_equal" value=""/>
+                        <isFalse value="${allowAllRemoteConnections}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="php_fpm_socket" value="${socket}" persist="1"/>
+                <actionGroup>
+                    <actionList>
+                        <mathExpression variable="php_fpm_initial_port" text="${php_fpm_port}"/>
+                        <mathExpression variable="php_fpm_final_port" text="${php_fpm_initial_port}+20"/>
+
+                        <!-- Only error out if we are enabling php-fpm -->
+                        <getFreePort variable="php_fpm_port" initialPort="${php_fpm_initial_port}" finalPort="${php_fpm_final_port}" showMessageOnError="${enable}" abortOnError="${enable}"/>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${php_fpm_connection_mode}" logic="equals" value="port"/>
+                        <isTrue value="${getFreeFpmPort}"/>
+                    </ruleList>
+                </actionGroup>
+                <setInstallerVariable name="listen_text" value="127.0.0.1:${fpmPort}"/>
+                <setInstallerVariable name="listen_text" value="0.0.0.0:${fpmPort}">
+                    <ruleList>
+                        <isTrue value="${allowAllRemoteConnections}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="listen_text" value="${socket}">
+                    <ruleList>
+                        <compareText text="${php_fpm_connection_mode}" logic="equals" value="socket"/>
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="php_fpm_port" value="${php_fpm_port}" persist="1"/>
+                <setInstallerVariable name="iniFile" value="${rootDir}/etc/php.ini">
+                    <ruleList>
+                        <compareText text="${iniFile}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="php_fpm_env_var_text" value=""/>
+                <!-- We have to manually expose the variables we are interested in as: env[OPENSSL_CONF] = $OPENSSL_CONF -->
+                <foreach variables="var" values="PATH MAGICK_HOME MAGICK_CONFIGURE_PATH MAGICK_CODER_MODULE_PATH GS_LIB LDAPCONF CURL_CA_BUNDLE SSL_CERT_FILE OPENSSL_CONF OPENSSL_ENGINES FREETDSCONF FREETDSLOCALES PHP_PATH">
+                    <actionList>
+                        <setInstallerVariable name="php_fpm_env_var_text" value="${php_fpm_env_var_text}env[${var}] = $${var}&#xA;"/>
+                    </actionList>
+                </foreach>
+                <writeFile path="${rootDir}/etc/environment.conf">
+                    <text>${php_fpm_env_var_text}</text>
+                </writeFile>
+                <writeFile path="${rootDir}/etc/common.conf">
+                    <text>user=${username}
+group=${group}
+</text>
+                </writeFile>
+                <addTextToFile>
+                    <file>${rootDir}/etc/common.conf</file>
+                    <text>listen.owner=${username}&#xA;listen.group=${group}&#xA;</text>
+                    <ruleList>
+                        <isTrue value="${installer_is_root_install}"/>
+                    </ruleList>
+                </addTextToFile>
+
+                <writeFile path="${rootDir}/etc/common-dynamic.conf">
+                    <text>include=${rootDir}/etc/common.conf
+pm=dynamic
+pm.max_children=5
+pm.start_servers=2
+pm.min_spare_servers=1
+pm.max_spare_servers=3
+</text>
+                </writeFile>
+                <writeFile path="${rootDir}/etc/common-ondemand.conf">
+                    <text>include=${rootDir}/etc/common.conf
+pm=ondemand
+pm.max_children=5
+pm.start_servers=2
+pm.min_spare_servers=1
+pm.max_spare_servers=3
+</text>
+                </writeFile>
+                <copyFile origin="${rootDir}/etc/php-fpm.conf.default" destination="${rootDir}/etc/php-fpm.conf"/>
+                <iniFileSet>
+                    <file>${rootDir}/etc/php-fpm.conf</file>
+                    <key>log_level</key>
+                    <section>global</section>
+                    <value>warning</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${rootDir}/etc/php-fpm.conf</file>
+                    <key>listen</key>
+                    <section>www</section>
+                    <value>${listen_text}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${rootDir}/etc/php-fpm.conf</file>
+                    <key>pm</key>
+                    <section>www</section>
+                    <value>ondemand</value>
+                </iniFileSet>
+
+                <substitute>
+                    <files>${rootDir}/etc/php-fpm.conf</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>^\s*;*\s*error_log\s*=\s*.*</pattern>
+                            <value>error_log = ${rootDir}/var/log/php-fpm.log</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>${rootDir}/etc/php-fpm.conf</files>
+                    <type>exact</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>[www]</pattern>
+                            <value>[www]&#xA;include=${rootDir}/etc/environment.conf&#xA;include=${rootDir}/etc/common.conf</value>
+                        </substitution>
+                    </substitutionList>
+                    <ruleList>
+                        <fileExists path="${rootDir}/etc/environment.conf"/>
+                    </ruleList>
+                </substitute>
+
+                <setInstallerVariable name="PHPFPM_WRAPPERS">
+                    <value>${rootDir}/sbin/*;${rootDir}/scripts/ctl.sh*</value>
+                </setInstallerVariable>
+                <actionGroup>
+                    <actionList>
+                        <!-- With ports -->
+                       <!-- <setInstallerVariable name="default_phpfpm_conf_text" value="ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:${php_fpm_port}${apacheHtdocsDir}/$1"/> -->
+                        <!-- With sockets, not fully supported by apache yet -->
+                        <setInstallerVariable name="socket_path" value="${rootDir}/var/run/www.sock"/>
+                        <urlEncode text="${socket_path}" variable="encoded_socket_path"/>
+                        <!--<setInstallerVariable name="default_phpfpm_conf_text" value="ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://uds=${encoded_socket_path}${apacheHtdocsDir}/$1"/>-->
+                        <setInstallerVariable name="timeout" value="300"/>
+
+                        <setInstallerVariable name="default_phpfpm_conf_text">
+                          <value><![CDATA[<IfDefine USE_PHP_FPM>
+  <Proxy "unix:${socket_path}|fcgi://www-fpm" timeout=${timeout}>
+  </Proxy>
+  <FilesMatch \.php$>
+    <If "-f %{REQUEST_FILENAME}">
+      SetHandler "proxy:fcgi://www-fpm"
+    </If>
+  </FilesMatch>
+</IfDefine>]]></value>
+                        </setInstallerVariable>
+
+                       <!-- <setInstallerVariable name="default_phpfpm_conf_text" value="#${default_phpfpm_conf_text}">
+                            <ruleList>
+                                <isFalse value="${apache_disable_mod_php}" />
+                                <apacheModuleTest moduleIdentifier="php[^\s]*_module" moduleName="[^\s]*php[^\s]*" condition="enabled"/>
+                            </ruleList>
+                        </setInstallerVariable>-->
+                        <writeFile>
+                            <path>${apacheConfDir}/php-fpm-apache.conf</path>
+                            <text>${default_phpfpm_conf_text}</text>
+                        </writeFile>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${apacheConfDir}" logic="does_not_equal" value=""/>
+                        <compareText text="${apacheHtdocsDir}" logic="does_not_equal" value=""/>
+                        <fileExists path="${apacheConfDir}/php-fpm-apache.conf" negate="1"/>
+                    </ruleList>
+                </actionGroup>
+
+                <setInstallerVariable name="WRAPPERS" value="${PHPFPM_WRAPPERS};${WRAPPERS}"/>
+                <substitute>
+                    <files>${rootDir}/scripts/ctl.sh*;${rootDir}/sbin/php-fpm</files>
+                    <type>exact</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                            <value>${installdir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHPFPM_ROOTDIR@@</pattern>
+                            <value>${rootDir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHP_ROOTDIR@@</pattern>
+                            <value>${rootDir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHPFPM_PORT@@</pattern>
+                            <value>${php_fpm_port}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHPFPM_PHPINI@@</pattern>
+                            <value>${iniFile}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_HTDOCS_DIR@@</pattern>
+                            <value>${apacheHtdocsDir}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <!-- TODO -->
+                <!-- Configure user and group -->
+               <!-- <baseRecursiveChown owner="${username}" group="${group}" files="${rootDir}/var/" >
+
+                </baseRecursiveChown>-->
+                <renameFile origin="${rootDir}/scripts/ctl.sh" destination="${rootDir}/scripts/ctl.sh.disabled">
+                    <ruleList>
+                        <fileExists path="${rootDir}/scripts/ctl.sh"/>
+                        <isFalse value="${enable}"/>
+                    </ruleList>
+                </renameFile>
+            </actionList>
+	</actionDefinition>
+
+        <actionDefinition>
+            <name>phpExtension</name>
+            <parameterList>
+                <!-- enable: add the extension in not exists and enable it
+                     disable: disable the extension only if it is enabled
+                     add_disabled: add the extension disabled if not exists -->
+                <stringParameter name="action" default="enable" />
+                <stringParameter name="extensionName" default="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="extensionAlternativeName" value="${extensionName}"/>
+                <actionGroup>
+                    <ruleList>
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>php_.*</pattern>
+                            <text>${extensionName}</text>
+                        </regExMatch>
+                    </ruleList>
+                    <actionList>
+                        <setInstallerVariableFromRegEx>
+                            <text>${extensionName}</text>
+                            <name>extensionAlternativeName</name>
+                            <substitution>\1</substitution>
+                            <pattern>php_(.*)</pattern>
+                        </setInstallerVariableFromRegEx>
+                    </actionList>
+                </actionGroup>
+                <setInstallerVariable name="fileExtension" value="dll">
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="fileExtension" value="so">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="php_configuration_file_contents" value="" />
+                <readFile name="php_configuration_file_contents" path="${php_configuration_directory}/php.ini" />
+                <actionGroup>
+                    <actionList>
+                        <if>
+                            <conditionRuleEvaluationLogic>or</conditionRuleEvaluationLogic>
+                            <conditionRuleList>
+                                <regExMatch>
+                                    <logic>matches</logic>
+                                    <pattern>(^|\n)\s*;\s?extension\s*=\s*${extensionName}\.${fileExtension}</pattern>
+                                    <text>${php_configuration_file_contents}</text>
+                                </regExMatch>
+                                <regExMatch>
+                                    <logic>matches</logic>
+                                    <pattern>(^|\n)\s*;\s?extension\s*=\s*${extensionAlternativeName}</pattern>
+                                    <text>${php_configuration_file_contents}</text>
+                                </regExMatch>
+                            </conditionRuleList>
+                            <actionList>
+                                <logMessage text="Replacing string &quot;;extension=${extensionName}.${fileExtension}&quot; with string &quot;extension=${extensionName}.${fileExtension}&quot; on file ${php_configuration_directory}/php.ini" />
+                                <substitute>
+                                    <files>${php_configuration_directory}/php.ini</files>
+                                    <type>regexp</type>
+                                    <substitutionList>
+                                        <substitution>
+                                            <pattern>(^|\n)\s*;\s?extension\s*=\s*${extensionName}.${fileExtension}</pattern>
+                                            <value>
+extension=${extensionName}.${fileExtension}</value>
+                                        </substitution>
+                                        <substitution>
+                                            <pattern>(^|\n)\s*;\s?extension\s*=\s*${extensionAlternativeName}</pattern>
+                                            <value>
+extension=${extensionAlternativeName}</value>
+                                        </substitution>
+                                    </substitutionList>
+                                    <onErrorActionList>
+                                        <logMessage text="Error replacing string &quot;;extension=${extensionName}.${fileExtension}&quot; with string &quot;extension=${extensionName}.${fileExtension}&quot; on file ${php_configuration_directory}/php.ini" />
+                                    </onErrorActionList>
+                                </substitute>
+                            </actionList>
+                            <elseActionList>
+                                <logMessage text="Adding string &quot;extension=${extensionName}.${fileExtension}&quot; to file ${php_configuration_directory}/php.ini" />
+                                <addTextToFile>
+                                    <file>${php_configuration_directory}/php.ini</file>
+                                    <text>
+extension=${extensionName}.${fileExtension}</text>
+                                    <ruleList>
+                                        <fileContentTest path="${php_configuration_directory}/php.ini" logic="does_not_contain" text="extension=${extensionName}.${fileExtension}"/>
+                                    </ruleList>
+                                </addTextToFile>
+                            </elseActionList>
+                        </if>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${action}" logic="equals" value="disable" negate="yes" />
+                        <ruleGroup ruleEvaluationLogic="and">
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>(^|\n)\s*extension\s*=\s*${extensionName}\.${fileExtension}</pattern>
+                                    <text>${php_configuration_file_contents}</text>
+                                </regExMatch>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>(^|\n)\s*extension\s*=\s*${extensionAlternativeName}</pattern>
+                                    <text>${php_configuration_file_contents}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </ruleGroup>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <logMessage text="Replacing string &quot;extension=${extensionName}.${fileExtension}&quot; with string &quot;;extension=${extensionName}.${fileExtension}&quot; on file ${php_configuration_directory}/php.ini" />
+                        <substitute>
+                            <files>${php_configuration_directory}/php.ini</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>(^|\n)\s*extension\s*=\s*${extensionName}\.${fileExtension}</pattern>
+                                     <value>
+;extension=${extensionName}.${fileExtension}</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <ruleList>
+                        <compareText text="${action}" logic="equals" value="disable" />
+                        <compareText text="${action}" logic="equals" value="add_disabled" />
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition>
+            <name>phpZendExtension</name>
+            <parameterList>
+                <stringParameter name="action" default="enable" />
+                <stringParameter name="extensionName" default="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="fileExtension" value="dll">
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="fileExtension" value="so">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <phpExtension action="${action}" extensionName="${extensionName}"/>
+                <logMessage text="Enabling Zend extension ${extensionName}  " />
+                <substitute>
+                    <files>${php_configuration_directory}/php.ini</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>(^|\n).*extension\s*=\s*${extensionName}\.${fileExtension}</pattern>
+                            <value>
+zend_extension=${extensionName}.${fileExtension}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+            </actionList>
+        </actionDefinition>
+
+
+
+
+
+	<actionDefinition name="phpSaveConfigurationToFile">
+	    <parameterList>
+                <stringParameter name="phpPropertiesFile" default="${installdir}/properties.ini" />
+                <stringParameter name="phpConfigurationDirectory" default="${php_configuration_directory}" />
+                <stringParameter name="phpBinaryDirectory" default="${php_binary_directory}" />
+                <stringParameter name="phpExtensionsDirectory" default="${php_extensions_directory}" />
+                <stringParameter name="phpInstalledVersion" default="${php_bundled_version}" />
+            </parameterList>
+	    <actionList>
+	        <iniFileSet>
+                    <file>${phpPropertiesFile}</file>
+                    <section>PHP</section>
+                    <key>php_binary_directory</key>
+                    <value>${phpBinaryDirectory}</value>
+            </iniFileSet>
+		<iniFileSet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_configuration_directory</key>
+		    <value>${phpConfigurationDirectory}</value>
+		</iniFileSet>
+		<iniFileSet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_extensions_directory</key>
+		    <value>${phpExtensionsDirectory}</value>
+		</iniFileSet>
+		<iniFileSet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_version</key>
+                    <value>${phpInstalledVersion}</value>
+                    <ruleList>
+                        <componentTest name="php" logic="exists"/>
+                    </ruleList>
+		</iniFileSet>
+            </actionList>
+	</actionDefinition>
+
+        <actionDefinition name="phpLoadConfigurationFromFile">
+            <parameterList>
+                <stringParameter name="phpPropertiesFile" default="${installdir}/properties.ini" />
+		<stringParameter name="phpConfigurationDirectory" default="php_configuration_directory" />
+		<stringParameter name="phpBinaryDirectory" default="php_binary_directory" />
+        <stringParameter name="phpExtensionsDirectory" default="php_extensions_directory" />
+        <stringParameter name="phpInstalledVersion" default="php_installed_version" />
+            </parameterList>
+	    <actionList>
+	        <iniFileGet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_configuration_directory</key>
+		    <variable>${phpConfigurationDirectory}</variable>
+		</iniFileGet>
+		<iniFileGet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_binary_directory</key>
+		    <variable>${phpBinaryDirectory}</variable>
+		</iniFileGet>
+		<iniFileGet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_extensions_directory</key>
+		    <variable>${phpExtensionsDirectory}</variable>
+		</iniFileGet>
+		<iniFileGet>
+		    <file>${phpPropertiesFile}</file>
+		    <section>PHP</section>
+		    <key>php_version</key>
+		    <variable>${phpInstalledVersion}</variable>
+		</iniFileGet>
+        <setInstallerVariable name="${phpInstalledVersion}" value="0.0.0" >
+		    <ruleList>
+                        <compareText text="${${phpInstalledVersion}}" logic="equals" value=""/>
+                    </ruleList>
+		</setInstallerVariable>
+        <foreach variables="var" values="${phpConfigurationDirectory} ${phpBinaryDirectory} ${phpExtensionsDirectory} ${phpInstalledVersion}">
+		    <actionList>
+		        <setInstallerVariable name="${var}" value="${${var}}" persist="1"/>
+			<globalVariables names="${var}"/>
+		    </actionList>
+		</foreach>
+            </actionList>
+        </actionDefinition>
+	<actionDefinition>
+	    <name>addDirectoryToPHPPath</name>
+	    <parameterList>
+		<stringParameter name="phpConfigurationFile" default="${php_configuration_directory}/php.ini" />
+		<stringParameter name="phpDirectory" default="" />
+	    </parameterList>
+	    <actionList>
+		<iniFileGet>
+		    <file>${phpConfigurationFile}</file>
+		    <section>PHP</section>
+		    <key>include_path</key>
+		    <variable>phpIncludePath</variable>
+		</iniFileGet>
+		<actionGroup>
+		    <actionList>
+			<setInstallerVariableFromRegEx>
+			    <text>${phpIncludePath}</text>
+			    <name>phpIncludePath</name>
+			    <substitution></substitution>
+			    <pattern>\"</pattern>
+			</setInstallerVariableFromRegEx>
+			<substitute>
+			    <files>${phpConfigurationFile}</files>
+			    <substitutionList>
+				<substitution>
+				    <pattern>^include_path =.*$</pattern>
+				    <value>include_path = "${phpIncludePath}:${phpDirectory}"</value>
+				    <ruleList>
+					<platformTest type="unix" />
+				    </ruleList>
+				</substitution>
+				<substitution>
+				    <pattern>^include_path =.*$</pattern>
+				    <value>include_path = "${phpIncludePath};${phpDirectory.unix}"</value>
+				    <ruleList>
+					<platformTest type="windows" />
+				    </ruleList>
+				</substitution>
+			    </substitutionList>
+			</substitute>
+		    </actionList>
+		    <ruleList>
+			<fileContentTest text="${phpDirectory}" path="${phpConfigurationFile}" logic="does_not_contain" />
+		    </ruleList>
+		</actionGroup>
+
+	    </actionList>
+	</actionDefinition>
+
+        <actionDefinition name="phpDefaultComponentConfiguration">
+            <actionList>
+                <substitute>
+                    <files>*/my.ini;*/php.ini;*/php-cgi;*/php-config;*/php.ini-recommended</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>;upload_tmp_dir =</pattern>
+                            <value>upload_tmp_dir = "${php_tmp_dir}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>soap.wsdl_cache_dir="/tmp"</pattern>
+                            <value>soap.wsdl_cache_dir="${php_tmp_dir}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>;session.save_path = "/tmp"</pattern>
+                            <value>session.save_path = "${php_tmp_dir}"</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_ROOTDIR@@</pattern>
+                            <value>${installdir.unix}/apache2</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_PORT@@</pattern>
+                            <value>${web_server_port}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHP_ROOTDIR@@</pattern>
+                            <value>${installdir.unix}/php</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHP_EXTENSIONDIR@@</pattern>
+                            <value>${php_directory.unix}/extensions</value>
+                        </substitution>
+                        <!-- Solves timming issues with some wizards in certain stacks
+                             Refs #4858 -->
+                        <substitution>
+                            <pattern>max_execution_time =.*$</pattern>
+                            <value>max_execution_time = 120</value>
+                        </substitution>
+			<!-- Increase default max_upload_file, refs #9935 -->
+			<!-- Should be less or equal that post_max_size -->
+                        <substitution>
+                            <pattern>upload_max_filesize =.*$</pattern>
+                            <value>upload_max_filesize = 40M</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>post_max_size =.*$</pattern>
+                            <value>post_max_size = 40M</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>memory_limit =.*$</pattern>
+                            <value>memory_limit = 512M</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>max_input_time =.*$</pattern>
+                            <value>max_input_time = 300</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>^\s*error_reporting =.*$</pattern>
+                            <value>error_reporting = E_ALL &amp; ~E_DEPRECATED &amp; ~E_STRICT</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_PORT@@</pattern>
+                            <value></value>
+                            <ruleList>
+                                <compareText text="${mysql_port}" logic="contains" value="unknown" />
+                            </ruleList>
+                        </substitution>
+
+
+                    </substitutionList>
+                </substitute>
+                <actionGroup>
+                    <actionList>
+                        <substitute>
+                            <files>*/PEAR/*.php;*.inc;*/peardev;*/pecl;*/phpunit;*/phing;*/phpdoc;*/trax;*/*.bat</files>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@XAMPP_PHP_ROOTDIR@@</pattern>
+                                    <value>${installdir}\php</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_APACHE_ROOTDIR@@</pattern>
+                                    <value>${installdir}\apache2</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_COMMON_ROOTDIR@@</pattern>
+                                    <value>${installdir}\common</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                                    <value>${installdir}\mysql</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_PHP_ROOT@@</pattern>
+                                    <value>${installdir}\php</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <substitute>
+                            <files>*/pearcmd.php;*/peclcmd.php;*/build-defs.h;*/etc/php.ini;*/bin/pear;*/bin/phpize;*/bin/php-config;*/bin/php;*/bin/php-cgi;*.la;*.mk;*/*.h;*/bin/peardev;*/bin/pecl;*/lib/php/*/*.php;*/lib/php/*/*.html;*/lib/php/*/*.inc;*/bin/phpdbg;*/bin/composer;*/bin/phar.phar</files>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@XAMPP_PHP_ROOTDIR@@</pattern>
+                                    <value>${installdir.unix}/php</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_SET_ENVIRONMENT_SCRIPT@@</pattern>
+                                    <value>${installdir.unix}/scripts/setenv.sh</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_APACHE_ROOTDIR@@</pattern>
+                                    <value>${installdir.unix}/apache2</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_COMMON_ROOTDIR@@</pattern>
+                                    <value>${installdir.unix}/common</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                                    <value>${installdir.unix}/mysql</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_PHP_ROOT@@</pattern>
+                                    <value>${installdir.unix}/php</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <createDirectory abortOnError="0" showMessageOnError="0" path="${php_directory}/lib/php/extensions" />
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="windows_arch" value="x86"/>
+                        <setInstallerVariable name="windows_arch" value="x64">
+                            <ruleList>
+                                <compareText text="${bitnami_platform_arch}" logic="equals" value="windows-x64"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <substitute>
+                            <files>*/my.ini;*/php.ini;*/php-cgi;*/php-config;*/php.ini-recommended</files>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>;extension=php_mbstring.dll</pattern>
+                                    <value>extension=php_mbstring.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=mbstring</pattern>
+                                    <value>extension=mbstring</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=php_exif.dll</pattern>
+                                    <value>extension=php_exif.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=exif</pattern>
+                                    <value>extension=exif</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=php_openssl.dll</pattern>
+                                    <value>extension=php_openssl.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=openssl</pattern>
+                                    <value>extension=openssl</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=php_imap.dll</pattern>
+                                    <value>extension=php_imap.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=imap</pattern>
+                                    <value>extension=imap</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=php_xmlrpc.dll</pattern>
+                                    <value>extension=php_xmlrpc.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=xmlrpc</pattern>
+                                    <value>extension=xmlrpc</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=php_curl.dll</pattern>
+                                    <value>extension=php_curl.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=curl</pattern>
+                                    <value>extension=curl</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=php_gd2.dll</pattern>
+                                    <value>extension=php_gd2.dll</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>;extension=gd2</pattern>
+                                    <value>extension=gd2</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <substitute>
+                            <files>*/pear.bat;*/pecl.bat</files>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@include_path@</pattern>
+                                    <value>${php_directory_long_path}\pear</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@bin_dir@</pattern>
+                                    <value>${php_directory_long_path}</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@php_bin@</pattern>
+                                    <value>${php_directory_long_path}\php.exe</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@ECHO OFF</pattern>
+                                    <value>@ECHO OFF
+									SET "PHP_PEAR_SYSCONF_DIR=${php_directory_long_path}"</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <!-- Currently we only support PHP 5.3.6 or later -->
+                        <foreach variables="vcredist_version" values="2008 2012 2013 2015 2017 2019">
+                            <actionList>
+                                <runProgram>
+                                    <program>${installdir}/php/vcredist_${windows_arch}_${vcredist_version}.exe</program>
+                                    <programArguments>/q</programArguments>
+                                    <showMessageOnError>0</showMessageOnError>
+                                    <abortOnError>0</abortOnError>
+                                    <ruleList>
+                                        <fileTest condition="exists" path="${installdir}/php/vcredist_${windows_arch}_${vcredist_version}.exe"/>
+                                    </ruleList>
+                                </runProgram>
+                            </actionList>
+                        </foreach>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <!-- http://php.net/manual/en/language.types.string.php#language.types.string.syntax.single -->
+        <actionDefinition>
+            <name>phpEscapeStringSingleQuoted</name>
+            <parameterList>
+                <stringParameter name="string" />
+                <stringParameter name="variable" default="php_string_escaped" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="${variable}" value="${string}" />
+                <globalVariables names="${variable}" />
+                <setInstallerVariableFromRegEx name="${variable}" pattern="\\" substitution="\\\\" text="${${variable}}">
+                    <ruleList>
+                        <compareText logic="contains" text="${${variable}}" value="\"/>
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+                <setInstallerVariableFromRegEx name="${variable}" text="${${variable}}" pattern="'" substitution="\'">
+                    <ruleList>
+                        <compareText text="${${variable}}" logic="contains" value="'" />
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+            </actionList>
+        </actionDefinition>
+
+	<actionDefinition>
+	    <name>enableSendmail</name>
+	    <parameterList>
+		<stringParameter name="phpConfigurationFile" default="${php_configuration_directory}/php.ini" />
+	    </parameterList>
+	    <actionList>
+                <substitute>
+                    <files>${php_configuration_directory}/php.ini</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>;sendmail_path</pattern>
+                            <value>sendmail_path</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+	    </actionList>
+	</actionDefinition>
+
+    <actionDefinition>
+        <name>phpExecute</name>
+        <parameterList>
+            <stringParameter name="file"  allowEmptyValue="0"/>
+            <stringParameter name="arguments" default=""/>
+            <stringParameter name="workingDirectory" default=""/>
+            <stringParameter name="variable" default=""/>
+        </parameterList>
+        <actionList>
+            <actionGroup>
+                <actionList>
+                    <runProgram>
+                        <program>${php_binary_directory}/php</program>
+                        <programArguments>-q "${file}" ${arguments}</programArguments>
+                        <workingDirectory>${workingDirectory}</workingDirectory>
+                    </runProgram>
+                </actionList>
+                <ruleList>
+                    <platformTest type="unix"/>
+                </ruleList>
+            </actionGroup>
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariableFromRegEx>
+                        <name>backslash_filepath</name>
+                        <pattern>/</pattern>
+                        <substitution>\</substitution>
+                        <text>${file}</text>
+                    </setInstallerVariableFromRegEx>
+                    <runProgram>
+                        <program>${php_binary_directory}/php.exe</program>
+                        <wrapInScript>1</wrapInScript>
+                        <programArguments>-q "${backslash_filepath}" ${arguments}</programArguments>
+                        <workingDirectory>${workingDirectory}</workingDirectory>
+                    </runProgram>
+                </actionList>
+                <ruleList>
+                    <platformTest type="windows"/>
+                </ruleList>
+            </actionGroup>
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariable name="${variable}" value="${program_stdout}"/>
+                    <globalVariables names="${variable}"/>
+                </actionList>
+                <ruleList>
+                    <stringTest text="${variable}" type="not_empty"/>
+                </ruleList>
+            </actionGroup>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>setInstallerVariableFromPhpScript</name>
+        <parameterList>
+            <stringParameter name="name" allowEmptyValue="0"/>
+            <stringParameter name="script" allowEmptyValue="0"/>
+            <stringParameter name="arguments" default=""/>
+            <stringParameter name="workingDirectory" default=""/>
+        </parameterList>
+        <actionList>
+            <phpExecute variable="${name}" file="${script}" arguments="${arguments}" workingDirectory="${workingDirectory}"/>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>getPhpVersion</name>
+        <parameterList>
+            <stringParameter name="phpBinaryDirectory" default="${php_binary_directory}"/>
+        </parameterList>
+        <actionList>
+            <setInstallerVariableFromScriptOutput>
+                <name>phpVersionOutput</name>
+                <exec>${phpBinaryDirectory}/php</exec>
+                <execArgs>-v</execArgs>
+                <abortOnError>0</abortOnError>
+                <showMessageOnError>0</showMessageOnError>
+            </setInstallerVariableFromScriptOutput>
+            <setInstallerVariableFromRegEx>
+                <name>phpVersion</name>
+                <pattern>^.*PHP\s+([0-9]+\.[0-9]+)\.[0-9]+\s.*$</pattern>
+                <substitution>\1</substitution>
+                <text>${phpVersionOutput}</text>
+            </setInstallerVariableFromRegEx>
+            <globalVariables names="phpVersion"/>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>avoidInstallationWithPHPGreaterThan7</name>
+        <actionList>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>PHP</section>
+                <key>php_version</key>
+                <variable>phpVersionFound</variable>
+            </iniFileGet>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>General</section>
+                <key>base_stack_version</key>
+                <variable>phpVersionFound</variable>
+                <ruleList>
+                    <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                </ruleList>
+            </iniFileGet>
+            <throwError>
+                <text>Versions of PHP greater than 7.0.0 are not supported. Currently supported versions are 5.6.x and lower</text>
+                <ruleList>
+                    <compareVersions version1="${phpVersionFound}" logic="greater_or_equal" version2="7.0.0"/>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>avoidInstallationWithPHPGreaterThan71</name>
+        <actionList>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>PHP</section>
+                <key>php_version</key>
+                <variable>phpVersionFound</variable>
+            </iniFileGet>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>General</section>
+                <key>base_stack_version</key>
+                <variable>phpVersionFound</variable>
+                <ruleList>
+                    <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                </ruleList>
+            </iniFileGet>
+            <throwError>
+                <text>Versions of PHP greater than 7.1.0 are not supported. Currently supported versions are 7.0.x and lower</text>
+                <ruleList>
+                    <compareVersions version1="${phpVersionFound}" logic="greater_or_equal" version2="7.1.0"/>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>avoidInstallationWithPHPLowerThan72</name>
+        <actionList>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>PHP</section>
+                <key>php_version</key>
+                <variable>phpVersionFound</variable>
+            </iniFileGet>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>General</section>
+                <key>base_stack_version</key>
+                <variable>phpVersionFound</variable>
+                <ruleList>
+                    <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                </ruleList>
+            </iniFileGet>
+            <throwError>
+                <text>Versions of PHP lower than 7.2.0 are not supported. Currently supported versions are 7.2.x and greater</text>
+                <ruleList>
+                    <compareVersions version1="${phpVersionFound}" logic="less" version2="7.2.0"/>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>avoidInstallationWithPHPGreaterThan72</name>
+        <actionList>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>PHP</section>
+                <key>php_version</key>
+                <variable>phpVersionFound</variable>
+            </iniFileGet>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>General</section>
+                <key>base_stack_version</key>
+                <variable>phpVersionFound</variable>
+                <ruleList>
+                    <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                </ruleList>
+            </iniFileGet>
+            <throwError>
+                <text>Versions of PHP greater than 7.2.0 are not supported. Currently supported versions are 7.1.x and lower</text>
+                <ruleList>
+                    <compareVersions version1="${phpVersionFound}" logic="greater_or_equal" version2="7.2.0"/>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    <actionDefinition>
+        <name>avoidInstallationWithPHPGreaterThan73</name>
+        <actionList>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>PHP</section>
+                <key>php_version</key>
+                <variable>phpVersionFound</variable>
+            </iniFileGet>
+            <iniFileGet>
+                <file>${installdir}/properties.ini</file>
+                <section>General</section>
+                <key>base_stack_version</key>
+                <variable>phpVersionFound</variable>
+                <ruleList>
+                    <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                </ruleList>
+            </iniFileGet>
+            <throwError>
+                <text>Versions of PHP greater than 7.3.0 are not supported. Currently supported versions are 7.2.x and lower</text>
+                <ruleList>
+                    <compareVersions version1="${phpVersionFound}" logic="greater_or_equal" version2="7.3.0"/>
+                </ruleList>
+            </throwError>
+        </actionList>
+    </actionDefinition>
+    </functionDefinitionList>
+</component>
+
+

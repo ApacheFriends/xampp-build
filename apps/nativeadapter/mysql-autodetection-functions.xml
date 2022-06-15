@@ -1,0 +1,260 @@
+<component>
+    <name>mysqlautodetection</name>
+    <description>//MySQL Autodetection</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+
+    <functionDefinitionList>
+      <actionDefinition name="autodetectMySQL">
+	<parameterList>
+          <stringParameter name="targetPlatform" default="" description="Target Platform"/>
+	  <stringParameter name="port" default="" description="Autodetected MySQL Port"/>
+	  <stringParameter name="host" default="" description="Autodetected MySQL Host"/>
+	  <stringParameter name="rootDirectory" default="" description="Autodetected Root Directory"/>
+          <stringParameter name="binaryDirectory" default="" description="Autodetected Binary Directory"/>
+          <stringParameter name="dataDirectory" default="" description="Autodetected Data Directory"/>
+          <stringParameter name="databaseArguments" default="" description="Autodetected Database Directory"/>
+          <stringParameter name="databaseSocket" default="" description="Autodetected Database Socket"/>
+          <stringParameter name="configurationDirectory" default="" description="Autodetected Configuration Directory" />
+	</parameterList>
+	<actionList>
+          <setInstallerVariable name="mysql_autodetected" value="0"/>
+
+          <globalVariables names="mysql_autodetected"/>
+          <globalVariables names="${port} ${host} ${rootDirectory} ${binaryDirectory} ${databaseArguments}  ${databaseSocket} ${dataDirectory} ${configurationDirectory}"/>
+
+	  <setInstallerVariable name="${host}" value="localhost" persist="1"/>
+	  <setInstallerVariable name="${host}" value="${mysql_hostname}" persist="1">
+	    <ruleList>
+	      <compareText text="${mysql_hostname}" logic="does_not_equal" value=""/>
+	    </ruleList>
+	  </setInstallerVariable>
+          <!-- RedHat START -->
+          
+          <actionGroup>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <actionList>
+              <setInstallerVariable name="mysql_autodetected" value="1"/>
+
+              <setInstallerVariable name="${configurationDirectory}" value="/etc" persist="1"/>
+              <setInstallerVariable name="mycnf_text" value=""/>
+              <readFile path="${${configurationDirectory}}/my.cnf" name="mycnf_text">
+                <ruleList>
+                  <fileExists path="${${configurationDirectory}}/my.cnf"/>
+                </ruleList>
+              </readFile>
+
+              <iniFileGet file="${${configurationDirectory}}/my.cnf" section="mysqld" key="port" variable="${port}"/>
+              <setInstallerVariable name="${port}" value="3306" persist="1">
+                <ruleList>
+		  <compareText text="${${port}}" logic="equals" value="" />
+		</ruleList>
+              </setInstallerVariable>
+
+              <!-- TODO: Just used to invoke mysql, we should use mysql_binary or something -->
+              <setInstallerVariable name="${rootDirectory}" value="/usr" persist="1"/>
+              <setInstallerVariable name="${dataDirectory}" value="/var/lib/mysql" persist="1"/>
+              
+              <setInstallerVariable name="${binaryDirectory}" value="/usr/bin" persist="1"/>
+              
+              <iniFileGet file="${${configurationDirectory}}/my.cnf" section="mysqld" key="socket" variable="socket"/>
+              <setInstallerVariable name="socket" value="/var/lib/mysql/mysql.sock">
+                <ruleList>
+                  <compareText text="${socket}" logic="equals" value="" />
+                </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="${databaseSocket}" value="${socket}" persist="1"/>
+              <setInstallerVariable name="${databaseArguments}" value="-u root -S &quot;${socket}&quot;" persist="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="redhat"/>
+              <compareText text="${targetPlatform}" logic="equals" value="fedora"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- RedHat END -->
+
+
+          <!-- XAMP START -->
+          
+          <actionGroup>
+            <actionList>
+	      <setInstallerVariable name="xampp_root" value="/opt/lampp" >
+		<ruleList>
+		  <platformTest type="linux"/>
+		</ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="xampp_root" value="/Applications/XAMPP/xamppfiles" >
+		<ruleList>
+		  <platformTest type="osx"/>
+		</ruleList>
+              </setInstallerVariable>
+	      <actionGroup>
+		  <actionList>
+		      <registryGet key="HKEY_LOCAL_MACHINE\SOFTWARE\xampp" name="Install_Dir" variable="xampp_root">
+		      </registryGet>
+		      <setInstallerVariable name="xampp_root" value="${installdir}" >
+			  <ruleList>
+			      <stringTest text="${xampp_root}" type="empty" />
+			  </ruleList>
+		      </setInstallerVariable>
+		      <setInstallerVariable name="xampp_root" value="${installdir}" >
+			  <ruleEvaluationLogic>or</ruleEvaluationLogic>
+			  <ruleList>
+			      <fileExists path="${installdir}/etc/my.cnf" />
+			      <fileExists path="${installdir}/mysql/bin/my.ini" />
+			  </ruleList>
+		      </setInstallerVariable>
+		  </actionList>
+		  <ruleList>
+		      <platformTest type="windows"/>
+		  </ruleList>
+	      </actionGroup>
+              <setInstallerVariable name="mysql_autodetected" value="1"/>
+              <actionGroup>
+                  <actionList>
+                      <setInstallerVariable name="${configurationDirectory}" value="${xampp_root}/etc" persist="1" />
+                      <setInstallerVariable name="mycnf_file" value="${${configurationDirectory}}/my.cnf" />
+                  </actionList>
+                  <ruleList>
+                      <platformTest type="unix"/>
+                  </ruleList>
+              </actionGroup>
+              <actionGroup>
+                  <actionList>
+                      <setInstallerVariable name="${configurationDirectory}" value="${xampp_root}/mysql/bin" persist="1"/>
+                      <setInstallerVariable name="mycnf_file" value="${${configurationDirectory}}/my.ini" />
+                  </actionList>
+                  <ruleList>
+                      <platformTest type="windows"/>
+                  </ruleList>
+              </actionGroup>
+
+              <setInstallerVariable name="mycnf_text" value=""/>
+              <readFile path="${mycnf_file}" name="mycnf_text">
+                <ruleList>
+                  <fileExists path="${mycnf_file}"/>
+                </ruleList>
+              </readFile>
+              
+
+              <iniFileGet file="${mycnf_file}" section="mysqld" key="port" variable="${port}">
+                <ruleList>
+                  <fileExists path="${mycnf_file}"/>
+                </ruleList>
+              </iniFileGet>
+              <setInstallerVariable name="${port}" value="3306">
+                <ruleList>
+		  <compareText text="${${port}}" logic="equals" value="" />
+		</ruleList>
+              </setInstallerVariable>
+
+              <!-- TODO: Just used to invoke mysql, we should use mysql_binary or something -->
+	      <actionGroup>
+		<actionList>
+		  <setInstallerVariable name="${rootDirectory}" value="${xampp_root}/"/>
+
+		  <setInstallerVariable name="${dataDirectory}" value="${xampp_root}/var/mysql/" persist="1"/>
+
+		  <setInstallerVariable name="${binaryDirectory}" value="${xampp_root}/bin"/>
+		  <iniFileGet file="${mycnf_file}" section="mysqld" key="socket" variable="socket"/>
+
+		  <setInstallerVariable name="socket" value="${xampp_root}/var/mysql/mysql.sock">
+                    <ruleList>
+                      <compareText text="${socket}" logic="equals" value="" />
+                    </ruleList>
+		  </setInstallerVariable>
+		  <setInstallerVariable name="${databaseSocket}" value="${socket}" persist="1"/>
+		  <setInstallerVariable name="${databaseArguments}" value="-u root -S &quot;${socket}&quot;"/>
+
+		</actionList>
+                <ruleList>
+		  <platformTest type="unix"/>
+                </ruleList>
+	      </actionGroup>
+	      <actionGroup>
+		<actionList>
+		  <setInstallerVariable name="${rootDirectory}" value="${xampp_root}\mysql"/>
+
+		  <setInstallerVariable name="${dataDirectory}" value="${xampp_root}\mysql\data" persist="1"/>
+
+		  <setInstallerVariable name="${binaryDirectory}" value="${xampp_root}\mysql\bin"/>
+
+		  <setInstallerVariable name="${databaseSocket}" value="" persist="1"/>
+		  <setInstallerVariable name="${databaseArguments}" value="-u root -P ${${port}}"/>
+
+		</actionList>
+                <ruleList>
+		  <platformTest type="windows"/>
+                </ruleList>
+	      </actionGroup>
+                            
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="xampp"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- XAMP END -->
+          
+          <!-- Ubuntu START -->
+          
+          <actionGroup>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <actionList>
+              <setInstallerVariable name="mysql_autodetected" value="1"/>
+
+              <setInstallerVariable name="${configurationDirectory}" value="/etc/mysql" persist="1"/>
+              <setInstallerVariable name="mycnf_text" value=""/>
+              <readFile path="${${configurationDirectory}}/my.cnf" name="mycnf_text">
+                <ruleList>
+                  <fileExists path="${${configurationDirectory}}/my.cnf"/>
+                </ruleList>
+              </readFile>
+              
+
+              <iniFileGet file="${${configurationDirectory}}/my.cnf" section="mysqld" key="port" variable="${port}"/>
+              <setInstallerVariable name="${port}" value="3306" persist="1">
+                <ruleList>
+                    <compareText text="${${port}}" logic="equals" value="" />
+                </ruleList>
+              </setInstallerVariable>
+
+              <!-- TODO: Just used to invoke mysql, we should use mysql_binary or something -->
+              <setInstallerVariable name="${rootDirectory}" value="/usr" persist="1"/>
+              <setInstallerVariable name="${dataDirectory}" value="/var/lib/mysql" persist="1"/>
+              
+              <setInstallerVariable name="${binaryDirectory}" value="/usr/bin" persist="1"/>
+              
+              <iniFileGet file="${${configurationDirectory}}/my.cnf" section="mysqld" key="socket" variable="socket"/>
+              <setInstallerVariable name="socket" value="/var/run/mysql/mysql.sock">
+                <ruleList>
+                  <compareText text="${socket}" logic="equals" value="" />
+                </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="${databaseSocket}" value="${socket}" persist="1"/>
+              <setInstallerVariable name="${databaseArguments}" value="-u root -S &quot;${socket}&quot;" persist="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="ubuntu"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- Ubuntu END -->
+
+	  <!-- Overwrite values -->
+	  <setInstallerVariable name="${host}" value="${mysql_hostname}" persist="1">
+	    <ruleList>
+	      <compareText text="${mysql_hostname}" logic="does_not_equal" value=""/>
+	    </ruleList>
+	  </setInstallerVariable>
+	  <setInstallerVariable name="${port}" value="${mysql_port}" persist="1">
+	    <ruleList>
+	      <compareText text="${mysql_port}" logic="does_not_equal" value=""/>
+	    </ruleList>
+	  </setInstallerVariable>
+	</actionList>
+    </actionDefinition>
+    </functionDefinitionList>
+</component>

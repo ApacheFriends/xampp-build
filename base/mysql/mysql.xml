@@ -1,0 +1,1470 @@
+<!-- MYSQL1.0
+Componentname: MySQL
+
+Short Description:
+This component is able to install and configurate the bundled MySQL binaries it carries,
+or to configure an existing MySQL server.
+
+System variables provided by this component:
+
+  * database_vendor (mysql)
+  * database_language (sql)
+  * database_port
+  * database_hostname
+  * database_client_hostname
+  * database_root_user
+  * database_root_password
+  * database_binary_directory
+  * database_confguration_directory
+  * database_data_directory
+  * database_root_directory
+  * database_upgrade
+  * database_socket
+  * component(mysql).mysql_installation_type_options -> bundled / existing / bundledAndExisting (default if var is not set)
+
+
+-->
+<component>
+    <name>mysql</name>
+    <description>${mysql_database_type}</description>
+    <canBeEdited>1</canBeEdited>
+    <detailedDescription>${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server.</detailedDescription>
+    <selected>1</selected>
+    <show>0</show>
+
+    <initializationActionList>
+        <logMessage text="[mysql:initialization] Running action list..."/>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable name="component(mysql).parameter(mysql_information).parameter(mysql_hostname).default" value="127.0.0.1" />
+                <setInstallerVariable name="component(mysql).parameter(mysql_information).parameter(mysql_hostname).value" value="127.0.0.1" />
+            </actionList>
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </actionGroup>
+        <addChoiceOptions>
+            <name>mysql_installation_type</name>
+            <optionList>
+                <option>
+                    <text>I wish to use the bundled ${mysql_database_type} database</text>
+                    <value>bundled</value>
+                </option>
+            </optionList>
+            <ruleList>
+                <compareText text="${component(mysql).parameter(mysql_installation_type_options).value}" logic="equals" value="bundled"/>
+            </ruleList>
+        </addChoiceOptions>
+        <addChoiceOptions>
+            <name>mysql_installation_type</name>
+            <optionList>
+                <option>
+                    <text>I wish to use an existing ${mysql_database_type} database</text>
+                    <value>existing</value>
+                </option>
+            </optionList>
+            <ruleList>
+                <compareText text="${component(mysql).parameter(mysql_installation_type_options).value}" logic="equals" value="existing"/>
+            </ruleList>
+        </addChoiceOptions>
+        <addChoiceOptions>
+            <name>mysql_installation_type</name>
+            <optionList>
+                <option>
+                    <text>I wish to use the bundled ${mysql_database_type} database</text>
+                    <value>bundled</value>
+                </option>
+                <option>
+                    <text>I wish to use an existing ${mysql_database_type} database</text>
+                    <value>existing</value>
+                </option>
+            </optionList>
+            <ruleList>
+                <compareText text="${component(mysql).parameter(mysql_installation_type_options).value}" logic="equals" value="bundledAndExisting"/>
+            </ruleList>
+        </addChoiceOptions>
+        <!-- T23959 MySQL only supports a few recent macOS versions -->
+        <throwError>
+            <text>The installer has detected that your operating system is macOS ${osx_major_version}. MySQL requires at least macOS ${mysql_min_osx_version}. Please upgrade your operating system and try again.</text>
+            <ruleList>
+                <compareText text="${mysql_database_type}" logic="does_not_equal" value="mariadb" nocase="1"/>
+                <platformTest type="osx"/>
+                <compareVersions version1="${osx_major_version}" logic="less" version2="${mysql_min_osx_version}"/>
+            </ruleList>
+        </throwError>
+        <!-- T23367 MySQL fails to install if Perl or required Perl modules are not present -->
+        <if>
+            <ruleList>
+                <compareText text="${mysql_database_type}" logic="does_not_equal" value="mariadb" nocase="1"/>
+                <platformTest type="linux"/>
+            </ruleList>
+            <conditionRuleList>
+                <programTest condition="is_not_in_path" name="perl"/>
+            </conditionRuleList>
+            <actionList>
+                <!-- Check for Perl existence -->
+                <showWarning>
+                    <text>MySQL requires Perl to be installed, but the installer failed to locate it. We highly recommend installing Perl before proceeding with the installation, following the guide below:
+
+https://docs.bitnami.com/installer/faq/linux-faq/administration/install-perl-linux/</text>
+                </showWarning>
+            </actionList>
+            <elseActionList>
+                <setInstallerVariable name="missing_perl_modules" value=""/>
+                <!-- Check for missing Perl modules-->
+                <!-- The list can be obtained from the "mysql_install_db" script -->
+                <foreach variables="perl_module" values="Fcntl File::Basename File::Copy Getopt::Long Sys::Hostname Data::Dumper">
+                    <actionList>
+                        <runProgram abortOnError="0" showMessageOnError="0" program="perl" programArguments="-e &quot;use ${perl_module}&quot;"/>
+                        <setInstallerVariable name="missing_perl_modules" value="${missing_perl_modules}&#xA;${perl_module}">
+                            <ruleList>
+                                <compareText text="${program_exit_code}" logic="does_not_equal" value="0"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                </foreach>
+                <showWarning>
+                    <text>MySQL requires some Perl modules in order to install properly, but the installer was unable to find them:
+${missing_perl_modules}
+
+You can find more information on how to install these modules below:
+
+https://docs.bitnami.com/installer/faq/linux-faq/administration/install-perl-linux/
+
+Please ensure the modules are installed and work before proceeding with the installation.</text>
+                    <ruleList>
+                        <stringTest text="${missing_perl_modules}" type="not_empty"/>
+                    </ruleList>
+                </showWarning>
+            </elseActionList>
+        </if>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable name="continue_installation" value="1"/>
+                <showQuestion variable="continue_installation" default="no">
+                    <text>MySQL requires a library that was not found in your system: libtinfo.so.5. You can find more information on how to install it below:
+
+https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/troubleshooting-components/#missing-library-libtinfo-so-5
+
+Do you want to continue with the installation?</text>
+                    <ruleList>
+                        <fileTest condition="not_exists" path="/lib64/libtinfo.so.5"/>
+                        <fileTest condition="not_exists" path="/usr/lib64/libtinfo.so.5"/>
+                        <fileTest condition="not_exists" path="/lib/x86_64-linux-gnu/libtinfo.so.5"/>
+                    </ruleList>
+                </showQuestion>
+                <exit>
+                    <ruleList>
+                        <isFalse value="${continue_installation}"/>
+                    </ruleList>
+                </exit>
+            </actionList>
+            <ruleList>
+                <compareText text="${mysql_database_type}" logic="does_not_equal" value="mariadb" nocase="1"/>
+                <platformTest type="linux"/>
+            </ruleList>
+        </actionGroup>
+    </initializationActionList>
+
+    <preInstallationActionList>
+        <logMessage text="[mysql:pre-installation] Running action list..."/>
+        <getFreePort variable="mysql_port" initialPort="${component(mysql).parameter(mysql_information).parameter(mysql_initial_port).value}" finalPort="${component(mysql).parameter(mysql_information).parameter(mysql_final_port).value}">
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <ruleList>
+                <isTrue value="${mysql_automatic_port_selection}"/>
+            </ruleList>
+        </getFreePort>
+    </preInstallationActionList>
+
+    <installationAbortedActionList>
+        <logMessage text="[mysql:installation-aborted] Running action list..."/>
+        <!-- WINDOWS -->
+        <actionGroup>
+            <actionList>
+                <runProgram>
+                    <progressText>Shutting down ${mysql_database_type}</progressText>
+                    <program>${mysql_binary_directory.dos.unix}\mysqladmin.exe</program>
+                    <programArguments>"--defaults-file=${mysql_configuration_file}" "-u${mysql_root_user}" "--password=${mysql_root_password.password}" shutdown</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <onErrorActionList>
+                        <logMessage text="[mysql:installation-aborted] Killing mysqld process" />
+                        <readFile path="${mysql_data_directory.dos}\${machine_hostname}.pid" name="mysql_pid" />
+                        <kill>
+                            <pid>${mysql_pid}</pid>
+                        </kill>
+                    </onErrorActionList>
+                </runProgram>
+                <runProgram progressText="Stopping ${mysql_database_type}">
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <program>sc</program>
+                    <programArguments>stop ${mysql_unique_service_name}</programArguments>
+                </runProgram>
+                <runProgram progressText="Uninstalling ${mysql_database_type}">
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <program>sc</program>
+                    <programArguments>delete ${mysql_unique_service_name}</programArguments>
+                </runProgram>
+                <deleteFile progressText="Uninstalling ${mysql_database_type}" path="${mysql_root_directory}/data" />
+                <deleteFile progressText="Uninstalling ${mysql_database_type}" path="${mysql_root_directory}" />
+            </actionList>
+            <ruleList>
+                <compareText text="${mysql_execute_abort_action_list}" value="1" logic="equals"/>
+                <compareText text="${mysql_ready_to_install}" value="1" logic="equals"/>
+                <platformTest type="windows"/>
+            </ruleList>
+        </actionGroup>
+
+        <!-- LINUX & OSX -->
+        <actionGroup>
+            <actionList>
+                <mysqlServer progressText="Stopping ${mysql_database_type}" action="stop"/>
+                <actionGroup>
+                    <actionList>
+                        <deleteFile progressText="Uninstalling ${mysql_database_type}" path="${mysql_root_directory}/data" />
+                        <deleteFile progressText="Uninstalling ${mysql_database_type}" path="${mysql_root_directory}" />
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+            <ruleList>
+                <compareText text="${mysql_execute_abort_action_list}" value="1" logic="equals"/>
+                <compareText text="${mysql_ready_to_install}" value="1" logic="equals"/>
+                <platformTest type="unix"/>
+            </ruleList>
+        </actionGroup>
+    </installationAbortedActionList>
+
+    <parameterList>
+        <stringParameter name="mariadb_bundled_version" ask="0" value="0" />
+        <stringParameter name="mysql_bundled_version" ask="0" value="0" />
+        <stringParameter name="mysql_min_osx_version" ask="0" value="10.12"/>
+        <booleanParameter name="mysql_abort_installation_on_initialization_error" value="0" ask="0" />
+        <booleanParameter name="mysql_execute_abort_action_list" value="1" ask="0" />
+        <booleanParameter name="mysql_ready_to_install" value="0" ask="0" />
+        <booleanParameter name="mysql_allow_all_remote_connections" value="0" ask="0" />
+        <booleanParameter name="mysql_alphanumeric_password" default="1" ask="0" value="1" />
+        <booleanParameter name="mysql_init_data_dir" value="1" ask="0" />
+        <booleanParameter name="mysql_global_port_checking" ask="0" value="0" />
+        <!-- Modifies my.cnf or my.ini and sets the default character encoding to UTF-8 -->
+        <booleanParameter name="mysql_configured_utf8mb4encoding" default="0" ask="0" value="0" />
+        <!-- T17953 - Modifies my.cnf or my.ini to adjust the buffer pool size parameter depending on ram -->
+        <booleanParameter name="mysql_adjust_buffer_poolt_to_ram" default="0" ask="0" value="0"/>
+        <!-- T17953 - Modifies my.cnf or my.ini to let the optimizer to determine how far into the "future" of each
+                      incomplete plan should look to evaluate whether it should be expanded further
+                      https://dev.mysql.com/doc/refman/5.6/en/controlling-query-plan-evaluation.html -->
+        <stringParameter name="mysql_optimizer_search_depth" default="0" ask="0" value="0"/>
+        <booleanParameter name="mysql_optimizer_search_depth_enabled" default="0" ask="0" value="0"/>
+        <stringParameter name="innodb_flush_log_at_trx_commit" default="0" ask="0" value="0"/>
+        <booleanParameter name="innodb_flush_log_at_trx_commit_enabled" default="0" ask="0" value="0"/>
+        <booleanParameter name="skip_name_resolve_enabled" default="1" ask="0" value="1"/>
+        <!-- If we want to restrict for instance russians charaters, we need to set mysql_ascii_password to 1.
+             Notice that ascii accepts dot, comma, quotes, tc, so you may want to combine this with the mysql_alphanumeric_password -->
+        <stringParameter name="mysql_ascii_password" default="0" ask="0" value="0"/>
+        <!-- hidden parameter -->
+        <stringParameter name="mysql_installation_type_options" default="bundledAndExisting" ask="0" value="bundledAndExisting"/>
+        <!-- hidden parameter
+                1: The postintallation script will be run
+                0: It won't be run -->
+        <booleanParameter name="mysql_post_installation_script" default="1" ask="0" value="1"/>
+        <!-- hidden parameter
+                1: Allow empty root password
+                0: Don't allow empty root password -->
+        <booleanParameter name="mysql_allow_empty_root_password" default="1" ask="0" value="1"/>
+        <!-- hidden parameter
+                1: Show a warning in case the user use an empty root password
+                0: Don't show a warning when the user use an empty root password -->
+        <booleanParameter name="mysql_warn_empty_root_password" default="0" ask="0" value="0"/>
+        <!-- hidden parameter
+                1: Start MySQL and create the root account
+                0: Only start MySQL-->
+        <booleanParameter name="mysql_upgrade" default="0" ask="0" value="0"/>
+        <!-- hidden parameter (needs to be directoryParameter so .unix works)-->
+        <directoryParameter>
+            <name>mysql_root_directory</name>
+            <ask>0</ask>
+            <default/>
+            <value>${installdir}/@@XAMPP_MYSQL_FLAVOUR@@</value>
+        </directoryParameter>
+        <directoryParameter>
+            <name>mysql_data_directory</name>
+            <ask>0</ask>
+            <default/>
+            <value>${mysql_root_directory}/data</value>
+        </directoryParameter>
+
+        <choiceParameter>
+            <name>mysql_installation_type</name>
+            <title>Database Installation</title>
+            <explanation>Please select which database configuration you wish to use</explanation>
+            <cliOptionShow>0</cliOptionShow>
+            <description/>
+            <displayType>radiobuttons</displayType>
+            <optionList/>
+            <validationActionList>
+                <showQuestion>
+                    <variable>continue</variable>
+                    <text>Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?</text>
+                    <ruleList>
+                        <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                    </ruleList>
+                </showQuestion>
+            </validationActionList>
+            <postShowPageActionList>
+                <exit>
+                    <ruleList>
+                        <compareText text="${continue}" logic="equals" value="no"/>
+                    </ruleList>
+                </exit>
+                <setInstallerVariable name="mysql_hostname" value="127.0.0.1">
+                    <ruleList>
+                        <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                    </ruleList>
+                </setInstallerVariable>
+            </postShowPageActionList>
+        </choiceParameter>
+        <stringParameter>
+            <title>${mysql_database_type} Information</title>
+            <name>mysql_client_hostname</name>
+            <ask>0</ask>
+            <validationActionList>
+                <throwError>
+                    <text>Please enter a valid IP address or hostname</text>
+                    <ruleList>
+                        <regExMatch text="${mysql_client_hostname}" pattern="^(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])$" logic="does_not_match"/>
+                        <regExMatch text="${mysql_client_hostname}" pattern="^([a-zA-Z]([a-zA-Z0-9\-]*[a-zA-Z0-9])*\.)*[a-zA-Z]([a-zA-Z0-9\-]*[a-zA-Z0-9])*$" logic="does_not_match"/>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+        </stringParameter>
+
+        <!-- Database information -->
+        <parameterGroup>
+            <name>mysql_information</name>
+            <explanation>Please enter your ${mysql_database_type} database information:</explanation>
+            <title>${mysql_database_type} Information</title>
+            <preShowPageActionList>
+                <!-- T13090 - This is done here because there is a bug in InstallBuilder. See the task for more information.
+                     T12835 - Suggests free port when the port by default is not available -->
+                <setInstallerVariable name="show_mysql_port" value="0"/>
+                <setInstallerVariable name="show_mysql_port" value="1">
+                    <ruleList>
+                        <portTest condition="cannot_bind" port="${mysql_port}"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <getFreePort variable="mysql_port" initialPort="3306" finalPort="65535">
+                    <ruleList>
+                      <portTest condition="cannot_bind" port="${mysql_port}"/>
+                      <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+                    </ruleList>
+                </getFreePort>
+                <!-- Show reasonable mysql binary directory when using external -->
+                <setInstallerVariable name="mysql_root_directory" value="${installdir}/@@XAMPP_MYSQL_FLAVOUR@@"/>
+                <setInstallerVariable name="mysql_root_directory" value="${env(SYSTEMDRIVE)}/mysql">
+                  <ruleList>
+                    <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                    <platformTest type="windows-x64"/>
+                  </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="mysql_root_directory" value="${env(SYSTEMDRIVE)}/mysql">
+                  <ruleList>
+                    <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                    <platformTest type="windows-x64"/>
+                  </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="mysql_root_directory" value="/usr">
+                  <ruleList>
+                    <platformTest type="linux-x64"/>
+                    <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                  </ruleList>
+                </setInstallerVariable>
+            </preShowPageActionList>
+            <parameterList>
+                <directoryParameter>
+                    <name>mysql_binary_directory</name>
+                    <description>${mysql_database_type} Binary Directory</description>
+                    <!-- if the explanation is maintained, then not everything fits on the screen in xwindow mode
+                    <explanation>Please specify the directory where the mysql and mysqladmin binaries are located</explanation> -->
+                    <value>${mysql_root_directory.unix}/bin</value>
+                    <default>${mysql_root_directory.unix}/bin</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <ask>yes</ask>
+                    <cliOptionShow>0</cliOptionShow>
+                    <mustBeWritable>0</mustBeWritable>
+                    <mustExist>1</mustExist>
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <width>35</width>
+                    <ruleList>
+                        <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                    </ruleList>
+                    <validationActionList>
+                        <throwError>
+                            <text>The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries.</text>
+                            <ruleList>
+                                <fileTest condition="not_exists" path="${mysql_binary_directory}/mysql.exe"/>
+                                <fileTest condition="not_exists" path="${mysql_binary_directory}/mysqladmin.exe"/>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries.</text>
+                            <ruleList>
+                                <fileTest condition="not_exists" path="${mysql_binary_directory}/mysql"/>
+                                <fileTest condition="not_exists" path="${mysql_binary_directory}/mysqladmin"/>
+                                <platformTest type="unix"/>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </directoryParameter>
+                <!-- hidden parameter
+                        1: Ask again for the MySQL Port
+                        0: Don't ask again for the MySQL Port -->
+                <booleanParameter name="mysql_server_port_show" default="0" ask="0" value="0"/>
+                <!-- hidden parameters for Port Autodetection
+                        1: Autodetect the Port for MySQL to listen
+                        0: Don't Autodetect the Port for MySQL to listen -->
+                <booleanParameter name="mysql_automatic_port_selection" default="0" ask="0" value="0"/>
+                <stringParameter name="mysql_initial_port" default="0" ask="0" value="0"/>
+                <stringParameter name="mysql_final_port" default="0" ask="0" value="0"/>
+                <!-- hidden parameter -->
+                <stringParameter name="mysql_database_type" default="MySQL" ask="0" value="MySQL"/>
+                <stringParameter>
+                    <name>mysql_hostname</name>
+                    <description>IP / Hostname</description>
+                    <explanation>Please enter the IP address or hostname for your database</explanation>
+                    <!-- localhost != 127.0.0.1 on Unix (127.0.0.1 means listen on TCP, localhost in socket) -->
+                    <value>localhost</value>
+                    <default>localhost</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>yes</ask>
+                    <cliOptionShow>0</cliOptionShow>
+                    <width>20</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Please enter a valid IP address or hostname</text>
+                            <ruleList>
+                                <regExMatch text="${mysql_hostname}" pattern="^(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])$" logic="does_not_match"/>
+                                <regExMatch text="${mysql_hostname}" pattern="^([a-zA-Z]([a-zA-Z0-9\-]*[a-zA-Z0-9])*\.)*[a-zA-Z]([a-zA-Z0-9\-]*[a-zA-Z0-9])*$" logic="does_not_match"/>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                    <ruleList>
+                        <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                    </ruleList>
+                </stringParameter>
+                <stringParameter>
+                    <name>mysql_port</name>
+                    <description>${mysql_database_type} Server port</description>
+                    <explanation>Choose a port that is not currently in use, such as port ${mysql_port}.</explanation>
+                    <value>3306</value>
+                    <default>3306</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>1</ask>
+                    <width>10</width>
+                    <validationActionList>
+                        <setInstallerVariable name="mysql_server_port_show" value="1"/>
+                        <setInstallerVariable name="project_reserved_ports" value=""/>
+                        <setInstallerVariable name="project_reserved_ports" value="${project.parameter(reserved_ports).value}">
+                            <ruleList>
+                                <isTrue value="${component(mysql).parameter(mysql_global_port_checking).value}"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <baseCheckPort serverName="MySQL" serverType="${mysql_installation_type}" serverPort="${mysql_port}" reservedPorts="${project_reserved_ports}">
+                          <ruleList>
+                            <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+                          </ruleList>
+                        </baseCheckPort>
+
+                        <setInstallerVariable name="project.parameter(reserved_ports).value" value="${project.parameter(reserved_ports).value}mysql_port ${mysql_port} ">
+                            <ruleList>
+                                <isTrue value="${component(mysql).parameter(mysql_global_port_checking).value}"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </validationActionList>
+                    <preShowPageActionList>
+                        <setInstallerVariableFromRegEx text="${project.parameter(reserved_ports).value}" pattern="mysql_port [0-9]+ " name="project.parameter(reserved_ports).value" substitution="">
+                            <ruleList>
+                                <isTrue value="${component(mysql).parameter(mysql_global_port_checking).value}"/>
+                            </ruleList>
+                        </setInstallerVariableFromRegEx>
+                    </preShowPageActionList>
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <ruleList>
+                        <isTrue value="${mysql_server_port_show}"/>
+                        <ruleGroup>
+                            <ruleList>
+                                <isTrue value="${component(mysql).parameter(mysql_global_port_checking).value}"/>
+                                <compareText text="${project.parameter(reserved_ports).value}" logic="contains" value=" ${mysql_port} "/>
+                            </ruleList>
+                        </ruleGroup>
+                        <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                        <isTrue value="${show_mysql_port}"/>
+                    </ruleList>
+                </stringParameter>
+            </parameterList>
+            <ruleList>
+                <isFalse value="${upgrade_stack}" />
+                <ruleGroup ruleEvaluationLogic="or">
+                    <ruleList>
+                         <isTrue value="${mysql_server_port_show}"/>
+                         <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                         <portTest condition="cannot_bind" port="${mysql_port}"/>
+                    </ruleList>
+                </ruleGroup>
+            </ruleList>
+        </parameterGroup>
+
+        <!-- Database Credentials -->
+        <parameterGroup>
+            <name>mysql_credentials</name>
+            <explanation/>
+            <title>${mysql_database_type} Credentials</title>
+            <parameterList>
+                <stringParameter>
+                    <name>mysql_root_user</name>
+                    <explanation>Please enter your database root username</explanation>
+                    <description>Username</description>
+                    <value>root</value>
+                    <default>root</default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>no</ask>
+                    <width>30</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>mysql_root_password</name>
+                    <explanation>Please enter your database root user password</explanation>
+                    <description>${mysql_database_type} Server root password</description>
+                    <cliOptionName>mysql_password</cliOptionName>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>yes</ask>
+                    <descriptionRetype>Re-enter password</descriptionRetype>
+                    <width>30</width>
+                    <validationActionList>
+                        <throwError>
+                            <text>Please use only ascii alphanumeric characters in your password</text>
+                            <ruleList>
+                                <isTrue value="${mysql_ascii_password}" />
+                                <isTrue value="${mysql_alphanumeric_password}"/>
+                                <stringTest text="${mysql_root_password}" type="not_empty"/>
+                                <ruleGroup>
+                                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                                    <ruleList>
+                                        <stringTest text="${mysql_root_password}" type="not_ascii" />
+                                        <stringTest text="${mysql_root_password}" type="not_alphanumeric"/>
+                                    </ruleList>
+                                </ruleGroup>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Please use only alphanumeric characters in your password</text>
+                            <ruleList>
+                                <isTrue value="${mysql_alphanumeric_password}"/>
+                                <isTrue value="${mysql_alphanumeric_password}"/>
+                                <stringTest text="${mysql_root_password}" type="not_alphanumeric"/>
+                                <stringTest text="${mysql_root_password}" type="not_empty"/>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>You need to provide a non-empty password</text>
+                            <ruleList>
+                                <stringTest text="${mysql_root_password}" type="empty"/>
+                                <isFalse value="${mysql_allow_empty_root_password}"/>
+                            </ruleList>
+                        </throwError>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="goback" value="no" />
+                                <showQuestion>
+                                    <text>For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?</text>
+                                    <variable>goback</variable>
+                                </showQuestion>
+                                <setInstallerVariable name="next_page" value="mysql_credentials">
+                                    <ruleList>
+                                        <compareText text="${goback}" value="yes" />
+                                    </ruleList>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <stringTest text="${mysql_root_password}" type="empty"/>
+                                <isTrue value="${mysql_allow_empty_root_password}"/>
+                                <isTrue value="${mysql_warn_empty_root_password}"/>
+                                <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+                            </ruleList>
+                        </actionGroup>
+                    </validationActionList>
+                    <postShowPageActionList>
+                        <actionGroup>
+                            <actionList>
+                                <actionGroup showMessageOnError="0" abortOnError="0">
+                                    <actionList>
+                                        <setInstallerVariable name="next_page" value="mysql_information"/>
+                                        <runProgram>
+                                            <program>${mysql_binary_directory}/mysql</program>
+                                            <programArguments>-u ${mysql_root_user} -p${mysql_root_password.password} -P${mysql_port} -h${mysql_hostname} -e "show databases;"</programArguments>
+                                            <ruleList>
+                                                <platformTest type="unix"/>
+                                                <stringTest text="${mysql_root_password}" type="not_empty" />
+                                            </ruleList>
+                                        </runProgram>
+                                        <runProgram>
+                                            <program>${mysql_binary_directory}/mysql</program>
+                                            <programArguments>-u ${mysql_root_user} --password="${mysql_root_password.password}" -P${mysql_port} -h${mysql_hostname} -e "show databases;"</programArguments>
+                                            <ruleList>
+                                                <platformTest type="unix"/>
+                                                <stringTest text="${mysql_root_password}" type="empty" />
+                                            </ruleList>
+                                        </runProgram>
+                                        <runProgram>
+                                            <program>${mysql_binary_directory}/mysql.exe</program>
+                                            <programArguments>-u ${mysql_root_user} "--password=${mysql_root_password.password}" -P${mysql_port} -h${mysql_hostname} -e "show databases;"</programArguments>
+                                            <ruleList>
+                                                <platformTest type="windows"/>
+                                            </ruleList>
+                                        </runProgram>
+                                        <setInstallerVariable name="next_page" value=""/>
+                                    </actionList>
+                                </actionGroup>
+                                <throwError>
+                                    <abortOnError>0</abortOnError>
+                                    <text>Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections.</text>
+                                    <ruleList>
+                                        <stringTest text="${next_page}" type="not_empty"/>
+                                    </ruleList>
+                                </throwError>
+                            </actionList>
+                            <ruleList>
+                                <!-- # 5135 The MySQL root password wasn't asked again if it was empty -->
+                                <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+                            </ruleList>
+                        </actionGroup>
+                    </postShowPageActionList>
+                </passwordParameter>
+            </parameterList>
+        </parameterGroup>
+        <parameterGroup>
+            <name>mysql_data</name>
+            <title>New Database</title>
+            <description/>
+            <explanation>Set the database name and user name which will be created or used.</explanation>
+            <value/>
+            <default/>
+            <ask>1</ask>
+            <cliOptionName/>
+            <leftImage/>
+            <parameterList>
+                <stringParameter>
+                    <name>mysql_database_name</name>
+                    <title/>
+                    <description>DB Name</description>
+                    <explanation/>
+                    <value>mysql_db</value>
+                    <default>mysql_db</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <ask>1</ask>
+                    <cliOptionName/>
+                    <leftImage/>
+                    <width>40</width>
+                </stringParameter>
+                <stringParameter>
+                    <name>mysql_database_username</name>
+                    <title/>
+                    <description>DB User Name</description>
+                    <explanation/>
+                    <value>mysql_user</value>
+                    <default>mysql_user</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <ask>1</ask>
+                    <cliOptionName/>
+                    <leftImage/>
+                    <width>40</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>mysql_database_password</name>
+                    <title/>
+                    <description>DB User Password</description>
+                    <explanation/>
+                    <value/>
+                    <default/>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <ask>1</ask>
+                    <cliOptionName/>
+                    <descriptionRetype>Re-enter</descriptionRetype>
+                    <leftImage/>
+                    <width>40</width>
+                    <validationActionList>
+                        <setInstallerVariable>
+                            <name>database_name</name>
+                            <persist>0</persist>
+                            <value>${mysql_database_name}</value>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>database_user</name>
+                            <persist>0</persist>
+                            <value>${mysql_database_username}</value>
+                        </setInstallerVariable>
+                        <setInstallerVariable>
+                            <name>database_password</name>
+                            <persist>0</persist>
+                            <value>${mysql_database_password}</value>
+                        </setInstallerVariable>
+                    </validationActionList>
+                </passwordParameter>
+            </parameterList>
+        </parameterGroup>
+    </parameterList>
+
+    <readyToInstallActionList>
+        <logMessage text="[mysql:ready-to-install] Running action list..."/>
+        <throwError>
+            <text>Please use only alphanumeric characters in your password</text>
+            <ruleList>
+                <isTrue value="${mysql_alphanumeric_password}"/>
+                <stringTest text="${mysql_root_password}" type="not_empty"/>
+                <stringTest text="${mysql_root_password}" type="not_alphanumeric"/>
+                <compareText text="${installer_ui}" value="unattended" logic="equals"/>
+            </ruleList>
+        </throwError>
+        <!-- T11748 - Escape password if a Basic Latin password is required -->
+        <escapeBasicLatin string="${mysql_root_password}" variable="mysql_root_password">
+            <ruleList>
+                <platformTest type="unix"/>
+                <isTrue value="${base_required_password_basiclatin}"/>
+            </ruleList>
+        </escapeBasicLatin>
+        <baseCheckPort serverName="MySQL" serverType="${mysql_installation_type}" serverPort="${mysql_port}" >
+            <ruleList>
+                <compareText text="${installer_ui}" logic="equals" value="unattended"/>
+                <isFalse value="${component(mysql).parameter(mysql_upgrade).value}" />
+                <isFalse value="${upgrade_stack}" />
+            </ruleList>
+        </baseCheckPort>
+        <!-- MySQL fails on Windows with drives bigger than 2TB, refs #12403 -->
+        <setInstallerVariable name="mysql_fix_2tb" value="0" />
+        <actionGroup>
+            <actionList>
+	              <getTotalDiskSpace path="${installdir}" units="GB" variable="totalDiskSpace" />
+	              <setInstallerVariable name="mysql_fix_2tb" value="1" >
+	                  <ruleList>
+	                      <compareValues value1="${totalDiskSpace}" value2="2000" logic="greater" />
+	                  </ruleList>
+	              </setInstallerVariable>
+            </actionList>
+            <ruleList>
+	              <platformTest type="windows" />
+	              <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+            </ruleList>
+        </actionGroup>
+        <setInstallerVariable name="database_vendor" value="mysql"/>
+        <setInstallerVariable name="database_language" value="sql"/>
+        <setInstallerVariable name="database_root_user" value="${mysql_root_user}"/>
+        <setInstallerVariable name="database_root_password" value="${mysql_root_password}" persist="1"/>
+        <setInstallerVariable name="database_hostname" value="${mysql_hostname}" persist="1"/>
+	      <!-- Regular staks will always use localhost a the client hostname -->
+        <setInstallerVariable name="database_client_hostname" value="${mysql_hostname}" persist="1"/>
+        <setInstallerVariable name="database_client_hostname" value="${mysql_client_hostname}">
+            <ruleList>
+                <compareText text="${mysql_client_hostname}" logic="does_not_equal" value="" />
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_port" value="${mysql_port}" persist="1"/>
+        <setInstallerVariable name="database_data_directory" value="${mysql_data_directory}"/>
+        <setInstallerVariable name="database_binary_directory" value="${mysql_binary_directory}" persist="1"/>
+        <setInstallerVariable name="mysql_configuration_directory" value="${mysql_root_directory}"/>
+        <setInstallerVariable name="mysql_configuration_file" value="${mysql_configuration_directory}/my.cnf" persist="1"/>
+        <setInstallerVariable name="mysql_configuration_file" value="${mysql_configuration_directory.dos}\my.ini" persist="1">
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_configuration_directory" value="${mysql_configuration_directory}" persist="1"/>
+        <setInstallerVariable name="database_installation_type" value="${mysql_installation_type}"/>
+        <setInstallerVariable name="database_upgrade" value="${mysql_upgrade}"/>
+        <setInstallerVariable name="database_root_directory" value="${mysql_root_directory}">
+            <ruleList>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_root_directory" value="${mysql_binary_directory}/..">
+            <ruleList>
+                <compareText text="${mysql_installation_type}" logic="equals" value="existing"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_name" value="${mysql_database_name}" persist="1"/>
+        <setInstallerVariable name="database_user" value="${mysql_database_username}"/>
+        <setInstallerVariable name="database_password" value="${mysql_database_password}"/>
+        <setInstallerVariable name="database_socket" value="" persist="1" />
+        <setInstallerVariable>
+            <name>mysql_socket</name>
+            <persist>1</persist>
+            <value>${mysql_root_directory}/tmp/mysql.sock</value>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_socket" value="${mysql_socket}">
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>mysql_arguments</name>
+            <value>-u ${mysql_root_user}</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>mysql_arguments</name>
+            <value>-u ${mysql_root_user} -S ${database_socket}</value>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_arguments" value="${mysql_arguments}" />
+        <setInstallerVariable name="database_client_binary" value="${mysql_binary_directory}/mysql" persist="1">
+            <ruleList>
+                <platformTest type="unix" />
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="database_client_binary" value="${mysql_binary_directory.unix}/mysql.exe" persist="1">
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="mysql_root_directory" value="${mysql_root_directory}" persist="1"/>
+        <setInstallerVariable name="MYSQL_PATH" value="${mysql_root_directory}/bin"/>
+        <setInstallerVariable name="MYSQL_PATH_WIN" value="${mysql_root_directory.dos}\bin"/>
+        <setInstallerVariable name="PATH" value="${MYSQL_PATH}:${PATH}"/>
+        <setInstallerVariable name="PATH_WIN" value="${MYSQL_PATH_WIN};${PATH_WIN}"/>
+        <setInstallerVariable name="MYSQL_LD_LIBRARY_PATH" value="${mysql_root_directory}/lib"/>
+        <setInstallerVariable name="LD_LIBRARY_PATH" value="${MYSQL_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}"/>
+        <setInstallerVariable name="MYSQL_DYLD_LIBRARY_PATH" value="${mysql_root_directory}/lib"/>
+        <setInstallerVariable name="DYLD_FALLBACK_LIBRARY_PATH" value="${MYSQL_DYLD_LIBRARY_PATH}:${DYLD_FALLBACK_LIBRARY_PATH}"/>
+        <setInstallerVariable name="MYSQL_ENV_VAR">
+            <value>##### MYSQL ENV #####
+
+</value>
+           <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="MYSQL_ENV_VAR">
+            <value>rem ##### MYSQL ENV #####
+
+</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="ENV_VAR">
+            <value>${MYSQL_ENV_VAR}${ENV_VAR}</value>
+        </setInstallerVariable>
+        <setInstallerVariable name="mysql_ready_to_install" value="1" />
+    </readyToInstallActionList>
+
+    <folderList>
+        <!-- Bundled MySQL Subcomponent -->
+        <folder name="programfiles" description="//Program Files" destination="${installdir}/@@XAMPP_MYSQL_FLAVOUR@@" platforms="all">
+            <distributionFileList>
+                <distributionDirectory origin="mysql/*" allowWildcards="1" />
+            </distributionFileList>
+            <actionList>
+                <logMessage text="[mysql:folder] Running action list..."/>
+                <actionGroup>
+                    <actionList>
+                        <substitute>
+                            <files>*/mysqlaccess;*/mysqld_safe;*/mysql-log-rotate;*/mysql.spec;*/mysql-test-run;*/FrontBase.benchmark;*/safe_mysqld;*/mysql.server;*/mysql_fix_privilege_tables;*/mysqld_multi</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>/usr/local/mysql</pattern>
+                                    <value>${installdir.unix}/@@XAMPP_MYSQL_FLAVOUR@@</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <substitute>
+                            <files>*</files>
+                            <type>exact</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                                    <value>${installdir.unix}/@@XAMPP_MYSQL_FLAVOUR@@</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_COMMON_ROOTDIR@@</pattern>
+                                    <value>${installdir}/common</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <logMessage text="[mysql:folder] Root directory: ${mysql_root_directory}"/>
+                        <substitute>
+                            <files>*/mysqld_safe;*/wrapper;*/my.cnf;*/mysql_config</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_PORT@@</pattern>
+                                    <value>${mysql_port}</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_DATADIR@@</pattern>
+                                    <value>${installdir.unix}/@@XAMPP_MYSQL_FLAVOUR@@/data</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>bind-address=127.0.0.1</pattern>
+                                    <value>#bind-address=127.0.0.1</value>
+			                              <ruleList>
+			                                  <isTrue value="${mysql_allow_all_remote_connections}" />
+			                              </ruleList>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <substitute>
+                            <files>*/my.ini</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_PORT@@</pattern>
+                                    <value>${mysql_port}</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                                    <value>"${installdir.unix}/@@XAMPP_MYSQL_FLAVOUR@@"</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_DATADIR@@</pattern>
+                                    <value>"${installdir.unix}/@@XAMPP_MYSQL_FLAVOUR@@/data"</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>user=root</pattern>
+                                    <value>user=${mysql_root_user}</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>bind-address\s*=\s*127.0.0.1</pattern>
+                                    <value>#bind-address=127.0.0.1</value>
+                                    <ruleList>
+                                        <isTrue value="${mysql_allow_all_remote_connections}" />
+                                    </ruleList>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+            <ruleList>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled"/>
+            </ruleList>
+        </folder>
+    </folderList>
+
+    <postInstallationActionList>
+        <logMessage text="[mysql:post-installation] Running action list..."/>
+        <logMessage text="[mysql:post-installation] Database settings:"/>
+        <logMessage text="[mysql:post-installation]  - mysql_init_data_dir:            ${mysql_init_data_dir}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_upgrade:                  ${mysql_upgrade}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_post_installation_script: ${mysql_post_installation_script}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_bundled_version:          ${mysql_bundled_version}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_data_directory:           ${mysql_data_directory}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_root_directory:           ${mysql_root_directory}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_installation_type:        ${mysql_installation_type}"/>
+        <logMessage text="[mysql:post-installation]  - mysql_fix_2tb:                  ${mysql_fix_2tb}"/>
+
+        <actionGroup>
+            <ruleList>
+                <isTrue value="${mysql_init_data_dir}"/>
+                <compareValues value1="${mysql_root_directory.unix}/data" logic="does_not_equal" value2="${mysql_data_directory.unix}"/>
+            </ruleList>
+            <actionList>
+                <createDirectory path="${mysql_data_directory}"/>
+                <copyFile>
+                    <origin>${mysql_root_directory}/data/*</origin>
+                    <destination>${mysql_data_directory}</destination>
+                </copyFile>
+            </actionList>
+        </actionGroup>
+
+        <setInstallerVariable name="component(mysql).parameter(mysql_bundled_version).value" value="${mariadb_bundled_version}" >
+            <ruleList>
+                <compareText value="${mariadb_bundled_version}" logic="does_not_equal" text="0" />
+            </ruleList>
+        </setInstallerVariable>
+
+        <mysqlSaveConfigurationToFile/>
+
+        <iniFileSet>
+            <ruleList>
+                <platformTest type="windows"/>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+            <file>${mysql_configuration_file}</file>
+            <section>mysqld</section>
+            <key>log-error</key>
+            <value>"${mysql_data_directory.unix}/mysqld.log"</value>
+        </iniFileSet>
+        <iniFileSet>
+            <file>${mysql_configuration_file}</file>
+            <section>mysqld</section>
+            <key>datadir</key>
+            <value>"${mysql_data_directory.unix}"</value>
+            <ruleList>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+        </iniFileSet>
+        <iniFileSet>
+            <file>${mysql_configuration_file}</file>
+            <section>mysqld</section>
+            <key>default-authentication-plugin</key>
+            <value>mysql_native_password</value>
+            <ruleList>
+                <compareText text="${mysql_database_type}" logic="does_not_equal" value="mariadb" nocase="1"/>
+                <compareVersions version1="${mysql_bundled_version}" logic="greater_or_equal" version2="8.0.0"/>
+            </ruleList>
+        </iniFileSet>
+
+        <mysqlSaveConfigurationToFile/>
+        <!-- UTF8MB4 Encoding Configuration  -->
+        <actionGroup>
+            <actionList>
+                <configureUtf8mb4Encoding mysqlCfgFile="${mysql_configuration_file}"/>
+            </actionList>
+            <ruleList>
+                <isTrue value="${mysql_configured_utf8mb4encoding}" />
+                <platformTest type="unix" />
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+        </actionGroup>
+        <!-- T17953 - Adjust innodb buffer pool size depending on the RAM -->
+        <actionGroup>
+            <actionList>
+                <mysqlGetInnoDBBufferPoolSize variable="innodb_buffer_pool_size"/>
+                <iniFileSet file="${mysql_configuration_file}" key="innodb_buffer_pool_size" section="mysqld" value="${innodb_buffer_pool_size}" />
+            </actionList>
+            <ruleList>
+                <isTrue value="${mysql_adjust_buffer_poolt_to_ram}"/>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+        </actionGroup>
+        <!-- T19991 - Set optimizer_search_depth to optimizer_search_depth_value -->
+        <actionGroup>
+            <ruleList>
+                <isTrue value="${mysql_optimizer_search_depth_enabled}"/>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+            <actionList>
+                <iniFileSet file="${mysql_configuration_file}" key="optimizer_search_depth" section="mysqld" value="${mysql_optimizer_search_depth}" />
+            </actionList>
+        </actionGroup>
+        <!-- T20082 - Set innodb_flush_log_at_trx_commit value -->
+        <actionGroup>
+            <ruleList>
+                <isTrue value="${innodb_flush_log_at_trx_commit_enabled}"/>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+            <actionList>
+                <iniFileSet file="${mysql_configuration_file}" key="innodb_flush_log_at_trx_commit" section="mysqld" value="${innodb_flush_log_at_trx_commit}" />
+            </actionList>
+        </actionGroup>
+        <!-- T20622 - Allow to disableskip-name-resolve option -->
+        <substitute files="${mysql_configuration_file}">
+            <ruleList>
+                <isFalse value="${skip_name_resolve_enabled}"/>
+                <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+            </ruleList>
+            <substitutionList>
+                <substitution pattern="skip-name-resolve" value="#skip-name-resolve"/>
+            </substitutionList>
+        </substitute>
+        <stringModify text="${mysql_database_type}" logic="tolower" variable="mysql_server_database_type" />
+        <!-- Linux List -->
+        <actionGroup>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+            <actionList>
+                <actionGroup>
+                    <actionList>
+                        <addUser>
+                            <username>mysql</username>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <ruleList>
+                                <userTest username="mysql" logic="not_exists"/>
+                            </ruleList>
+                        </addUser>
+                        <readFile>
+                            <path>/etc/group</path>
+                            <name>groupFile</name>
+                        </readFile>
+                        <setInstallerVariable name="mysql_group_exists" value="0" />
+                        <setInstallerVariable name="mysql_group_exists" value="1" >
+                            <ruleList>
+                                <compareText text="${groupFile}" logic="contains" value="mysql:"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <addGroup>
+                            <groupname>mysql</groupname>
+                            <ruleList>
+                                <isFalse value="${mysql_group_exists}" />
+                            </ruleList>
+                        </addGroup>
+                        <addGroupToUser>
+                            <username>mysql</username>
+                            <groupname>mysql</groupname>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <ruleList>
+                                <isFalse value="${mysql_group_exists}" />
+                            </ruleList>
+                        </addGroupToUser>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${installer_is_root_install}" logic="equals" value="1"/>
+                    </ruleList>
+                </actionGroup>
+                <logMessage text="[mysql:post-installation] Substituting @@XAMPP_MYSQL_ROOTDIR@@ with ${mysql_root_directory}"/>
+                <logMessage text="[mysql:post-installation] Substituting @@XAMPP_MYSQL_DATADIR@@ with ${mysql_data_directory}"/>
+                <logMessage text="[mysql:post-installation] Substituting @@XAMPP_MYSQL_PORT@@ with ${mysql_port}"/>
+                <logMessage text="[mysql:post-installation] Substituting @@XAMPP_INSTALLDIR@@ with ${installdir.unix}"/>
+                <logMessage text="[mysql:post-installation] Substituting @@XAMPP_MYSQL_DATABASE_TYPE@@ with @@XAMPP_MYSQL_FLAVOUR@@"/>
+                <substitute>
+                    <files>${mysql_root_directory}/scripts/myscript.sh; ${mysql_root_directory}/scripts/myscript_upgrade.sh; ${mysql_root_directory}/scripts/ctl.sh</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                            <value>${mysql_root_directory}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_DATADIR@@</pattern>
+                            <value>${mysql_data_directory}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_PORT@@</pattern>
+                            <value>${mysql_port}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                            <value>${installdir.unix}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_DATABASE_TYPE@@</pattern>
+                            <value>@@XAMPP_MYSQL_FLAVOUR@@</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <!-- Keep previous authentication https://mariadb.com/kb/en/library/authentication-from-mariadb-104/ -->
+                <substitute>
+                    <files>${mysql_root_directory}/scripts/myscript.sh</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>mysql_install_db</pattern>
+                            <value>mysql_install_db --auth-root-authentication-method=normal</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>UPDATE mysql.user </pattern>
+                            <value></value>
+                        </substitution>
+                        <substitution>
+                            <pattern> WHERE User='root'</pattern>
+                            <value></value>
+                        </substitution>
+                        <substitution>
+                            <pattern>^[^;]*FLUSH PRIVILEGES.*$</pattern>
+                            <value></value>
+                        </substitution>
+                    </substitutionList>
+                    <ruleList>
+                        <compareText text="${mysql_database_type}" logic="equals" value="mariadb" nocase="1"/>
+                        <compareVersions version1="${mysql_bundled_version}" logic="greater_or_equal" version2="10.4.0"/>
+                    </ruleList>
+                </substitute>
+            </actionList>
+        </actionGroup>
+        <actionGroup>
+            <ruleList>
+                <platformTest type="unix"/>
+                <isTrue value="${component(mysql).parameter(mysql_post_installation_script).value}"/>
+                <compareText text="${component(mysql).parameter(mysql_installation_type).value}" logic="equals" value="bundled"/>
+            </ruleList>
+            <actionList>
+                <actionGroup>
+                    <actionList>
+                        <logMessage text="[mysql:post-installation] Start: Installing and Initializing ${mysql_database_type} Database" />
+                        <runProgram progressText="Initializing ${mysql_database_type} Database. This could take a couple of minutes.">
+                            <program>${mysql_root_directory}/scripts/myscript.sh</program>
+                            <programArguments>${mysql_root_directory} "${mysql_root_password.password}"</programArguments>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>1</showMessageOnError>
+                        </runProgram>
+                        <actionGroup>
+                            <actionList>
+                                <foreach values="1 2 3 4 5" variables="iteration">
+                                    <actionList>
+                                        <showQuestion text="Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?" variable="retry_connection" >
+                                            <ruleList>
+                                                <isTrue value="${program_exit_code}" />
+                                                <compareText text="${program_stderr}" logic="contains" value="Can't connect to local ${mysql_database_type} server through socket" />
+                                            </ruleList>
+                                        </showQuestion>
+                                        <exit exitCode="1" >
+                                            <ruleList>
+                                                <isFalse value="${retry_connection}" />
+                                            </ruleList>
+                                        </exit>
+                                        <runProgram progressText="Initializing ${mysql_database_type} Database. This could take a couple of minutes.">
+                                            <program>${mysql_root_directory}/scripts/myscript.sh</program>
+                                            <programArguments>${mysql_root_directory} "${mysql_root_password.password}"</programArguments>
+                                            <abortOnError>0</abortOnError>
+                                            <showMessageOnError>0</showMessageOnError>
+                                        </runProgram>
+                                    </actionList>
+                                </foreach>
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${program_exit_code}" />
+                                <compareText text="${program_stderr}" logic="contains" value="Can't connect to local ${mysql_database_type} server through socket" />
+                                <isTrue value="${mysql_abort_installation_on_initialization_error}" />
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <showWarning text="${mysql_database_type} connection timed out. The installation has been stopped." />
+                                <exit exitCode="1" />
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${program_exit_code}" />
+                                <compareText text="${program_stderr}" logic="contains" value="Can't connect to local ${mysql_database_type} server through socket" />
+                                <isTrue value="${mysql_abort_installation_on_initialization_error}" />
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <runProgram>
+                                    <program>${mysql_root_directory}/bin/mysql</program>
+                                    <programArguments>-u ${mysql_root_user} -p${mysql_root_password.password} -e "CREATE USER 'root'@'%' IDENTIFIED BY '${mysql_root_password.password}';"</programArguments>
+                                </runProgram>
+                                <runProgram>
+                                    <program>${mysql_root_directory}/bin/mysql</program>
+                                    <programArguments>-u ${mysql_root_user} -p${mysql_root_password.password} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"</programArguments>
+                                </runProgram>
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${mysql_allow_all_remote_connections}" />
+                                <stringTest text="${mysql_root_password}" type="not_empty" />
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <runProgram>
+                                    <program>${mysql_binary_directory}/mysql</program>
+                                    <programArguments>-u ${mysql_root_user} --password="${mysql_root_password.password}" -e "CREATE USER 'root'@'%' IDENTIFIED BY '${mysql_root_password.password}';"</programArguments>
+                                </runProgram>
+                                <runProgram>
+                                    <program>${mysql_binary_directory}/mysql</program>
+                                    <programArguments>-u ${mysql_root_user} --password="${mysql_root_password.password}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"</programArguments>
+                                </runProgram>
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${mysql_allow_all_remote_connections}" />
+                                <stringTest text="${mysql_root_password}" type="empty" />
+                            </ruleList>
+                        </actionGroup>
+                        <logMessage text="[mysql:post-installation] End: Installing and Initializing ${mysql_database_type} Database" />
+                    </actionList>
+                    <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                    <ruleList>
+                        <isFalse value="${component(mysql).parameter(mysql_upgrade).value}" />
+                        <isTrue value="${mysql_init_data_dir}" />
+                    </ruleList>
+                </actionGroup>
+                <!-- Only in upgrades -->
+                <actionGroup>
+                    <actionList>
+                        <logMessage text="[mysql:post-installation] Start: Updating ${mysql_database_type} directory permissions" />
+                        <runProgram progressText="Updating mysql directory permissions">
+                            <program>${mysql_root_directory}/scripts/myscript_upgrade.sh</program>
+                            <programArguments>${mysql_root_directory}</programArguments>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>1</showMessageOnError>
+                        </runProgram>
+                        <logMessage text="[mysql:post-installation] End: Updating ${mysql_database_type} directory permissions" />
+                    </actionList>
+                    <ruleList>
+                        <isTrue value="${component(mysql).parameter(mysql_upgrade).value}" />
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionGroup>
+
+        <!-- Windows List -->
+        <actionGroup>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+            <actionList>
+                <logMessage text="[mysql:post-installation] Start: Installing and Initializing ${mysql_database_type} Database" />
+                <actionGroup>
+                    <ruleList>
+                        <isTrue value="${mysql_fix_2tb}" />
+                        <compareText text="${mysql_installation_type}" logic="equals" value="bundled" />
+                    </ruleList>
+                    <actionList>
+                        <logMessage text="[mysql:post-installation] Configuring database parameters..."/>
+                        <iniFileSet file="${mysql_configuration_file}" key="innodb_flush_method" section="mysqld" value="normal" />
+                        <iniFileSet file="${mysql_configuration_file}" key="character-set-server" section="mysqld" value="utf8mb4" />
+                        <iniFileSet file="${mysql_configuration_file}" key="collation-server" section="mysqld" value="utf8mb4_general_ci" />
+                        <iniFileSet file="${mysql_configuration_file}" key="default-character-set" section="client" value="utf8mb4" />
+                    </actionList>
+                </actionGroup>
+
+                <actionGroup>
+                    <ruleList>
+                        <isFalse value="${component(mysql).parameter(mysql_post_installation_script).value}"/>
+                        <isTrue value="${component(mysql).parameter(mysql_upgrade).value}"/>
+                    </ruleList>
+                    <actionList>
+                        <logMessage text="[mysql:post-installation] Initialization not required... Deleting myscript.bat file"/>
+                        <deleteFile path="${mysql_root_directory}/scripts/myscript.bat"/>
+                    </actionList>
+                </actionGroup>
+
+                <actionGroup>
+                    <ruleList>
+                        <isTrue value="${component(mysql).parameter(mysql_post_installation_script).value}"/>
+                        <compareText text="${component(mysql).parameter(mysql_installation_type).value}" logic="equals" value="bundled"/>
+                        <isFalse value="${component(mysql).parameter(mysql_upgrade).value}" />
+                    </ruleList>
+                    <actionList>
+                        <logMessage text="[mysql:post-installation] Initialization not required... Substituting parameters in myscript.bat file"/>
+                        <substitute>
+                            <files>${mysql_root_directory}/scripts/myscript.bat</files>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                                    <value>${mysql_root_directory}</value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>@@XAMPP_MYSQL_PORT@@</pattern>
+                                    <value>${mysql_port}</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        
+                        <!-- Keep previous authentication https://mariadb.com/kb/en/library/authentication-from-mariadb-104/ -->
+                        <substitute>
+                            <files>${mysql_root_directory}/scripts/myscript.bat</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>UPDATE mysql.user </pattern>
+                                    <value></value>
+                                </substitution>
+                                <substitution>
+                                    <pattern> WHERE User='root'</pattern>
+                                    <value></value>
+                                </substitution>
+                                <substitution>
+                                    <pattern>^[^;]*FLUSH PRIVILEGES.*$</pattern>
+                                    <value></value>
+                                </substitution>
+                            </substitutionList>
+                            <ruleList>
+                                <compareText text="${mysql_database_type}" logic="equals" value="mariadb" nocase="1"/>
+                                <compareVersions version1="${mysql_bundled_version}" logic="greater_or_equal" version2="10.4.0"/>
+                            </ruleList>
+                        </substitute>
+
+                        <copyFile>
+                            <origin>${mysql_configuration_file}</origin>
+                            <destination>${mysql_root_directory}/my.ini.bak</destination>
+                        </copyFile>
+
+                        <deleteFile path="${mysql_data_directory.dos}/*">
+                            <ruleList>
+                                <compareText text="${mysql_database_type}" logic="equals" value="mariadb" nocase="1"/>
+                                <platformTest type="windows" />
+                            </ruleList>
+                        </deleteFile>
+                        
+                        <runProgram>
+                            <program>${mysql_binary_directory.dos.unix}\mysql_install_db.exe</program>
+                            <programArguments>--port=${mysql_port} --datadir=${mysql_data_directory.dos}</programArguments>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>1</showMessageOnError>
+                            <ruleList>
+                                <compareText text="${mysql_database_type}" logic="equals" value="mariadb" nocase="1"/>
+                            </ruleList>
+                        </runProgram>
+
+                        <copyFile>
+                            <origin>${mysql_root_directory}/my.ini.bak</origin>
+                            <destination>${mysql_configuration_file}</destination>
+                        </copyFile>
+                        
+                        <runProgram progressText="Initializing ${mysql_database_type} Database. This could take a couple of minutes.">
+                            <program>${mysql_binary_directory.dos.unix}\mysqld.exe</program>
+                            <programArguments>"--defaults-file=${mysql_configuration_file}" --initialize-insecure</programArguments>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>1</showMessageOnError>
+                            <ruleList>
+                                <compareText text="${mysql_database_type}" logic="equals" value="mysql" nocase="1"/>
+                                <compareVersions version1="${mysql_bundled_version}" logic="greater_or_equal" version2="5.7"/>
+                            </ruleList>
+                        </runProgram>
+                        <runProgram abortOnError="0" showMessageOnError="1">
+                            <program>${mysql_binary_directory.dos.unix}\mysqld.exe</program>
+                            <programArguments>"--defaults-file=${mysql_configuration_file}" &amp;</programArguments>
+                        </runProgram>
+                        <waitForPort port="${mysql_port}" timeout="30000" progressText="Waiting for ${mysql_database_type} to Start."/>
+
+                        <runProgram abortOnError="1" showMessageOnError="1">
+                            <program>${mysql_root_directory}/scripts/myscript.bat</program>
+                            <programArguments>${mysql_root_password.password}</programArguments>
+                            <ruleList>
+                                <compareText text="${mysql_database_type}" logic="does_not_equal" value="mariadb" nocase="1"/>
+                            </ruleList>
+                        </runProgram>
+                        <!-- Ref T11748 - Support complex password for MariaDB based applications -->
+                        <runProgram abortOnError="1" showMessageOnError="1">
+                            <program>${mysql_root_directory.dos}/bin/mysql.exe</program>
+                            <programArguments>"--defaults-file=${mysql_configuration_file}" "-u${mysql_root_user}" "-e SET Password=password('${mysql_root_password.password}'); DELETE FROM mysql.user WHERE User=''; FLUSH PRIVILEGES;"</programArguments>
+                            <ruleList>
+                                <compareText text="${mysql_database_type}" logic="equals" value="mariadb" nocase="1"/>
+                            </ruleList>
+                        </runProgram>
+                        <wait ms="30000" progressText="Configuring database"/>
+                        <runProgram abortOnError="0" showMessageOnError="0">
+                            <progressText>Shutting down ${mysql_database_type}</progressText>
+                            <program>${mysql_binary_directory.dos.unix}\mysqladmin.exe</program>
+                            <programArguments>"--defaults-file=${mysql_configuration_file}" "-u${mysql_root_user}" "--password=${mysql_root_password.password}" shutdown</programArguments>
+                            <onErrorActionList>
+                                <logMessage text="[mysql:post-installation] Unable to shutdown ${mysql_database_tye}... Killing mysqld process" />
+                                <readFile path="${mysql_data_directory.dos}\${machine_hostname}.pid" name="mysql_pid" />
+                                <kill pid="${mysql_pid}"/>
+                            </onErrorActionList>
+                        </runProgram>
+                        <wait ms="20000"/>
+                        <logMessage text="[mysql:post-installation] End: Installing and Initializing ${mysql_database_type} Database" />
+                    </actionList>
+                </actionGroup>
+            </actionList>
+        </actionGroup>
+
+        <addLogrotate name="mysql" logs="${mysql_root_directory}/data/*.log" />
+        <addMonit name="mysql" pidFile="${mysql_root_directory}/data/mysqld.pid" />
+    </postInstallationActionList>
+</component>

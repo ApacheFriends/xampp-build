@@ -1,0 +1,983 @@
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr ""
+"${product_fullname} については、ブラウザで \n"
+"http://localhost:${web_server_port} にアクセスしてください。"
+
+msgid "To access the ${product_fullname}, go to\nhttp://${web_server_browser_domain}:${web_server_port} from your browser."
+msgstr ""
+"${product_fullname} については、ブラウザで \n"
+"http://${web_server_browser_domain}:${web_server_port} にアクセスしてください。"
+
+msgid "Please choose a number for Port"
+msgstr ""
+
+msgid "Default email provider:"
+msgstr ""
+
+msgid "Re-enter"
+msgstr "再入力"
+
+msgid "Creating Database"
+msgstr "データベース作成中"
+
+msgid "${mysql_database_type} Information"
+msgstr "${mysql_database_type} の情報"
+
+msgid "Please configure Drupal installation"
+msgstr ""
+
+msgid "Database Installation"
+msgstr "データベースのインストール"
+
+msgid "Drupal"
+msgstr ""
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr ""
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "${product_fullname} サービスをアンインストール"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr ""
+
+msgid "Configuration Report"
+msgstr ""
+
+msgid "GMail password"
+msgstr ""
+
+msgid "SSL Port"
+msgstr "SSL のポート番号"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "Bitnami クラウド・ホスティングについて、もっと詳しく"
+
+msgid "Login must not have capital letters"
+msgstr "ログイン名に大文字を含むことはできません。"
+
+msgid "Do you want to keep the redmine database? It will be saved at ${installdir}/backups"
+msgstr "redmine データベースを取っておきますか？ ${installdir}/backups に保存されます。"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr ""
+
+msgid "Starting Subversion server"
+msgstr "Subversion サーバを開始しています"
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+
+msgid "${product_fullname} admin user creation"
+msgstr "${product_fullname} の管理者アカウントを作成します。"
+
+msgid "Please enter your database root username"
+msgstr "データベースの root ユーザ名を入力してください。"
+
+msgid "Installing Thin Cluster as services."
+msgstr "Thin Cluster をサービスとしてインストールしています。"
+
+msgid "Please select which database configuration you wish to use"
+msgstr "使用したいデータベース構成を選択してください。"
+
+msgid "BitRock Nginx"
+msgstr ""
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "${mysql_database_type} の接続がタイムアウトしました。インストールを中止します。"
+
+msgid "New Database"
+msgstr "新規データベース"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr "インストールするパス名が長すぎます。最大長は ${base_installdir_max_characters} 文字です。"
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "サービスをシャットダウンしています (数分かかることがあります)"
+
+msgid "Unable to get free disk space."
+msgstr "ディスクの空き容量が不足しています。"
+
+msgid "Unable to start Apache"
+msgstr "Apache を開始できませんでした"
+
+# 77%
+#, fuzzy
+msgid "SMTP Host"
+msgstr "SMTP のポート番号"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr "mysql_port ${mysql_port} は使用できません。 他のものを選択してください。"
+
+msgid "DB Prefix"
+msgstr ""
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr ""
+"指定されたフォルダには ${bitnami_platform_name} "
+"の正しいインストールファイルが含まれていないようです。properties.ini がないか、正しくインストールされていません。"
+
+msgid "${mysql_database_type} Server root password"
+msgstr "${mysql_database_type} サーバの root パスワード"
+
+msgid "Select a folder"
+msgstr "フォルダを選択"
+
+msgid "Default mail server configuration."
+msgstr ""
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr "SQLite はオールインワンでサーバ不要、設定不要のトランザクショナルな SQL データベースエンジンのソフトウェアライブラリです。"
+
+msgid "Password must contain both letters and numbers"
+msgstr "パスワードは文字と数字の両方を含む必要があります。"
+
+msgid "IP / Hostname"
+msgstr "IP / ホスト名"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr "インストールディレクトリには、文字、数字、'/', '.', '-', '_' の記号のみを使用することができます。"
+
+msgid "Bitnami RubyStack"
+msgstr ""
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+"Bitnami クラウドホスティングは、あなたが Bitnami アプリケーションをクラウドで使用する環境を、新たに提供します。ご興味がありましたら、イ"
+"ンストールが完了するまでの間にぜひ以下の情報を確認ください。ブラウザの画面が開きます。"
+
+msgid "Hebrew"
+msgstr "Hebrew"
+
+msgid "French"
+msgstr "French"
+
+msgid "Bitnami Redmine Module"
+msgstr ""
+
+msgid "Login and password must not be the same"
+msgstr "ログイン名とパスワードを同じにすることはできません。"
+
+msgid "Secure connection"
+msgstr ""
+
+msgid "No, I will do this after installation"
+msgstr "いいえ、インストール後に自分でやります。"
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr "Apache を ${apache_unique_service_name} というサービス名でインストールしています。"
+
+msgid "Web Server Port"
+msgstr "Web サーバのポート番号"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr ""
+
+msgid "Removing Thin Cluster as services."
+msgstr "Thin Cluster をサービスから外しています。"
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr ""
+"このモジュールは Bitnami RubyStack ${bitnami_minimum_required_rubystack_version} "
+"以上を必要とします。${base_stack_name} ${base_stack_version} "
+"をインストールしようとしています。www.bitnami.com から Bitnami RubyStack の最新版をインストールしてください。"
+
+msgid "Launch ${product_fullname}"
+msgstr "${product_fullname} 起動"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "アスキーのアルファベットと数字文字のみが使用可能です。"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "アスキーのアルファベットと数字文字のみが使用可能です。"
+
+msgid "Stopping services."
+msgstr ""
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "バンドルされている ${mysql_database_type} データベースを使いたい"
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "${bitnami_platform_name} のインストールを含むフォルダを選択してください。"
+
+msgid "Set the database name and user name which will be created or used."
+msgstr "Set the database name and user name which will be created or used."
+
+msgid "${product_fullname} Subversion Service"
+msgstr "${product_fullname} Subversion サービス"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr ""
+"ポート ${apachethinmodule_port2} "
+"番を使用する権限がないか、すでに使用されているポート番号のようです。他のポート番号を指定してください。"
+
+msgid "Language for default data configuration"
+msgstr "データベースに保管する際の既定の言語"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr "インストーラは ${mysql_database_type} サーバに接続できませんでした。${mysql_database_type} が動作しているか、確認してください。"
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "保存されているデータもすべて削除しますか？"
+
+msgid "Development Settings"
+msgstr ""
+
+msgid "Your real name"
+msgstr "表示用氏名"
+
+msgid "Running database migration"
+msgstr "データベースのマイグレーションを実行中"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "正しい IP アドレスまたはホスト名を入力してください"
+
+msgid "WordPress"
+msgstr ""
+
+msgid "${mysql_database_type} Server port"
+msgstr "${mysql_database_type} サーバのポート番号"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+"パスワードは ${component(paramadminaccount).parameter(base_required_password_lengt"
+"h).value} 文字以上を必要とします。"
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr "Apache を ${apache_unique_service_name} というサービス名でインストールできませんでした。"
+
+msgid "Create databases for the rails project."
+msgstr ""
+
+msgid "Do you want to configure mail support?"
+msgstr ""
+
+msgid "This is required so your application can send notifications via email."
+msgstr ""
+
+msgid "Apache Web Server Port"
+msgstr "Apache Web サーバのポート番号"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr "${mysql_database_type} ソフトウェアは、高速かつ、マルチスレッド、マルチユーザで頑丈な、SQL データベースサーバを提供します。"
+
+msgid "Russian"
+msgstr "Russian"
+
+msgid "New Component"
+msgstr ""
+
+msgid "Web Server Domain"
+msgstr "Web サーバのドメイン"
+
+msgid "Thin Server Port"
+msgstr "Thin サーバのポート番号"
+
+msgid "Nginx Port"
+msgstr ""
+
+msgid "Installation folder cannot contain spaces."
+msgstr "インストールフォルダに空白を含むことはできません。"
+
+msgid "Custom"
+msgstr ""
+
+msgid "${product_fullname} database root user creation"
+msgstr ""
+
+msgid "Configure SMTP Settings"
+msgstr ""
+
+msgid "Stop ${product_fullname} service"
+msgstr "${product_fullname} サービスを停止"
+
+# 93%
+#, fuzzy
+msgid "Web Server port"
+msgstr "Web サーバのポート番号"
+
+msgid "German"
+msgstr "German"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr ""
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr "${bitnami_platform_name} の既存の ${mysql_database_type} のパスワードを入力してください"
+
+msgid "Manager tool"
+msgstr "管理者ツール"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr ""
+
+msgid "Yes, please prompt me"
+msgstr "はい。そうしてください"
+
+msgid "Czech"
+msgstr "Czech"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr ""
+
+msgid "Portuguese/Brazilian"
+msgstr "Portuguese/Brazilian"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "Chinese"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"64ビット環境に 32ビットのモジュールをインストールしようとしています。サポートされていません。適切なモジュールを bitnami.com "
+"からダウンロードしてください。"
+
+msgid "Launch Redmine application."
+msgstr "Redmine アプリケーション起動"
+
+msgid "Waiting Subversion to start."
+msgstr "Subversion 開始待ち"
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+"ユーザ名は ${component(paramadminaccount).parameter(base_required_username_length"
+").value} 文字より長い必要があります。"
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr "データベース作成中 / アカウントの初期化中。少し時間がかかるかもしれません。"
+
+msgid "Web Server domain"
+msgstr "Web サーバ・ドメイン"
+
+msgid "Bulgarian"
+msgstr "Bulgarian"
+
+msgid "DB User Password"
+msgstr "データベースのパスワード"
+
+msgid "Production settings"
+msgstr ""
+
+msgid "${product_fullname} Service"
+msgstr "${product_fullname} サービス"
+
+msgid "Bitnami WordPress Module"
+msgstr ""
+
+msgid "Installing RubyGems, please be patient."
+msgstr "RubyGems をインストールしています。しばらくお待ちください。"
+
+msgid "sphinx Server port"
+msgstr ""
+
+msgid "Populating database."
+msgstr ""
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr "セットアッププログラムはデータベースの作成をします。既存のものは上書きされます。続行しますか？"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "${product_fullname} ${mysql_database_type} サービス"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+"${installdir} には十分な空き容量がありません。 ${product_fullname} "
+"をインストールするには、${base_needed_space} MB 以上が必要です。"
+
+msgid "Licenses destination"
+msgstr ""
+
+msgid "Drupal packaged by Bitnami"
+msgstr ""
+
+msgid "SSL"
+msgstr ""
+
+msgid "Shutting down services."
+msgstr "サービスをシャットダウンしています"
+
+msgid "None"
+msgstr ""
+
+msgid "Sample data for Joomla (English)"
+msgstr ""
+
+msgid "Installing gems, please be patient."
+msgstr "gems をインストールしています。しばらくお待ちください。"
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "この ${mysql_database_type} データベースの情報を入力してください:"
+
+msgid "${product_fullname} Apache Service"
+msgstr "${product_fullname} Apache サービス"
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr ""
+
+msgid "Romanian"
+msgstr "Romanian"
+
+msgid "Dutch"
+msgstr "Dutch"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr ""
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+
+msgid "Populating database. This may take some time."
+msgstr "データベースにデータ登録中です。少し時間がかかるかもしれません。"
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "データベースの IP アドレスまたはホスト名を入力してください。"
+
+msgid "WordPress packaged by Bitnami"
+msgstr ""
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr "Subversion サーバが listen するポート番号を入力してください。"
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "この Apache サーバが listen するポートを入力してください。"
+
+msgid "Hostname"
+msgstr ""
+
+msgid "Create Admin account"
+msgstr "管理者アカウントの作成"
+
+msgid "English"
+msgstr "English"
+
+msgid "TLS"
+msgstr ""
+
+msgid "Re-enter password"
+msgstr "パスワード再入力"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr ""
+"パス名 ${mysql_binary_directory} が正しくないようです。 ディレクトリに ${mysql_database_type} "
+"の実行ファイルが含まれているか確認してください。"
+
+msgid "Blog name"
+msgstr ""
+
+msgid "DB User Name"
+msgstr "データベースのユーザ名"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr ""
+
+msgid "Login"
+msgstr "ログイン名"
+
+msgid "Thin Processes"
+msgstr "Thin プロセス"
+
+msgid "Install ${product_fullname} as service"
+msgstr "${product_fullname} をサービスとしてインストールしています。"
+
+msgid "Restarting Apache"
+msgstr "Apache の再起動"
+
+msgid "Installation Report"
+msgstr ""
+
+msgid "Start ${product_fullname} service"
+msgstr "${product_fullname} サービス開始"
+
+msgid "Quick Start Guide"
+msgstr ""
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr "選択したアプリケーションのカスタマイズ方法を表示しますか？"
+
+msgid "Select your language for default data configuration:"
+msgstr "データベース設定の規定値として使用する言語を選択してください:"
+
+msgid "Please select the use of this Stack"
+msgstr ""
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr ""
+
+msgid "Serbian"
+msgstr "Serbian"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr ""
+
+msgid "Swedish"
+msgstr "Swedish"
+
+msgid "${mysql_database_type} Service"
+msgstr "${mysql_database_type} サービス"
+
+# 76%
+#, fuzzy
+msgid "GMail address"
+msgstr "Email アドレス"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "${product_fullname} をアンインストール"
+
+msgid "Portuguese"
+msgstr "Portuguese"
+
+msgid "Updating mysql directory permissions"
+msgstr "${mysql_database_type}ディレクトリパーミッションを更新中"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr ""
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr ""
+"Subversion サーバを ${SubversionUniqueServiceName} という名前のサービスとしてインストールしています。"
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr "ポートを使用する権限がないか、ポートがすでに使用されています。他のポート番号を指定してください。"
+
+msgid "Unable to add text to httpd.conf"
+msgstr "httpd.conf に追加できませんでした。"
+
+msgid "Subversion Server Port"
+msgstr "Subversion サーバのポート番号"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr ""
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr ""
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr ""
+"ポート ${apachethinmodule_port1} "
+"番を使用する権限がないか、すでに使用されているポート番号のようです。他のポート番号を指定してください。"
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr ""
+"Redmine はプロジェクト管理用の柔軟なWebアプリケーションです。Ruby on Rails "
+"フレームワークを使用して記述されており、クロスプラットフォーム、クロスデータベースで動作します。"
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr ""
+
+msgid "Thin port nr 1"
+msgstr "Thin ポートその1"
+
+msgid "GMail"
+msgstr ""
+
+msgid "Thin port nr 2"
+msgstr "Thin ポートその2"
+
+msgid "Number of thin servers"
+msgstr "thin サービスの数"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "${mysql_database_type} の認証情報"
+
+msgid "Please enter a password"
+msgstr "パスワードを入力してください"
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr ""
+
+msgid "Starting application."
+msgstr "アプリケーションを開始しています。"
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "${mysql_database_type}サーバに接続するには。正しいパスワードを設定してください。"
+
+msgid "DB Name"
+msgstr "データベース名"
+
+msgid "Hostname or IP Address"
+msgstr ""
+
+msgid "Korean"
+msgstr "韓国語"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr ""
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "${mysql_database_type} を ${mysql_unique_service_name} というサービス名でインストールできませんでした。"
+
+msgid "Password"
+msgstr "パスワード"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr "指定されたポートは使用できません。他のポートを指定してください。"
+
+msgid "Select installation type"
+msgstr "インストールタイプ選択"
+
+msgid "Installation type"
+msgstr ""
+
+msgid "Use ${product_fullname}"
+msgstr "${product_fullname} を使用する"
+
+msgid "Installation folder"
+msgstr ""
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "${mysql_database_type} 開始待ち"
+
+msgid "PhpMyAdmin"
+msgstr ""
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr ""
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr ""
+"システムリソース(CPUまたはメモリ)の不足により、ローカルの ${mysql_database_type} サーバへ接続できません。${mysql_database_type} "
+"への接続をリトライして、インストールを続行しますか？"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "${mysql_database_type} 開始待ち"
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr ""
+"インストーラは、${installdir} 用の空き領域を確保することができませんでした。${product_fullname} "
+"に必要な空き領域があるか確認してください。"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "${mysql_database_type} データベースを初期化しています。この処理には数分かかることがあります。"
+
+msgid "Please enter your database root user password"
+msgstr "データベースの root ユーザのパスワードを入力してください。"
+
+msgid "Memcached Server port"
+msgstr ""
+
+msgid "Starting Apache."
+msgstr "Apache を開始しています。"
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "ファイルに書込できませんでした: ${apache_server_directory}/conf/ssi.conf"
+
+msgid "Please configure WordPress installation"
+msgstr ""
+
+msgid "Subversion Server port"
+msgstr "Subversion サーバのポート番号"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+"データベース ${mysql_hostname}:${mysql_port} に接続できません。パラメータが正しいか、${mysql_database_type}の構成で TCP/IP "
+"接続を受け付けるようになっているか、確認してください。"
+
+msgid "Please select the ports for Thin servers. Those will be added to the Apache configuration file."
+msgstr "Thin サーバーのポート番号を選択してください。この情報は Apache の設定ファイルに追加されます。"
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr "あなたのスタックに Ruby がインストールされていません。このモジュールは Ruby を必要とします。"
+
+msgid "Polish"
+msgstr "Polish"
+
+msgid "This will create a sample Rails project."
+msgstr ""
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr "${mysql_database_type} を ${mysql_unique_service_name} というサービス名でインストールしています。"
+
+msgid "Bitnami Drupal Module"
+msgstr ""
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "データベースを初期化しています。しばらくかかるかもしれません。"
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr "${appName} データベースを取っておきますか？ ${installdir}/backups に保存されます。"
+
+msgid "Joomla!"
+msgstr ""
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr ""
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "${mysql_database_type} をシャットダウンしています"
+
+msgid "${product_fullname} Thin Service"
+msgstr "${product_fullname} Thin サービス"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "選択したフォルダは空ではありません。別のフォルダを指定してください。"
+
+msgid "Site name"
+msgstr ""
+
+msgid "Japanese"
+msgstr "日本語"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr "Web サーバのドメイン名またはIPアドレスを入力してください (www.example.com)。"
+
+msgid "You need to provide a non-empty password"
+msgstr "パスワードは空にできません"
+
+msgid "Configuring database"
+msgstr "データベース構成中"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr ""
+
+msgid "SMTP Port"
+msgstr "SMTP のポート番号"
+
+msgid "Chinese/Taiwan"
+msgstr "Chinese/Taiwan"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr ""
+"セキュリティ上、${mysql_database_type} の root ユーザパスワードを空にしないことをお勧めします。${mysql_database_type} の root ユーザのパスワードを設定しますか？"
+
+msgid "www.bitnami.com"
+msgstr ""
+
+msgid "Email Address"
+msgstr "Email アドレス"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr ""
+
+msgid "Sample Rails Application"
+msgstr ""
+
+msgid "Italian"
+msgstr "Italian"
+
+msgid "Ruby On Rails"
+msgstr ""
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr ""
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+
+msgid "Please enter a password to use for the database root user"
+msgstr ""
+
+msgid "Creating web application."
+msgstr ""
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "${product_fullname} をインストールするフォルダを選択してください。"
+
+msgid "Please configure Joomla! installation"
+msgstr ""
+
+msgid "Uninstalling services."
+msgstr ""
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr ""
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr ""
+
+msgid "Redmine packaged by Bitnami"
+msgstr ""
+
+msgid "Bitnami Website"
+msgstr "Bitnami ウェブサイト"
+
+msgid "Username"
+msgstr "ユーザ名"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"32ビット環境に 64ビットのモジュールをインストールしようとしています。サポートされていません。bitnami.com "
+"から適切なモジュールをダウンロードしてください。"
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "アルファベットと数字文字のみが使用可能です"
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "アルファベットと数字文字のみが使用可能です"
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "アルファベットと数字文字のみが使用可能です"
+
+msgid "Please confirm your password"
+msgstr "確認のためにパスワードをもう一度入れてください"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr "この Apache サーバが SSL アクセスに使用するポート番号を入力してください。"
+
+msgid "Spanish"
+msgstr "Spanish"
+
+#~ msgid "Bitnami console"
+#~ msgstr "Bitnami コンソール"
+
+#~ msgid "Include system path in environment"
+#~ msgstr "システムのパスを環境変数に追加する"
+
+#~ msgid "SUBVERSION server"
+#~ msgstr "SUBVERSION サーバ"
+
+#~ msgid "Enter the web page name (www.example.com/web_page_name)"
+#~ msgstr "Webページ名を入力してください (www.example.com/web_page_name)。"
+
+#~ msgid "${product_fullname} SMTP configuration."
+#~ msgstr "${product_fullname} SMTP 構成。"
+
+#~ msgid "SMTP Configuration"
+#~ msgstr "SMTP 構成"
+
+#~ msgid "Graphical Manager"
+#~ msgstr "GUI管理ツール"
+
+#~ msgid "RubyGems"
+#~ msgstr "RubyGems"
+
+#~ msgid "Full name of the platform in which the module will be installed"
+#~ msgstr "モジュールがインストールされたプラットフォームのフルネーム"
+
+#~ msgid "SMTP Domain"
+#~ msgstr "SMTP ドメイン"
+
+#~ msgid "Initial Settings"
+#~ msgstr "初期設定"
+
+#~ msgid "Apache Service"
+#~ msgstr "Apache サービス"
+
+#~ msgid "standalone html site"
+#~ msgstr "スタンドアロン html サイト"
+
+# 88%
+#, fuzzy
+#~ msgid "Php installation directory"
+#~ msgstr "PERL インストールディレクトリ"
+
+#~ msgid "yes"
+#~ msgstr "はい"
+
+#~ msgid "SMTP Address"
+#~ msgstr "SMTP アドレス"
+
+#~ msgid "SMTP User Name"
+#~ msgstr "SMTP ユーザ名"
+
+#~ msgid "no"
+#~ msgstr "いいえ"
+
+#~ msgid "Configure Apache to use a thin cluster."
+#~ msgstr "Aoache を thin クラスタを使用するよう構成する。"
+
+#~ msgid "Apache User"
+#~ msgstr "Apache ユーザ"
+
+#~ msgid "PERL installation directory"
+#~ msgstr "PERL インストールディレクトリ"
+
+#~ msgid "Bitnami Shortcuts"
+#~ msgstr "Bitnami ショートカット"
+
+#~ msgid "Shortcuts Images"
+#~ msgstr "ショートカット画像"
+
+#~ msgid "Gems"
+#~ msgstr "Gems"
+
+#~ msgid "Script for start/stop Services"
+#~ msgstr "サービスを開始／停止するスクリプト"
+
+# 92%
+#, fuzzy
+#~ msgid "Install ${product_fullname} as a service?"
+#~ msgstr "${product_fullname} をサービスとしてインストールしています。"
+
+#~ msgid "Apache Thin Module Properties"
+#~ msgstr "Apache Thin Module プロパティ"
+
+#~ msgid "Include system ld library path in environment"
+#~ msgstr "システムの ld ライブラリのパスを環境変数に追加する"
+
+#~ msgid "Apache Configuration directory"
+#~ msgstr "Apache 構成のディレクトリ"
+
+#~ msgid "README File"
+#~ msgstr "README ファイル"
+
+#~ msgid "Do you want to configure SMTP server?"
+#~ msgstr "SMTP サーバの設定を行いますか？"
+
+# 94%
+#, fuzzy
+#~ msgid "Thin port nr 3"
+#~ msgstr "Thin ポートその1"
+
+# 94%
+#, fuzzy
+#~ msgid "Thin port nr 4"
+#~ msgstr "Thin ポートその1"
+
+# 94%
+#, fuzzy
+#~ msgid "Thin port nr 5"
+#~ msgstr "Thin ポートその1"
+
+#~ msgid "SMTP Password"
+#~ msgstr "SMTP パスワード"
+
+#~ msgid "Parameters"
+#~ msgstr "パラメータ"
+
+#~ msgid "Admin Account"
+#~ msgstr "管理者アカウント"
+
+#~ msgid "Web Page Name"
+#~ msgstr "Web ページ名"
+
+# 90%
+#, fuzzy
+#~ msgid "Please introduce a valid password to connect to the PostgreSQL server."
+#~ msgstr "${mysql_database_type}サーバに接続するには。正しいパスワードを設定してください。"
+
+# 84%
+#, fuzzy
+#~ msgid "Please enter the existing PostgreSQL password for ${bitnami_platform_name}"
+#~ msgstr "${bitnami_platform_name} の既存の ${mysql_database_type} のパスワードを入力してください"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""

@@ -1,0 +1,29 @@
+<component>
+    <name>xampp_mercury</name>
+    <description>Mercury Mail Server</description>
+    <canBeEdited>1</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+
+
+    <folderList>
+        <folder>
+          <description>//XAMPP Files</description>
+          <destination>${installdir}/</destination>
+          <name>xampp_mercury_folder</name>
+          <distributionFileList>
+            <distributionDirectory origin="xampp/MercuryMail"/>
+          </distributionFileList>
+	  <actionList>
+	    <createDirectory path="${installdir}/MercuryMail/SCRATCH" />
+	    <createDirectory path="${installdir}/MercuryMail/SCRATCH/MERCURYB" />
+	    <createDirectory path="${installdir}/MercuryMail/SCRATCH/MERCURYD" />
+	    <createDirectory path="${installdir}/MercuryMail/SCRATCH/MERCURYI" />
+	    <createDirectory path="${installdir}/MercuryMail/SCRATCH/MERCURYP" />
+	    <addDirectoriesToUninstaller files="${installdir}/MercuryMail/SCRATCH" addContents="1"/>
+	  </actionList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+    </postInstallationActionList>
+</component>

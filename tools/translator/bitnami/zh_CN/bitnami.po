@@ -1,0 +1,984 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-07 13:07+0200\n"
+"PO-Revision-Date: 2011-12-17 17:00+0200\n"
+"Last-Translator: Dengkangming <Dkm716@yahoo.com.cn>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.1.6\n"
+
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr "访问 ${product_fullname}, 从你的浏览器访问http://localhost:${web_server_port}。"
+
+msgid "Please choose a number for Port"
+msgstr "请选择一个端口号"
+
+msgid "Default email provider:"
+msgstr "默认电子邮件提供商："
+
+msgid "Re-enter"
+msgstr "重新输入"
+
+msgid "Creating Database"
+msgstr "创建数据库"
+
+msgid "${mysql_database_type} Information"
+msgstr "${mysql_database_type}信息"
+
+msgid "Please configure Drupal installation"
+msgstr "请配置Drupal安装"
+
+msgid "Database Installation"
+msgstr "数据库安装"
+
+msgid "Drupal"
+msgstr "Drupal"
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr "你要保留Joomla！数据库？它将被保存在${installdir}/backups"
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "卸载${product_fullname}服务"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr "Joomla ${project.version} packaged by Bitnami"
+
+msgid "Configuration Report"
+msgstr "配置报告"
+
+msgid "GMail password"
+msgstr "GMail 密码"
+
+msgid "SSL Port"
+msgstr "SSL 端口"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "了解更多有关Bitnami云主机"
+
+msgid "Login must not have capital letters"
+msgstr "登录不可以有大写字母"
+
+msgid "Do you want to keep the redmine database? It will be saved at ${installdir}/backups"
+msgstr "你要保留Redmine的数据库？它将被保存在"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "我想使用现有的${mysql_database_type}数据库"
+
+msgid "Starting Subversion server"
+msgstr "启动Subversion服务器"
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr "请输入Apache Web服务器侦听的端口。不应使用任何其他服务器上运行的进程使用的端口号。"
+
+msgid "${product_fullname} admin user creation"
+msgstr "${product_fullname} admin 用户创建"
+
+msgid "Please enter your database root username"
+msgstr "请输入你的数据库root用户名"
+
+msgid "Installing Thin Cluster as services."
+msgstr "安装Thin集群为服务。"
+
+msgid "Please select which database configuration you wish to use"
+msgstr "请选择您要使用的数据库配置"
+
+msgid "BitRock Nginx"
+msgstr "BitRock Nginx"
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"安装程序检测到安装文件夹 ${app(wordpress).installdir} "
+"不为空。如果继续安装可能会破坏现有程序，请确保旧版本应用程序已卸载。你要继续吗？"
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"安装程序检测到安装文件夹 ${app(joomla).installdir} "
+"不为空。如果继续安装可能会破坏现有程序，请确保旧版本应用程序已卸载。你要继续吗？"
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "${mysql_database_type}连接超时，安装已停止。"
+
+msgid "New Database"
+msgstr "新建数据库"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr "安装目录路径太长。允许的最大字符数是 ${base_installdir_max_characters}。"
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "关闭服务（这可能需要几分钟）"
+
+msgid "Unable to get free disk space."
+msgstr "无法获得免费的磁盘空间。"
+
+msgid "Unable to start Apache"
+msgstr "无法启动Apache"
+
+msgid "SMTP Host"
+msgstr "SMTP 主机"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+"Ruby on Rails "
+"是一个使用Ruby语言写的开源Web应用框架，它是严格按照MVC结构开发的。它努力使自身保持简单，来使实际的应用开发时的代码更少，使用最少的配置。"
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr "无法绑定 mysql_port 到 ${mysql_port}。请选择另一个。"
+
+msgid "DB Prefix"
+msgstr "DB前缀"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr "文件夹下未正确安装${bitnami_platform_name}。poperties.ini文件丢失或未正确安装。"
+
+msgid "${mysql_database_type} Server root password"
+msgstr "${mysql_database_type}服务器的root密码"
+
+msgid "Select a folder"
+msgstr "选择一个文件夹"
+
+msgid "Default mail server configuration."
+msgstr "默认邮件服务器的配置。"
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr "SQLite是一个自包含、无服务器、零配置、事务性SQL数据库引擎的软件库。"
+
+msgid "Password must contain both letters and numbers"
+msgstr "密码必须是字母与数字的组合"
+
+msgid "IP / Hostname"
+msgstr "IP/主机名"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr "安装目录必须是一个仅含字母、数字和'/'、 '.'、'-' 、'_'字符的路径"
+
+msgid "Bitnami RubyStack"
+msgstr "Bitnami RubyStack"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+"Bitnami云部署提供了一种在云端部署你的BitnNami应用的新方式。在等待安装完成的过程中，如果想更多了解Bitnami，勾选下面会出现一个浏览器"
+"窗口。"
+
+msgid "Hebrew"
+msgstr "希伯来语"
+
+msgid "French"
+msgstr "法语"
+
+msgid "Bitnami Redmine Module"
+msgstr "Bitnami Redmine Module"
+
+msgid "Login and password must not be the same"
+msgstr "用户名和密码必须不相同"
+
+msgid "Secure connection"
+msgstr "安全连接"
+
+msgid "No, I will do this after installation"
+msgstr "不，安装后再执行。"
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr "将Apache安装成名为 ${apache_unique_service_name}的一个Windows服务。"
+
+msgid "Web Server Port"
+msgstr "Web服务器端口"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr "安装程序将以你的前缀创建常用的*_production, *_development和*_test 库。"
+
+msgid "Removing Thin Cluster as services."
+msgstr "删除Thin Cluster作为服务。"
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr ""
+"你试图在${base_stack_name} ${base_stack_version}上安装本模块，该模块至少要求最新的Bitnami "
+"RubyStack "
+"${bitnami_minimum_required_rubystack_version}，可从www.bitnami.com下载最新版的Bitnami "
+"RubyStack 。"
+
+msgid "Launch ${product_fullname}"
+msgstr "调用 ${product_fullname}"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "请仅使用文字数字ASCII字符"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "请仅使用文字数字ASCII字符"
+
+msgid "Stopping services."
+msgstr "停止服务"
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "希望使用绑定的${mysql_database_type}数据库"
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "请选择${bitnami_platform_name}的安装目录"
+
+msgid "Set the database name and user name which will be created or used."
+msgstr "设置将创建或使用的数据库名和用户名"
+
+msgid "${product_fullname} Subversion Service"
+msgstr "${product_fullname} Subversison服务"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr "无绑定端口${apachethinmodule_port2}的权限或端口已被其它程序占用，请选择另外的端口。"
+
+msgid "Language for default data configuration"
+msgstr "缺省数据配置语言"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr "安装程序不能连接到${mysql_database_type}服务器，确认${mysql_database_type}已运行。"
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "是否也删除所有保存数据文件？"
+
+msgid "Development Settings"
+msgstr "开发设置"
+
+msgid "Your real name"
+msgstr "您的真实姓名"
+
+msgid "Running database migration"
+msgstr "正执行数据库迁移"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "请输入正确的IP地址或主机名"
+
+msgid "WordPress"
+msgstr "wordPress"
+
+msgid "${mysql_database_type} Server port"
+msgstr "${mysql_database_type}服务端口"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+"密码长度必须大于等于 ${component(paramadminaccount).parameter(base_required_password_l"
+"ength).value}"
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr "无法作为服务名为${apache_unique_service_name}来安装Apache"
+
+msgid "Create databases for the rails project."
+msgstr "创建rails项目的数据库"
+
+msgid "Do you want to configure mail support? This is required so your application can send notifications via email."
+msgstr "你要配置邮件支持吗？这是必需的，这样应用程序可以通过电子邮件发送通知。"
+
+msgid "Apache Web Server Port"
+msgstr "Apache Web 服务端口"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr "${mysql_database_type}提供了一个非常快的、多线程、多用户和健壮的SQL数据库服务器"
+
+msgid "Russian"
+msgstr "俄语"
+
+msgid "New Component"
+msgstr "新组件"
+
+msgid "Web Server Domain"
+msgstr "Web服务器域名"
+
+msgid "Thin Server Port"
+msgstr "Thin服务器端口"
+
+msgid "Nginx Port"
+msgstr "Nginx端口"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "安装文件夹不能包含空格"
+
+msgid "Custom"
+msgstr "自定义"
+
+msgid "${product_fullname} database root user creation"
+msgstr "${product_fullname}数据库的root用户创建"
+
+msgid "Configure SMTP Settings"
+msgstr "配置SMTP设置"
+
+msgid "Stop ${product_fullname} service"
+msgstr "停止${product_fullname}服务"
+
+msgid "Web Server port"
+msgstr "Web服务端口"
+
+msgid "German"
+msgstr "德语"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "不能获得${mysql_database_type}文件${sqlFile}：不存在"
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr "请输入${bitnami_platform_name}现在的${mysql_database_type}密码"
+
+msgid "Manager tool"
+msgstr "管理器工具"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr ""
+"如果在公共服务器上部署这个协议栈，建议结合安全性和性能来进行文件权限和配置设置。安装某些插件、主题和更新，可能需要手动更改，或安装如FTP等另外的服务。"
+
+msgid "Yes, please prompt me"
+msgstr "是的，请提示我"
+
+msgid "Czech"
+msgstr "捷克语"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr "无效的前缀。请选择一个不同的。"
+
+msgid "Portuguese/Brazilian"
+msgstr "葡萄牙语/巴西"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "中文"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "不支持在64位的系统上安装32位的模块。请从bitnami.com下载正确的模块"
+
+msgid "Launch Redmine application."
+msgstr "启动Redmine应用程序。"
+
+msgid "Waiting Subversion to start."
+msgstr "等待Subversion启动"
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+"用户名的长度必须大于${component(paramadminaccount).parameter(base_required_username_le"
+"ngth).value}"
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr "创建数据库/初始化用户帐号需要一些时间"
+
+msgid "Web Server domain"
+msgstr "Web服务器域名"
+
+msgid "Bulgarian"
+msgstr "保加利亚语"
+
+msgid "DB User Password"
+msgstr "DB用户密码"
+
+msgid "Production settings"
+msgstr "产品设置"
+
+msgid "${product_fullname} Service"
+msgstr "${product_fullname}服务"
+
+msgid "Bitnami WordPress Module"
+msgstr "Bitnami WordPress模块"
+
+msgid "Installing RubyGems, please be patient."
+msgstr "RubyGems安装中，请耐心等待。"
+
+msgid "sphinx Server port"
+msgstr "sphinx服务器端口"
+
+msgid "Populating database."
+msgstr "写入数据库"
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr "安装程序将尝试安装新的数据库并覆盖已有的副本。希望继续吗？"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "${product_fullname} ${mysql_database_type}服务"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+"${installdir}下没有足够的空闲容量，至少需要${base_needed_space} MB 才能安装${product_fullname}"
+
+msgid "Licenses destination"
+msgstr "许可证目的地"
+
+msgid "Drupal packaged by Bitnami"
+msgstr "Bitnami Drupal协议栈"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Shutting down services."
+msgstr "关闭服务"
+
+msgid "None"
+msgstr "没有"
+
+msgid "Installing gems, please be patient."
+msgstr "正在安装gems，请耐心等待"
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "请输入${mysql_database_type}数据库信息"
+
+msgid "${product_fullname} Apache Service"
+msgstr "${product_fullname} Apache 服务"
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr "主机名用于创建内部URL，不正确的主机名可能导致无法从其他计算机访问WordPress"
+
+msgid "Romanian"
+msgstr "罗马尼亚语"
+
+msgid "Dutch"
+msgstr "荷兰语"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr "创建${mysql_database_type} root帐户"
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"安装程序检测到安装文件夹${app(drupal).installdir}非空，确认已卸载旧版本，继续可能会导致安装异常，继续安装吗？"
+
+msgid "Populating database. This may take some time."
+msgstr "写入数据库，可能需要一些时间。"
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "请输入数据库的IP地址或主机名"
+
+msgid "WordPress packaged by Bitnami"
+msgstr "Bitnami WordPress协议栈"
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr "输入Subversion服务器监听的缺省端口。"
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "输入Apache服务器捆绑监听的缺省端口。"
+
+msgid "Hostname"
+msgstr "主机名"
+
+msgid "Create Admin account"
+msgstr "创建管理员帐户"
+
+msgid "English"
+msgstr "英语"
+
+msgid "TLS"
+msgstr "TLS"
+
+msgid "Re-enter password"
+msgstr "重新输入密码"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr "无效路径${mysql_binary_directory} ，检查目录中是否有必须的库文件。"
+
+msgid "Blog name"
+msgstr "博客名"
+
+msgid "DB User Name"
+msgstr "DB用户名"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr "不能获得文件'${sqlFile}“：当前用户不可读。"
+
+msgid "Login"
+msgstr "登录"
+
+msgid "Thin Processes"
+msgstr "Thin进程"
+
+msgid "Install ${product_fullname} as service"
+msgstr "安装${product_fullname}为服务"
+
+msgid "Restarting Apache"
+msgstr "重启Apache"
+
+msgid "Installation Report"
+msgstr "安装报告"
+
+msgid "Start ${product_fullname} service"
+msgstr "启动${product_fullname}服务"
+
+msgid "Quick Start Guide"
+msgstr "快速入门指南"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr "希望安装程序提示定制您所选择的应用程序吗？"
+
+msgid "Select your language for default data configuration:"
+msgstr "选择缺省数据配置语言："
+
+msgid "Please select the use of this Stack"
+msgstr "请选择使用该协议栈"
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr "服务器名或IP地址。如果这个值不正确，可能无法从其他计算机上访问Joomla！。"
+
+msgid "Serbian"
+msgstr "塞尔维亚语"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr "安装类型"
+
+msgid "Swedish"
+msgstr "瑞典语"
+
+msgid "${mysql_database_type} Service"
+msgstr "${mysql_database_type}服务"
+
+msgid "GMail address"
+msgstr "GMail地址"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "卸载${product_fullname}"
+
+msgid "Portuguese"
+msgstr "葡萄牙语"
+
+msgid "Updating mysql directory permissions"
+msgstr "更新mysql目录权限"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr "设置新的Rails应用程序数据库密码。"
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr "安装Subversion服务器为一个名为${SubversionUniqueServiceName}的Windows服务"
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr "无绑定到该端口的权限或端口已经被另一个应用程序占用。请选择另一个端口。"
+
+msgid "Unable to add text to httpd.conf"
+msgstr "无法将文本添加到httpd.conf"
+
+msgid "Subversion Server Port"
+msgstr "Subversion用品端口"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr "在浏览器中打开 ${product_fullname}"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "Bitnami云主机"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr "无绑定到该端口的权限或端口已经被另一个应用程序占用。请选择另一个端口。"
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr "Redmine是一个灵活的项目管理Web应用程序，使用Ruby on Rails框架编写，它是跨平台和跨数据库。"
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "未知的${mysql_database_type}定义标识符'${id}“"
+
+msgid "Thin port nr 1"
+msgstr "Thin nr 1端口"
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Thin port nr 2"
+msgstr "Thin nr 2端口"
+
+msgid "Number of thin servers"
+msgstr "thin 服务器数量"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "${mysql_database_type}的全权证书"
+
+msgid "Please enter a password"
+msgstr "请输入密码"
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr "要保存Drupal数据库吗？它将被保存在${installdir}/backups"
+
+msgid "Starting application."
+msgstr "执行程序。"
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "请使用有效的密码连接到${mysql_database_type}服务器。"
+
+msgid "DB Name"
+msgstr "DB名"
+
+msgid "Hostname or IP Address"
+msgstr "主机名或IP地址"
+
+msgid "Korean"
+msgstr "朝鲜语"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "${mysql_database_type}二进制目录"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "无法以名为${mysql_unique_service_name}的服务安装${mysql_database_type}"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr "不能绑定到指定的端口，请选择另外一个端口。"
+
+msgid "Select installation type"
+msgstr "选择安装类型"
+
+msgid "Installation type"
+msgstr "安装类型"
+
+msgid "Use ${product_fullname}"
+msgstr "使用{product_fullname}"
+
+msgid "Installation folder"
+msgstr "安装文件夹"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "等待${mysql_database_type}启动"
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr "WordPress是一个关注美学、Web标准和可用性的个人博客发布平台。"
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr "由于缺乏系统资源（CPU或内存），安装程序无法连接到本地${mysql_database_type}服务器。想重试连接到${mysql_database_type}服务器，并继续进行安装吗？"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "等待${mysql_database_type}启动。"
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr "安装程序无法在${installdir}上获得空闲容量。请检查是否有足够的空闲容量来安装${product_fullname}"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "初始化${mysql_database_type}数据库。这可能需要几分钟。"
+
+msgid "Please enter your database root user password"
+msgstr "请输入你的数据库root用户密码"
+
+msgid "Memcached Server port"
+msgstr "Memcached服务器端口"
+
+msgid "Starting Apache."
+msgstr "启动Apache。"
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "无法写入文件：${apache_server_directory}/ conf/ ssi.conf"
+
+msgid "Please configure WordPress installation"
+msgstr "请配置WordPress安装"
+
+msgid "Subversion Server port"
+msgstr "Subversion服务器端口"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+"无法连接到数据库${mysql_hostname}：${mysql_port}。请检查参数是正确的，你的${mysql_database_type}配置接受TCP / IP连接。"
+
+msgid "Please select the ports for Thin servers. Those will be added to the Apache configuration file."
+msgstr "请选择Thin服务器的端口。这些将被添加到Apache配置文件中。"
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr "Ruby没有安装至你的协议栈。这个模块需要安装Ruby。"
+
+msgid "Polish"
+msgstr "波兰语"
+
+msgid "This will create a sample Rails project."
+msgstr "这将创建一个Rails示例项目。"
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr "请输入${mysql_database_type}数据库服务器将侦听的端口。不能使用服务器中运行进程占用的端口号。"
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr "作为名为${mysql_unique_service_name}的Windows服务来安装${mysql_database_type}"
+
+msgid "Bitnami Drupal Module"
+msgstr "Bitnami Drupal模块"
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "初始化数据库。这可能需要一些时间。"
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr "需要保存${APPNAME}数据库吗？它将被保存在${installdir}/backups"
+
+msgid "Joomla!"
+msgstr "Joomla!"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "无法设置phpMyAdmin的授权用户"
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "关闭${mysql_database_type}"
+
+msgid "${product_fullname} Thin Service"
+msgstr "${product_fullname} Thin 服务"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "选中的文件夹非空。请选择另外的文件夹"
+
+msgid "Site name"
+msgstr "网站名称"
+
+msgid "Japanese"
+msgstr "日语"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr "输入web服务器名或IP地址(www.example.com)"
+
+msgid "You need to provide a non-empty password"
+msgstr "需提供一个非空的密码"
+
+msgid "Configuring database"
+msgstr "配置数据库"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr "为Joomla提供的示例数据，仅支持英文。"
+
+msgid "SMTP Port"
+msgstr "SMTP端口"
+
+msgid "Chinese/Taiwan"
+msgstr "中文/繁体"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr "基于安全原因，建议设置一个非空白的${mysql_database_type} root用户密码。你要设置${mysql_database_type} root用户的密码吗？"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "Email Address"
+msgstr "Email地址"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr "要保存WordPress数据库吗？它将被保存在${installdir}/backups"
+
+msgid "Sample Rails Application"
+msgstr "Rails示例应用"
+
+msgid "Italian"
+msgstr "意大利语"
+
+msgid "Ruby On Rails"
+msgstr "基于Rails的Ruby"
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+"Drupal是一个内容管理平台，让个人或社区的用户可以轻松在网站上发布、管理、组织多种内容。Drupal通常用于社区的门户网站、讨论网站、企业网站、内联"
+"网应用程序、个人网站或博客、爱好者网站、电子商务应用，资源目录和社交网站"
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr ""
+"允许更改文件权限和配置设置，可以很容易地安装插件、主题和某些应用程序的更新，但从安全角度来看不是最佳的选择。如果是用于开发目的或用于公司内，建议允许更改"
+"。"
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+"项目目录${rubystack_project_directory}/${samplerails_application_name}-${product"
+"_version} 已存在。请选择一个不同的前缀。"
+
+msgid "Please enter a password to use for the database root user"
+msgstr "请输入数据库root用户密码才能使用"
+
+msgid "Creating web application."
+msgstr "创建Web应用程序。"
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "请选择安装${product_fullname}的文件夹"
+
+msgid "Please configure Joomla! installation"
+msgstr "请配置JOOMLA！安装"
+
+msgid "Uninstalling services."
+msgstr "卸载服务。"
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr "phpMyAdmin是用PHP编写的一个工具，旨在通过Web来管理${mysql_database_type}。"
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr "Bitnami Joomla ${project.version}模块"
+
+msgid "Redmine packaged by Bitnami"
+msgstr "Redmine packaged by Bitnami"
+
+msgid "Bitnami Website"
+msgstr "Bitnami网站"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "不支持在32位的系统上安装64位的组件，请从bitnami.com下载相应的组件。"
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+"Joomla!是一个获奖的内容管理系统，能用于建立个人/企业网站或门户、小型商业网站、非盈利组织网站、政府应用、企业内网和外网、学校和教堂网站、社区门户"
+"。"
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "请仅使用文字数字式字符"
+
+msgid "Please use only alphanumeric characters n your application password"
+msgstr "请仅使用文字数字式字符"
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "请仅使用文字数字式字符"
+
+msgid "Please confirm your password"
+msgstr "请确认密码"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr "请输入将使用SSL访问Apache服务器绑定的端口。"
+
+msgid "Spanish"
+msgstr "西班牙"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""
+
+msgid "The installer detected that the installation folder ${app(${project.shortName}).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr "安装程序检测到安装文件夹${moodle_installation_directory}不为空。如果继续安装可能会破坏现有程序，请确保旧版本应用程序已卸载。你要继续吗？"
+
+msgid "Setting up modules tables"
+msgstr "设置模块表"
+
+msgid "Change Windows settings to associate Python files (.py) to the bundled Python."
+msgstr "更改Windows设置以关联Python文件 (.py) 至捆绑的Python。"
+
+msgid "Registering Python"
+msgstr "正在注册Python"
+
+msgid "Configuring Apache"
+msgstr "正在配置Apache"
+
+msgid "Tools"
+msgstr "工具"
+
+msgid "Add Bitnami Python to the registry"
+msgstr "添加Bitnami Python到注册表"
+
+msgid "Creating admin user"
+msgstr "正在创建admin用户"
+
+msgid "Choose a folder to create the repository in"
+msgstr "选择要创建知识库的文件夹"
+
+msgid "Warning: All data in the project and repository directory will be deleted. Do you wish to continue?"
+msgstr "警告：项目和知识库目录中的所有数据将被删除。您要继续吗？"
+
+msgid "Creating environment"
+msgstr "正在创建环境"
+
+msgid "Creating project"
+msgstr "正在创建项目"
+
+msgid "\"${trac_projects_dir}\" already exists. Please select a different folder."
+msgstr "\"${trac_projects_dir}\" 已存在。请选择其他文件夹。"
+
+msgid "Registers Bitnami Python in the Windows registry."
+msgstr "在Windows注册表中注册Bitnami Python。"
+
+msgid "Project Name"
+msgstr "项目名称"
+
+msgid "Remove Bitnami Python from the registry"
+msgstr "从注册表删除Bitnami Python"
+
+msgid "Do you want to setup an initial project?"
+msgstr "是否希望设置首个项目？"
+
+msgid "Creating git repository"
+msgstr "正在创建git知识库"
+
+msgid "Repository type"
+msgstr "知识库类型"
+
+msgid "Creating projects folder"
+msgstr "正在创建项目文件夹"
+
+msgid "Change association settings for Python"
+msgstr "更改Python的关联设置"
+
+msgid "Removes Bitnami Python from the Windows registry."
+msgstr "从Windows注册表删除Bitnami Python。"
+
+msgid "Setting permissions"
+msgstr "设置权限"
+
+msgid "See help file regarding registering Python in the Windows Registry"
+msgstr "有关在Windows注册表中注册Python的信息，请参见帮助文件"
+
+msgid "Create Project"
+msgstr "创建项目"
+
+msgid "Creating subversion repository"
+msgstr "正在创建subversion知识库"
+
+msgid "Help"
+msgstr "帮助"
+
+msgid "\"${trac_repositorypath}\" already exists. Please select a different folder."
+msgstr "\"${trac_repositorypath}\" 已存在。请选择其他文件夹。"
+
+msgid "This option lets you change the Windows properties to associate the Python files to the new Python that are going to be installed. If you have your own Python you may want to disable this feature."
+msgstr "本选项允许您更改Windows属性以关联Python文件到要安装的全新Python。如果您拥有自己的Python，则可禁用本功能。"
+
+msgid "Choose a folder to create your projects in"
+msgstr "选择要创建项目的文件夹"
+
+msgid "Wiki name"
+msgstr "Wiki名称"
+
+msgid "Please configure MediaWiki installation"
+msgstr "请配置MediaWiki安装"
+
+msgid "The installer detected that the installation folder ${app(${project.shortName}).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr "安装程序检测到安装文件夹${app(${project.shortName}).installdir}不为空。如果继续安装可能会破坏现有程序，请确保旧版本应用程序已卸载。你要继续吗？"
+
+msgid "Starting Servers"
+msgstr "正在启动服务器"
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your OSQA installation from other computers."
+msgstr "用于创建内部URL的主机名。如果该值不正确，您可能无法从其他计算机访问您的OSQA安装。"
+
+msgid "Creating Project Database"
+msgstr "正在创建项目数据库"
+
+msgid "Git"
+msgstr "Git"
+
+msgid "Subversion"
+msgstr "Subversion"
+
+msgid "MediaWiki"
+msgstr "MediaWiki"
+
+msgid "MediaWiki packaged by Bitnami"
+msgstr "MediaWiki packaged by Bitnami"
+
+msgid "Moodle"
+msgstr "Moodle"
+
+msgid "Bitnami LMS powered by Moodle(TM) LMS"
+msgstr "Bitnami LMS powered by Moodle(TM) LMS"
+
+msgid "OSQA"
+msgstr "OSQA"
+
+msgid "OSQA packaged by Bitnami"
+msgstr "OSQA packaged by Bitnami"
+
+msgid "Django"
+msgstr "Django"
+
+
+msgid "Moodle Site Settings"
+msgstr "新设置 - 首页设置"
+
+
+msgid "Please configure Moodle installation"
+msgstr "请配置Moodle安装"
+

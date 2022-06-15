@@ -1,0 +1,86 @@
+<componentGroup>
+    <name>xampp_server</name>
+    <description>Server</description>
+    <canBeEdited>0</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+    <componentList>
+      <include file="xampp-apache.xml"/>
+      <include file="xampp-mysql.xml"/>
+      <include file="xampp-filezilla.xml"/>
+      <include file="xampp-mercury.xml"/>
+      <include file="xampp-tomcat.xml"/>
+    </componentList>
+    <parameterList>
+        <choiceParameter>
+            <name>xampp_control_language</name>
+            <explanation>XAMPP Control Panel for Windows supports different languages.</explanation>
+            <description>Language</description>
+            <default>English</default>
+            <optionList>
+                <option value="en" text="English" />
+                <option value="de" text="Deutsch" />
+            </optionList>
+            <ruleList>
+                <platformTest type="windows"/>
+                <isTrue value="${installer_is_root_install}"/>
+            </ruleList>
+        </choiceParameter>
+    </parameterList>
+    <readyToInstallActionList>
+    </readyToInstallActionList>
+
+    <postInstallationActionList>
+      <foreach variables="component key" values="xampp_apache Apache xampp_mysql MySQL xampp_filezilla FileZilla xampp_mercury Mercury xampp_tomcat Tomcat">
+	<actionList>
+	  <iniFileSet file="${installdir}/xampp-control.ini" key="${key}" section="EnableModules" value="${component(xampp_server).component(${component}).selected}"/>
+	</actionList>
+      </foreach>
+      <actionGroup>
+          <!-- T3580 security issue non-admin users can modify this file -->
+          <!-- https://docs.microsoft.com/en-gb/windows/win32/secauthz/well-known-sids?redirectedfrom=MSDN -->
+          <!-- Other users can read, only the Administrator can edit it -->
+          <actionList>
+              <iniFileSet file="${installdir}/xampp-control.ini" key="Language" section="Common" value="${xampp_control_language}" />
+              <clearWindowsACL files="${installdir}/xampp-control.ini" />
+              <setWindowsACL>
+                  <action>allow</action>
+                  <files>${installdir}/xampp-control.ini</files>
+                  <users>S-1-5-32-544</users>
+              </setWindowsACL>
+              <setWindowsACL>
+                  <permissions>file_generic_read</permissions>
+                  <action>allow</action>
+                  <files>${installdir}/xampp-control.ini</files>
+                  <users>S-1-1-0</users>
+              </setWindowsACL>
+          </actionList>
+          <ruleList>
+              <platformTest type="windows"/>
+              <isTrue value="${installer_is_root_install}"/>
+          </ruleList>
+      </actionGroup>
+      <deleteFile path="${installdir}/mysql_start.bat;${installdir}/mysql_stop.bat;">
+	<ruleList>
+	  <isFalse value="${component(xampp_server).component(xampp_mysql).selected}"/>
+	</ruleList>
+      </deleteFile>
+      <deleteFile path="${installdir}/filezilla_start.bat;${installdir}/filezilla_stop.bat;${installdir}/filezilla_setup.bat;${installdir}/htdocs/xampp/navilinks/02_filezilla.tools">
+	<ruleList>
+	  <isFalse value="${component(xampp_server).component(xampp_filezilla).selected}"/>
+	</ruleList>
+      </deleteFile>
+
+      <deleteFile path="${installdir}/mercury_start.bat;${installdir}/mercury_stop.bat">
+	<ruleList>
+	  <isFalse value="${component(xampp_server).component(xampp_mercury).selected}"/>
+	</ruleList>
+      </deleteFile>
+
+      <deleteFile path="${installdir}/catalina_start.bat;${installdir}/catalina_stop.bat;${installdir}/catalina_service.bat;${installdir}/htdocs/xampp/navilinks/tomcat.j2ee">
+	<ruleList>
+	  <isFalse value="${component(xampp_server).component(xampp_tomcat).selected}"/>
+	</ruleList>
+      </deleteFile>
+    </postInstallationActionList>
+</componentGroup>

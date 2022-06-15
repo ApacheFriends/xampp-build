@@ -1,0 +1,378 @@
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[@@XAMPP_DATE@@] XAMPP for OS X @@XAMPP_APPLICATION_VERSION@@
+This version of XAMPP contains the following software releases:
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2021-09-30] XAMPP for OS X 7.3.31-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.49
+   - MariaDB 10.4.21
+   - OpenSSL 1.1.1k
+   - PEAR 1.7.1
+   - PHP 7.3.31
+   - phpMyAdmin 5.1.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2021-08-03] XAMPP for OS X 7.3.29-2
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.48
+   - MariaDB 10.4.20
+   - OpenSSL 1.1.1k
+   - PEAR 1.7.1
+   - PHP 7.3.29
+   - phpMyAdmin 5.1.1
+   - Update kernel and systemd for OS X VM (CVE-2021-33909 and CVE-2021-33910)
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2021-03-13] XAMPP for OS X 7.3.27-1
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.18
+   - OpenSSL 1.1.1j
+   - PEAR 1.7.1
+   - PHP 7.3.27
+   - phpMyAdmin 5.1.0
+   - Update sudo package for OS X VM (CVE-2021-3156)
+   
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2021-01-19] XAMPP for OS X 7.3.26-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.17
+   - OpenSSL 1.1.1i
+   - PEAR 1.7.1
+   - PHP 7.3.26
+   - phpMyAdmin 5.0.4
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-12-03] XAMPP for OS X 7.3.25-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.17
+   - OpenSSL 1.1.1h
+   - PEAR 1.7.1
+   - PHP 7.3.25
+   - phpMyAdmin 5.0.4
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-11-16] XAMPP for OS X 7.3.24-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.16
+   - OpenSSL 1.1.1h
+   - PEAR 1.7.1
+   - PHP 7.3.24
+   - phpMyAdmin 5.0.4
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-10-14] XAMPP for OS X 7.3.23-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.14
+   - OpenSSL 1.1.1h
+   - PEAR 1.7.1
+   - PHP 7.3.23
+   - phpMyAdmin 5.0.3
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-09-12] XAMPP for OS X 7.3.22-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.14
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.22
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-08-19] XAMPP for OS X 7.3.21-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.46
+   - MariaDB 10.4.14
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.21
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-07-15] XAMPP for OS X 7.3.20-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.43
+   - MariaDB 10.4.13
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.20
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-06-17] XAMPP for OS X 7.3.19-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.43
+   - MariaDB 10.4.13
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.19
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-05-19] XAMPP for OS X 7.3.18-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.43
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.18
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-04-24] XAMPP for OS X 7.3.17-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.43
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.17
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-04-23] XAMPP for OS X 7.3.16-2
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.43
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1g
+   - PEAR 1.7.1
+   - PHP 7.3.16
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-04-15] XAMPP for OS X 7.3.16-1
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.43
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1f
+   - PEAR 1.7.1
+   - PHP 7.3.16
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-04-01] XAMPP for OS X 7.3.16-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.41
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1e
+   - PEAR 1.7.1
+   - PHP 7.3.16
+   - phpMyAdmin 5.0.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-03-03] XAMPP for OS X 7.3.15-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.41
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1d
+   - PEAR 1.7.1
+   - PHP 7.3.15
+   - phpMyAdmin 5.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2020-02-05] XAMPP for OS X 7.3.14-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.41
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1d
+   - PEAR 1.7.1
+   - PHP 7.3.14
+   - phpMyAdmin 5.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-12-27] XAMPP for OS X 7.3.13-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.41
+   - MariaDB 10.4.11
+   - OpenSSL 1.1.1d
+   - PEAR 1.7.1
+   - PHP 7.3.13
+   - phpMyAdmin 5.0.0
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-12-05] XAMPP for OS X 7.3.12-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.41
+   - MariaDB 10.4.10
+   - OpenSSL 1.1.1d
+   - PEAR 1.7.1
+   - PHP 7.3.12
+   - phpMyAdmin 4.9.2
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-10-30] XAMPP for OS X 7.3.11-0
+This version of XAMPP contains the following software releases:
+   - PHP 7.3.11
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-10-09] XAMPP for OS X 7.3.10-0
+This version of XAMPP contains the following software releases:
+   - PHP 7.3.10
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-09-03] XAMPP for OS X 7.3.9-0
+This version of XAMPP contains the following software releases:
+   - PHP 7.3.9
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-08-09] XAMPP for OS X 7.3.8-0
+This version of XAMPP contains the following software releases:
+   - PHP 7.3.8
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-07-22] XAMPP for OS X 7.3.7-1
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.3.16
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.7
+   - phpMyAdmin 4.9.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-07-09] XAMPP for OS X 7.3.7-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.3.16
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.7
+   - phpMyAdmin 4.9.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-07-08] XAMPP for OS X 7.3.6-4
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.3.16
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.6
+   - phpMyAdmin 4.9.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-07-03] XAMPP for OS X 7.3.6-3
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.3.16
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.6
+   - phpMyAdmin 4.9.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-06-20] XAMPP for OS X 7.3.6-2
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.3.16
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.6
+   - phpMyAdmin 4.9.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-06-14] XAMPP for OS X 7.3.6-1
+This version of XAMPP contains the following software releases:
+   - Fix installation errors with MariaDB for some modules on Windows
+   - Apache 2.4.39
+   - MariaDB 10.3.15
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.6
+   - phpMyAdmin 4.9.0.1
+  
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-06-05] XAMPP for OS X 7.3.6-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.3.15
+   - OpenSSL 1.0.2s
+   - PEAR 1.7.1
+   - PHP 7.3.6
+   - phpMyAdmin 4.9.0.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-05-16] XAMPP for OS X 7.3.5-1
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.1.40
+   - OpenSSL 1.0.2r
+   - PEAR 1.7.1
+   - PHP 7.3.5
+   - phpMyAdmin 4.8.5
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-05-06] XAMPP for OS X 7.3.5-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.1.39
+   - OpenSSL 1.0.2r
+   - PEAR 1.7.1
+   - PHP 7.3.5
+   - phpMyAdmin 4.8.5
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-04-15] XAMPP for OS X 7.1.28-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.39
+   - MariaDB 10.1.38
+   - OpenSSL 1.0.2r
+   - PEAR 1.7.1
+   - PHP 7.3.4
+   - phpMyAdmin 4.8.5
+   - Fix Apache Carpe Diem vulnerability CVE-2019-0211
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2019-01-21] XAMPP for OS X 7.3.1-0
+This version of XAMPP contains the following software releases:
+   - Updated PHP to 7.3.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2018-12-14] XAMPP for OS X 7.3.0-0
+This version of XAMPP contains the following software releases:
+   - Updated PHP to 7.0.33
+   - Updated MariaDB to 10.1.37
+   - Updated OpenSSL 1.0.2q
+   - Updated phpMyAdmin 4.8.4
+

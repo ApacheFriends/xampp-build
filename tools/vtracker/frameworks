@@ -1,0 +1,37 @@
+config = {
+  dldefaultno
+  dlprefs   = \.(tar\.|t)gz$;\.tar\.bz2$;\.zip$;\.7z$;\.Z$
+  lastcheck = "2022-06-07 13:07"
+  verbose
+}
+
+prog cacertificates = {
+  version = 2022-04-26
+  url     = https://curl.haxx.se/docs/caextract.html
+  regex   = cacert-(__VER__).pem
+}
+prog cakeapp = {
+  version = 3.10.1
+  url     = https://github.com/cakephp/app/tags
+  regex   = (3\.[0-9]+\.[0-9]+)\n
+}
+prog cakephp = {
+  version = 3.10.4
+  url     = https://github.com/cakephp/cakephp/tags
+  regex   = (3\.[0-9]+\.[0-9]+)\n
+}
+prog codeigniter = {
+  version = 4.2.0
+  url     = https://github.com/codeigniter4/CodeIgniter4/releases
+  regex   = tag/v(__VER__)
+}
+prog composer = {
+  version = 2.3.7
+  url     = https://github.com/composer/composer/tags
+  regex   = tag/([0-9\\.]+(?!.*(alpha|beta|rc*|ALPHA|BETA|RC*)))
+}
+prog phpmyadmin = {
+  version = 5.2.0
+  url     = http://www.phpmyadmin.net/home_page/downloads.php
+  regex   = ">phpMyAdmin (__VER__)</"
+}

@@ -1,0 +1,38 @@
+<component>
+    <name>xampp_mysql</name>
+    <description>MySQL</description>
+    <canBeEdited>1</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+
+
+    <folderList>
+        <folder>
+          <description>//XAMPP Files</description>
+          <destination>${installdir}/</destination>
+          <name>xampp_mysql_folder</name>
+          <distributionFileList>
+            <distributionDirectory origin="xampp/mysql"/>
+          </distributionFileList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable name="mysql_configuration_file" value="${installdir}/mysql/bin/my.ini"/>
+                <!-- MySQL fails on Windows with drives bigger than 2TB, refs #12403 -->
+                <getTotalDiskSpace path="${installdir}" units="GB" variable="totalDiskSpace" />
+                <iniFileSet file="${mysql_configuration_file}" key="innodb_flush_method" section="mysqld" value="normal" >
+                    <ruleList>
+                        <compareValues value1="${totalDiskSpace}" value2="2000" logic="greater" />
+                    </ruleList>
+                </iniFileSet>
+                <!-- Enable utf8mb4 encoding -->
+                <configureUtf8mb4Encoding mysqlCfgFile="${mysql_configuration_file}"/>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </actionGroup>
+    </postInstallationActionList>
+</component>

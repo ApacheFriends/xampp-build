@@ -1,0 +1,91 @@
+<component>
+    <name>logrotate</name>
+    <description>//Logrotate</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <parameterList>
+        <directoryParameter name="logrotate_main_directory" value="${installdir}/config/logrotate" ask="0"/>
+        <directoryParameter name="logrotate_directory" value="${installdir}/config/logrotate/logrotate.d" ask="0"/>
+        <booleanParameter name="logrotate_install" value="0" ask="0" />
+        <booleanParameter name="logrotate_execute_abort_action_list" value="1" ask="0"/>
+        <booleanParameter name="logrotate_ready_to_install" value="0" ask="0"/>
+    </parameterList>
+    <readyToInstallActionList>
+        <setInstallerVariable name="logrotate_ready_to_install" value="1"/>
+    </readyToInstallActionList>
+    <postInstallationActionList>
+        <actionGroup>
+            <actionList>
+                <createDirectory path="${logrotate_directory}" >
+                    <ruleList>
+                        <fileTest path="${logrotate_directory}" condition="not_exists" />
+                    </ruleList>
+                </createDirectory>
+                <writeFile>
+                    <path>${logrotate_main_directory}/bitnami.conf</path>
+                    <text>
+# Bitnami configuration file for log rotation.
+# To enable logrotate create a symlink to the system logrotate folder
+#
+# For example, in Ubuntu:
+#
+# sudo ln -s ${logrotate_main_directory}/bitnami.conf /etc/logrotate.d/bitnami.conf
+#
+
+include ${logrotate_directory}/
+</text>
+                    <ruleList>
+                        <fileTest path="${logrotate_main_directory}/bitnami.conf" condition="not_exists" />
+                    </ruleList>
+                </writeFile>
+                <addFilesToUninstaller files="/etc/logrotate.d/bitnami.conf" >
+                    <ruleList>
+                        <isTrue value="${logrotate_install}" />
+                        <fileTest path="/etc/logrotate.d/bitnami.conf" condition="not_exists" />
+                    </ruleList>
+                </addFilesToUninstaller>
+                <createSymLink>
+                    <target>${logrotate_main_directory}/bitnami.conf</target>
+                    <linkName>/etc/logrotate.d/bitnami.conf</linkName>
+                    <ruleList>
+                        <isTrue value="${logrotate_install}" />
+                        <fileTest path="/etc/logrotate.d/bitnami.conf" condition="not_exists" />
+                    </ruleList>
+                </createSymLink>
+            </actionList>
+            <ruleList>
+                <platformTest type="linux" />
+            </ruleList>
+        </actionGroup>
+    </postInstallationActionList>
+    <installationAbortedActionList>
+        <logMessage text="[logrotate:installation-aborted] Running action list..."/>
+        <actionGroup>
+            <actionList>
+                <deleteFile abortOnError="0" showMessageOnError="0" path="${logrotate_main_directory}" />
+                <deleteFile abortOnError="0" showMessageOnError="0" path="${installdir}/config" />
+            </actionList>
+            <ruleList>
+                <isTrue value="${logrotate_execute_abort_action_list}"/>
+                <isTrue value="${logrotate_ready_to_install}"/>
+            </ruleList>
+        </actionGroup>
+    </installationAbortedActionList>
+    <preUninstallationActionList>
+        <actionGroup>
+            <actionList>
+                <deleteFile abortOnError="0" showMessageOnError="0" path="${logrotate_main_directory}" />
+                <deleteFile path="${installdir}/config" >
+                    <ruleList>
+                        <fileTest path="${installdir}/config" condition="is_empty"/>
+                    </ruleList>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <platformTest type="linux" />
+            </ruleList>
+        </actionGroup>
+    </preUninstallationActionList>
+</component>
+

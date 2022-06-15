@@ -1,0 +1,148 @@
+<component>
+  <name>native_mysql_adapter</name>
+  <description>Native MySQL Adaptation Layer</description>
+  <canBeEdited>0</canBeEdited>
+  <show>0</show>
+  <!-- This must be explicitly enabled -->
+  <selected>0</selected>
+  <folderList>
+    <folder>
+      <name>mysql_fedora</name>
+      <destination>${installdir}/</destination>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
+      <distributionFileList>
+        <distributionDirectory origin="files/fedora/mysql"/>
+      </distributionFileList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value="fedora"/>
+      </ruleList>
+    </folder>
+    <folder>
+      <name>mysql_redhat</name>
+      <destination>${installdir}/</destination>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
+      <distributionFileList>
+        <distributionDirectory origin="files/redhat/mysql"/>
+      </distributionFileList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value="redhat"/>
+      </ruleList>
+    </folder>
+    <folder>
+      <name>mysql_xampp_windows</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/windows/mysql"/>
+      </distributionFileList>
+      <actionList>
+	<removeFilesFromUninstaller files="*/mysql/*" />
+	  <substitute>
+	      <files>*.bat</files>
+	      <substitutionList>
+		  <substitution pattern="@@XAMPP_INSTALLDIR@@" value="${installdir}"/>
+	      </substitutionList>
+	  </substitute>
+      </actionList>
+      <ruleList>
+	<platformTest type="windows"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder> 
+    <folder>
+      <name>mysql_xampp_osx</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/osx/mysql"/>
+      </distributionFileList>
+      <actionList>
+	<removeFilesFromUninstaller files="*/mysql/*" />
+      </actionList>
+      <ruleList>
+	<platformTest type="osx"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder> 
+    <folder>
+      <name>mysql_xampp_linux</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/linux/mysql"/>
+      </distributionFileList>
+      <actionList>
+	  <removeFilesFromUninstaller files="*/mysql/*" />
+      </actionList>
+      <ruleList>
+	<platformTest type="linux"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder> 
+
+    <folder>
+      <name>mysql_ubuntu</name>
+      <destination>${installdir}/</destination>
+      <ruleEvaluationLogic>or</ruleEvaluationLogic>
+      <distributionFileList>
+        <distributionDirectory origin="files/ubuntu/mysql"/>
+      </distributionFileList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value="ubuntu"/>
+      </ruleList>
+    </folder>
+  </folderList>
+  <parameterList>
+    <stringParameter name="mysql_hostname" value="localhost" ask="0"/>
+    <stringParameter name="mysql_port" value="" ask="0"/>
+  </parameterList>
+  <postInstallationActionList>
+      <!-- Include the bitnami my.cnf in the system my.cnf file -->
+      <addTextToFile>
+          <file>${database_configuration_directory}/my.cnf</file>
+          <text>
+!include ${installdir}/mysql/my.cnf                                                                                                  
+</text>
+              <ruleList>
+                  <platformTest type="unix" />
+                  <fileContentTest logic="does_not_contain" path="${database_configuration_directory}/my.cnf" text="${installdir}/mysql/my.cnf"/>
+              </ruleList>
+      </addTextToFile>
+      <addMonit name="mysql" pidFile="/var/run/mysqld/mysqld.pid" >
+	  <ruleList>
+	      <compareText text="${target_platform}" logic="equals" value="redhat"/>
+	  </ruleList>
+      </addMonit>
+
+      <actionGroup>
+        <actionList>
+          <setInstallerVariableFromScriptOutput>
+            <name>db_type</name>
+            <exec>mysql</exec>
+            <execArgs>--version</execArgs>
+            <workingDirectory>${installdir}</workingDirectory>           
+          </setInstallerVariableFromScriptOutput>
+          <setInstallerVariable name="database_type" value="MySQL" persist="1">
+            <ruleList>
+              <compareText text="${db_type}" logic="does_not_contain" value="MariaDB"/>
+            </ruleList>
+          </setInstallerVariable>
+          <setInstallerVariable name="database_type" value="MariaDB" persist="1">
+            <ruleList>
+              <compareText text="${db_type}" logic="contains" value="MariaDB" />
+            </ruleList>
+          </setInstallerVariable>
+          <substitute>
+            <type>exact</type>
+            <files>${installdir}/mysql/scripts/ctl.sh</files>
+            <substitutionList>
+              <substitution>
+                <pattern>@@XAMPP_MYSQL_TYPE@@</pattern>
+                <value>${database_type}</value>
+              </substitution>
+            </substitutionList>
+          </substitute>
+        </actionList>
+        <ruleList>
+          <compareText text="${target_platform}" logic="equals" value="redhat"/>
+        </ruleList>
+      </actionGroup>
+  </postInstallationActionList>
+</component>

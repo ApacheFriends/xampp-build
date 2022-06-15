@@ -1,0 +1,273 @@
+<component>
+  <name>nativeadapter</name>
+  <show>0</show>
+
+  <preBuildActionList>
+      <setInstallerVariable name="component(joomla).parameter(joomla_version).value" value="3.0.0" />
+  </preBuildActionList>
+
+  <initializationActionList>
+    <setInstallerVariable name="target_platform" value="xampp" />
+    <setInstallerVariable name="bitnami_platform_name" value="XAMPP" />
+    <setInstallerVariable name="component(powered).parameter(base_powered_url).value" value="https://bitnami.com" />
+    <setInstallerVariable name="component(adminaccountregistry).parameter(base_general_configuration).parameter(base_allow_empty_password).value" value="1" />
+    <setInstallerVariable name="component(adminaccountregistry).parameter(base_general_configuration).ask" value="0" />
+    <setInstallerVariable name="component(joomlasampledata).show" value="0" />
+    <setInstallerVariable name="component(wordpress).canBeEdited" value="1" />
+    <setInstallerVariable name="component(drupal).canBeEdited" value="1" />
+    <setInstallerVariable name="component(joomla).canBeEdited" value="1" />
+
+    <setInstallerVariable name="component(wordpress).parameter(wordpress).ask" value="0" />
+    <setInstallerVariable name="component(drupal).parameter(drupal).ask" value="0" />
+    <setInstallerVariable name="component(joomla).parameter(joomla).ask" value="0" />
+  </initializationActionList>
+
+  <folderList>
+      <folder>
+	  <name>applications</name>
+	  <destination>${installdir}/htdocs/xampp</destination>
+	  <distributionFileList>
+	      <distributionDirectory origin="htdocs-xampp/applications.html" />
+	      <distributionDirectory origin="htdocs-xampp/bitnami.css" />
+	      <distributionDirectory origin="htdocs-xampp/img" />
+	  </distributionFileList>
+      </folder>
+      <folder>
+	  <description>//images</description>
+	  <destination>${installdir}/htdocs/xampp/img</destination>
+	  <name>applicationsimg</name>
+	  <platforms>all</platforms>
+	  <distributionFileList>
+	      <distributionFile origin="images/wordpress-module.png"/>
+	      <distributionFile origin="images/drupal-module.png"/>
+	      <distributionFile origin="images/joomla-module.png"/>
+	  </distributionFileList>
+      </folder>
+  </folderList>
+
+  <postInstallationActionList>
+
+    <changePermissions>
+      <files>${installdir}/properties.ini</files>
+      <permissions>0700</permissions>
+      <ruleList>
+        <platformTest type="unix"/>
+      </ruleList>
+    </changePermissions>
+
+    <phpExtension action="enable" extensionName="php_openssl"/>
+    <!-- Hacks, this is just for the demo -->
+    <!-- Php deprecated setting warnings -->
+    <iniFileSet>
+      <file>${php_configuration_directory}/php.ini</file>
+      <key>error_reporting</key>
+      <section>[PHP]</section>
+      <value>E_ALL &amp; ~E_NOTICE &amp; ~E_DEPRECATED</value>
+    </iniFileSet>
+
+    <!-- Sugar and others -->
+    <apacheModule moduleName="mod_version" action="enable" apacheConfigurationFile="${web_server_configuration_directory}/httpd.conf" />
+    <actionGroup>
+      <actionList>
+        <readFile path="${php_configuration_directory}/php.ini" name="phpini_text"/>
+        <substitute>
+          <files>${php_configuration_directory}/php.ini</files>
+          <type>regexp</type>
+          <substitutionList>
+            <substitution pattern=";\s*date\.timezone\s*=\s*.*" value="date.timezone=America/Los_Angeles" />
+          </substitutionList>
+          <ruleList>
+            <regExMatch>
+              <logic>matches</logic>
+              <pattern>.*;\s*date\.timezone\s*=\s*.*</pattern>
+              <text>${phpini_text}</text>
+            </regExMatch>
+          </ruleList>
+        </substitute>
+        <iniFileSet>
+          <file>${php_configuration_directory}/php.ini</file>
+          <key>date.timezone</key>
+          <section>Date</section>
+          <value>America/Los_Angeles</value>
+          <ruleList>
+            <regExMatch>
+              <logic>does_not_match</logic>
+              <pattern>.*;\s*date\.timezone\s*=\s*.*</pattern>
+              <text>${phpini_text}</text>
+            </regExMatch>
+          </ruleList>
+        </iniFileSet>
+      </actionList>
+      <ruleList>
+        <fileExists path="${php_configuration_directory}/php.ini"/>
+      </ruleList>
+    </actionGroup>
+
+    <!-- Applications page -->
+    <registerApplication applicationId="wordpress" applicationExplanation="${component(wordpress).detailedDescription}" applicationDescription="Bitnami WordPress" applicationUrl="wordpress" htmlFile="${installdir}/htdocs/xampp/applications.html" >
+	<ruleList>
+	    <isTrue value="${component(wordpress).selected}" />
+	</ruleList>
+    </registerApplication>
+    <registerApplication applicationId="drupal" applicationExplanation="${component(drupal).detailedDescription}" applicationDescription="Bitnami Drupal" applicationUrl="drupal" htmlFile="${installdir}/htdocs/xampp/applications.html" >
+	<ruleList>
+	    <isTrue value="${component(drupal).selected}" />
+	</ruleList>
+    </registerApplication>
+    <registerApplication applicationId="joomla" applicationExplanation="${component(joomla).detailedDescription}" applicationDescription="Bitnami Joomla!" applicationUrl="joomla" htmlFile="${installdir}/htdocs/xampp/applications.html" >
+	<ruleList>
+	    <isTrue value="${component(joomla).selected}" />
+	</ruleList>
+    </registerApplication>
+
+<!--    <substitute>
+	<abortOnError>0</abortOnError>
+	<showMessageOnError>0</showMessageOnError>
+	<files>${installdir}/htdocs/xampp/navi.php</files>
+	<type>regexp</type>
+	<substitutionList>
+	    <substitution>
+		<pattern>TEXT\['navi-components'\]\s*;\*?\s*\?&gt;&lt;/a&gt;&lt;br&gt;</pattern>
+		<value>TEXT['navi-components']; ?&gt;&lt;/a&gt;&lt;br&gt;
+&lt;a class="n" target="content" onclick="h(this);" href="applications.html"&gt;&lt;?php echo Applications ?&gt;&lt;/a&gt;&lt;br&gt;
+</value>
+            <ruleList>
+		<fileContentTest path="${installdir}/htdocs/xampp/navi.php" logic="does_not_contain" text="applications.html"/>
+	    </ruleList>
+	    </substitution>
+	</substitutionList>
+    </substitute>
+    <substitute>
+	<abortOnError>0</abortOnError>
+	<showMessageOnError>0</showMessageOnError>
+	<files>${installdir}/htdocs/xampp/applications.html</files>
+	<type>exact</type>
+	<substitutionList>
+	    <substitution>
+		<pattern>"module_access"&gt;&lt;a href</pattern>
+		<value>"module_access"&gt;&lt;a target="_blank" href</value>
+	    </substitution>
+	</substitutionList>
+    </substitute>
+-->
+    <apacheModule action="enable" moduleName="mod_version" />
+    <!--<apacheServer action="restart"/>-->
+  </postInstallationActionList>
+
+  <preInstallationActionList>
+    <actionGroup>
+      <actionList>
+        <!--<autodetectPlatform nativePlatformType="auto" variable="target_platform"/>
+        <throwError text="The installer couldn't detect any suitable platform">
+          <ruleList>
+            <compareText text="${target_platform}" logic="equals" value=""/>
+          </ruleList>
+        </throwError>-->
+      </actionList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value=""/>
+      </ruleList>
+    </actionGroup>
+  </preInstallationActionList>
+
+  <parameterList>
+    <stringParameter name="target_platform" value="" ask="0"/>
+  </parameterList>
+
+  <readyToInstallActionList>
+
+      <setInstallerVariable name="wordpress_password" value="${application_password}" />
+      <setInstallerVariable name="joomla_password" value="${application_password}" />
+      <setInstallerVariable name="drupal_password" value="${application_password}" />
+
+    <autodetectApache>
+      <port>web_server_port</port>
+      <sslPort>web_server_ssl_port</sslPort>
+      <rootDirectory>system_apache_server_directory</rootDirectory>
+      <configurationDirectory>system_web_server_configuration_directory</configurationDirectory>
+      <domainName>web_server_domain_name</domainName>
+      <apacheUser>web_server_user</apacheUser>
+      <apacheGroup>web_server_group</apacheGroup>
+      <targetPlatform>${target_platform}</targetPlatform>
+    </autodetectApache>
+
+    <!-- We do not use the real ones but the adapted, that is going to
+         be included in the system httpd.conf -->
+    <setInstallerVariable name="web_server_configuration_directory" value="${installdir}/apache/conf" persist="1"/>
+    <setInstallerVariable name="apache_server_directory"  value="${installdir}/apache" persist="1"/>
+
+
+    <autodetectMySQL>
+      <port>database_port</port>
+      <host>database_hostname</host>
+      <rootDirectory>database_root_directory</rootDirectory>
+      <binaryDirectory>database_binary_directory</binaryDirectory>
+      <dataDirectory>database_data_directory</dataDirectory>
+      <databaseArguments>database_arguments</databaseArguments>
+      <databaseSocket>database_socket</databaseSocket>
+      <targetPlatform>${target_platform}</targetPlatform>
+    </autodetectMySQL>
+    <autodetectPHP>
+      <configurationDirectory>php_configuration_directory</configurationDirectory>
+      <binaryDirectory>php_binary_directory</binaryDirectory>
+      <targetPlatform>${target_platform}</targetPlatform>
+    </autodetectPHP>
+  <!-- Base configuration -->
+
+    <baseSaveGeneralStackConfigurationToFile baseStackPropertiesFile="${installdir}/properties.ini">
+      <baseStackName>${project.fullName}</baseStackName>
+      <baseStackVersion>${project.version}</baseStackVersion>
+      <baseStackPlatform>${platform_name}</baseStackPlatform>
+      <baseStackInstallDir>${installdir}</baseStackInstallDir>
+    </baseSaveGeneralStackConfigurationToFile>
+
+    <!-- Adapt Apache -->
+
+    <!-- Add information to properties.ini -->
+    <!-- Some of the written properties point to the bitnami lampstack htdocs as
+         we will later register it with the native apache -->
+    <apacheSaveConfigurationToFile>
+      <apachePropertiesFile>${installdir}/properties.ini</apachePropertiesFile>
+      <apacheServerPort>${web_server_port}</apacheServerPort>
+      <apacheUser>${web_server_user}</apacheUser>
+      <apacheGroup>${web_server_group}</apacheGroup>
+      <apacheSSLPort>${web_server_ssl_port}</apacheSSLPort>
+      <apacheRootDirectory>${system_apache_server_directory}</apacheRootDirectory>
+      <apacheDomainName>127.0.0.1</apacheDomainName>
+      <apacheConfigurationDirectory>${system_web_server_configuration_directory}</apacheConfigurationDirectory>
+      <apacheWindowsServiceName></apacheWindowsServiceName>
+    </apacheSaveConfigurationToFile>
+    <!-- Adapt MySQL -->
+
+    <!-- Add information to properties.ini -->
+
+    <mysqlSaveConfigurationToFile mysqlPropertiesFile="${installdir}/properties.ini">
+      <mysqlPort>${database_port}</mysqlPort>
+      <mysqlHost>${database_hostname}</mysqlHost>
+      <mysqlRootDirectory>${database_root_directory}</mysqlRootDirectory>
+      <mysqlDataDirectory>${database_data_directory}</mysqlDataDirectory>
+      <mysqlBinaryDirectory>${database_binary_directory}</mysqlBinaryDirectory>
+      <mysqlArguments>${database_arguments}</mysqlArguments>
+      <mysqlSocket>${database_socket}</mysqlSocket>
+      <mysqlWindowsServiceName></mysqlWindowsServiceName>
+    </mysqlSaveConfigurationToFile>
+
+    <!-- Adapt PHP -->
+    <phpSaveConfigurationToFile>
+      <phpPropertiesFile>${installdir}/properties.ini</phpPropertiesFile>
+      <phpConfigurationDirectory>${php_configuration_directory}</phpConfigurationDirectory>
+      <phpBinaryDirectory>${php_binary_directory}</phpBinaryDirectory>
+    </phpSaveConfigurationToFile>
+
+  </readyToInstallActionList>
+
+  <preUninstallationActionList>
+    <apacheServer action="restart"/>
+  </preUninstallationActionList>
+  <postUninstallationActionList>
+      <deleteFile path="${installdir}/apps/wordpress" />
+      <deleteFile path="${installdir}/apps/joomla" />
+      <deleteFile path="${installdir}/apps/drupal" />
+      <deleteFile path="${installdir}/properties.ini" />
+  </postUninstallationActionList>
+</component>

@@ -1,0 +1,101 @@
+<component>
+    <name>monit</name>
+    <description>//Monit</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <parameterList>
+        <directoryParameter name="monit_main_directory" value="${installdir}/config/monit" ask="0"/>
+        <directoryParameter name="monit_config_directory" value="${installdir}/config/monit/conf.d" ask="0"/>
+        <booleanParameter name="monit_install" value="0" ask="0" />
+        <booleanParameter name="monit_execute_abort_action_list" value="1" ask="0"/>
+        <booleanParameter name="monit_ready_to_install" value="0" ask="0"/>
+    </parameterList>
+    <readyToInstallActionList>
+        <setInstallerVariable name="monit_ready_to_install" value="1"/>
+    </readyToInstallActionList>
+    <postInstallationActionList>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable name="monit_root_directory" value="${installdir}/monit" >
+                    <ruleList>
+                        <compareText text="${monit_root_directory}" logic="contains" value="unknown variable" />
+                    </ruleList>
+                </setInstallerVariable>
+                <addDirectoriesToUninstaller files="${monit_root_directory}"/>
+                <setInstallerVariable name="monit_port" value="2812" >
+                    <ruleList>
+                        <compareText text="${monit_port}" logic="contains" value="unknown variable" />
+                    </ruleList>
+                </setInstallerVariable>
+                <createDirectory path="${monit_config_directory}" >
+                    <ruleList>
+                        <fileTest path="${monit_config_directory}" condition="not_exists" />
+                    </ruleList>
+                </createDirectory>
+                <writeFile>
+                    <path>${monit_main_directory}/bitnami.conf</path>
+                    <text>
+# Bitnami configuration file for Gonit.
+# https://github.com/bitnami/gonit
+
+include ${monit_config_directory}/*.conf
+</text>
+                    <ruleList>
+                        <fileTest path="${monit_main_directory}/bitnami.conf" condition="not_exists" />
+                    </ruleList>
+                </writeFile>
+                <changePermissions permissions="700" files="${monit_main_directory}/bitnami.conf" />
+                <createSymLink>
+                    <target>${monit_main_directory}/bitnami.conf</target>
+                    <linkName>/etc/monit/conf.d/bitnami.conf</linkName>
+                    <ruleList>
+                        <isTrue value="${monit_install}" />
+                        <fileTest path="/etc/monit/conf.d/bitnami.conf" condition="not_exists" />
+                        <fileExists path="/etc/monit/conf.d" />
+                    </ruleList>
+                </createSymLink>
+                <createSymLink>
+                    <target>${monit_main_directory}/bitnami.conf</target>
+                    <linkName>/etc/monit.d/bitnami.conf</linkName>
+                    <ruleList>
+                        <isTrue value="${monit_install}" />
+                        <fileTest path="/etc/monit.d/bitnami.conf" condition="not_exists" />
+                        <fileExists path="/etc/monit.d" />
+                    </ruleList>
+                </createSymLink>
+            </actionList>
+            <ruleList>
+                <platformTest type="linux" />
+            </ruleList>
+        </actionGroup>
+    </postInstallationActionList>
+    <installationAbortedActionList>
+        <logMessage text="[monit:installation-aborted] Running action list..."/>
+        <deleteFile abortOnError="0" showMessageOnError="0" path="${monit_main_directory}">
+            <ruleList>
+                <isTrue value="${monit_execute_abort_action_list}"/>
+                <isTrue value="${monit_ready_to_install}"/>
+            </ruleList>
+        </deleteFile>
+    </installationAbortedActionList>
+    <preUninstallationActionList>
+        <actionGroup>
+            <actionList>
+                <deleteFile abortOnError="0" showMessageOnError="0" path="${monit_main_directory}" />
+                <deleteFile path="${installdir}/config" >
+                    <ruleList>
+                        <fileTest path="${installdir}/config" condition="is_empty"/>
+                    </ruleList>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <platformTest type="linux" />
+            </ruleList>
+        </actionGroup>
+    </preUninstallationActionList>
+    <shouldPackRuleList>
+        <compareText text="${platform_name}" logic="contains" value="linux"/>
+    </shouldPackRuleList>
+</component>
+

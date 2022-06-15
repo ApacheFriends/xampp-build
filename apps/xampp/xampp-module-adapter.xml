@@ -1,0 +1,8 @@
+    <component>
+        <name>xampp_module_adapter</name>
+        <selected>1</selected>    
+        <show>0</show>
+        <postInstallationActionList>
+            <adaptPlatform nativePlatformType="xampp" onlyPopulateVariables="0" targetPlatform="xampp"/>
+        </postInstallationActionList>
+    </component>

@@ -1,0 +1,39 @@
+config = {
+  dldefaultno
+  dlprefs   = \.(tar\.|t)gz$;\.tar\.bz2$;\.zip$;\.7z$;\.Z$
+  lastcheck = "2022-06-07 12:50"
+}
+
+prog composr = {
+  version   = 10.0.42
+  dlversion = 10.0.42
+  rev       = 0
+  url       = https://compo.sr/download.htm
+  regex     = "main version.*v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))"
+}
+prog XAMPP74 = {
+  comment   = BITROCK_DETECTED_DATE=2022-06-07_13:35
+  version   = 7.4.30
+  dlversion = 7.4.29
+  url       = http://www.php.net/
+  regex     = /downloads.php#v(7.4.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://github.com/php/php-src/tags
+  regex     = /tag/php-(7.4.[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog XAMPP80 = {
+  version   = 8.0.19
+  dlversion = 8.0.19
+  url       = http://www.php.net/
+  regex     = /downloads.php#v(8.0[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://github.com/php/php-src/tags
+  regex     = /tag/php-(8.0[0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+prog XAMPP81 = {
+  version   = 8.1.6
+  dlversion = 8.1.6
+  url       = http://www.php.net/
+  regex     = /downloads.php#v([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+  url       = https://github.com/php/php-src/tags
+  regex     = /tag/php-([0-9\\.]+(?!.*(alpha|beta|rc|ALPHA|BETA|RC)))
+}
+

@@ -1,0 +1,3261 @@
+<component>
+    <name>apachefunctions</name>
+    <description>//Apache functions</description>
+    <show>0</show>
+    <selected>1</selected>
+    <parameterList>
+        <booleanParameter name="apache_aws_redirection" ask="0" value="0"/>
+        <booleanParameter name="apache_nip_redirection" ask="0" value="0"/>
+    </parameterList>
+    <functionDefinitionList>
+        <ruleDefinition name="apacheModuleTest">
+	    <parameterList>
+	        <stringParameter name="moduleName" default="" />
+                <stringParameter name="moduleIdentifier" default="" />
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+                <stringParameter name="condition" value="enabled"/>
+	    </parameterList>
+	    <actionList>
+                <setInstallerVariable name="result" value="0"/>
+                <setInstallerVariable name="load_line" value=""/>
+                <readFile path="${apacheConfigurationFile}" name="apache_configuration_file_content" />
+                <setInstallerVariable name="module_definition" value=""/>
+                <!-- Note the opened parenthesis to be closed later -->
+                <setInstallerVariable name="pattern" value="^.*\n\s*(#*\s*LoadModule\s+([^\n]*)"/>
+                <setInstallerVariable name="pattern" value="${pattern}${moduleIdentifier}\s+">
+                    <ruleList>
+                        <compareText text="${moduleIdentifier}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="pattern" value="${pattern}modules/${moduleName}\.so">
+                    <ruleList>
+                        <compareText text="${moduleName}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="pattern" value="${pattern}).*"/>
+
+                <setInstallerVariableFromRegEx text="${apache_configuration_file_content}" name="load_line" pattern="${pattern}" substitution="\1" >
+                    <ruleList>
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>${pattern}</pattern>
+                            <text>${apache_configuration_file_content}</text>
+                        </regExMatch>
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+                <setInstallerVariable name="result" value="1">
+                    <ruleList>
+                        <compareText text="${condition}" logic="equals" value="present"/>
+                        <compareText text="${load_line}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="result" value="1">
+                    <ruleList>
+                        <compareText text="${condition}" logic="equals" value="enabled"/>
+                        <compareText text="${load_line}" logic="does_not_equal" value=""/>
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <negate>1</negate>
+                            <pattern>^\s*#.*</pattern>
+                            <text>${load_line}</text>
+                        </regExMatch>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="result" value="1">
+                    <ruleList>
+                        <compareText text="${condition}" logic="equals" value="disabled"/>
+                        <ruleGroup>
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                                <compareText text="${load_line}" logic="equals" value=""/>
+                                <regExMatch>
+                                    <logic>matches</logic>
+                                    <pattern>^\s*#.*</pattern>
+                                    <text>${load_line}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </ruleGroup>
+                    </ruleList>
+                </setInstallerVariable>
+	    </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+	</ruleDefinition>
+
+        <ruleDefinition>
+            <name>isPhpInstalled</name>
+            <actionList>
+                <setInstallerVariable name="result" value=""/>
+                <setInstallerVariable name="result" value="1">
+                    <ruleList>
+                        <componentTest name="php" logic="exists"/>
+                        <componentTest name="php" logic="selected"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="php_dir" value="${installdir}/php"/>
+                        <setInstallerVariable name="php_dir" value="${php_directory}">
+                            <ruleList>
+                                <compareText text="${php_directory}" logic="does_not_contain" value="unknown variable"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="php_scripts_dir" value="${php_dir}/scripts"/>
+                        <setInstallerVariable name="result" value="1">
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                                <fileExists path="${php_scripts_dir}/ctl.sh.disabled"/>
+                                <fileExists path="${php_scripts_dir}/ctl.sh"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${result}" logic="equals" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <setInstallerVariable name="result" value="0">
+                    <ruleList>
+                        <compareText text="${result}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <ruleDefinition>
+            <name>isPhpFpmInstalled</name>
+            <actionList>
+                <setInstallerVariable name="result" value=""/>
+                <setInstallerVariable name="result" value="1">
+                   <ruleList>
+                        <!-- PHP-FPM depends on PHP so in case the latter is disabled without disabling PHP-FPM, we check it here -->
+                        <isPhpInstalled/>
+                        <componentTest name="php_fpm" logic="exists"/>
+                        <componentTest name="php_fpm" logic="selected"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="php_dir" value="${installdir}/php"/>
+                        <setInstallerVariable name="result" value="1">
+                            <ruleList>
+                                <fileExists path="${php_dir}/sbin/php-fpm"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${result}" logic="equals" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <setInstallerVariable name="result" value="0">
+                    <ruleList>
+                        <compareText text="${result}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <ruleDefinition>
+            <name>isPhpFpmEnabled</name>
+            <parameterList>
+                <stringParameter name="useCacheResult" value="1"/>
+            </parameterList>
+            <actionList>
+                <actionGroup>
+                    <actionList>
+
+                <setInstallerVariable name="result" value=""/>
+                <globalVariables names="cache_php_fpm_is_enabled"/>
+                <!-- Ifnore cached result if we disabled it externally -->
+                <setInstallerVariable name="cache_php_fpm_is_enabled" value="">
+                    <ruleList>
+                        <isFalse value="${useCacheResult}"/>
+                    </ruleList>
+                </setInstallerVariable>
+                 <setInstallerVariable name="result" value="1">
+                     <ruleList>
+                        <!-- PHP-FPM depends on PHP so in case the latter is disabled without disabling PHP-FPM, we check it here -->
+                        <componentTest name="php" logic="exists"/>
+                        <componentTest name="php" logic="selected"/>
+                        <componentTest name="php_fpm" logic="exists"/>
+                        <componentTest name="php_fpm" logic="selected"/>
+                        <isTrue value="${component(php_fpm).parameter(enable_phpfpm).value}"/>
+                     </ruleList>
+                 </setInstallerVariable>
+
+                 <setInstallerVariable name="result" value="0">
+                     <ruleList>
+                         <isPhpFpmInstalled negate="1"/>
+                     </ruleList>
+                 </setInstallerVariable>
+
+                 <actionGroup>
+                     <actionList>
+                         <setInstallerVariable name="result" value="0"/>
+                         <setInstallerVariable name="result" value="1">
+                             <ruleList>
+                                 <isTrue value="${cache_php_fpm_is_enabled}"/>
+                             </ruleList>
+                         </setInstallerVariable>
+                     </actionList>
+                     <ruleList>
+                         <compareText text="${result}" logic="equals" value=""/>
+                         <!--<isDefined variable="cache_php_fpm_is_enabled" allowEmptyValues="0"/>-->
+                         <compareText text="${cache_php_fpm_is_enabled}" logic="does_not_contain" value="unknown variable"/>
+                         <compareText text="${cache_php_fpm_is_enabled}" logic="does_not_equal" value=""/>
+                     </ruleList>
+                 </actionGroup>
+                 <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="result" value="0"/>
+                        <!--<setInstallerVariable name="php_fpm_global_conf_enabled" value="0"/>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="text" value=""/>
+                                <readFile>
+                                    <name>text</name>
+                                    <path>${web_server_configuration_directory}/bitnami/bitnami.conf</path>
+                                </readFile>
+                                <setInstallerVariable name="textfpm_global_conf" value=""/>
+                                <readFile>
+                                    <name>text_fpm_global_conf</name>
+                                    <path>${web_server_configuration_directory}/bitnami/bitnami.conf</path>
+                                </readFile>
+
+                                <setInstallerVariable name="php_fpm_global_conf_enabled" value="1">
+                                    <ruleList>
+                                        <regExMatch text="${text}" logic="matches" pattern="\n+\s*Include\s+&quot;conf/php-fpm-apache.conf&quot;"/>
+                                        <regExMatch text="${text}" logic="matches" pattern="\n+\s*ProxyPassMatch\s+.*"/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <fileExists path="${web_server_configuration_directory}/conf/php-fpm-apache.conf"/>
+                                <fileExists path="${web_server_configuration_directory}/bitnami/bitnami.conf"/>
+                            </ruleList>
+                        </actionGroup>-->
+                        <setInstallerVariable name="result" value="1">
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                         <!--       <isTrue value="${php_fpm_global_conf_enabled}"/>-->
+                                <apacheModuleTest moduleIdentifier="php[^\s]*_module" moduleName="[^\s]*php[^\s]*" condition="disabled"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${result}" logic="equals" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <setInstallerVariable name="cache_php_fpm_is_enabled" value="${result}"/>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+        <ruleDefinition>
+            <name>isThreadSafeModPhp</name>
+            <parameterList>
+                <stringParameter name="phpConfig" value=""/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="phpConfig" value="${installdir}/php/bin/php-config">
+                    <ruleList>
+                         <compareText text="${phpConfig}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="phpConfig" value="${php_directory}/bin/php-config">
+                    <ruleList>
+                        <compareText text="${php_directory}" logic="does_not_contain" value="unknown variable"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="php_config_text" value=""/>
+                <readFile>
+                    <name>php_config_text</name>
+                    <path>${phpConfig}</path>
+                    <ruleList>
+                        <compareText text="${phpConfig}" logic="does_not_equal" value=""/>
+                        <fileExists path="${phpConfig}"/>
+                    </ruleList>
+                </readFile>
+            </actionList>
+            <ruleList>
+                <compareText text="${php_config_text}" logic="contains" value="enable-maintainer-zts"/>
+            </ruleList>
+        </ruleDefinition>
+        <!-- Checks if a bitnami application is registered in apache configuration. Currently it is not used (needs more testing) but we are not supporting it in bnconfig yet -->
+        <ruleDefinition name="isAppRegisteredInFile">
+            <parameterList>
+                <stringParameter name="applicationId" default=""/>
+                <stringParameter name="configFile" value="" />
+                <stringParameter name="intoConfigFile" value=""/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="result" value="0"/>
+                <setInstallerVariable name="configFile" value="${app(${applicationId}).installdir.unix}/conf/httpd-prefix.conf ${app(${applicationId}).installdir.unix}/conf/httpd-vhosts.conf" >
+                    <ruleList>
+                        <stringTest text="${configFile}" type="empty" />
+                        <fileExists path="${app(${applicationId}).installdir.unix}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="configFile" value="${${applicationId}_installation_directory}/conf/httpd-prefix.conf ${${applicationId}_installation_directory}/conf/httpd-vhosts.conf" >
+                    <ruleList>
+                        <stringTest text="${configFile}" type="empty" />
+                        <fileExists path="${${applicationId}_installation_directory}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="intoConfigFile" value="httpd.conf" />
+                        <setInstallerVariable name="intoConfigFile" value="bitnami/bitnami-apps-prefix.conf bitnami/bitnami-apps-vhosts.conf" >
+                            <ruleList>
+                                <fileTest path="${web_server_configuration_directory.unix}/bitnami/bitnami.conf" condition="exists" />
+                                <fileTest path="${web_server_configuration_directory.unix}/bitnami/bitnami-apps-prefix.conf" condition="exists" />
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${intoConfigFile}" logic="equals" value=""/>
+                    </ruleList>
+                </actionGroup>
+
+                <foreach>
+                    <variables>var1</variables>
+                    <values>${intoConfigFile}</values>
+                    <actionList>
+                        <foreach>
+                            <variables>var2</variables>
+                            <values>${configFile}</values>
+                            <actionList>
+                                <readFile path="${web_server_configuration_directory}/${var1}" name="apache_configuration_file"/>
+                                <setInstallerVariable name="result" value="1">
+                                    <ruleList>
+                                         <compareText text="${apache_configuration_file}" logic="contains" value="${var2}"/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                            </actionList>
+                        </foreach>
+                    </actionList>
+                </foreach>
+            </actionList>
+            <ruleList>
+                <isTrue value="${result}"/>
+            </ruleList>
+        </ruleDefinition>
+
+        <!-- Custom helper action to restart apache service in Windows -->
+        <!-- This action is not meant to be runned by developers -->
+        <actionDefinition>
+            <name>apacheRestartWindows</name>
+            <actionList>
+                <manageService service="apache" action="restart" waitForPort="${web_server_port}" >
+                    <ruleList>
+                        <fileExists path="${installdir}/apache" />
+                    </ruleList>
+                </manageService>
+                <manageService service="apache2" action="restart" waitForPort="${web_server_port}" >
+                    <ruleList>
+                        <fileExists path="${installdir}/apache2" />
+                    </ruleList>
+                </manageService>
+                <actionGroup>
+                    <actionList>
+                        <runProgram>
+                            <program>cmd.exe</program>
+                            <programArguments>/C start /MIN net stop ${apache_unique_service_name}</programArguments>
+                        </runProgram>
+                        <waitForPort port="${web_server_port}" timeout="10000" state="free"/>
+                        <runProgram>
+                            <program>cmd.exe</program>
+                            <programArguments>/C start /MIN net start ${apache_unique_service_name}</programArguments>
+                        </runProgram>
+                        <waitForPort port="${web_server_port}" timeout="10000" state="in_use"/>
+                    </actionList>
+                    <ruleList>
+                        <fileExists path="${installdir}/apache2/scripts/servicerun.bat" negate="1"/>
+                        <fileExists path="${installdir}/apache/scripts/ctl.bat" negate="1"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="getBannerRootDirectory">
+	    <parameterList>
+		<stringParameter name="variable" default="" />
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+	    </parameterList>
+	    <actionList>
+                <setInstallerVariable name="${variable}" value=""/>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariable name="banner_dir" value=""/>
+                <if  abortOnError="0" showMessageOnError="0">
+                    <actionList>
+                        <setInstallerVariable name="banner_dir" value="${banner_root_directory}"/>
+                    </actionList>
+                    <elseActionList>
+                        <readFile path="${web_server_configuration_directory}/httpd.conf" name="apache_conf_text" />
+                        <setInstallerVariableFromRegEx text="${apache_conf_text}" name="banner_dir">
+                            <pattern>Include\s+\"?([^\n\"]*)/conf/banner.conf\"?"</pattern>
+                            <substitution>\1</substitution>
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>matches</logic>
+                                    <pattern>Include\s+\"?([^\n\"]*)/conf/banner.conf\"?</pattern>
+                                    <text>${apache_conf_text}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </setInstallerVariableFromRegEx>
+                        <foreach>
+                            <variables>d</variables>
+                            <values>"${installdir}/apps/bitnami/banner" "${apache_server_directory}/banner" "${installdir}/bitnami/banner" "${installdir}/apps/bitnami/banner"</values>
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <actionList>
+                                <actionGroup>
+                                    <actionList>
+                                        <setInstallerVariable name="banner_dir" value="${d}"/>
+                                        <break/>
+                                    </actionList>
+                                    <ruleList>
+                                        <fileExists path="${d}/conf/banner-substitutions.conf"/>
+                                    </ruleList>
+                                </actionGroup>
+                            </actionList>
+                            <ruleList>
+                                <compareText text="${banner_dir}" logic="equals" value=""/>
+                                <fileExists path="${banner_dir}/conf/banner-substitutions.conf" negate="1"/>
+                            </ruleList>
+                        </foreach>
+                    </elseActionList>
+                    <conditionRuleList>
+                        <componentTest name="bitnami_banner" logic="exists"/>
+                        <componentTest name="bitnami_banner" logic="selected"/>
+                    </conditionRuleList>
+                </if>
+                <setInstallerVariable name="${variable}" value="${banner_dir}"/>
+	    </actionList>
+	</actionDefinition>
+        <actionDefinition name="getBannerTextForApp">
+	    <parameterList>
+		<stringParameter name="variable" default="" />
+                <stringParameter name="disableBannerCondition" value=""/>
+                <stringParameter name="bannerRootDirectory" value=""/>
+	    </parameterList>
+	    <actionList>
+                <setInstallerVariable name="${variable}" value=""/>
+                <globalVariables names="${variable}"/>
+
+                <setInstallerVariable name="app_banner_text" value=""/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="app_banner_text" value=""/>
+                        <setInstallerVariable name="app_banner_text">
+                            <value><![CDATA[    <If "${disableBannerCondition}" >
+       SetEnv  "DISABLE_BANNER" "YES"
+    </If>
+]]></value>
+                            <ruleList>
+                                <compareText text="${disableBannerCondition}" logic="does_not_equal" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+
+                        <setInstallerVariable name="app_banner_text">
+                            <value>${app_banner_text}    Include "${bannerRootDirectory}/conf/banner-substitutions.conf"</value>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="app_banner_text">
+                            <value><![CDATA[# Banner configuration
+<IfDefine !DISABLE_BANNER>
+${app_banner_text}
+</IfDefine>
+]]></value>
+                        </setInstallerVariable>
+
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${bannerRootDirectory}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <setInstallerVariable name="${variable}" value="${app_banner_text}"/>
+	    </actionList>
+	</actionDefinition>
+
+	<actionDefinition name="addPhpFpmApp">
+	    <parameterList>
+            <stringParameter name="socket" default="" />
+            <stringParameter name="port" default="9000" />
+            <stringParameter name="chrootDir" default="" />
+            <stringParameter name="phpFpmConfFile" default=""/>
+            <stringParameter name="confDir" default=""/>
+            <stringParameter name="id" default="www"/>
+            <stringParameter name="appPhpSettings" default=""/>
+            <stringParameter name="user" default=""/>
+            <stringParameter name="group" default=""/>
+            <stringParameter name="pmMode" default="dynamic"/>
+            <stringParameter name="maxChildren" default=""/>
+            <stringParameter name="startServers" default=""/>
+            <stringParameter name="minSpareServers" default=""/>
+            <stringParameter name="maxSpareServers" default=""/>
+        </parameterList>
+	    <actionList>
+            <setInstallerVariable name="tmp_text" value="${appPhpSettings}" />
+
+            <setInstallerVariable name="phpFpmConfFile" value="${php_fpm_root_directory}/etc/php-fpm.conf">
+                <ruleList>
+                    <compareText text="${phpFpmConfFile}" logic="equals" value="" />
+                    <compareText text="${php_fpm_root_directory}" logic="does_not_contain" value="unknown" />
+                </ruleList>
+            </setInstallerVariable>
+            <setInstallerVariable name="phpFpmConfFile" value="${installdir}/php/etc/php-fpm.conf">
+                <ruleList>
+                    <compareText text="${phpFpmConfFile}" logic="equals" value="" />
+                </ruleList>
+            </setInstallerVariable>
+            <dirName>
+                <variable>phpFpmConfDir</variable>
+                <path>${phpFpmConfFile}</path>
+            </dirName>
+            <createDirectory path="${confDir}" >
+                <ruleList>
+                    <fileExists path="${confDir}" negate="1"/>
+                </ruleList>
+            </createDirectory>
+            <touchFile path="${confDir}/php-settings.conf">
+                <ruleList>
+                    <fileExists path="${confDir}/php-settings.conf" negate="1"/>
+                </ruleList>
+            </touchFile>
+            <setInstallerVariable name="includedFile" value="${phpFpmConfDir}/common-dynamic.conf"/>
+            <setInstallerVariable name="includedFile" value="${phpFpmConfDir}/common-ondemand.conf">
+                <ruleList>
+                    <compareText text="${pmMode}" logic="equals" value="ondemand"/>
+                </ruleList>
+            </setInstallerVariable>
+            <setInstallerVariable name="confText">
+                <value>[${id}]&#xA;include=${includedFile}</value>
+            </setInstallerVariable>
+            <setInstallerVariable name="confText">
+                <value>${confText}&#xA;include=${confDir}/php-settings.conf</value>
+            </setInstallerVariable>
+            <setInstallerVariable name="confText">
+                <value>${confText}&#xA;include=${phpFpmConfDir}/environment.conf</value>
+                <ruleList>
+                    <fileExists path="${phpFpmConfDir}/environment.conf"/>
+                </ruleList>
+            </setInstallerVariable>
+
+            <foreach>
+                <variables>key var</variables>
+                <values>user user group group pm pmMode pm.max_children maxChildren pm.start_servers startServers pm.min_spare_servers minSpareServers pm.max_spare_servers maxSpareServers</values>
+                <actionList>
+                    <setInstallerVariable name="confText">
+                        <value>${confText}&#xA;${key}=${${var}}</value>
+                        <ruleList>
+                            <compareText text="${${var}}" logic="does_not_equal" value="" />
+                        </ruleList>
+                    </setInstallerVariable>
+                </actionList>
+            </foreach>
+            <writeFile>
+                <path>${confDir}/pool.conf</path>
+                <text>${confText}&#xA;</text>
+                <ruleList>
+                    <fileExists path="${confDir}/pool.conf" negate="1"/>
+                </ruleList>
+            </writeFile>
+            <addTextToFile>
+                <file>${phpFpmConfFile}</file>
+		        <text>
+                    include=${confDir}/pool.conf
+                </text>
+		        <ruleList>
+			        <fileContentTest text="include=${confDir}/pool.conf" path="${phpFpmConfFile}" logic="does_not_contain" />
+		        </ruleList>
+		    </addTextToFile>
+            <while>
+                <actionList>
+                    <setInstallerVariableFromRegEx>
+                        <name>k</name>
+                        <pattern>^\s*(php_[^\s]+)\s+([^\s]+)\s+([^\s]+)\s*.*</pattern>
+                        <substitution>\1[\2]</substitution>
+                        <text>${tmp_text}</text>
+                    </setInstallerVariableFromRegEx>
+
+                    <setInstallerVariableFromRegEx>
+                        <name>v</name>
+                        <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*.*</pattern>
+                        <substitution>\2</substitution>
+                        <text>${tmp_text}</text>
+                    </setInstallerVariableFromRegEx>
+                    <setInstallerVariableFromRegEx>
+                        <name>tmp_text</name>
+                        <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*(.*)</pattern>
+                        <substitution>\3</substitution>
+                        <text>${tmp_text}</text>
+                    </setInstallerVariableFromRegEx>
+                    <!-- PHP-FPM complains with 'invalid boolean value' if php_flags are not either 'on' or 'off' -->
+                    <if>
+                        <conditionRuleEvaluationLogic>or</conditionRuleEvaluationLogic>
+                        <conditionRuleList>
+                            <compareText text="${v}" logic="equals" value="on"/>
+                            <isTrue value="${v}"/>
+                        </conditionRuleList>
+                        <actionList>
+                            <setInstallerVariable name="v" value="on"/>
+                        </actionList>
+                        <elseActionList>
+                            <setInstallerVariable name="v" value="off"/>
+                        </elseActionList>
+                        <ruleList>
+                            <regExMatch text="${k}" logic="matches" pattern="^php(_admin)?_flag"/>
+                        </ruleList>
+                    </if>
+                    <propertiesFileSet>
+                        <file>${confDir}/php-settings.conf</file>
+                        <key>${k}</key>
+                        <value>${v}</value>
+                    </propertiesFileSet>
+                </actionList>
+                <conditionRuleList>
+                    <regExMatch>
+                        <logic>matches</logic>
+                        <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*(.*)</pattern>
+                        <text>${tmp_text}</text>
+                    </regExMatch>
+                </conditionRuleList>
+                <ruleList>
+                    <platformTest type="unix"/>
+                    <compareText text="${tmp_text}" logic="does_not_equal" value=""/>
+                </ruleList>
+            </while>
+        </actionList>
+	</actionDefinition>
+	<actionDefinition name="removePhpFpmApp">
+	    <parameterList>
+                <stringParameter name="applicationId" default=""/>
+                <stringParameter name="phpFpmConfFile" default=""/>
+                <stringParameter name="confDir" default=""/>
+            </parameterList>
+	        <actionList>
+                <setInstallerVariable name="phpFpmConfFile" value="${installdir}/php/etc/php-fpm.conf">
+                    <ruleList>
+                        <compareText text="${phpFpmConfFile}" logic="equals" value="" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="app_installdir" value="${installdir}/apps/${applicationId}"/>
+                <setInstallerVariable name="app_installdir" value="${app(${applicationId}).installdir}">
+                    <ruleList>
+                        <compareText text="${app(${applicationId}).installdir}" logic="does_not_contain" value="unknown variable"/>
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="confDir" value="${app_installdir}/conf/php-fpm">
+                    <ruleList>
+                        <compareText text="${confDir}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <actionGroup abortOnError="0" showMessageOnError="1">
+                    <actionList>
+                        <setInstallerVariable name="substitution" value=""/>
+                        <readFile path="${phpFpmConfFile}" name="php_fpm_conf_text"/>
+                        <pathManipulation variable="pool_file" path="${confDir}/pool.conf"/>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariableFromRegEx>
+                                    <text>${php_fpm_conf_text}</text>
+                                    <name>substitution</name>
+                                    <pattern>(^|.*\n)\s*(include\s*=\s*${pool_file}\s*)(\n.*|$)</pattern>
+                                    <substitution>\2</substitution>
+                                </setInstallerVariableFromRegEx>
+                                <substitute>
+                                    <files>${phpFpmConfFile}</files>
+                                    <type>exact</type>
+                                    <substitutionList>
+                                        <substitution>
+                                            <pattern>${substitution}</pattern>
+                                            <value>&#xA;</value>
+                                        </substitution>
+                                    </substitutionList>
+                                    <ruleList>
+                                        <compareText text="${substitution}" logic="does_not_equal" value=""/>
+                                    </ruleList>
+                                </substitute>
+                            </actionList>
+                            <ruleList>
+                                <regExMatch text="${php_fpm_conf_text}" logic="matches" pattern="(^|\n)\s*include\s*=\s*${pool_file}\s*"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <fileExists path="${phpFpmConfFile}"/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+    </actionDefinition>
+        <actionDefinition>
+            <name>phpUserIniSet</name>
+            <parameterList>
+                <stringParameter name="apacheFormattedText" default="" />
+                <stringParameter name="path" default="" />
+                <stringParameter name="key" default="" />
+                <stringParameter name="value" default="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="permissions" value="444"/>
+                <getPermissions>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <file>${path}</file>
+                    <variable>permissions</variable>
+                    <ruleList>
+                        <fileExists path="${path}"/>
+                    </ruleList>
+                </getPermissions>
+                <while>
+                    <actionList>
+                        <setInstallerVariableFromRegEx>
+                            <name>k</name>
+                            <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*.*</pattern>
+                            <substitution>\1</substitution>
+                            <text>${apacheFormattedText}</text>
+                        </setInstallerVariableFromRegEx>
+
+                        <setInstallerVariableFromRegEx>
+                            <name>v</name>
+                            <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*.*</pattern>
+                            <substitution>\2</substitution>
+                            <text>${apacheFormattedText}</text>
+                        </setInstallerVariableFromRegEx>
+
+                        <setInstallerVariableFromRegEx>
+                            <name>apacheFormattedText</name>
+                            <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*(.*)</pattern>
+                            <substitution>\3</substitution>
+                            <text>${apacheFormattedText}</text>
+                        </setInstallerVariableFromRegEx>
+                        <changePermissions>
+                            <files>${path}</files>
+                            <permissions>777</permissions>
+                        </changePermissions>
+                        <propertiesFileSet>
+                            <file>${path}</file>
+                            <key>${k}</key>
+                            <value>${v}</value>
+                        </propertiesFileSet>
+                    </actionList>
+                    <conditionRuleList>
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>^\s*php_[^\s]+\s+([^\s]+)\s+([^\s]+)\s*(.*)</pattern>
+                            <text>${apacheFormattedText}</text>
+                        </regExMatch>
+                    </conditionRuleList>
+                    <ruleList>
+                        <compareText text="${apacheFormattedText}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </while>
+                <propertiesFileSet>
+                    <file>${path}</file>
+                    <key>${key}</key>
+                    <value>${value}</value>
+                    <ruleList>
+                        <compareText text="${key}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </propertiesFileSet>
+                <changePermissions>
+                    <files>${path}</files>
+                    <permissions>${permissions}</permissions>
+                </changePermissions>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition>
+            <name>phpFpmSettingGet</name>
+            <parameterList>
+                <stringParameter name="phpFpmConfigFile" default="" />
+                <stringParameter name="setting" default="port" />
+                <stringParameter name="variable" default="" />
+                <stringParameter name="defaultValue" value=""/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="${variable}" value="${defaultValue}"/>
+                <actionGroup abortOnError="0" showMessageOnError="0">
+                    <actionList>
+                        <setInstallerVariable name="fpm_port" value=""/>
+                        <setInstallerVariable name="fpm_port" value="${component(php_fpm).parameter(php_fpm_port).value}">
+                            <ruleList>
+                                <componentTest name="php_fpm" logic="exists"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <iniFileGet>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <file>${installdir}/properties.ini</file>
+                            <section>PHP</section>
+                            <key>php_fpm_port</key>
+                            <variable>fpm_port</variable>
+                            <ruleList>
+                                <compareText text="${fpm_port}" logic="equals" value="" />
+                                <fileExists path="${installdir}/properties.ini" />
+                            </ruleList>
+                        </iniFileGet>
+                        <setInstallerVariable name="fpm_port" value="9000">
+                            <ruleList>
+                                <compareText text="${fpm_port}" logic="equals" value="" />
+                            </ruleList>
+                        </setInstallerVariable>
+                    <!-- Just in case, we also define the well known variable -->
+                    <setInstallerVariable name="php_fpm_port" value="${fpm_port}" persist="1"/>
+                    <globalVariables names="php_fpm_port"/>
+
+                    <setInstallerVariable name="${variable}" value="${fpm_port}" persist="1"/>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${setting}" logic="equals" value="port"/>
+                    </ruleList>
+                </actionGroup>
+
+                <actionGroup abortOnError="0" showMessageOnError="0">
+                    <actionList>
+                        <setInstallerVariable name="fpm_socket" value=""/>
+                        <setInstallerVariable name="fpm_socket" value="${component(php_fpm).parameter(php_fpm_socket).value}">
+                            <ruleList>
+                                <componentTest name="php_fpm" logic="exists"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <iniFileGet>
+                            <abortOnError>0</abortOnError>
+                            <showMessageOnError>0</showMessageOnError>
+                            <file>${installdir}/properties.ini</file>
+                            <section>PHP</section>
+                            <key>php_fpm_socket</key>
+                            <variable>fpm_socket</variable>
+                            <ruleList>
+                                <compareText text="${fpm_socket}" logic="equals" value="" />
+                                <fileExists path="${installdir}/properties.ini" />
+                            </ruleList>
+                        </iniFileGet>
+                        <setInstallerVariable name="fpm_socket" value="${php_directory}/var/run/www.sock">
+                            <ruleList>
+                                <compareText text="${fpm_socket}" logic="equals" value="" />
+                                <!--<isPhpFpmEnabled/>-->
+                            </ruleList>
+                        </setInstallerVariable>
+                        <!-- Just in case, we also define the well known variable -->
+                        <setInstallerVariable name="php_fpm_scoket" value="${fpm_socket}" persist="1"/>
+                        <globalVariables names="php_fpm_socket"/>
+
+                        <setInstallerVariable name="${variable}" value="${fpm_socket}" persist="1"/>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${setting}" logic="equals" value="socket"/>
+                    </ruleList>
+                </actionGroup>
+
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="${variable}" value="${${variable}}" persist="1"/>
+                        <globalVariables names="${variable}"/>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${variable}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="apacheModule">
+	    <parameterList>
+                <!-- anything else than disable, enables the module -->
+		<stringParameter name="action" default="enable" />
+	        <stringParameter name="moduleName" default="" />
+                <stringParameter name="moduleIdentifier" default="" />
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+	    </parameterList>
+	    <actionList>
+                <readFile path="${apacheConfigurationFile}" name="apache_configuration_file_content" />
+                <setInstallerVariable name="module_definition" value=""/>
+                <setInstallerVariableFromRegEx text="${apache_configuration_file_content}" name="module_definition" pattern="^.*\n\s*#*\s*LoadModule(.*)modules/${moduleName}\.so\s*\n.*" substitution="LoadModule\1modules/${moduleName}.so" >
+                    <ruleList>
+                        <fileContentTest path="${apacheConfigurationFile}" logic="contains" text="${moduleName}" />
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>^.*\n\s*#*\s*LoadModule(.*)modules/${moduleName}\.so\s*\n.*</pattern>
+                            <text>${apache_configuration_file_content}</text>
+                        </regExMatch>
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+                <actionGroup>
+                    <actionList>
+                        <substitute>
+                            <files>${apacheConfigurationFile}</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>^\s*#\s*${module_definition}</pattern>
+                                    <value>${module_definition}</value>
+                                    <ruleList>
+                                        <compareText text="${action}" logic="equals" value="disable" negate="yes" />
+                                    </ruleList>
+                                </substitution>
+                                <substitution>
+                                    <pattern>^\s*${module_definition}</pattern>
+                                    <value>#${module_definition}</value>
+                                    <ruleList>
+                                        <compareText text="${action}" logic="equals" value="disable" />
+                                    </ruleList>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${module_definition}" logic="does_not_equal" value="" />
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="new_content" value=""/>
+                        <setInstallerVariableFromRegEx text="${apache_configuration_file_content}" name="new_content" pattern="(^.*LoadModule\s+[^\n]+\n)(.*)" substitution="\1LoadModule ${moduleIdentifier} modules/${moduleName}.so&#xA;\2" >
+                            <ruleList>
+                                <regExMatch>
+                                    <logic>matches</logic>
+                                    <pattern>(^.*LoadModule\s+[^\n]+\n)(.*)</pattern>
+                                    <text>${apache_configuration_file_content}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </setInstallerVariableFromRegEx>
+                        <writeFile path="${apacheConfigurationFile}" text="${new_content}">
+                            <ruleList>
+                                <compareText text="${new_content}" logic="does_not_equal" value="" />
+                            </ruleList>
+                        </writeFile>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${module_definition}" logic="equals" value="" />
+                        <compareText text="${action}" logic="does_not_equal" value="disable"/>
+                        <compareText text="${moduleIdentifier}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </actionGroup>
+	    </actionList>
+	</actionDefinition>
+        <actionDefinition name="getModPhpIdentifier">
+	    <parameterList>
+		<stringParameter name="variable" default="" />
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+	    </parameterList>
+	    <actionList>
+                <setInstallerVariable name="${variable}" value=""/>
+                <globalVariables names="${variable}"/>
+                <readFile path="${apacheConfigurationFile}" name="apache_configuration_file_content" />
+                <setInstallerVariableFromRegEx text="${apache_configuration_file_content}" name="${variable}" pattern=".*\n\s*#*\s*LoadModule\s+([^\s]+)\s+modules/libphp[0-9]*.so.*" substitution="\1" >
+                    <ruleList>
+                        <fileContentTest path="${apacheConfigurationFile}" logic="contains" text="modules/libphp" />
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>.*\n\s*#*\s*LoadModule\s+([^\s]+)\s+modules/libphp[0-9]*.so.*</pattern>
+                            <text>${apache_configuration_file_content}</text>
+                        </regExMatch>
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+                <setInstallerVariable name="${variable}" value="mod_php5.c">
+                    <ruleList>
+                        <compareText text="${${variable}}" logic="equals" value="" />
+                    </ruleList>
+                </setInstallerVariable>
+	    </actionList>
+	</actionDefinition>
+        <actionDefinition name="wrapApacheIfModPhpStatetments">
+	    <parameterList>
+		<stringParameter name="variable" default="" />
+		<stringParameter name="text" default="" />
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+	    </parameterList>
+	    <actionList>
+                <setInstallerVariable name="${variable}" value="${text}"/>
+                <globalVariables names="${variable}"/>
+                <!-- For now, only unix -->
+                <actionGroup>
+                    <actionList>
+                        <getModPhpIdentifier apacheConfigurationFile="${apacheConfigurationFile}" variable="identifier"/>
+                        <setInstallerVariable name="${variable}">
+                            <value>    &lt;IfModule ${identifier}&gt;
+            ${text}
+    &lt;/IfModule&gt;
+</value>
+                            <ruleList>
+                                <compareText text="${indentifier}" logic="does_not_equal" value=""/>
+                                <compareText text="${text}" logic="does_not_equal" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+	    </actionList>
+	</actionDefinition>
+        <actionDefinition name="apacheMpmModeGet">
+	    <parameterList>
+                <stringParameter name="mode" value=""/>
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+	    </parameterList>
+	    <actionList>
+                <readFile path="${apacheConfigurationFile}" name="apache_configuration_file_content" />
+                <setInstallerVariable name="${mode}" value="prefork"/>
+                <setInstallerVariableFromRegEx text="${apache_configuration_file_content}" name="${mode}" pattern="^.*\n\s*LoadModule\s+mpm_(event|prefork|worker)_module\s+modules/mod_mpm_(event|prefork|worker)\.so\s*\n.*" substitution="\1" >
+                    <ruleList>
+                        <regExMatch>
+                            <logic>matches</logic>
+                            <pattern>^.*\n\s*LoadModule\s+mpm_(event|prefork|worker)_module\s+modules/mod_mpm_(event|prefork|worker)\.so\s*\n.*</pattern>
+                            <text>${apache_configuration_file_content}</text>
+                        </regExMatch>
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+                <globalVariables names="${mode}"/>
+	    </actionList>
+	</actionDefinition>
+        <actionDefinition name="apacheMpmModeSet">
+	    <parameterList>
+                <stringParameter name="mode" value="prefork"/>
+		<stringParameter name="apacheConfigurationFile" default="${web_server_configuration_directory}/httpd.conf" />
+	    </parameterList>
+	    <actionList>
+                <!-- Limited only to Unix -->
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="mode" value="prefork" >
+                            <ruleList>
+                                <compareText text="${mode}" logic="equals" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+                        <apacheModule action="enable" moduleName="mod_mpm_${mode}" apacheConfigurationFile="${apacheConfigurationFile}" moduleIdentifier="mpm_${mode}_module"/>
+                        <foreach variables="m" values="prefork event worker">
+                            <actionList>
+                                <continue>
+                                    <ruleList>
+                                        <compareText text="${m}" logic="equals" value="${mode}"/>
+                                    </ruleList>
+                                </continue>
+                                <apacheModule action="disable" moduleName="mod_mpm_${m}" apacheConfigurationFile="${apacheConfigurationFile}" moduleIdentifier="mpm_${m}_module"/>
+                            </actionList>
+                        </foreach>
+                        <actionGroup>
+                            <actionList>
+                                <apacheModule action="disable" moduleName="libphp" apacheConfigurationFile="${apacheConfigurationFile}"/>
+                                <apacheModule action="disable" moduleName="libphp7" apacheConfigurationFile="${apacheConfigurationFile}"/>
+                            </actionList>
+                            <ruleList>
+                                <!--<isThreadSafeModPhp negate="1"/>-->
+                                <compareText text="${mode}" logic="does_not_equal" value="prefork"/>
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <apacheModule action="enable" moduleName="libphp" apacheConfigurationFile="${apacheConfigurationFile}"/>
+                                <apacheModule action="enable" moduleName="libphp7" apacheConfigurationFile="${apacheConfigurationFile}"/>
+                            </actionList>
+                            <ruleList>
+                                <compareText text="${mode}" logic="equals" value="prefork"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+	    </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="apacheRegisterApp">
+            <parameterList>
+                <stringParameter name="applicationId" default=""/>
+                <stringParameter name="configFile" default="" />
+                <stringParameter name="intoConfigFile" default="" />
+                <stringParameter name="enabled" default="1"/>
+                <booleanParameter name="useVirtualHosts" default="0"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="type" value="prefix"/>
+                <setInstallerVariable name="type" value="vhosts">
+                    <ruleList>
+                        <isTrue value="${useVirtualHosts}"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="configFile" value="${app(${applicationId}).installdir.unix}/conf/httpd-${type}.conf" >
+                    <ruleList>
+                        <stringTest text="${configFile}" type="empty" />
+                        <fileExists path="${app(${applicationId}).installdir.unix}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="configFile" value="${${applicationId}_installation_directory}/conf/httpd-${type}.conf" >
+                    <ruleList>
+                        <stringTest text="${configFile}" type="empty" />
+                        <fileExists path="${${applicationId}_installation_directory}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="intoConfigFile" value="httpd.conf" />
+                        <setInstallerVariable name="intoConfigFile" value="bitnami/bitnami-apps-${type}.conf" >
+                            <ruleList>
+                                <fileTest path="${web_server_configuration_directory.unix}/bitnami/bitnami.conf" condition="exists" />
+                                <fileTest path="${web_server_configuration_directory.unix}/bitnami/bitnami-apps-${type}.conf" condition="exists" />
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${intoConfigFile}" logic="equals" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <addTextToFile>
+                    <file>${web_server_configuration_directory}/${intoConfigFile}</file>
+                    <text>Include "${configfile}"
+                    </text>
+                    <ruleList>
+                        <fileContentTest path="${web_server_configuration_directory.unix}/${intoConfigFile}" logic="does_not_contain" text="${configFile}"/>
+                        <isTrue value="${enabled}" />
+                    </ruleList>
+                </addTextToFile>
+                <addTextToFile>
+                    <file>${web_server_configuration_directory}/${intoConfigFile}</file>
+                    <text>#Include "${configFile}"
+                    </text>
+                    <ruleList>
+                        <fileContentTest path="${web_server_configuration_directory.unix}/${intoConfigFile}" logic="does_not_contain" text="${configFile}"/>
+                        <isFalse value="${enabled}" />
+                    </ruleList>
+                </addTextToFile>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="apacheUnregisterApp">
+	  <parameterList>
+	    <stringParameter name="applicationId" default=""/>
+	    <stringParameter name="configFiles" value="" />
+	    <stringParameter name="configFile" value="" />
+	    <stringParameter name="intoConfigFile" value="" />
+	  </parameterList>
+          <actionList>
+            <setInstallerVariable name="files" value=""/>
+            <setInstallerVariable name="files" value="${configFiles}">
+	      <ruleList>
+		<stringTest text="${configFiles}" type="not_empty"/>
+	      </ruleList>
+            </setInstallerVariable>
+            <setInstallerVariable name="files">
+              <value>${files} "${configFile}"</value>
+	      <ruleList>
+		<stringTest text="${configFile}" type="not_empty"/>
+	      </ruleList>
+            </setInstallerVariable>
+            <actionGroup>
+              <actionList>
+	        <setInstallerVariable name="files">
+                  <value>"${app(${applicationId}).installdir.unix}/conf/httpd-prefix.conf" "${app(${applicationId}).installdir.unix}/conf/httpd-vhosts.conf"</value>
+		  <ruleList>
+		    <fileExists path="${app(${applicationId}).installdir.unix}"/>
+		  </ruleList>
+	        </setInstallerVariable>
+	        <setInstallerVariable name="files">
+                  <value>"${${applicationId}_installation_directory}/conf/httpd-prefix.conf" "${${applicationId}_installation_directory}/conf/httpd-vhosts.conf"</value>
+		  <ruleList>
+		    <stringTest text="${files}" type="empty"/>
+		    <fileExists path="${${applicationId}_installation_directory}"/>
+		  </ruleList>
+	        </setInstallerVariable>
+              </actionList>
+              <ruleList>
+                <stringTest text="${files}" type="empty"/>
+              </ruleList>
+            </actionGroup>
+	    <actionGroup>
+	      <actionList>
+		    <setInstallerVariable name="intoConfigFile" value="httpd.conf" />
+		    <setInstallerVariable name="intoConfigFile" value="bitnami/bitnami-apps-prefix.conf bitnami/bitnami-apps-vhosts.conf" >
+			<ruleList>
+			    <fileTest path="${web_server_configuration_directory.unix}/bitnami/bitnami.conf" condition="exists" />
+			    <fileTest path="${web_server_configuration_directory.unix}/bitnami/bitnami-apps-prefix.conf" condition="exists" />
+			</ruleList>
+		    </setInstallerVariable>
+		</actionList>
+		<ruleList>
+		    <compareText text="${intoConfigFile}" logic="equals" value=""/>
+		</ruleList>
+	    </actionGroup>
+	    <foreach>
+		<variables>var1</variables>
+		<values>${intoConfigFile}</values>
+		<actionList>
+		    <foreach>
+			<variables>var2</variables>
+			<values>${files}</values>
+			<actionList>
+			    <readFile path="${web_server_configuration_directory}/${var1}" name="apache_configuration_file"/>
+			    <setInstallerVariableFromRegEx>
+				<text>${apache_configuration_file}</text>
+				<name>apache_configuration_file</name>
+				<pattern>Include "${var2}"</pattern>
+				<substitution></substitution>
+			    </setInstallerVariableFromRegEx>
+			    <writeFile path="${web_server_configuration_directory}/${var1}" text="${apache_configuration_file}"/>
+			</actionList>
+		    </foreach>
+		</actionList>
+	    </foreach>
+          </actionList>
+	</actionDefinition>
+
+    <actionDefinition name="removePhpApp">
+	    <parameterList>
+	        <stringParameter name="applicationId" default=""/>
+	        <stringParameter name="apacheConfigFile" value="" />
+	        <stringParameter name="intoApacheConfigFile" value="" />
+            <stringParameter name="phpFpmAppConfigDir" value="" />
+            <stringParameter name="phpFpmConfFile" default=""/>
+	    </parameterList>
+	    <actionList>
+            <apacheUnregisterApp applicationId="${applicationId}" configFile="${apacheConfigFile}" intoConfigFile="${intoApacheConfigFile}"/>
+            <removePhpFpmApp applicationId="${applicationId}" confDir="${phpFpmAppConfigDir}" phpFpmConfFile="${phpFpmConfFile}" >
+                <ruleList>
+                    <platformTest type="unix"/>
+                </ruleList>
+            </removePhpFpmApp>
+        </actionList>
+	</actionDefinition>
+
+
+      <actionDefinition name="apacheSaveConfigurationToFile">
+          <parameterList>
+              <stringParameter name="apachePropertiesFile" default="${installdir}/properties.ini" />
+              <stringParameter name="apacheServerPort" default="${web_server_port}" />
+              <stringParameter name="apacheUser" default="${web_server_user}" />
+              <stringParameter name="apacheGroup" default="${web_server_group}" />
+              <stringParameter name="apacheSSLPort" default="${web_server_ssl_port}" />
+              <stringParameter name="apacheRootDirectory" default="${apache_server_directory}" />
+              <stringParameter name="apacheHtdocsDirectory" default="${apache_htdocs_directory}" />
+              <stringParameter name="apacheDomainName" default="${web_server_domain_name}" />
+              <stringParameter name="apacheWindowsServiceName" default="${apache_unique_service_name}" />
+              <stringParameter name="apacheConfigurationDirectory" default="${web_server_configuration_directory}" />
+              <stringParameter name="apacheInstalledVersion" default="${apache_bundled_version}" />
+          </parameterList>
+          <actionList>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_server_port</key>
+                  <value>${apacheServerPort}</value>
+	            </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_user</key>
+                  <value>${apacheUser}</value>
+                  <ruleList>
+                      <platformTest type="unix"/>
+                  </ruleList>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_group</key>
+                  <value>${apacheGroup}</value>
+                  <ruleList>
+                      <platformTest type="unix"/>
+                  </ruleList>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_server_ssl_port</key>
+                  <value>${apacheSSLPort}</value>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_root_directory</key>
+                  <value>${apacheRootDirectory}</value>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_htdocs_directory</key>
+                  <value>${apacheHtdocsDirectory}</value>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_domainname</key>
+                  <value>${apacheDomainName}</value>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_configuration_directory</key>
+                  <value>${apacheConfigurationDirectory}</value>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_unique_service_name</key>
+                  <value>${apacheWindowsServiceName}</value>
+	                <ruleList>
+	                    <platformTest type="windows"/>
+	                </ruleList>
+              </iniFileSet>
+              <iniFileSet>
+                  <file>${apachePropertiesFile}</file>
+                  <section>Apache</section>
+                  <key>apache_version</key>
+                  <value>${apacheInstalledVersion}</value>
+                  <ruleList>
+                      <componentTest name="apache" logic="exists"/>
+                  </ruleList>
+              </iniFileSet>
+          </actionList>
+      </actionDefinition>
+
+        <actionDefinition name="apacheLoadConfigurationFromFile">
+            <parameterList>
+                <stringParameter name="apachePropertiesFile" default="${installdir}/properties.ini" />
+                <!-- The following parameters refer to the name of the variable where the value will be stored -->
+                <stringParameter name="apacheServerPort" default="web_server_port" />
+                <stringParameter name="apacheUser" default="web_server_user" />
+	              <stringParameter name="apacheGroup" default="web_server_group" />
+	              <stringParameter name="apacheSSLPort" default="web_server_ssl_port" />
+	              <stringParameter name="apacheRootDirectory" default="apache_server_directory" />
+	              <stringParameter name="apacheHtdocsDirectory" default="apache_htdocs_directory" />
+	              <stringParameter name="apacheDomainName" default="web_server_domain_name" />
+	              <stringParameter name="apacheWindowsServiceName" default="apache_unique_service_name" />
+	              <stringParameter name="apacheConfigurationDirectory" default="web_server_configuration_directory" />
+	              <stringParameter name="apacheInstalledVersion" default="apache_installed_version" />
+            </parameterList>
+            <actionList>
+                <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_server_port</key>
+	                  <variable>${apacheServerPort}</variable>
+	              </iniFileGet>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_user</key>
+	                  <variable>${apacheUser}</variable>
+	              </iniFileGet>
+	              <setInstallerVariable name="${apacheUser}" value="daemon" >
+	                  <ruleList>
+                        <compareText text="${${apacheUser}}" logic="equals" value=""/>
+                    </ruleList>
+	              </setInstallerVariable>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_group</key>
+	                  <variable>${apacheGroup}</variable>
+	              </iniFileGet>
+	              <setInstallerVariable name="${apacheGroup}" value="daemon" >
+	                  <ruleList>
+	                      <compareText text="${${apacheGroup}}" logic="equals" value=""/>
+	                  </ruleList>
+	              </setInstallerVariable>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_server_ssl_port</key>
+	                  <variable>${apacheSSLPort}</variable>
+	              </iniFileGet>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_root_directory</key>
+	                  <variable>${apacheRootDirectory}</variable>
+	              </iniFileGet>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_htdocs_directory</key>
+	                  <variable>${apacheHtdocsDirectory}</variable>
+	              </iniFileGet>
+	              <actionGroup>
+	                  <actionList>
+		                    <setInstallerVariable name="apache_htdocs_directory" value="${${apacheRootDirectory}}/htdocs" persist="1" />
+	                      <globalVariables names="apache_htdocs_directory" />
+	                  </actionList>
+	                  <ruleList>
+		                    <stringTest text="${${apacheHtdocsDirectory}}" type="empty" />
+	                  </ruleList>
+	              </actionGroup>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_domainname</key>
+                    <variable>${apacheDomainName}</variable>
+	              </iniFileGet>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_configuration_directory</key>
+	                  <variable>${apacheConfigurationDirectory}</variable>
+	              </iniFileGet>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_unique_service_name</key>
+	                  <variable>${apacheWindowsServiceName}</variable>
+	                  <ruleList>
+	                      <platformTest type="windows"/>
+	                  </ruleList>
+	              </iniFileGet>
+	              <iniFileGet>
+	                  <file>${apachePropertiesFile}</file>
+	                  <section>Apache</section>
+	                  <key>apache_version</key>
+	                  <variable>${apacheInstalledVersion}</variable>
+	              </iniFileGet>
+                <setInstallerVariable name="${apacheInstalledVersion}" value="0.0.0" >
+                    <ruleList>
+                        <compareText text="${${apacheInstalledVersion}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <foreach variables="var">
+                    <values>
+                        ${apacheServerPort}
+                        ${apacheUser}
+                        ${apacheGroup}
+                        ${apacheSSLPort}
+                        ${apacheRootDirectory}
+                        ${apacheHtdocsDirectory}
+                        ${apacheDomainName}
+                        ${apacheConfigurationDirectory}
+                        ${apacheWindowsServiceName}
+                        ${apacheInstalledVersion}
+                    </values>
+                    <actionList>
+	                      <setInstallerVariable name="${var}" value="${${var}}" persist="1"/>
+ 		                    <globalVariables names="${var}"/>
+	                  </actionList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+    <actionDefinition name="apacheServer">
+        <parameterList>
+            <stringParameter name="action" default="start" description="//start/stop/restart/graceful/restartIfStarted"/>
+        </parameterList>
+        <actionList>
+            <!-- Get status -->
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariableFromScriptOutput>
+                        <exec>${installdir}/ctlscript.sh</exec>
+                        <execArgs>status apache</execArgs>
+                        <name>apacheStatus</name>
+                    </setInstallerVariableFromScriptOutput>
+                    <setInstallerVariable name="apache_running" value="0" />
+                    <setInstallerVariable name="apache_running" value="1" >
+                        <ruleList>
+                            <compareText text="${apacheStatus}" logic="contains" value="already running" />
+                        </ruleList>
+                    </setInstallerVariable>
+                </actionList>
+                <ruleList>
+                    <platformTest type="unix" />
+                    <compareText text="${action}" logic="equals" value="restartIfStarted"/>
+                </ruleList>
+            </actionGroup>
+            <actionGroup>
+                <actionList>
+                    <apacheLoadConfigurationFromFile/>
+                    <setInstallerVariable name="apache_running" value="0" />
+                    <setInstallerVariable name="apache_running" value="1" >
+                        <ruleList>
+                            <windowsServiceTest service="${apache_unique_service_name}" condition="is_running" />
+                        </ruleList>
+                    </setInstallerVariable>
+                </actionList>
+                <ruleList>
+                    <platformTest type="windows" />
+                    <compareText text="${action}" logic="equals" value="restartIfStarted"/>
+                </ruleList>
+            </actionGroup>
+
+            <actionGroup>
+                <actionList>
+                    <manageService service="apache" action="start" waitForPort="${web_server_port}"/>
+                    <manageService service="php-fpm" action="start" >
+                        <ruleList>
+                            <platformTest type="unix"/>
+                            <isPhpFpmEnabled/>
+                        </ruleList>
+                    </manageService>
+                    <actionGroup>
+                        <actionList>
+                          <manageService service="apache2" action="start" waitForPort="${web_server_port}" />
+                          <actionGroup>
+                              <actionList>
+                                  <runProgram>
+                                      <program>cmd.exe</program>
+                                      <programArguments>/C start /MIN net start ${apache_unique_service_name}</programArguments>
+                                  </runProgram>
+                                  <waitForPort port="${web_server_port}" timeout="10000"/>
+                              </actionList>
+                              <ruleList>
+                                  <fileExists path="${installdir}/apache2/scripts/servicerun.bat" negate="1"/>
+                              </ruleList>
+                          </actionGroup>
+                        </actionList>
+                        <ruleList>
+                          <platformTest type="windows"/>
+                        </ruleList>
+                    </actionGroup>
+                </actionList>
+                <ruleList>
+                  <compareText text="${action}" logic="equals" value="start"/>
+                </ruleList>
+            </actionGroup>
+
+            <actionGroup>
+                <actionList>
+                  <manageService service="apache" action="stop" waitForPort="${web_server_port}"/>
+                  <actionGroup>
+                      <actionList>
+                          <manageService service="apache2" action="stop" waitForPort="${web_server_port}" >
+                              <ruleList>
+                                  <fileExists path="${installdir}/apache2" />
+                              </ruleList>
+                          </manageService>
+                          <actionGroup>
+                              <actionList>
+                                  <runProgram>
+                                      <program>cmd.exe</program>
+                                      <programArguments>/C start /MIN net stop ${apache_unique_service_name}</programArguments>
+                                  </runProgram>
+                                  <waitForPort port="${web_server_port}" timeout="10000" state="free"/>
+                              </actionList>
+                              <ruleList>
+                                  <fileExists path="${installdir}/apache2/scripts/servicerun.bat" negate="1"/>
+                              </ruleList>
+                          </actionGroup>
+                      </actionList>
+                      <ruleList>
+                          <platformTest type="windows"/>
+                      </ruleList>
+                  </actionGroup>
+                </actionList>
+                <ruleList>
+                    <compareText text="${action}" logic="equals" value="stop"/>
+                </ruleList>
+            </actionGroup>
+
+            <actionGroup>
+                <actionList>
+                    <actionGroup>
+                        <actionList>
+                            <manageService service="apache" action="restart" waitForPort="${web_server_port}" />
+                            <manageService service="php-fpm" action="restart" >
+                                <ruleList>
+                                    <isPhpFpmEnabled/>
+                                </ruleList>
+                            </manageService>
+                        </actionList>
+                        <ruleList>
+                            <platformTest type="unix"/>
+                        </ruleList>
+                    </actionGroup>
+
+                    <apacheRestartWindows>
+                        <ruleList>
+                            <platformTest type="windows"/>
+                        </ruleList>
+                    </apacheRestartWindows>
+                </actionList>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                    <compareText text="${action}" logic="equals" value="restart"/>
+                    <ruleGroup>
+                        <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                        <ruleList>
+                            <compareText text="${action}" logic="equals" value="restartIfStarted"/>
+                            <isTrue value="${apache_running}" />
+                        </ruleList>
+                    </ruleGroup>
+                </ruleList>
+            </actionGroup>
+
+            <actionGroup>
+              <actionList>
+                <actionGroup>
+                    <actionList>
+                        <runProgram>
+                            <program>${installdir}/apache2/bin/apachectl</program>
+                            <programArguments>graceful</programArguments>
+                        </runProgram>
+                        <manageService service="php-fpm" action="restart" >
+                            <ruleList>
+                                <isPhpFpmEnabled/>
+                            </ruleList>
+                        </manageService>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+                <apacheRestartWindows>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </apacheRestartWindows>
+            </actionList>
+              <ruleList>
+                <compareText text="${action}" logic="equals" value="graceful"/>
+              </ruleList>
+            </actionGroup>
+	  </actionList>
+	</actionDefinition>
+
+        <actionDefinition name="getProxyHandlerConfTextForApp">
+            <parameterList>
+                <stringParameter name="socketPath" value="" default="" />
+                <stringParameter name="appName" value="" default="" />
+                <stringParameter name="timeout" value="" default="" />
+                <stringParameter name="extraApacheSettings" value="" default="" />
+                <stringParameter name="confTextVar" value="" default="" />
+                <stringParameter name="perDirConfTextVar" value="" default="" />
+                <stringParameter name="phpInterpreter" default="php"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="${confTextVar}" value=""/>
+                <setInstallerVariable name="${perDirConfTextVar}" value=""/>
+
+                <setInstallerVariable name="php_fpm_common_proxy_text" value=""/>
+                <setInstallerVariable name="php_fpm_common_proxy_text" value="${extraApacheSettings}&#xA;">
+                    <ruleList>
+                        <compareText text="${extraApacheSettings}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="timeout" value="300">
+                    <ruleList>
+                        <compareText text="${timeout}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="proxy_definition_text" value=""/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="constantUseName" value="USE_PHP_FPM"/>
+                        <setInstallerVariable name="proxy_definition_text" value="&lt;IfDefine ${constantUseName}&gt;&#xA;    &lt;Proxy &quot;unix:${socketPath}|fcgi://${appName}-fpm&quot; timeout=${timeout}&gt;&#xA;    &lt;/Proxy&gt;&#xA;&lt;/IfDefine&gt;"/>
+                        <setInstallerVariable name="per_dir_proxy_definition_text" value="    &lt;IfDefine ${constantUseName}&gt;${php_fpm_common_proxy_text}&#xA;       &lt;FilesMatch \.php$&gt;&#xA;         SetHandler &quot;proxy:fcgi://${appName}-fpm&quot;&#xA;       &lt;/FilesMatch&gt;&#xA;    &lt;/IfDefine&gt;"/>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${phpInterpreter}" logic="equals" value="php"/>
+                    </ruleList>
+                </actionGroup>
+
+                <setInstallerVariable name="${confTextVar}" value="${proxy_definition_text}"/>
+                <setInstallerVariable name="${perDirConfTextVar}" value="${per_dir_proxy_definition_text}"/>
+                <globalVariables names="${confTextVar} ${perDirConfTextVar}"/>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="getPhpFpmConfTextForApp">
+ 	    <parameterList>
+                <stringParameter name="socketPath" value="" default="" />
+ 	        <stringParameter name="appName" value="" default="" />
+ 	        <stringParameter name="timeout" value="" default="" />
+ 	        <stringParameter name="extraApacheSettings" value="" default="" />
+                <stringParameter name="confTextVar" value="" default="" />
+                <stringParameter name="perDirConfTextVar" value="" default="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="${confTextVar}" value=""/>
+                <setInstallerVariable name="${perDirConfTextVar}" value=""/>
+
+                <if>
+                    <conditionRuleList>
+                        <!-- This means we are using the old configuration with mod_rewrite -->
+                        <fileExists path="${web_server_configuration_directory}/php-fpm-apache.conf"/>
+                        <fileContentTest text="fcgi://uds=" path="${web_server_configuration_directory}/php-fpm-apache.conf" logic="contains" />
+                    </conditionRuleList>
+                    <actionList>
+                        <urlEncode text="${socketPath}" variable="encoded_socket_path"/>
+                        <setInstallerVariable name="php_fpm_text" value=""/>
+                        <setInstallerVariable name="php_fpm_text" value="ProxyTimeout ${timeout}">
+                            <ruleList>
+                                <compareText text="${timeout}" logic="does_not_equal" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+
+                        <setInstallerVariable name="php_fpm_per_dir_text" value="    &lt;IfDefine USE_PHP_FPM&gt;${extraApacheSettings}&#xA;       RewriteEngine On&#xA;         RewriteOptions Inherit&#xA;       RewriteRule ^(.*\.php(/.*)?)$ fcgi://uds=${encoded_socket_path}/%{REQUEST_FILENAME} [P,L]&#xA;    &lt;/IfDefine&gt;"/>
+                        <setInstallerVariable name="${confTextVar}" value="${php_fpm_text}"/>
+                        <setInstallerVariable name="${perDirConfTextVar}" value="${php_fpm_per_dir_text}"/>
+                        <globalVariables names="${confTextVar} ${perDirConfTextVar}"/>
+                    </actionList>
+                    <elseActionList>
+                        <getProxyHandlerConfTextForApp appName="${appName}" socketPath="${socket_path}" timeout="${timeout}" extraApacheSettings="${extraApacheSettings}" confTextVar="${confTextVar}" perDirConfTextVar="${perDirConfTextVar}" phpInterpreter="php"/>
+                    </elseActionList>
+                </if>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="apacheConfigurationForApp">
+            <parameterList>
+                <stringParameter name="appName" value="" default="${project.shortname}"/>
+                <stringParameter name="applicationOnRoot" value="" default="0"/>
+                <stringParameter name="appApacheConfigurationFile" value="" default="httpd-app.conf"/>
+                <stringParameter name="forceAppApacheConfigurationFileCreation" value="1"/>
+                <stringParameter name="appDirectory" value="" default="${installdir}/apps/${project.shortname}"/>
+                <stringParameter name="apacheConfigurationText" value="" default=""/>
+                <stringParameter name="innerApacheConfigurationText" value="" default=""/>
+                <stringParameter name="apachePrefixConfigurationText" value="" default=""/>
+                <stringParameter name="apacheVhostsConfigurationText" value="" default=""/>
+                <stringParameter name="apacheAllowOverride" value="" default=""/>
+                <stringParameter name="apacheOptions" value="" default="+MultiViews"/>
+                <stringParameter name="apacheIncludeHtaccess" value="" default="${appDirectory}/conf/${appApacheConfigurationFile}"/>
+                <stringParameter name="appWebDirectory" value="" default=""/>
+                <stringParameter name="appConfDirectory" value="" default=""/>
+                <stringParameter name="beforeAppApacheConfiguration" value="" default=""/>
+                <stringParameter name="insideAppApacheConfiguration" value="" default=""/>
+                <stringParameter name="afterAppApacheConfiguration" value="" default=""/>
+                <stringParameter name="extraApacheSettings" value="" default=""/>
+                <stringParameter name="disableBitNamiBanner" value="0" default=""/>
+                <stringParameter name="disableBannerCondition" value="%{REQUEST_URI} !~ m!^/+(index\.php)?/*$!i"/>
+                <stringParameter name="addTextToBannerText" value=""/>
+                <stringParameter name="appConfigurationForVhost" default="" value=""/>
+                <booleanParameter name="withoutDirectoryConfiguration" default="0" value=""/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="appDirectory" value="${${appName}_installation_directory}">
+                    <ruleList>
+                        <fileExists path="${${appName}_installation_directory}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appDirectory" value="${app(${appName}).installdir}">
+                    <ruleList>
+                        <fileExists path="${app(${appName}).installdir}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appWebDirectory" value="${appDirectory}/htdocs">
+                    <ruleList>
+                        <compareText text="${appWebDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appConfDirectory" value="${appDirectory}">
+                    <ruleList>
+                        <compareText text="${appConfDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="banner_dir" value=""/>
+                <getBannerRootDirectory abortOnError="0" showMessageOnError="0" variable="banner_dir">
+                    <ruleList>
+                        <isFalse value="${disableBitNamiBanner}"/>
+                    </ruleList>
+                </getBannerRootDirectory>
+                <createDirectory path="${appConfDirectory}/conf" />
+                <setInstallerVariable name="app_banner_text" value=""/>
+                <actionGroup>
+                    <actionList>
+                        <getBannerTextForApp bannerRootDirectory="${banner_dir}" disableBannerCondition="${disableBannerCondition}" variable="app_banner_conf"/>
+                        <writeFile>
+                            <path>${appConfDirectory}/conf/banner.conf</path>
+                            <text>${app_banner_conf}</text>
+                        </writeFile>
+                        <setInstallerVariable name="app_banner_text" value="Include &quot;${appConfDirectory}/conf/banner.conf&quot;"/>
+                    </actionList>
+                    <ruleList>
+                        <isFalse value="${disableBitNamiBanner}"/>
+                        <compareText logic="does_not_equal" text="${banner_dir}" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="app_banner_text" value="${app_banner_text}
+                            ${addTextToBannerText}">
+                            <ruleList>
+                                <compareText logic="does_not_equal" text="${addTextToBannerText}" value=""/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <isFalse value="${disableBitNamiBanner}"/>
+                        <compareText logic="does_not_equal" text="${banner_dir}" value=""/>
+                    </ruleList>
+                </actionGroup>
+                <writeFile>
+                    <path>${appConfDirectory}/conf/httpd-prefix.conf</path>
+                    <text>${apachePrefixConfigurationText}</text>
+                    <ruleList>
+                        <compareText logic="does_not_equal" text="${apachePrefixConfigurationText}" value=""/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${appConfDirectory}/conf/httpd-prefix.conf</path>
+                    <text>Alias /${appName}/ &quot;${appWebDirectory}/&quot;
+Alias /${appName} &quot;${appWebDirectory}&quot;
+</text>
+                    <ruleList>
+                        <compareText logic="equals" text="${apachePrefixConfigurationText}" value=""/>
+                        <isFalse value="${applicationOnRoot}"/>
+                    </ruleList>
+                </writeFile>
+                <writeFile>
+                    <path>${appConfDirectory}/conf/httpd-prefix.conf</path>
+                    <text>DocumentRoot &quot;${appWebDirectory}&quot;
+                    </text>
+                    <ruleList>
+                        <compareText logic="equals" text="${apachePrefixConfigurationText}" value=""/>
+                        <isTrue value="${applicationOnRoot}"/>
+                    </ruleList>
+                </writeFile>
+                <addTextToFile>
+                    <file>${appConfDirectory}/conf/httpd-prefix.conf</file>
+                    <text><![CDATA[
+RewriteEngine On
+RewriteCond "%{HTTP_HOST}" ^ec2-([0-9]{1,3})-([0-9]{1,3})-([0-9]{1,3})-([0-9]{1,3})\..*\.amazonaws.com(:[0-9]*)?$
+RewriteRule "^/?(.*)" "%{REQUEST_SCHEME}://%1.%2.%3.%4%5/$1" [L,R=302,NE]
+]]></text>
+                    <ruleList>
+                        <isTrue value="${apache_aws_redirection}"/>
+                    </ruleList>
+                </addTextToFile>
+                <addTextToFile>
+                    <file>${appConfDirectory}/conf/httpd-prefix.conf</file>
+                    <text><![CDATA[
+RewriteEngine On
+RewriteCond "%{HTTP_HOST}" ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(:[0-9]*)?$
+RewriteRule "^/?(.*)" "%{REQUEST_SCHEME}://%1.%2.%3.%4.nip.io%5/$1" [L,R=302,NE]
+]]></text>
+                    <ruleList>
+                        <isTrue value="${apache_nip_redirection}"/>
+                    </ruleList>
+                </addTextToFile>
+                <addTextToFile>
+                    <file>${appConfDirectory}/conf/httpd-prefix.conf</file>
+                    <text><![CDATA[
+Include "${appConfDirectory}/conf/${appApacheConfigurationFile}"]]></text>
+                </addTextToFile>
+                <if>
+                    <conditionRuleList>
+                        <compareText logic="equals" text="${apacheVhostsConfigurationText}" value=""/>
+                    </conditionRuleList>
+                    <actionList>
+                        <writeFile>
+                            <path>${appConfDirectory}/conf/httpd-vhosts.conf</path>
+                            <text>&lt;VirtualHost *:${web_server_port}&gt;
+    ServerName ${appName}.example.com
+    ServerAlias www.${appName}.example.com
+    DocumentRoot &quot;${appWebDirectory}&quot;
+    ${appConfigurationForVhost}
+    Include &quot;${appConfDirectory}/conf/${appApacheConfigurationFile}&quot;
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:${web_server_ssl_port}&gt;
+    ServerName ${appName}.example.com
+    ServerAlias www.${appName}.example.com
+    DocumentRoot &quot;${appWebDirectory}&quot;
+    SSLEngine on
+    SSLCertificateFile &quot;${appConfDirectory}/conf/certs/server.crt&quot;
+    SSLCertificateKeyFile &quot;${appConfDirectory}/conf/certs/server.key&quot;
+    ${appConfigurationForVhost}
+    Include &quot;${appConfDirectory}/conf/${appApacheConfigurationFile}&quot;
+&lt;/VirtualHost&gt;
+</text>
+                        </writeFile>
+                    </actionList>
+                    <elseActionList>
+                        <writeFile>
+                            <path>${appConfDirectory}/conf/httpd-vhosts.conf</path>
+                            <text>${apacheVhostsConfigurationText}</text>
+                        </writeFile>
+                    </elseActionList>
+                </if>
+                <actionGroup>
+                    <actionList>
+                        <!-- T118 Java apps do not have DocumentRoot -->
+                        <substitute>
+                            <files>${appConfDirectory}/conf/httpd-vhosts.conf</files>
+                            <type>exact</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>DocumentRoot &quot;${appWebDirectory}&quot;</pattern>
+                                    <value/>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <ruleList>
+                        <fileExists path="${appConfDirectory}/conf/httpd-vhosts.conf"/>
+                        <fileTest condition="not_exists" path="${appWebDirectory}"/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="apacheAllowOverride" value="All"/>
+                        <setInstallerVariable name="apacheAllowOverride" value="None">
+                            <ruleList>
+                                <fileExists path="${appConfDirectory}/conf/htaccess.conf"/>
+                            </ruleList>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText logic="equals" text="${apacheAllowOverride}" value=""/>
+                    </ruleList>
+                </actionGroup>
+
+                <setInstallerVariable name="app_conf_text" value="${apacheConfigurationText}"/>
+
+                <setInstallerVariable name="app_conf_text">
+                    <value>${beforeAppApacheConfiguration}
+&lt;Directory &quot;${appWebDirectory}&quot;&gt;
+    ${extraApacheSettings}
+    ${innerApacheConfigurationText}
+    ${app_banner_text}
+&lt;/Directory&gt;
+${afterAppApacheConfiguration}
+</value>
+                    <ruleList>
+                        <compareText logic="equals" text="${app_conf_text}" value=""/>
+                        <compareText logic="does_not_equal" text="${innerApacheConfigurationText}" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="insideDirConf" value=""/>
+                <setInstallerVariable name="insideDirConf">
+                    <value>${insideDirConf}
+    ${insideAppApacheConfiguration}</value>
+                    <ruleList>
+                        <compareText logic="does_not_equal" text="${insideAppApacheConfiguration}" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="insideDirConf">
+                    <value>${insideDirConf}
+    ${extraApacheSettings}</value>
+                    <ruleList>
+                        <compareText logic="does_not_equal" text="${extraApacheSettings}" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="insideDirConf">
+                    <value>${insideDirConf}
+    ${app_banner_text}</value>
+                    <ruleList>
+                        <compareText logic="does_not_equal" text="${app_banner_text}" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                 <setInstallerVariable name="app_conf_text">
+                    <value>${beforeAppApacheConfiguration}
+${afterAppApacheConfiguration}
+${app_banner_text}
+</value>
+                    <ruleList>
+                        <compareText logic="equals" text="${app_conf_text}" value=""/>
+                        <isTrue value="${withoutDirectoryConfiguration}"/>
+                    </ruleList>
+               </setInstallerVariable>
+               <setInstallerVariable name="app_conf_text">
+                    <value>${beforeAppApacheConfiguration}
+&lt;Directory &quot;${appWebDirectory}&quot;&gt;
+    Options ${apacheOptions}
+    AllowOverride ${apacheAllowOverride}
+    &lt;IfVersion &lt; 2.3 &gt;
+        Order allow,deny
+        Allow from all
+    &lt;/IfVersion&gt;
+    &lt;IfVersion &gt;= 2.3&gt;
+        Require all granted
+    &lt;/IfVersion&gt;
+    ${insideDirConf}
+&lt;/Directory&gt;
+${afterAppApacheConfiguration}
+</value>
+                    <ruleList>
+                        <compareText logic="equals" text="${app_conf_text}" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+
+                <writeFile>
+                    <path>${appConfDirectory}/conf/${appApacheConfigurationFile}</path>
+                    <text>${app_conf_text}</text>
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <ruleList>
+                        <fileTest condition="not_exists" path="${appConfDirectory}/conf/${appApacheConfigurationFile}"/>
+                        <isTrue value="${forceAppApacheConfigurationFileCreation}"/>
+                    </ruleList>
+                </writeFile>
+                <addTextToFile>
+                    <file>${appConfDirectory}/conf/${appApacheConfigurationFile}</file>
+                    <text>Include &quot;${appConfDirectory}/conf/htaccess.conf&quot;
+                    </text>
+                    <ruleList>
+                        <fileExists path="${appConfDirectory}/conf/htaccess.conf"/>
+                    </ruleList>
+                </addTextToFile>
+                <addDirectoriesToUninstaller addContents="1" files="${appConfDirectory}/conf"/>
+            </actionList>
+        </actionDefinition>
+
+
+
+        <actionDefinition name="apacheConfigurationForPHPApp">
+            <parameterList>
+                <stringParameter name="appName" value="" default="${project.shortname}" />
+                <stringParameter name="applicationOnRoot" value="" default="0" />
+                <stringParameter name="appApacheConfigurationFile" value="" default="httpd-app.conf" />
+                <stringParameter name="forceAppApacheConfigurationFileCreation" value="1"/>
+                <stringParameter name="appDirectory" value="" default="${installdir}/apps/${project.shortname}" />
+                <stringParameter name="apacheConfigurationText" value="" default="" />
+                <stringParameter name="innerApacheConfigurationText" value="" default="" />
+                <stringParameter name="apachePrefixConfigurationText" value="" default="" />
+                <stringParameter name="apacheVhostsConfigurationText" value="" default=""/>
+                <stringParameter name="apacheAllowOverride" value="" default="" />
+                <stringParameter name="apacheOptions" value="" default="+MultiViews" />
+                <stringParameter name="apacheIncludeHtaccess" value="" default="${appDirectory}/conf/${appApacheConfigurationFile}" />
+                <stringParameter name="appWebDirectory" value="" default="" />
+                <stringParameter name="appConfDirectory" value="" default="" />
+                <stringParameter name="beforeAppApacheConfiguration" value="" default="" />
+                <stringParameter name="insideAppApacheConfiguration" value="" default="" />
+                <stringParameter name="afterAppApacheConfiguration" value="" default="" />
+                <stringParameter name="extraApacheSettings" value="" default="" />
+                <stringParameter name="disableBitNamiBanner" value="0" default="" />
+                <stringParameter name="disableBannerCondition" value="%{REQUEST_URI} !~ m!^/+(index\.php)?/*$!i"/>
+                <booleanParameter name="withoutDirectoryConfiguration" default="" value=""/>
+                <!-- PHP parameters -->
+                <stringParameter name="proxyTimeout" value="" default="" />
+                <stringParameter name="appSupportsPhpFpm" value="" default="1" />
+                <stringParameter name="appPhpSettings" value="" default="" />
+                <stringParameter name="phpFpmPmMode" value="" default="dynamic" />
+                <stringParameter name="verifyPhpFileExists" value="0" default="" />
+                <stringParameter name="phpFpmExtraApacheSettings" value="" default="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="appDirectory" value="${${appName}_installation_directory}">
+                    <ruleList>
+                        <fileExists path="${${appName}_installation_directory}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appDirectory" value="${app(${appName}).installdir}">
+                    <ruleList>
+                        <fileExists path="${app(${appName}).installdir}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appWebDirectory" value="${appDirectory}/htdocs">
+                    <ruleList>
+                        <compareText text="${appWebDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appConfDirectory" value="${appDirectory}">
+                    <ruleList>
+                        <compareText text="${appConfDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <createDirectory path="${appConfDirectory}/conf" />
+                <if>
+                    <actionList>
+                        <actionGroup>
+                            <actionList>
+                                <actionGroup abortOnError="0" showMessageOnError="0">
+                                    <actionList>
+                                        <apacheModule action="enable" moduleName="libphp" apacheConfigurationFile="${web_server_configuration_directory}/httpd.conf"/>
+                                        <apacheModule action="enable" moduleName="libphp7" apacheConfigurationFile="${web_server_configuration_directory}/httpd.conf"/>
+                                        <apacheMpmModeSet mode="prefork" />
+                                    </actionList>
+                                    <ruleList>
+                                        <isPhpFpmEnabled/>
+                                        <isFalse value="${appSupportsPhpFpm}"/>
+                                        <apacheModuleTest moduleIdentifier="php[^\s]*_module" moduleName="[^\s]*php[^\s]*" condition="disabled"/>
+                                    </ruleList>
+                                </actionGroup>
+                                <setInstallerVariable name="socket_dir" value="${installdir}/php/var/run"/>
+                                <setInstallerVariable name="socket_dir" value="${php_directory}/var/run">
+                                    <ruleList>
+                                        <compareText text="${php_directory}" logic="does_not_contain" value="unknown variable"/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="socket_path" value="${socket_dir}/www.sock"/>
+                                <getPhpFpmConfTextForApp appName="${appName}" socketPath="${socket_path}" timeout="${proxyTimeout}" extraApacheSettings="${phpFpmExtraApacheSettings}" confTextVar="global_php_fpm_config" perDirConfTextVar="per_dir_php_fpm_config"/>
+                                <addPhpFpmApp socket="${socket_path}" confDir="${appConfDirectory}/conf/php-fpm" id="www" appPhpSettings="${appPhpSettings}" pmMode="${phpFpmPmMode}"/>
+                            </actionList>
+                            <ruleList>
+                                <isPhpFpmInstalled/>
+                            </ruleList>
+                        </actionGroup>
+
+                    </actionList>
+                    <elseActionList>
+                        <setInstallerVariable name="global_php_fpm_config" value=""/>
+                        <setInstallerVariable name="per_dir_php_fpm_config" value=""/>
+                        <!-- These files are generated and packed at build-time, if PHP-FPM is not installed, we simply remove them -->
+                        <deleteFile path="${appConfDirectory}/conf/php-fpm" abortOnError="0" showMessageOnError="0"/>
+                    </elseActionList>
+                    <conditionRuleList>
+                        <platformTest type="unix"/>
+                        <ruleGroup>
+                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                            <ruleList>
+                                <isPhpFpmInstalled/>
+                            </ruleList>
+                        </ruleGroup>
+                    </conditionRuleList>
+                </if>
+
+                <setInstallerVariable name="beforeAppApacheConfiguration" value="${beforeAppApacheConfiguration}&#xA;${global_php_fpm_config}&#xA;">
+                    <ruleList>
+                        <compareText text="${global_php_fpm_config}" logic="does_not_equal" value="" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="insideAppApacheConfiguration" value="${insideAppApacheConfiguration}&#xA;${phpFlagsText}&#xA;">
+                    <ruleList>
+                        <compareText text="${appDisableAPC}" logic="equals" value="1" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <wrapApacheIfModPhpStatetments variable="phpSettingsText" text="${appPhpSettings}"/>
+                <wrapApacheIfModPhpStatetments variable="phpFlagsText" text="php_flag apc.cache_by_default Off"/>
+
+                <apacheConfigurationForApp
+                    appName="${appName}"
+                    applicationOnRoot="${applicationOnRoot}"
+                    appApacheConfigurationFile="${appApacheConfigurationFile}"
+                    forceAppApacheConfigurationFileCreation="${forceAppApacheConfigurationFileCreation}"
+                    appDirectory="${appDirectory}"
+                    apacheConfigurationText="${apacheConfigurationText}"
+                    innerApacheConfigurationText="${innerApacheConfigurationText}"
+                    apachePrefixConfigurationText="${apachePrefixConfigurationText}"
+                    apacheVhostsConfigurationText="${apacheVhostsConfigurationText}"
+                    apacheAllowOverride="${apacheAllowOverride}"
+                    apacheOptions="${apacheOptions}"
+                    apacheIncludeHtaccess="${apacheIncludeHtaccess}"
+                    appWebDirectory="${appWebDirectory}"
+                    appConfDirectory="${appConfDirectory}"
+                    beforeAppApacheConfiguration="${beforeAppApacheConfiguration}"
+                    insideAppApacheConfiguration="${insideAppApacheConfiguration}&#xA;${phpSettingsText}&#xA;${per_dir_php_fpm_config}&#xA;"
+                    afterAppApacheConfiguration="${afterAppApacheConfiguration}"
+                    extraApacheSettings="${extraApacheSettings}"
+                    disableBitNamiBanner="${disableBitNamiBanner}"
+                    disableBannerCondition="${disableBannerCondition}"
+                    withoutDirectoryConfiguration="${withoutDirectoryConfiguration}"/>
+
+
+                <substitute>
+                    <files>${appConfDirectory}/conf/${appApacheConfigurationFile}</files>
+                    <type>exact</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_PHP_OPTIONS@@</pattern>
+                            <value>${phpSettingsText}</value>
+                            <ruleList>
+                                <fileContentTest path="${appConfDirectory}/conf/${appApacheConfigurationFile}" logic="contains" text="${per_dir_php_fpm_config}"/>
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_PHP_OPTIONS@@</pattern>
+                            <value>${phpSettingsText}&#xA;${per_dir_php_fpm_config}</value>
+                            <ruleList>
+                                <fileContentTest path="${appConfDirectory}/conf/${appApacheConfigurationFile}" logic="does_not_contain" text="${per_dir_php_fpm_config}"/>
+                            </ruleList>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+            </actionList>
+        </actionDefinition>
+
+
+        <actionDefinition name="apacheConfigurationForJavaApp">
+            <parameterList>
+                <stringParameter name="appName" value="" default="${project.shortname}" />
+                <stringParameter name="applicationOnRoot" value="" default="0" />
+                <stringParameter name="appApacheConfigurationFile" value="" default="httpd-app.conf" />
+                <stringParameter name="forceAppApacheConfigurationFileCreation" value="1"/>
+                <stringParameter name="appDirectory" value="" default="${installdir}/apps/${project.shortname}" />
+                <stringParameter name="apacheConfigurationText" value="" default="" />
+                <stringParameter name="innerApacheConfigurationText" value="" default="" />
+                <stringParameter name="apachePrefixConfigurationText" value="" default="" />
+                <stringParameter name="apacheVhostsConfigurationText" value="" default=""/>
+                <stringParameter name="apacheAllowOverride" value="" default="" />
+                <stringParameter name="apacheOptions" value="" default="+MultiViews" />
+                <stringParameter name="apacheIncludeHtaccess" value="" default="${appDirectory}/conf/${appApacheConfigurationFile}" />
+                <stringParameter name="appWebDirectory" value="" default="" />
+                <stringParameter name="appConfDirectory" value="" default="" />
+                <stringParameter name="beforeAppApacheConfiguration" value="" default="" />
+                <stringParameter name="insideAppApacheConfiguration" value="" default="" />
+                <stringParameter name="afterAppApacheConfiguration" value="" default="" />
+                <stringParameter name="extraApacheSettings" value="" default="" />
+                <stringParameter name="disableBitNamiBanner" value="0" default="" />
+                <stringParameter name="disableBannerCondition" value=""/>
+                <booleanParameter name="withoutDirectoryConfiguration" default="0" value=""/>
+            </parameterList>
+            <actionList>
+              <actionGroup>
+                  <actionList>
+                      <setInstallerVariable name="apachePrefixConfigurationText">
+                          <value>${apachePrefixConfigurationText}
+Include "${appDirectory}/conf/banner.conf"
+                          </value>
+                          <ruleList>
+                              <componentTest name="bitnami_banner" logic="exists"/>
+                              <componentTest name="bitnami_banner" logic="selected"/>
+                          </ruleList>
+                      </setInstallerVariable>
+                  </actionList>
+                  <ruleList>
+                      <isFalse value="${applicationOnRoot}" />
+                  </ruleList>
+              </actionGroup>
+              <apacheConfigurationForApp
+                    appName="${appName}"
+                    applicationOnRoot="${applicationOnRoot}"
+                    appApacheConfigurationFile="${appApacheConfigurationFile}"
+                    forceAppApacheConfigurationFileCreation="${forceAppApacheConfigurationFileCreation}"
+                    appDirectory="${appDirectory}"
+                    apacheConfigurationText="${apacheConfigurationText}"
+                    innerApacheConfigurationText="${innerApacheConfigurationText}"
+                    apachePrefixConfigurationText="${apachePrefixConfigurationText}"
+                    apacheVhostsConfigurationText="${apacheVhostsConfigurationText}"
+                    apacheAllowOverride="${apacheAllowOverride}"
+                    apacheOptions="${apacheOptions}"
+                    apacheIncludeHtaccess="${apacheIncludeHtaccess}"
+                    appWebDirectory="${appWebDirectory}"
+                    appConfDirectory="${appConfDirectory}"
+                    beforeAppApacheConfiguration="${beforeAppApacheConfiguration}"
+                    insideAppApacheConfiguration="${insideAppApacheConfiguration}"
+                    afterAppApacheConfiguration="${afterAppApacheConfiguration}"
+                    extraApacheSettings="${extraApacheSettings}"
+                    disableBitNamiBanner="${disableBitNamiBanner}"
+                    disableBannerCondition="${disableBannerCondition}"
+                    withoutDirectoryConfiguration="${withoutDirectoryConfiguration}"/>
+            </actionList>
+        </actionDefinition>
+
+
+        <actionDefinition name="apacheConfigurationForRubyApp">
+            <parameterList>
+                <stringParameter name="innerApacheConfigurationText" value="" default=""/>
+                <stringParameter name="apacheVhostsConfigurationText" value="" default=""/>
+                <stringParameter name="extraApacheSettings" value="" default=""/>
+                <stringParameter name="addTextToBannerText" value=""/>
+                <stringParameter name="appName" value="" default="${project.shortname}" />
+                <stringParameter name="appApacheConfigurationFile" value="" default="httpd-app.conf" />
+                <stringParameter name="forceAppApacheConfigurationFileCreation" value="1"/>
+                <stringParameter name="applicationOnRoot" value="" default="0" />
+                <stringParameter name="appDirectory" value="" default="${installdir}/apps/${project.shortname}" />
+                <stringParameter name="apacheConfigurationText" value="" default="" />
+                <stringParameter name="apacheOptions" value="" default="-MultiViews" />
+                <stringParameter name="apacheAllowOverride" value="" default="" />
+                <stringParameter name="apacheIncludeHtaccess" value="" default="${appDirectory}/conf/${appApacheConfigurationFile}" />
+                <stringParameter name="appWebDirectory" value="" default="" />
+                <stringParameter name="appConfDirectory" value="" default="" />
+                <stringParameter name="apachePrefixConfigurationText" value="" default="" />
+                <stringParameter name="disableBitNamiBanner" value="0" default="" />
+                <stringParameter name="disableBannerCondition" value="%{REQUEST_URI} !~ m!^/+$!i"/>
+                <stringParameter name="beforeAppApacheConfiguration" value="" default=""/>
+                <stringParameter name="insideAppApacheConfiguration" value="" default=""/>
+                <stringParameter name="afterAppApacheConfiguration" value="" default=""/>
+                <booleanParameter name="withoutDirectoryConfiguration" default="0" value=""/>
+                <!-- Ruby parameters -->
+                <stringParameter name="apachethinmoduleProcessesNr" value="" default="${apachethinmodule_processes_nr}" />
+                <stringParameter name="apacheThinModulePort1" value="" default="${apachethinmodule_port1}" />
+                <stringParameter name="apacheThinModulePort2" value="" default="${apachethinmodule_port2}" />
+                <stringParameter name="apachePassengerExtraOptions" value="" default="" />
+                <stringParameter name="setHttpsRedirectProtocol" value="" default="0"/>
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="rubyBeforeAppApacheConfiguration">
+                    <value>${beforeAppApacheConfiguration}</value>
+                </setInstallerVariable>
+                <setInstallerVariable name="rubyInsideAppApacheConfiguration" value=""/>
+                <setInstallerVariable name="rubyAfterAppApacheConfiguration" value=""/>
+                <setInstallerVariable name="rubyAppConfigurationForVhost" value =""/>
+                <setInstallerVariable name="prefixConfiguration" value=""/>
+                <setInstallerVariable name="prefixConfiguration">
+                    <value>${apachePrefixConfigurationText}
+</value>
+                    <ruleList>
+                        <compareText text="${apachePrefixConfigurationText}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appDirectory" value="${${appName}_installation_directory}">
+                    <ruleList>
+                        <fileExists path="${${appName}_installation_directory}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appDirectory" value="${app(${appName}).installdir}">
+                    <ruleList>
+                        <fileExists path="${app(${appName}).installdir}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appWebDirectory" value="${appDirectory}/htdocs">
+                    <ruleList>
+                        <compareText text="${appWebDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appConfDirectory" value="${appDirectory}">
+                    <ruleList>
+                        <compareText text="${appConfDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <createDirectory path="${appConfDirectory}/conf" />
+                <actionGroup>
+                    <actionList>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="rubyInsideAppApacheConfiguration">
+                                    <value>PassengerEnabled on
+    SetEnv RAILS_RELATIVE_URL_ROOT "/${appName}"
+    PassengerAppRoot "${appDirectory}/htdocs/"
+    &lt;IfModule pagespeed_module&gt;
+        ModPagespeedDisallow "*"
+    &lt;/IfModule&gt;
+    ${apachePassengerExtraOptions}
+</value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <isFalse value="${applicationOnRoot}"/>
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="rubyInsideAppApacheConfiguration">
+                                    <value>PassengerEnabled on
+    PassengerAppRoot "${appDirectory}/htdocs/"
+    &lt;IfModule pagespeed_module&gt;
+        ModPagespeedDisallow "*"
+    &lt;/IfModule&gt;
+    ${apachePassengerExtraOptions}
+</value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${applicationOnRoot}"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <foreach variables="module" values="proxy_http proxy_balancer proxy proxy_connect proxy_ftp proxy_ajp rewrite lbmethod_bybusyness lbmethod_byrequests">
+                            <actionList>
+                                <substitute>
+                                    <files>${apache_server_directory}/conf/httpd.conf</files>
+                                    <substitutionList>
+                                        <substitution>
+                                            <pattern>#LoadModule ${module}_module modules/mod_${module}.so</pattern>
+                                            <value>LoadModule ${module}_module modules/mod_${module}.so</value>
+                                        </substitution>
+                                    </substitutionList>
+                                </substitute>
+                            </actionList>
+                        </foreach>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+ProxyPass /${appName} balancer://${project.shortname}cluster
+ProxyPassReverse /${appName} balancer://${project.shortname}cluster
+
+&lt;Proxy balancer://${project.shortname}cluster&gt;
+    BalancerMember http://127.0.0.1:${apacheThinModulePort1}/${appName}</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+    BalancerMember http://127.0.0.1:${apacheThinModulePort2}/${appName}</value>
+                                <ruleList>
+                                    <compareValues value1="${apachethinmoduleProcessesNr}" logic="greater_or_equal" value2="2"/>
+                                </ruleList>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+&lt;/Proxy&gt;
+</value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <isFalse value="${applicationOnRoot}"/>
+                            </ruleList>
+                        </actionGroup>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+RequestHeader set X_FORWARDED_PROTO 'https'</value>
+                                    <ruleList>
+                                        <isTrue value="${setHttpsRedirectProtocol}"/>
+                                    </ruleList>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+DocumentRoot "${appDirectory}/htdocs/public"
+
+&lt;Proxy balancer://${project.shortname}cluster&gt;
+    BalancerMember http://127.0.0.1:${apacheThinModulePort1}</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+    BalancerMember http://127.0.0.1:${apacheThinModulePort2}</value>
+                                <ruleList>
+                                    <compareValues value1="${apachethinmoduleProcessesNr}" logic="greater_or_equal" value2="2"/>
+                                </ruleList>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="prefixConfiguration">
+                                    <value>${prefixConfiguration}
+&lt;/Proxy&gt;
+                                    </value>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="rubyBeforeAppApacheConfiguration">
+                                    <value>${beforeAppApacheConfiguration}
+RewriteEngine On
+</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="rubyInsideAppApacheConfiguration">
+                                    <value>${insideAppApacheConfiguration}
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule . balancer://${project.shortname}cluster%{REQUEST_URI} [P,QSA,L]</value>
+                                </setInstallerVariable>
+                                <setInstallerVariable name="rubyAfterAppApacheConfiguration">
+                                    <value>${afterAppApacheConfiguration}
+RewriteRule ^/?$ balancer://${project.shortname}cluster%{REQUEST_URI} [P,QSA,L]
+ProxyPassReverse / balancer://${project.shortname}cluster</value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <isTrue value="${applicationOnRoot}"/>
+                            </ruleList>
+                        </actionGroup>
+                        <setInstallerVariable name="rubyAppConfigurationForVhost">
+                            <value>&lt;Directory "${appDirectory}/htdocs/public"&gt;
+        Options -MultiViews
+        allow from all
+    &lt;/Directory&gt;
+
+    RewriteEngine On
+    RewriteRule ^/(.*)$ balancer://${project.shortname}cluster%{REQUEST_URI} [P,QSA,L]
+    &lt;Proxy balancer://${project.shortname}cluster&gt;
+        BalancerMember http://127.0.0.1:${apacheThinModulePort1}
+    &lt;/Proxy&gt;
+</value>
+                        </setInstallerVariable>
+
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariable name="rubyAppConfigurationForVhost">
+                                    <value>&lt;Directory "${appDirectory}/htdocs/public"&gt;
+        Options -MultiViews
+        allow from all
+    &lt;/Directory&gt;
+
+    RewriteEngine On
+    RewriteRule ^/(.*)$ balancer://${project.shortname}cluster%{REQUEST_URI} [P,QSA,L]
+    &lt;Proxy balancer://${project.shortname}cluster&gt;
+        BalancerMember http://127.0.0.1:${apacheThinModulePort1}
+        BalancerMember http://127.0.0.1:${apacheThinModulePort2}
+    &lt;/Proxy&gt;
+                                    </value>
+                                </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+                                <compareValues value1="${apachethinmoduleProcessesNr}" logic="greater_or_equal" value2="2"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </actionGroup>
+                <apacheConfigurationForApp
+                    appName="${appName}"
+                    applicationOnRoot="${applicationOnRoot}"
+                    appApacheConfigurationFile="${appApacheConfigurationFile}"
+                    forceAppApacheConfigurationFileCreation="${forceAppApacheConfigurationFileCreation}"
+                    appDirectory="${appDirectory}"
+                    apacheConfigurationText="${apacheConfigurationText}"
+                    innerApacheConfigurationText="${innerApacheConfigurationText}"
+                    apachePrefixConfigurationText="${prefixConfiguration}"
+                    apacheVhostsConfigurationText="${apacheVhostsConfigurationText}"
+                    apacheAllowOverride="${apacheAllowOverride}"
+                    apacheOptions="${apacheOptions}"
+                    apacheIncludeHtaccess="${apacheIncludeHtaccess}"
+                    appWebDirectory="${appWebDirectory}/public"
+                    appConfDirectory="${appConfDirectory}"
+                    beforeAppApacheConfiguration="${rubyBeforeAppApacheConfiguration}"
+                    insideAppApacheConfiguration="${rubyInsideAppApacheConfiguration}"
+                    afterAppApacheConfiguration="${rubyAfterAppApacheConfiguration}"
+                    extraApacheSettings="${extraApacheSettings}"
+                    disableBitNamiBanner="${disableBitNamiBanner}"
+                    disableBannerCondition="${disableBannerCondition}"
+                    appConfigurationForVhost="${rubyAppConfigurationForVhost}"
+                    withoutDirectoryConfiguration="${withoutDirectoryConfiguration}"/>
+
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="apacheConfigurationForPythonApp">
+            <parameterList>
+                <stringParameter name="appName" value="" default="${project.shortname}" />
+                <stringParameter name="applicationOnRoot" value="" default="0" />
+                <stringParameter name="appApacheConfigurationFile" value="" default="httpd-app.conf" />
+                <stringParameter name="forceAppApacheConfigurationFileCreation" value="1"/>
+                <stringParameter name="appDirectory" value="" default="${installdir}/apps/${project.shortname}" />
+                <stringParameter name="apacheConfigurationText" value="" default="" />
+                <stringParameter name="innerApacheConfigurationText" value="" default="" />
+                <stringParameter name="apachePrefixConfigurationText" value="" default="" />
+                <stringParameter name="apacheVhostsConfigurationText" value="" default=""/>
+                <stringParameter name="apacheAllowOverride" value="" default="" />
+                <stringParameter name="apacheOptions" value="" default="+MultiViews" />
+                <stringParameter name="apacheIncludeHtaccess" value="" default="${appDirectory}/conf/${appApacheConfigurationFile}" />
+                <stringParameter name="appWebDirectory" value="" default="${installdir}/apps/${project.shortname}/scripts" />
+                <stringParameter name="appConfDirectory" value="" default="" />
+                <stringParameter name="beforeAppApacheConfiguration" value="" default="" />
+                <stringParameter name="insideAppApacheConfiguration" value="" default="" />
+                <stringParameter name="afterAppApacheConfiguration" value="" default="" />
+                <stringParameter name="extraApacheSettings" value="" default="" />
+                <stringParameter name="disableBitNamiBanner" value="0" default="" />
+                <stringParameter name="disableBannerCondition" value="%{REQUEST_URI} !~ m!^/.*$!i"/>
+                <stringParameter name="addTextToBannerText" value=""/>
+                <booleanParameter name="withoutDirectoryConfiguration" default="0" value=""/>
+                <!-- Python parameters -->
+                <stringParameter name="enableWSGIMode" value="1"/>
+                <stringParameter name="pythonAppMainDirectoryConfiguration" value=""/>
+                <stringParameter name="pythonAppOtherConfiguration" value=""/>
+                <stringParameter name="pythonDaemonUser" value=""/>
+                <stringParameter name="pythonDaemonGroup" value=""/>
+                <stringParameter name="pythonHome" value="" />
+                <stringParameter name="pythonPath" value="" />
+                <stringParameter name="pythonEggs" value="" />
+                <stringParameter name="pythonProcessGroup" value="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="appDirectory" value="${${appName}_installation_directory}">
+                    <ruleList>
+                        <fileExists path="${${appName}_installation_directory}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appDirectory" value="${app(${appName}).installdir}">
+                    <ruleList>
+                        <fileExists path="${app(${appName}).installdir}" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appWebDirectory" value="${appDirectory}/htdocs">
+                    <ruleList>
+                        <compareText text="${appWebDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="appConfDirectory" value="${appDirectory}">
+                    <ruleList>
+                        <compareText text="${appConfDirectory}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="python_process_group" value="wsgi-${appName}">
+                    <ruleList>
+                        <compareText text="${pythonProcessGroup}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="python_process_group" value="${pythonProcessGroup}">
+                    <ruleList>
+                        <compareText text="${pythonProcessGroup}" logic="does_not_equal" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <createDirectory path="${appConfDirectory}/conf" />
+                <setInstallerVariable name="pythonAppMainDirectoryConfiguration" value="WSGIProcessGroup ${python_process_group}&#xA;${pythonAppMainDirectoryConfiguration}">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <compareText text="${enableWSGIMode}" value="1"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <stringModify>
+                    <text>${appName}</text>
+                    <logic>toupper</logic>
+                    <variable>appNameUpperCase</variable>
+                </stringModify>
+                <setInstallerVariable name="python_daemon_user" value=""/>
+                <setInstallerVariable name="python_daemon_user">
+                    <value>user=${pythonDaemonUser}</value>
+                    <ruleList>
+                        <compareText text="${pythonDaemonUser}" value="" logic="does_not_equal"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="python_daemon_group" value=""/>
+                <setInstallerVariable name="python_daemon_group">
+                    <value>group=${pythonDaemonGroup}</value>
+                    <ruleList>
+                        <compareText text="${pythonDaemonGroup}" value="" logic="does_not_equal"/>
+                        <platformTest type="osx" negate="1"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="python_home" value=""/>
+                <setInstallerVariable name="python_home">
+                    <value>home=${pythonHome}</value>
+                    <ruleList>
+                        <compareText text="${pythonHome}" value="" logic="does_not_equal"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="python_path" value=""/>
+                <setInstallerVariable name="python_path">
+                    <value>python-path=${pythonPath}</value>
+                    <ruleList>
+                        <compareText text="${pythonPath}" value="" logic="does_not_equal"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="python_eggs" value=""/>
+                <setInstallerVariable name="python_eggs">
+                    <value>python-eggs=${pythonEggs}</value>
+                    <ruleList>
+                        <compareText text="${pythonEggs}" value="" logic="does_not_equal"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="pythonBeforeAppApacheConfiguration" value=""/>
+                <setInstallerVariable name="pythonBeforeAppApacheConfiguration">
+                    <value>&lt;IfDefine !IS_${appNameUpperCase}_LOADED&gt; &#xA;Define IS_${appNameUpperCase}_LOADED&#xA;WSGIDaemonProcess ${python_process_group} ${python_daemon_user} ${python_daemon_group} processes=2 threads=15 ${python_home} ${python_path} ${python_eggs} display-name=%{GROUP}&#xA;&lt;/IfDefine&gt; &#xA;</value>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="pythonBeforeAppApacheConfiguration">
+                    <value>${pythonBeforeAppApacheConfiguration}${beforeAppApacheConfiguration}</value>
+                    <ruleList>
+                        <compareText text="${beforeAppApacheConfiguration}" value="" logic="does_not_equal"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="pythonInsideAppApacheConfiguration" value=""/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="pythonInsideAppApacheConfiguration">
+                            <value>${pythonAppMainDirectoryConfiguration}</value>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${pythonAppMainDirectoryConfiguration}" value="" logic="does_not_equal"/>
+                        <compareText text="${appWebDirectory}" value="" logic="does_not_equal"/>
+                        <compareText text="${apacheConfigurationText}" value="" logic="equals"/>
+                    </ruleList>
+                </actionGroup>
+                <setInstallerVariable name="pythonAfterAppApacheConfiguration" value=""/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="pythonAfterAppApacheConfiguration">
+                            <value>${pythonAppOtherConfiguration}</value>
+                        </setInstallerVariable>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${pythonAppOtherConfiguration}" value="" logic="does_not_equal"/>
+                        <compareText text="${apacheConfigurationText}" value="" logic="equals"/>
+                    </ruleList>
+                </actionGroup>
+
+                <!-- banner always disabled here, because we are configuring it before -->
+                <apacheConfigurationForApp
+                    appName="${appName}"
+                    applicationOnRoot="${applicationOnRoot}"
+                    appApacheConfigurationFile="${appApacheConfigurationFile}"
+                    forceAppApacheConfigurationFileCreation="${forceAppApacheConfigurationFileCreation}"
+                    appDirectory="${appDirectory}"
+                    apacheConfigurationText="${apacheConfigurationText}"
+                    innerApacheConfigurationText="${innerApacheConfigurationText}"
+                    apachePrefixConfigurationText="${apachePrefixConfigurationText}"
+                    apacheVhostsConfigurationText="${apacheVhostsConfigurationText}"
+                    apacheAllowOverride="${apacheAllowOverride}"
+                    apacheOptions="${apacheOptions}"
+                    apacheIncludeHtaccess="${apacheIncludeHtaccess}"
+                    appWebDirectory="${appWebDirectory}"
+                    appConfDirectory="${appConfDirectory}"
+                    beforeAppApacheConfiguration="${pythonBeforeAppApacheConfiguration}"
+                    insideAppApacheConfiguration="${pythonInsideAppApacheConfiguration}"
+                    afterAppApacheConfiguration="${pythonAfterAppApacheConfiguration}"
+                    extraApacheSettings="${extraApacheSettings}"
+                    disableBitNamiBanner="${disableBitNamiBanner}"
+                    disableBannerCondition="${disableBannerCondition}"
+                    withoutDirectoryConfiguration="${withoutDirectoryConfiguration}"/>
+
+                <apacheModule moduleName="mod_wsgi" action="enable">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <compareText text="${enableWSGIMode}" value="1"/>
+                    </ruleList>
+                </apacheModule>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="ApacheCleanRedirections">
+            <parameterList>
+                <stringParameter name="applicationId" default="${project.shortname}"/>
+                <stringParameter name="configFile"/>
+            </parameterList>
+            <actionList>
+                <!-- Set default values -->
+                <setInstallerVariable name="applicationId" value="${project.shortname}">
+                    <ruleList>
+                        <stringTest text="${applicationId}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="configFile" value="${installdir}/apps/${applicationId}/conf/httpd-prefix.conf">
+                    <ruleList>
+                        <stringTest text="${configFile}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+                <readFile>
+                    <name>httpdprefix_text</name>
+                    <path>${base_directory}/apps/${applicationId}/conf/httpd-prefix.conf</path>
+                </readFile>
+                <setInstallerVariableFromRegEx>
+                    <text>${httpdprefix_text}</text>
+                    <name>new_prefix_file</name>
+                    <substitution>\1\3</substitution>
+                    <pattern>(.*)(\s*#Init\s*[^\s]*\s*redirection.*#End\s*[^\s]*\s*redirection\s*)(.*)</pattern>
+                </setInstallerVariableFromRegEx>
+                <writeFile>
+                    <path>${base_directory}/apps/${applicationId}/conf/httpd-prefix.conf</path>
+                    <text>${new_prefix_file}</text>
+                </writeFile>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="ApacheRedirectAWSdomainToIP">
+            <parameterList>
+                <stringParameter name="applicationId" default="${project.shortname}"/>
+                <booleanParameter name="nipRedirection" default="0"/>
+                <stringParameter name="configFile"/>
+            </parameterList>
+            <actionList>
+                <!-- Set default values -->
+                <setInstallerVariable name="applicationId" value="${project.shortname}">
+                    <ruleList>
+                        <stringTest text="${applicationId}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="configFile" value="${installdir}/apps/${applicationId}/conf/httpd-prefix.conf">
+                    <ruleList>
+                        <stringTest text="${configFile}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+				<setInstallerVariable name="awsRegEx" value="^ec2-([0-9]{1,3}-[0-9]{1,3}-[0-9]{1,3}-[0-9]{1,3})\..*\.amazonaws.com(:[0-9]*)?$"/>
+                <actionGroup>
+                    <ruleList>
+                        <hostValidation host="${machine_hostname}" type="ip" condition="is_not_valid"/>
+                    </ruleList>
+                    <actionList>
+                        <setInstallerVariableFromRegEx>
+                            <name>awsIP</name>
+                            <pattern>${awsRegEx}</pattern>
+                            <substitution>\1</substitution>
+                            <text>${machine_hostname}</text>
+                        </setInstallerVariableFromRegEx>
+                        <setInstallerVariableFromRegEx>
+                            <name>machine_hostname</name>
+                            <pattern>-</pattern>
+                            <substitution>.</substitution>
+                            <text>${awsIP}</text>
+                        </setInstallerVariableFromRegEx>
+                    </actionList>
+                </actionGroup>
+                <setInstallerVariable name="apacheRewriteCond">
+                    <value><![CDATA[RewriteCond "%{HTTP_HOST}" ${awsRegEx}]]></value>
+                </setInstallerVariable>
+                <actionGroup>
+                    <ruleList>
+                        <isTrue value="${nipRedirection}"/>
+                    </ruleList>
+                    <actionList>
+                        <setInstallerVariable name="machine_hostname" value="${machine_hostname}.nip.io"/>
+                        <setInstallerVariable name="apacheRewriteCond">
+                            <value><![CDATA[RewriteCond "%{HTTP_HOST}" ${awsRegEx} [OR]
+RewriteCond "%{HTTP_HOST}" ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(:[0-9]*)?$]]></value>
+                        </setInstallerVariable>
+                    </actionList>
+                </actionGroup>
+                <substitute>
+                    <files>${configFile}</files>
+                    <type>regexp</type>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>Include\s*"${base_directory}/apps/${applicationId}/conf/httpd-app.conf\s*"</pattern>
+                            <value>#Init nip redirection
+RewriteEngine On
+${apacheRewriteCond}
+RewriteRule "^/?(.*)" "%{REQUEST_SCHEME}://%1.%2.%3.%4%5/$1" [L,R=302,NE]
+#End nip redirection
+
+Include "${base_directory}/apps/${applicationId}/conf/httpd-app.conf"</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <apacheServer action="restart"/>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="ApacheNIPRedirection">
+            <parameterList>
+                <stringParameter name="applicationId" default="${project.shortname}"/>
+                <stringParameter name="configFile"/>
+            </parameterList>
+            <actionList>
+                <actionGroup>
+                    <actionList>
+                        <!-- Set default values -->
+                        <setInstallerVariable name="applicationId" value="${project.shortname}">
+                            <ruleList>
+                                <stringTest text="${applicationId}"  type="empty" />
+                            </ruleList>
+                        </setInstallerVariable>
+                        <setInstallerVariable name="configFile" value="${installdir}/apps/${applicationId}/conf/httpd-prefix.conf">
+                            <ruleList>
+                                <stringTest text="${configFile}"  type="empty" />
+                            </ruleList>
+                        </setInstallerVariable>
+                        <substitute>
+                            <files>${configFile}</files>
+                            <type>regexp</type>
+                            <substitutionList>
+                                <substitution>
+                                    <pattern>Include\s*"${base_directory}/apps/${applicationId}/conf/httpd-app.conf\s*"</pattern>
+                                    <value>#Init nip redirection
+RewriteEngine On
+RewriteCond "%{HTTP_HOST}" ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})(:[0-9]*)?$
+RewriteRule "^/?(.*)" "%{REQUEST_SCHEME}://%1.%2.%3.%4.nip.io%5/$1" [L,R=302,NE]
+#End nip redirection
+
+Include "${base_directory}/apps/${applicationId}/conf/httpd-app.conf"</value>
+                                </substitution>
+                            </substitutionList>
+                        </substitute>
+                        <setInstallerVariable name="machine_hostname" value="${machine_hostname}.nip.io"/>
+                        <apacheServer action="restart"/>
+                    </actionList>
+                    <ruleList>
+                        <hostValidation>
+                            <host>${machine_hostname}</host>
+                            <type>ip</type>
+                            <condition>is_valid</condition>
+                        </hostValidation>
+                    </ruleList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <!-- The following functions are used to configure apps for Nginx server, ideally we should include nginx-functions.xml
+             but this implied a lot of modifications in all applications that include phpmyadmin.xml, including nginx on lamp tarball
+             and use this tarball instead of the ruby one. We should apply these changes when we start to support modules. -->
+
+
+        <actionDefinition name="nginxConfigurationForApp">
+ 	        <parameterList>
+ 	            <stringParameter name="appName" default="${project.shortname}"/>
+                <stringParameter name="applicationOnRoot" value="" default="0" />
+ 	            <stringParameter name="appNginxConfigurationFile" default="nginx-app.conf"/>
+                <stringParameter name="forceAppNginxConfigurationFileCreation" default="1"/>
+ 	            <stringParameter name="appDirectory"/>
+	 	        <stringParameter name="nginxConfigurationText"/>
+	 	        <stringParameter name="innerNginxConfigurationText"/>
+	 	        <stringParameter name="nginxPrefixConfigurationText"/>
+                <stringParameter name="nginxVhostsConfigurationText"/>
+	 	        <stringParameter name="appWebDirectory"/>
+	 	        <stringParameter name="appConfDirectory"/>
+                <stringParameter name="nginxIncludeHtaccess"/>
+                <stringParameter name="appConfIncludeDirectory"/>
+                <stringParameter name="proxyTimeout" default="300"/>
+	 	        <stringParameter name="appConfigurationForVhost" default=""/>
+ 	        </parameterList>
+ 	        <actionList>
+                <!-- Set default values -->
+                <setInstallerVariable name="appName" value="${project.shortname}">
+                    <ruleList>
+                        <stringTest text="${appName}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="appDirectory" value="${installdir}/apps/${appName}">
+                    <ruleList>
+                        <stringTest text="${appDirectory}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="appWebDirectory" value="${appDirectory}/htdocs">
+                    <ruleList>
+                        <stringTest text="${appWebDirectory}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="appConfDirectory" value="${appDirectory}/conf">
+                    <ruleList>
+                        <stringTest text="${appConfDirectory}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="nginxIncludeHtaccess" value="${appConfDirectory}/${appNginxConfigurationFile}">
+                    <ruleList>
+                        <stringTest text="${nginxIncludeHtaccess}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="appConfIncludeDirectory" value="${appConfDirectory}">
+                    <ruleList>
+                        <stringTest text="${appConfIncludeDirectory}"  type="empty" />
+                    </ruleList>
+                </setInstallerVariable>
+
+                <setInstallerVariable name="nginx_ssl_port" value="8043">
+                    <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                    <ruleList>
+                        <stringTest text="${nginx_ssl_port}"  type="empty" />
+                        <compareText text="${nginx_ssl_port}" logic="contains" value="unknown variable" />
+                    </ruleList>
+                </setInstallerVariable>
+
+	 	        <createDirectory path="${appConfDirectory}" />
+
+                <!-- Prefix conf file -->
+                <writeFile>
+                    <path>${appConfDirectory}/nginx-prefix.conf</path>
+                    <text>${nginxPrefixConfigurationText}</text>
+	 	            <ruleList>
+   			            <compareText text="${nginxPrefixConfigurationText}" logic="does_not_equal" value="" />
+	 	            </ruleList>
+                </writeFile>
+
+
+		        <writeFile>
+                    <path>${appConfDirectory}/nginx-prefix.conf</path>
+                    <text>
+location /${appName} {
+    alias "${appWebDirectory.unix}";
+    include "${appConfIncludeDirectory.unix}/${appNginxConfigurationFile}";
+}&#xA;</text>
+                     <ruleList>
+ 			             <compareText text="${nginxPrefixConfigurationText}" logic="equals" value=""/>
+                         <isFalse value="${applicationOnRoot}"/>
+	 	             </ruleList>
+                 </writeFile>
+		        <writeFile>
+                    <path>${appConfDirectory}/nginx-prefix.conf</path>
+                    <text>
+root "${appWebDirectory.unix}";
+include "${appConfIncludeDirectory.unix}/${appNginxConfigurationFile}";
+</text>
+                     <ruleList>
+ 			             <compareText text="${nginxPrefixConfigurationText}" logic="equals" value=""/>
+                         <isTrue value="${applicationOnRoot}"/>
+	 	             </ruleList>
+            </writeFile>
+
+            <if>
+                <conditionRuleList>
+                    <compareText text="${nginxVhostsConfigurationText}" logic="equals" value=""/>
+                </conditionRuleList>
+                <actionList>
+                    <setInstallerVariable name="session_cache_config">
+                        <value>
+       ssl_session_cache    shared:SSL:1m;
+       ssl_session_timeout  5m;</value>
+                    </setInstallerVariable>
+                    <setInstallerVariable name="session_cache_config">
+                        <value>
+       # http://nginx.org/en/docs/windows.html#known_issues
+       #ssl_session_cache    shared:SSL:1m;
+       #ssl_session_timeout  5m;</value>
+                        <ruleList>
+                            <platformTest type="windows"/>
+                        </ruleList>
+                    </setInstallerVariable>
+                    <writeFile>
+                        <path>${appConfDirectory}/nginx-vhosts.conf</path>
+                        <text>
+server {
+
+    listen    ${nginx_port};
+    root   "${appWebDirectory.unix}";
+    server_name  ${appName}.example.com www.${appName}.example.com;
+    ${appConfigurationForVhost}
+    include "${appConfIncludeDirectory.unix}/nginx-app.conf";
+}
+
+server {
+
+    listen    ${nginx_ssl_port} ssl;
+    root   "${appWebDirectory.unix}";
+    server_name  ${appName}.example.com www.${appName}.example.com;
+
+    ssl_certificate      "${appConfIncludeDirectory.unix}/certs/server.crt";
+    ssl_certificate_key  "${appConfIncludeDirectory.unix}/certs/server.key";
+
+    ${session_cache_config}
+
+    ssl_ciphers  HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers  on;
+    ${appConfigurationForVhost}
+    include "${appConfIncludeDirectory.unix}/nginx-app.conf";
+}&#xA;</text>
+                    </writeFile>
+                </actionList>
+                <elseActionList>
+                    <writeFile>
+                        <path>${appConfDirectory}/nginx-vhosts.conf</path>
+                        <text>${nginxVhostsConfigurationText}</text>
+                    </writeFile>
+                </elseActionList>
+            </if>
+
+            <!-- App configuration -->
+            <setInstallerVariable name="app_conf_text" value=""/>
+            <setInstallerVariable name="app_conf_text" value="${nginxConfigurationText}">
+                <ruleList>
+                    <compareText text="${app_conf_text}" logic="equals" value=""/>
+                    <compareText text="${nginxConfigurationText}" logic="does_not_equal" value=""/>
+                </ruleList>
+            </setInstallerVariable>
+
+            <setInstallerVariable name="app_conf_text">
+                <value>${innerNginxConfigurationText}</value>
+                <ruleList>
+                    <compareText text="${app_conf_text}" logic="equals" value=""/>
+                    <compareText text="${innerNginxConfigurationText}" logic="does_not_equal" value=""/>
+                </ruleList>
+            </setInstallerVariable>
+
+            <writeFile>
+                <path>${appConfDirectory}/${appNginxConfigurationFile}</path>
+                <text>${app_conf_text}</text>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                    <fileTest path="${appConfDirectory}/${appNginxConfigurationFile}" condition="not_exists" />
+                    <isTrue value="${forceAppNginxConfigurationFileCreation}"/>
+                </ruleList>
+            </writeFile>
+
+		    <addDirectoriesToUninstaller files="${appConfDirectory}" addContents="1" />
+
+        </actionList>
+    </actionDefinition>
+
+    <actionDefinition name="nginxConfigurationForPHPApp">
+        <parameterList>
+            <stringParameter name="appName" default="${project.shortname}"/>
+            <stringParameter name="applicationOnRoot" value="" default="0" />
+            <stringParameter name="appNginxConfigurationFile" default="nginx-app.conf"/>
+            <stringParameter name="forceAppNginxConfigurationFileCreation" default="1"/>
+            <stringParameter name="appDirectory"/>
+            <stringParameter name="nginxConfigurationText"/>
+            <stringParameter name="innerNginxConfigurationText"/>
+            <stringParameter name="nginxPrefixConfigurationText"/>
+            <stringParameter name="nginxVhostsConfigurationText"/>
+            <stringParameter name="appWebDirectory"/>
+            <stringParameter name="appConfDirectory"/>
+            <stringParameter name="nginxIncludeHtaccess"/>
+            <stringParameter name="appConfIncludeDirectory"/>
+            <stringParameter name="phpFpmPmMode" default="dynamic"/>
+            <stringParameter name="proxyTimeout" default="300"/>
+            <stringParameter name="appConfigurationForVhost" default=""/>
+        </parameterList>
+        <actionList>
+            <!-- PHP-FPM config -->
+            <if>
+                <actionList>
+                    <setInstallerVariable name="socket_dir" value="${installdir}/php/var/run"/>
+                    <setInstallerVariable name="socket_dir" value="${php_directory}/var/run">
+                        <ruleList>
+                            <compareText text="${php_directory}" logic="does_not_contain" value="unknown variable"/>
+                        </ruleList>
+                    </setInstallerVariable>
+                    <setInstallerVariable name="socket_path" value="${socket_dir}/www.sock"/>
+
+                    <setInstallerVariable name="fastcgi_pass_str" value="unix:${socket_path}"/>
+                </actionList>
+                <elseActionList>
+                    <!-- These files are generated and packed at build-time, if PHP-FPM is not installed, we simply remove them -->
+                    <deleteFile path="${appConfDirectory}/php-fpm" abortOnError="0" showMessageOnError="0"/>
+                    <!-- We do not currently support per-app configuration on Windows -->
+                    <setInstallerVariable name="fastcgi_pass_str" value="127.0.0.1:${php_fpm_port}"/>
+                </elseActionList>
+                <conditionRuleList>
+                    <platformTest type="unix"/>
+                </conditionRuleList>
+            </if>
+
+            <setInstallerVariable name="fastcgi_configuration">
+              <value># Deny all attempts to access hidden files such as .htaccess or .htpasswd.
+location ~ /\. {
+    deny all;
+}
+
+location ~ \.php$ {
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_read_timeout ${proxyTimeout};
+    fastcgi_pass ${fastcgi_pass_str};
+    fastcgi_index index.php;
+    fastcgi_param  SCRIPT_FILENAME $request_filename;
+    include fastcgi_params;
+}&#xA;</value>
+            </setInstallerVariable>
+
+            <setInstallerVariable name="innerNginxConfigurationText">
+                <value>${innerNginxConfigurationText}&#xA;${fastcgi_configuration}&#xA;</value>
+            </setInstallerVariable>
+
+            <nginxConfigurationForApp>
+                <appName>${appName}</appName>
+                <applicationOnRoot>${applicationOnRoot}</applicationOnRoot>
+                <appNginxConfigurationFile>${appNginxConfigurationFile}</appNginxConfigurationFile>
+                <forceAppNginxConfigurationFileCreation>${forceAppNginxConfigurationFileCreation}</forceAppNginxConfigurationFileCreation>
+                <appDirectory>${appDirectory}</appDirectory>
+                <nginxConfigurationText>${nginxConfigurationText}</nginxConfigurationText>
+                <innerNginxConfigurationText>${innerNginxConfigurationText}</innerNginxConfigurationText>
+                <nginxPrefixConfigurationText>${nginxPrefixConfigurationText}</nginxPrefixConfigurationText>
+                <nginxVhostsConfigurationText>${nginxVhostsConfigurationText}</nginxVhostsConfigurationText>
+                <appWebDirectory>${appWebDirectory}</appWebDirectory>
+                <appConfDirectory>${appConfDirectory}</appConfDirectory>
+                <nginxIncludeHtaccess>${nginxIncludeHtaccess}</nginxIncludeHtaccess>
+                <appConfIncludeDirectory>${appConfIncludeDirectory}</appConfIncludeDirectory>
+                <proxyTimeout>${proxyTimeout}</proxyTimeout>
+                <appConfigurationForVhost>${appConfigurationForVhost}</appConfigurationForVhost>
+            </nginxConfigurationForApp>
+        </actionList>
+    </actionDefinition>
+
+    <actionDefinition name="nginxRegisterApp">
+	    <parameterList>
+	        <stringParameter name="applicationId" default="${project.shortname}"/>
+	        <stringParameter name="configFile"/>
+	        <stringParameter name="enabled" default="1"/>
+            <booleanParameter name="useVirtualHosts" default="0"/>
+	    </parameterList>
+	    <actionList>
+            <!-- Set default values -->
+            <setInstallerVariable name="applicationId" value="${project.shortname}">
+                <ruleList>
+                    <stringTest text="${applicationId}"  type="empty" />
+                </ruleList>
+            </setInstallerVariable>
+
+            <setInstallerVariable name="configFile" value="${installdir}/apps/${applicationId}/conf/nginx-prefix.conf">
+                <ruleList>
+                    <stringTest text="${configFile}"  type="empty" />
+                </ruleList>
+            </setInstallerVariable>
+
+            <createDirectory path="${nginx_root_directory}/conf/bitnami" />
+
+            <setInstallerVariable name="includeConfigFile" value='include "${configfile}";'/>
+            <setInstallerVariable name="includeConfigFile" value='#include "${configfile}";'>
+                <ruleList>
+                    <isFalse value="${enabled}" />
+                </ruleList>
+            </setInstallerVariable>
+
+            <setInstallerVariable name="nginxBitnamiPrefixes" value='${nginx_root_directory}/conf/bitnami/bitnami-apps-prefix.conf'/>
+            <setInstallerVariable name="nginxBitnamiVhosts" value='${nginx_root_directory}/conf/bitnami/bitnami-apps-vhosts.conf'/>
+
+            <touchFile path="${nginxBitnamiPrefixes}" createIfNotExists="1"/>
+            <touchFile path="${nginxBitnamiVhosts}" createIfNotExists="1"/>
+
+            <if>
+                <conditionRuleList>
+                    <isFalse value="${useVirtualHosts}"/>
+                </conditionRuleList>
+                <actionList>
+                    <addTextToFile>
+                        <file>${nginxBitnamiPrefixes}</file>
+                        <text>${includeConfigFile}&#xA;</text>
+                        <ruleList>
+                            <fileContentTest path="${nginxBitnamiPrefixes}" logic="does_not_contain" text="${configFile}"/>
+                        </ruleList>
+                    </addTextToFile>
+                </actionList>
+                <elseActionList>
+                    <addTextToFile>
+                        <file>${nginxBitnamiVhosts}</file>
+                        <text>${includeConfigFile}&#xA;</text>
+                        <ruleList>
+                            <fileContentTest path="${nginxBitnamiVhosts}" logic="does_not_contain" text="${configFile}"/>
+                        </ruleList>
+                    </addTextToFile>
+                </elseActionList>
+            </if>
+
+            <substitute>
+                <files>${nginx_root_directory}/conf/nginx.conf</files>
+                <type>exact</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>location /status {</pattern>
+                        <value>include "${nginxBitnamiPrefixes}";
+
+    location /status {</value>
+                    </substitution>
+                </substitutionList>
+                <ruleList>
+                    <fileContentTest path="${nginx_root_directory}/conf/nginx.conf" logic="does_not_contain" text="${nginxBitnamiPrefixes}"/>
+                </ruleList>
+            </substitute>
+
+            <substitute>
+                <files>${nginx_root_directory}/conf/nginx.conf</files>
+                <type>exact</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>include "${nginx_root_directory}/conf/vhosts/*.conf";</pattern>
+                        <value>include "${nginxBitnamiVhosts}";
+  include "${nginx_root_directory}/conf/vhosts/*.conf";</value>
+                    </substitution>
+                </substitutionList>
+                <ruleList>
+                    <fileContentTest path="${nginx_root_directory}/conf/nginx.conf" logic="does_not_contain" text="${nginxBitnamiVhosts}"/>
+                </ruleList>
+            </substitute>
+	    </actionList>
+	</actionDefinition>
+
+    <actionDefinition name="nginxUnregisterApp">
+	    <parameterList>
+	        <stringParameter name="applicationId" default="${project.shortname}"/>
+	        <stringParameter name="configFile"/>
+            <stringParameter name="vhostFile"/>
+	    </parameterList>
+	    <actionList>
+            <!-- Set default values -->
+            <setInstallerVariable name="applicationId" value="${project.shortname}">
+                <ruleList>
+                    <stringTest text="${applicationId}"  type="empty" />
+                </ruleList>
+            </setInstallerVariable>
+
+            <setInstallerVariable name="configFile" value="${installdir}/apps/${applicationId}/conf/nginx-prefix.conf">
+                <ruleList>
+                    <stringTest text="${configFile}"  type="empty" />
+                </ruleList>
+            </setInstallerVariable>
+
+            <setInstallerVariable name="vhostFile" value="${installdir}/apps/${applicationId}/conf/nginx-vhosts.conf">
+                <ruleList>
+                    <stringTest text="${vhostFile}"  type="empty" />
+                </ruleList>
+            </setInstallerVariable>
+
+		    <foreach>
+			    <variables>nginxBitnamiConfigFile includedFile</variables>
+			    <values>
+                    ${nginx_root_directory}/conf/bitnami/bitnami-apps-prefix.conf "${configFile}"
+                    ${nginx_root_directory}/conf/bitnami/bitnami-apps-vhosts.conf "${vhostFile}"
+                </values>
+			    <actionList>
+                    <substitute>
+                        <files>${nginxBitnamiConfigFile}</files>
+                        <type>regexp</type>
+                        <substitutionList>
+                            <substitution>
+                                <pattern>include\s+"${includedFile}";</pattern>
+                                <value></value>
+                            </substitution>
+                        </substitutionList>
+                    </substitute>
+			    </actionList>
+		    </foreach>
+		</actionList>
+	</actionDefinition>
+    </functionDefinitionList>
+</component>

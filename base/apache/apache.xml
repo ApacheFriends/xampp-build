@@ -1,0 +1,714 @@
+
+<!-- APACHE 1.0
+Componentname: APACHE
+
+Short Description:
+This component is able to install and configurate the bundled Apache it carries.
+
+System variables provided by this component:
+
+ * web_server_port
+ * web_server_ssl_port
+ * apache_server_directory
+ * web_server_domain_name
+ * web_server_configuration_directory
+ * web_server_user
+ * web_server_group
+ * web_server_upgrade
+-->
+<component>
+    <name>apache</name>
+    <description>//Apache Component</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <detailedDescription>Apache is an open-source HTTP server for modern operating systems including UNIX and Windows NT.</detailedDescription>
+    <initializationActionList>
+        <!-- Set the web server user and group if not root -->
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable>
+                    <name>web_server_default_user</name>
+                    <value>${system_username}</value>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>web_server_default_group</name>
+                    <value>${system_username}</value>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <isFalse value="${installer_root_install}"/>
+            </ruleList>
+        </actionGroup>
+        <!-- if installer_is_root_install==1 default webport=80   and web_server_ssl_port==443,
+                                                else webport=8080 and web_server_ssl_port==8443-->
+        <setInstallerVariable>
+            <name>web_server_default_port</name>
+            <value>80</value>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <platformTest type="windows"/>
+                <compareText text="${installer_is_root_install}" logic="does_not_equal" value="0"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>web_server_default_port</name>
+            <value>8080</value>
+            <ruleList>
+                <compareText text="${installer_is_root_install}" logic="equals" value="0"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>web_server_default_ssl_port</name>
+            <value>443</value>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <platformTest type="windows"/>
+                <compareText text="${installer_is_root_install}" logic="does_not_equal" value="0"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>web_server_default_ssl_port</name>
+            <value>8443</value>
+            <ruleList>
+                <compareText text="${installer_is_root_install}" logic="equals" value="0"/>
+            </ruleList>
+        </setInstallerVariable>
+    </initializationActionList>
+    <preInstallationActionList>
+        <getFreePort variable="apache_server_port" initialPort="${component(apache).parameter(apache_server_initial_port).value}" finalPort="${component(apache).parameter(apache_server_final_port).value}">
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <ruleList>
+                <compareText text="${apache_automatic_port_selection}" logic="equals" value="1" />
+                <platformTest type="unix" />
+            </ruleList>
+        </getFreePort>
+        <getFreePort variable="apache_server_ssl_port" initialPort="${component(apache).parameter(apache_server_ssl_initial_port).value}" finalPort="${component(apache).parameter(apache_server_ssl_final_port).value}">
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <ruleList>
+                <compareText text="${apache_automatic_port_selection}" logic="equals" value="1" />
+                <platformTest type="unix" />
+            </ruleList>
+        </getFreePort>
+    </preInstallationActionList>
+    <parameterList>
+        <stringParameter name="apache_bundled_version" ask="0" value="0" />
+        <!--<stringParameter name="apache_disable_mod_php" ask="0" value="0"/>-->
+        <stringParameter name="apache_mpm_mode" ask="0" value="" />
+        <stringParameter name="apache_upgrade" ask="0" value="0" />
+        <stringParameter name="apache_automatic_port_selection" ask="0" value="0" />
+	<stringParameter name="apache_server_initial_port" ask="0" value="0" />
+	<stringParameter name="apache_server_final_port" ask="0" value="0" />
+	<stringParameter name="apache_server_ssl_initial_port" ask="0" value="0" />
+	<stringParameter name="apache_server_ssl_final_port" ask="0" value="0" />
+	<stringParameter name="apache_additional_disabled_modules" ask="0" value="" />
+
+<!-- hidden parameter
+            1: Enable SSI
+            0: Disable SSI -->
+<stringParameter>
+            <name>web_server_enable_ssi</name>
+            <ask>0</ask>
+            <default>1</default>
+            <value>1</value>
+        </stringParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <!--description>Apache installation directory</description-->
+            <name>apache_server_directory</name>
+            <default>${installdir}/apache2</default>
+        </directoryParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <!--description>Apache htdocs directory</description-->
+            <name>apache_htdocs_directory</name>
+            <default>${apache_server_directory}/htdocs</default>
+        </directoryParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <!--description>Apache Configuration directory</description-->
+            <name>apache_configuration_directory</name>
+            <default>${apache_server_directory}/conf</default>
+        </directoryParameter>
+        <stringParameter>
+            <name>web_server_default_port</name>
+            <ask>0</ask>
+            <default>80 or 8080 - depending on your permissions</default>
+        </stringParameter>
+        <stringParameter>
+            <name>web_server_default_ssl_port</name>
+            <default>443 or 8443 - depending on your permissions</default>
+            <ask>0</ask>
+        </stringParameter>
+        <stringParameter>
+            <name>apache_server_port</name>
+            <title>Web Server Port</title>
+            <description>Apache Web Server Port</description>
+            <explanation>Choose a port that is not currently in use, such as port ${apache_server_port}.</explanation>
+            <value>${web_server_default_port}</value>
+            <default>${web_server_default_port}</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <ask>1</ask>
+            <cliOptionName/>
+            <leftImage/>
+            <width>30</width>
+            <preShowPageActionList>
+                <!-- T12835 - Suggests free port when the port by default is not available -->
+                <getFreePort variable="apache_server_port" initialPort="${apache_server_port}" finalPort="65535"/>
+            </preShowPageActionList>
+            <validationActionList>
+                <baseCheckPort serverName="Apache" serverPort="${apache_server_port}">
+                    <ruleList>
+			<isFalse value="${apache_upgrade}" />
+                    </ruleList>
+                </baseCheckPort>
+            </validationActionList>
+            <ruleList>
+                <isFalse value="${upgrade_stack}" />
+                <ruleGroup ruleEvaluationLogic="or">
+                    <ruleList>
+                        <portTest port="${apache_server_port}" condition="cannot_bind"/>
+                        <compareText logic="equals" value="1" text="${apache_server_port_show}"/>
+                    </ruleList>
+                </ruleGroup>
+            </ruleList>
+        </stringParameter>
+        <stringParameter>
+            <name>apache_server_ssl_port</name>
+            <title>Web Server Port</title>
+            <description>SSL Port</description>
+            <explanation>Choose a port that is not currently in use, such as port ${apache_server_ssl_port}.</explanation>
+            <value>${web_server_default_ssl_port}</value>
+            <default>${web_server_default_ssl_port}</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <ask>1</ask>
+            <cliOptionName/>
+            <leftImage/>
+            <width>30</width>
+            <preShowPageActionList>
+                <!-- T12835 - Suggests free port when the port by default is not available -->
+                <getFreePort variable="apache_server_ssl_port" initialPort="${apache_server_ssl_port}" finalPort="65535"/>
+            </preShowPageActionList>
+            <validationActionList>
+                <baseCheckPort serverName="Apache HTTPS" serverPort="${apache_server_ssl_port}"/>
+            </validationActionList>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <portTest port="${apache_server_ssl_port}" condition="cannot_bind"/>
+                <compareText logic="equals" value="1" text="${apache_server_ssl_port_show}"/>
+            </ruleList>
+        </stringParameter>
+        <stringParameter>
+            <name>apache_server_domain_name</name>
+            <title>Web Server Domain</title>
+            <description>Web Server domain</description>
+            <explanation>Enter the domain name or the IP address for you web server (www.example.com)</explanation>
+            <value/>
+            <default>127.0.0.1</default>
+            <ask>1</ask>
+            <cliOptionName>web_server_domain</cliOptionName>
+            <leftImage/>
+            <width>40</width>
+        </stringParameter>
+        <stringParameter>
+            <name>apache_server_web_name</name>
+            <!--title>Web Page Name</title>
+            <description>Web Page Name</description>
+            <explanation>Enter the web page name (www.example.com/web_page_name)</explanation-->
+            <value/>
+            <default/>
+            <ask>0</ask>
+            <cliOptionName/>
+            <leftImage/>
+            <width>40</width>
+        </stringParameter>
+        <stringParameter>
+            <name>web_server_default_user</name>
+            <ask>0</ask>
+            <default>daemon</default>
+        </stringParameter>
+        <stringParameter>
+            <name>apache_user</name>
+            <!--title>Apache User</title>
+            <description>Apache User</description>
+            <explanation>Apache User</explanation-->
+            <value/>
+            <default>${web_server_default_user}</default>
+            <ask>0</ask>
+            <cliOptionName>apache_user</cliOptionName>
+            <leftImage/>
+            <width>40</width>
+        </stringParameter>
+        <stringParameter>
+            <name>web_server_default_group</name>
+            <ask>0</ask>
+            <default>daemon</default>
+        </stringParameter>
+        <stringParameter>
+            <name>apache_group</name>
+            <!--title>Apache Group</title>
+            <description>Apache Group</description>
+            <explanation>Apache Group</explanation-->
+            <value/>
+            <default>${web_server_default_group}</default>
+            <ask>0</ask>
+            <cliOptionName>apache_group</cliOptionName>
+            <leftImage/>
+            <width>40</width>
+        </stringParameter>
+        <booleanParameter name="apache_execute_abort_action_list" value="1" ask="0" />
+        <booleanParameter name="apache_ready_to_install" value="0" ask="0" />
+    </parameterList>
+    <readyToInstallActionList>
+        <!-- T12835 - Check ports -->
+        <actionGroup>
+            <actionList>
+                <baseCheckPort serverName="Apache" serverPort="${apache_server_port}"/>
+                <baseCheckPort serverName="Apache" serverPort="${apache_server_ssl_port}"/>
+            </actionList>
+            <ruleList>
+                <compareText text="${installer_ui}" logic="equals" value="unattended"/>
+                <compareText value="${product_shortname}" text="nativeadapter" logic="does_not_equal" />
+                <isFalse value="${upgrade_stack}"/>
+            </ruleList>
+        </actionGroup>
+        <setInstallerVariable name="web_server_port" value="${apache_server_port}"/>
+        <setInstallerVariable name="web_server_user" value="${apache_user}" persist="1"/>
+        <setInstallerVariable name="web_server_group" value="${apache_group}" persist="1"/>
+        <setInstallerVariable name="web_server_ssl_port" value="${apache_server_ssl_port}"/>
+        <setInstallerVariable name="web_server_directory" value="${apache_server_directory}" persist="1"/>
+        <setInstallerVariable name="web_server_domain_name" value="${apache_server_domain_name}"/>
+        <setInstallerVariable name="web_server_web_name" value="${apache_web_name}"/>
+        <setInstallerVariable name="web_server_configuration_directory" value="${web_server_directory}/conf" persist="1"/>
+        <setInstallerVariable name="web_server_upgrade" value="${apache_upgrade}"/>
+        <setInstallerVariable name="apache_root_directory" value="${apache_server_directory}" persist="1"/>
+        <setInstallerVariable name="apache_binary_directory" value="${apache_server_directory}/bin" persist="1"/>
+        <setInstallerVariable name="APACHE_PATH" value="${apache_root_directory}/bin"/>
+        <setInstallerVariable name="PATH" value="${APACHE_PATH}:${PATH}"/>
+        <setInstallerVariable name="APACHE_LD_LIBRARY_PATH" value="${apache_root_directory}/lib"/>
+        <setInstallerVariable name="LD_LIBRARY_PATH" value="${APACHE_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}"/>
+        <setInstallerVariable name="APACHE_DYLD_LIBRARY_PATH" value="${apache_root_directory}/lib"/>
+        <setInstallerVariable name="DYLD_FALLBACK_LIBRARY_PATH" value="${APACHE_DYLD_LIBRARY_PATH}:${DYLD_FALLBACK_LIBRARY_PATH}"/>
+        <setInstallerVariable name="APACHE_ENV_VAR">
+            <value>##### APACHE ENV #####
+
+</value>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="APACHE_ENV_VAR">
+            <value>rem ##### APACHE ENV #####
+
+</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="ENV_VAR">
+            <value>${APACHE_ENV_VAR}${ENV_VAR}</value>
+        </setInstallerVariable>
+
+        <!-- T4414 Windows 10 doesn't include machine_hostname in /etc/hosts -->
+        <setInstallerVariable name="web_server_browser_domain" value="${web_server_domain_name}"/>
+        <setInstallerVariable name="web_server_browser_domain" value="127.0.0.1">
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="apache_ready_to_install" value="1"/>
+    </readyToInstallActionList>
+    <folderList>
+        <folder>
+            <description>//Apache Files</description>
+            <destination>${installdir}</destination>
+            <name>apache2</name>
+            <actionList>
+                <substitute>
+		    <type>exact</type>
+                    <files>${installdir}/ctl.sh;*</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                            <value>${installdir.unix}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_ROOTDIR@@</pattern>
+                            <value>${apache_server_directory.unix}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_PORT@@</pattern>
+                            <value>${apache_server_port}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_COMMON_ROOTDIR@@</pattern>
+                            <value>${installdir.unix}/common</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_ROOTDIR@@</pattern>
+                            <value>${installdir.unix}/mysql</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_SSL_PORT@@</pattern>
+                            <value>${apache_server_ssl_port}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_SSL_PORT@@</pattern>
+                            <value>${apache_server_ssl_port}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_USER@@</pattern>
+                            <value>${apache_user}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_GROUP@@</pattern>
+                            <value>${apache_group}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+<!--            <files>
+                ${installdir}/ctl.bat
+            </files>-->
+<files>                ${apache_server_directory}/scripts/ctl.sh;${apache_server_directory}/scripts/servicerun.bat;${apache_server_directory}/scripts/serviceinstall.bat
+            </files>
+                    <substitutionList>
+<!--<substitution>
+                    <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                    <value>${installdir}</value>
+                </substitution>-->
+<substitution>
+                            <pattern>@@XAMPP_APACHE_ROOTDIR@@</pattern>
+                            <value>${apache_server_directory}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_PORT@@</pattern>
+                            <value>${apache_server_port}</value>
+                        </substitution>
+
+<!--<substitution>
+                    <pattern>@@XAMPP_COMMON_ROOTDIR@@</pattern>
+                    <value>${installdir}/common</value>
+                </substitution>
+                <substitution>
+                    <pattern>@@XAMPP_SSL_PORT@@</pattern>
+                    <value>${apache_server_ssl_port}</value>
+                </substitution>
+                <substitution>
+                    <pattern>@@XAMPP_APACHE_SSL_PORT@@</pattern>
+                    <value>${apache_server_ssl_port}</value>
+                </substitution>
+                <substitution>
+                <pattern>@@XAMPP_APACHE_USER@@</pattern>
+                <value>${apache_user}</value>
+                </substitution>
+                <substitution>
+                <pattern>@@XAMPP_APACHE_GROUP@@</pattern>
+                <value>${apache_group}</value>
+                </substitution>-->
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>*/apache2/bin/apachectl</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>LD_LIBRARY_PATH</pattern>
+                            <value>DYLD_FALLBACK_LIBRARY_PATH</value>
+                        </substitution>
+                    </substitutionList>
+                    <ruleList>
+                        <regExMatch text="${platform_name}" pattern="osx" logic="matches"/>
+                    </ruleList>
+                </substitute>
+                <substitute>
+                    <files>*/apachectl;*/conf/*.conf;*/apxs;*/apr-config;*/apu-config;*/bin/envvars;*/bin/envvars-std;*/build/config*;lib/libapr*.la;*.la;*.pc;*.conf;*/bin/ab;*/bin/checkgid;*/bin/htdbm;*/bin/htdigest;*/bin/htpasswd;*/bin/logresolve;*/bin/rotatelogs</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_APACHE_ROOTDIR@@</pattern>
+                            <value>${apache_server_directory.unix}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <changePermissions>
+                    <files>*/certs/*.key</files>
+                    <permissions>400</permissions>
+                </changePermissions>
+                <changePermissions>
+                    <files>*/certs/*.crt</files>
+                    <permissions>444</permissions>
+                </changePermissions>
+            </actionList>
+            <distributionFileList>
+                <distributionDirectory origin="apache2"/>
+            </distributionFileList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+        <actionGroup>
+            <actionList>
+                <foreach variables="vcredist_version" values="2015 2017 2019">
+                    <actionList>
+                        <runProgram>
+                            <program>${installdir}/apache2/vcredist_x64_${vcredist_version}.exe</program>
+                            <programArguments>/q</programArguments>
+                            <showMessageOnError>0</showMessageOnError>
+                            <abortOnError>0</abortOnError>
+                            <ruleList>
+                                <fileTest condition="exists" path="${installdir}/apache2/vcredist_x64_${vcredist_version}.exe"/>
+                            </ruleList>
+                        </runProgram>
+                    </actionList>
+                </foreach>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </actionGroup>
+
+        <createSystemUser username="${web_server_user}" groupname="${web_server_group}" />
+        <actionGroup>
+            <actionList>
+                <apacheMpmModeSet mode="${apache_mpm_mode}" ruleEvaluationLogic="or">
+                    <ruleList>
+                        <compareText text="${apache_mpm_mode}" logic="equals" value="prefork"/>
+                        <isPhpFpmEnabled/>
+                        <!--<isThreadSafeModPhp/>-->
+                    </ruleList>
+                </apacheMpmModeSet>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </actionGroup>
+        <!-- Required for <ifVersion> tags -->
+        <apacheModule action="enable" moduleName="mod_version" />
+        <!-- Required for language support in index.html -->
+        <apacheModule action="enable" moduleName="mod_negotiation" />
+        <!-- Required for mod_proxy_balancer. At least for apache 2.4+ in some systems -->
+        <apacheModule action="enable" moduleName="mod_slotmem_shm" />
+        <foreach variables="disableApacheModule" values="${apache_additional_disabled_modules}">
+            <actionList>
+                <apacheModule action="disable" moduleName="${disableApacheModule}" />
+            </actionList>
+            <ruleList>
+                <compareText text="${apache_additional_disabled_modules}" logic="does_not_equal" value="" />
+            </ruleList>
+        </foreach>
+        <actionGroup>
+            <actionList>
+                <getModPhpIdentifier apacheConfigurationFile="${apache_server_directory}/conf/httpd.conf" variable="identifier"/>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+                <isPhpFpmInstalled/>
+            </ruleList>
+        </actionGroup>
+        <setInstallerVariable name="use_php_fpm_var_text" value="&#xA;# This enables using PHP-FPM when mod_php is disabled&#xA;&lt;IfModule !${identifier}&gt;&#xA;    Action application/x-httpd-php &quot;/bitnami-error-php-fpm-did-not-handle-the-connection&quot;&#xA;    Define USE_PHP_FPM&#xA;    Include &quot;conf/php-fpm-apache.conf&quot;&#xA;&lt;/IfModule&gt;&#xA;"/>
+        <actionGroup>
+            <actionList>
+                <!--<apacheModule action="enable" moduleName="mod_cgid"/>-->
+                <apacheModule action="enable" moduleName="mod_actions"/>
+                <substitute>
+                    <files>${apache_server_directory}/conf/httpd.conf</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>\s*#\s*LoadModule\s+php7_module\s+modules/libphp7.so\s*</pattern>
+                            <value>
+# Comment the below module to enable PHP-FPM
+#LoadModule php7_module        modules/libphp7.so
+${use_php_fpm_var_text}
+</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>\s*#\s*LoadModule\s+php_module\s+modules/libphp.so\s*</pattern>
+                            <value>
+# Comment the below module to enable PHP-FPM
+#LoadModule php_module         modules/libphp.so
+${use_php_fpm_var_text}
+</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+
+                <substitute>
+                    <files>${apache_server_directory}/conf/httpd.conf</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>\s*LoadModule\s+php7_module\s+modules/libphp7.so\s*</pattern>
+                            <value>
+# Comment the below module to enable PHP-FPM
+LoadModule php7_module        modules/libphp7.so
+${use_php_fpm_var_text}
+</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>\s*LoadModule\s+php_module\s+modules/libphp.so\s*</pattern>
+                            <value>
+# Comment the below module to enable PHP-FPM
+LoadModule php_module         modules/libphp.so
+${use_php_fpm_var_text}
+</value>
+                        </substitution>
+                    </substitutionList>
+                    <ruleList>
+                        <fileContentTest path="${apache_server_directory}/conf/httpd.conf" logic="does_not_contain" text="# Comment the below module to enable PHP-FPM"/>
+                    </ruleList>
+                </substitute>
+
+                <addTextToFile>
+                    <file>${apache_server_directory}/conf/httpd.conf</file>
+                    <text>${use_php_fpm_var_text}</text>
+                    <ruleList>
+                        <fileContentTest path="${apache_server_directory}/conf/httpd.conf" logic="does_not_contain" text="# This enables using PHP-FPM when mod_php is disabled"/>
+                    </ruleList>
+                </addTextToFile>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+                <isPhpFpmInstalled/>
+            </ruleList>
+        </actionGroup>
+
+        <addTextToFile>
+            <file>${apache_server_directory}/conf/httpd.conf</file>
+            <text>
+&lt;IfModule headers_module&gt;
+    &lt;IfVersion &gt;= 2.4.7 &gt;
+        Header always setifempty X-Frame-Options SAMEORIGIN
+    &lt;/IfVersion&gt;
+    &lt;IfVersion &lt; 2.4.7 &gt;
+        Header always merge X-Frame-Options SAMEORIGIN
+    &lt;/IfVersion&gt;
+    RequestHeader unset Proxy
+&lt;/IfModule&gt;
+
+# The following lines prevent .user.ini PHP settings files from being viewed by Web clients.
+&lt;Files ".user.ini"&gt;
+
+&lt;IfVersion &lt; 2.3 &gt;
+    Order allow,deny
+    Deny from all
+&lt;/IfVersion&gt;
+&lt;IfVersion &gt;= 2.3&gt;
+    Require all denied
+&lt;/IfVersion&gt;
+
+&lt;/Files&gt;
+</text>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>1</showMessageOnError>
+            <customErrorMessage>Unable to add text to httpd.conf</customErrorMessage>
+        </addTextToFile>
+
+
+        <addTextToFile>
+            <file>${apache_server_directory}/conf/httpd.conf</file>
+            <text>
+# Security
+ServerSignature Off
+ServerTokens Prod
+TraceEnable Off
+
+</text>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>1</showMessageOnError>
+            <customErrorMessage>Unable to add text to httpd.conf</customErrorMessage>
+        </addTextToFile>
+        <addTextToFile>
+            <file>${apache_server_directory}/conf/httpd.conf</file>
+            <text>Include "${apache_server_directory}/conf/ssi.conf"
+</text>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>1</showMessageOnError>
+            <customErrorMessage>Unable to add text to httpd.conf</customErrorMessage>
+        </addTextToFile>
+        <writeFile>
+            <path>${apache_server_directory}/conf/ssi.conf</path>
+            <text>&lt;IfModule mod_include.c&gt;
+    &lt;Directory "${apache_server_directory}/htdocs"&gt;
+        Options +Includes
+    &lt;/Directory&gt;
+    AddType text/html .shtml
+    AddOutputFilter INCLUDES .shtml
+&lt;/IfModule&gt;
+            </text>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>1</showMessageOnError>
+            <customErrorMessage>Unable to write file: ${apache_server_directory}/conf/ssi.conf</customErrorMessage>
+        </writeFile>
+        <addFilesToUninstaller files="${apache_server_directory}/conf/ssi.conf"/>
+        <addLogrotate name="apache" logs="${apache_server_directory}/logs/*_log">
+            <additionalOptions>postrotate
+    ${apache_server_directory}/bin/apachectl graceful 2>/dev/null || true
+  endscript
+            </additionalOptions>
+        </addLogrotate>
+        <addMonit name="apache" dirName="apache2" pidFile="${apache_server_directory}/logs/httpd.pid" />
+
+        <!-- We enable mod_wsgi during preparefordist, but should not enable it if the component is not included -->
+        <substitute type="exact" files="${apache_configuration_directory}/httpd.conf;${apache_binary_directory}/envvars">
+            <substitutionList>
+                <substitution pattern="LoadModule wsgi_module modules/mod_wsgi.so&#xA;WSGIPythonHome @@XAMPP_PYTHON_ROOTDIR@@&#xA;" value=""/>
+                <substitution pattern="PYTHONHOME=@@XAMPP_PYTHON_ROOTDIR@@&#xA;export PYTHONHOME&#xA;" value=""/>
+            </substitutionList>
+            <ruleList>
+                <componentTest name="apachewsgi" logic="does_not_exist"/>
+            </ruleList>
+        </substitute>
+        <substitute>
+            <files>${apache_server_directory}/conf/httpd.conf</files>
+            <substitutionList>
+                <substitution>
+                    <pattern>#Include conf/extra/httpd-default.conf</pattern>
+                    <value>Include conf/extra/httpd-default.conf</value>
+                </substitution>
+            </substitutionList>
+        </substitute>
+    </postInstallationActionList>
+    <installationAbortedActionList>
+        <logMessage text="[apache:installation-aborted] Running action list..."/>
+        <!-- WINDOWS -->
+        <actionGroup progressText="Uninstalling Apache">
+            <actionList>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <program>sc</program>
+                    <programArguments>stop ${apache_unique_service_name}</programArguments>
+                </runProgram>
+                <runProgram>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>0</showMessageOnError>
+                    <program>sc</program>
+                    <programArguments>delete ${apache_unique_service_name}</programArguments>
+                </runProgram>
+                <deleteFile path="${apache_server_directory}" />
+            </actionList>
+            <ruleList>
+                <compareText text="${apache_execute_abort_action_list}" value="1" logic="equals"/>
+                <compareText text="${apache_ready_to_install}" value="1" logic="equals"/>
+                <platformTest type="windows"/>
+            </ruleList>
+        </actionGroup>
+
+        <!-- LINUX & OSX -->
+        <actionGroup progressText="Uninstalling Apache">
+            <actionList>
+                <apacheServer action="stop"/>
+                <deleteFile path="${apache_server_directory}">
+                    <ruleList>
+                        <compareText text="${apache_installation_type}" logic="equals" value="bundled"/>
+                    </ruleList>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <compareText text="${apache_execute_abort_action_list}" value="1" logic="equals"/>
+                <compareText text="${apache_ready_to_install}" value="1" logic="equals"/>
+                <platformTest type="unix"/>
+            </ruleList>
+        </actionGroup>
+    </installationAbortedActionList>
+</component>
+

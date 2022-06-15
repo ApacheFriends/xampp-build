@@ -1,0 +1,388 @@
+
+<!-- APACHE REQUIRED:
+ * apache_server_directory required.
+ -->
+
+<!-- PHP 1.0
+Componentname: PHP
+
+Short Description:
+This component is able to install and configure PHP in an Apache server.
+
+System variables provided by this component:
+
+ * php_directory
+ * php_binary_directory
+ * php_configuration_directory
+ * php_nodelete_fixreg ( 1 if you don't want to delete fixreg, 0 by default)
+
+-->
+<component>
+    <name>php</name>
+    <description>//PHP 5 Component</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <parameterList>
+        <stringParameter name="php_bundled_version" ask="0" value="0" />
+        <booleanParameter name="php_install_nts" value="0" ask="0" />
+        <directoryParameter>
+            <ask>0</ask>
+            <default/>
+            <!--description>Php installation directory</description-->
+            <name>php_directory</name>
+            <value>${installdir.dos.unix}/php</value>
+        </directoryParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <default/>
+            <!--description>Php installation directory</description-->
+            <name>php_directory_long_path</name>
+            <value>${installdir}\php</value>
+        </directoryParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <default>0</default>
+            <!--description>No delete fixreg.php</description-->
+            <name>php_nodelete_fixreg</name>
+            <value>0</value>
+        </directoryParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <default>${php_directory}/composer</default>
+            <name>php_composer_dir</name>
+            <value>${php_directory}/composer</value>
+        </directoryParameter>
+        <directoryParameter>
+            <ask>0</ask>
+            <default>${php_directory}/tmp</default>
+            <name>php_tmp_dir</name>
+            <value>${php_directory}/tmp</value>
+        </directoryParameter>
+    </parameterList>
+        <initializationActionList>
+                <actionGroup>
+            <actionList>
+                <setInstallerVariable name="continue_installation" value="1"/>
+                <showQuestion variable="continue_installation" default="no">
+                    <text>PHP requires a library that was not found in your system: libnsl.so.1. You can find more information on how to install it below:
+
+https://docs.bitnami.com/installer/faq/linux-faq/troubleshooting/troubleshooting-components/#missing-library-libnsl-so-1
+
+Do you want to continue with the installation?</text>
+                    <ruleList>
+                        <fileTest condition="not_exists" path="/lib64/libnsl.so.1"/>
+                        <fileTest condition="not_exists" path="/usr/lib64/libnsl.so.1"/>
+                        <fileTest condition="not_exists" path="/lib/x86_64-linux-gnu/libnsl.so.1"/>
+                    </ruleList>
+                </showQuestion>
+                <exit>
+                    <ruleList>
+                        <isFalse value="${continue_installation}"/>
+                    </ruleList>
+                </exit>
+            </actionList>
+            <ruleList>
+                <platformTest type="linux"/>
+            </ruleList>
+        </actionGroup>
+    </initializationActionList>
+    <readyToInstallActionList>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable>
+                    <name>php_configuration_directory</name>
+                    <value>${php_directory}/etc</value>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>php_binary_directory</name>
+                    <value>${php_directory}/bin</value>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>php_extensions_directory</name>
+                    <value>${php_directory}/lib/php/extensions</value>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable>
+                    <name>php_configuration_directory</name>
+                    <value>${php_directory}</value>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>php_binary_directory</name>
+                    <value>${php_directory}</value>
+                </setInstallerVariable>
+                <setInstallerVariable>
+                    <name>php_extensions_directory</name>
+                    <value>${php_directory}/ext</value>
+                </setInstallerVariable>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </actionGroup>
+        <setInstallerVariable name="PHP_PATH" value="${php_directory}/bin"/>
+        <setInstallerVariable name="PHP_PATH_WIN" value="${php_directory.dos}"/>
+        <setInstallerVariable name="PATH" value="${PHP_PATH}:${PATH}">
+            <ruleList>
+                <compareText text="${PATH}" value="${PHP_PATH}" nocase="1" logic="does_not_contain"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="PATH_WIN" value="${PHP_PATH_WIN};${PATH_WIN}">
+            <ruleList>
+                <compareText text="${PATH_WIN}" value="${PHP_PATH_WIN}" nocase="1" logic="does_not_contain"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="PHP_ENV_VAR">
+            <value>##### PHP ENV #####
+PHP_PATH=${php_binary_directory}/php
+COMPOSER_HOME=${php_composer_dir}
+export PHP_PATH
+export COMPOSER_HOME
+</value>
+        </setInstallerVariable>
+        <setInstallerVariable name="PHP_ENV_VAR">
+            <value>rem ##### PHP ENV #####
+set PHPRC=${php_directory.dos}
+</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="ENV_VAR">
+            <value>${PHP_ENV_VAR}${ENV_VAR}</value>
+        </setInstallerVariable>
+	<!-- #8296 PHP 5.3 error with PHP 5.2 installed -->
+	<actionGroup>
+	    <actionList>
+		<setEnvironmentVariable>
+		    <name>PATH</name>
+		    <value>${php_directory.dos};${env(PATH)}</value>
+		</setEnvironmentVariable>
+		<setEnvironmentVariable>
+		    <name>PHPRC</name>
+		    <value>${php_directory.dos}</value>
+		</setEnvironmentVariable>
+	    </actionList>
+	    <ruleList>
+		<platformTest type="windows" />
+	    </ruleList>
+	</actionGroup>
+    <setInstallerVariable name="pear_config_file" value="${php_configuration_directory}/pear.conf"/>
+    <setInstallerVariable name="pear_config_file" value="${php_configuration_directory.dos}\pear.conf">
+        <ruleList>
+            <platformTest type="windows"/>
+        </ruleList>
+    </setInstallerVariable>
+    </readyToInstallActionList>
+    <folderList>
+        <folder>
+            <description>//Program Files</description>
+            <destination>${installdir}/php</destination>
+            <name>php</name>
+            <actionList>
+                <phpDefaultComponentConfiguration/>
+                <runProgram program="${php_binary_directory}/php" programArguments="-v" abortOnError="0" showMessageOnError="1">
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </runProgram>
+            </actionList>
+            <distributionFileList>
+                <distributionDirectory origin="php/*" allowWildcards="1" excludeFiles="*/scripts"/>
+            </distributionFileList>
+            <ruleList>
+                <isFalse value="${php_install_nts}" />
+            </ruleList>
+        </folder>
+        <folder>
+            <description>//Program Files</description>
+            <destination>${installdir}/php</destination>
+            <name>php_scripts</name>
+            <actionList>
+                <!-- If php-fpm was included (was compiled) and the XML was not included, we still have to provide some configuration -->
+                <configurePhpFpm rootDir="${php_directory}" enable="0" apacheConfDir="${web_server_configuration_directory}" apacheHtdocsDir="${apache_server_directory}/htdocs" username="${web_server_user}" group="${web_server_group}">
+                    <ruleList>
+                        <platformTest type="unix"/>
+                        <componentTest name="php_fpm" logic="does_not_exist"/>
+                        <fileExists path="${installdir}/php/sbin/php-fpm"/>
+                    </ruleList>
+                </configurePhpFpm>
+            </actionList>
+            <distributionFileList>
+                <distributionDirectory origin="php/scripts"/>
+            </distributionFileList>
+            <shouldPackRuleList>
+                <compareText text="${platform_name}" logic="does_not_contain" value="windows"/>
+                <fileExists path="${build_project_directory}/php/sbin/php-fpm"/>
+            </shouldPackRuleList>
+        </folder>
+
+        <folder>
+            <description>//Program Files</description>
+            <destination>${installdir}/php</destination>
+            <name>phpnts</name>
+            <actionList>
+                <phpDefaultComponentConfiguration/>
+            </actionList>
+            <distributionFileList>
+                <distributionDirectory origin="phpnts/*" allowWildcards="1" />
+            </distributionFileList>
+            <ruleList>
+                <isTrue value="${php_install_nts}" />
+            </ruleList>
+            <shouldPackRuleList>
+                <fileTest path="phpnts" condition="exists" />
+            </shouldPackRuleList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+        <createDirectory>
+            <path>${php_composer_dir}</path>
+        </createDirectory>
+        <baseRecursiveChown owner="bitnami" group="${web_server_group}" files="${php_composer_dir}" />
+        <createDirectory>
+            <path>${php_tmp_dir}</path>
+        </createDirectory>
+        <actionGroup>
+            <actionList>
+                <changePermissions>
+                    <files>${php_tmp_dir}</files>
+                    <permissions>777</permissions>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </changePermissions>
+                <runProgram>
+                    <program>${installdir}/php/bin/php</program>
+                    <programArguments>-q ${installdir}/php/bin/fixreg.php ${installdir}/php/lib/php/.registry @@XAMPP_PHP_ROOT@@ ${installdir}/php</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/bin/php</program>
+		    <programArguments>-q ${installdir}/php/bin/fixreg.php ${installdir}/php/lib/php/.registry/.channel.pear.amazonwebservices.com @@XAMPP_PHP_ROOT@@ ${installdir}/php</programArguments>
+		    <abortOnError>0</abortOnError>
+		    <showMessageOnError>1</showMessageOnError>
+		    <ruleList>
+			<fileExists path="${installdir}/php/lib/php/.registry/.channel.pear.amazonwebservices.com" />
+		    </ruleList>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/bin/php</program>
+                    <programArguments>-q ${installdir}/php/bin/fixreg.php ${installdir}/php/lib/php/.registry @@XAMPP_APACHE_ROOTDIR@@ ${installdir}/apache2</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/bin/php</program>
+                    <programArguments>-q ${installdir}/php/bin/fixreg.php ${installdir}/php/etc @@XAMPP_PHP_ROOT@@ ${installdir}/php</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <deleteFile>
+                    <path>${php_directory}/bin/fixreg.php</path>
+                    <ruleList>
+                        <compareValues value1="${php_nodelete_fixreg}" logic="equals" value2="0"/>
+                    </ruleList>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix"/>
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <actionList>
+                <runProgram>
+                    <program>${installdir}/php/php.exe</program>
+                    <wrapInScript>1</wrapInScript>
+                    <programArguments>-q "${installdir}/php/bin/fixreg.php" "${installdir}/php/PEAR/.channels" "@@XAMPP_PHP_ROOT@@" "${installdir}/php"</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/php.exe</program>
+                    <wrapInScript>1</wrapInScript>
+		            <programArguments>-q "${installdir}/php/bin/fixreg.php" "${installdir}/php/PEAR/.registry/.channel.pear.amazonwebservices.com" "@@XAMPP_PHP_ROOT@@" "${installdir}/php"</programArguments>
+		            <abortOnError>0</abortOnError>
+		            <showMessageOnError>1</showMessageOnError>
+		            <ruleList>
+			          <fileExists path="${installdir}/php/PEAR/.registry/.channel.pear.amazonwebservices.com" />
+		            </ruleList>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/php.exe</program>
+                    <wrapInScript>1</wrapInScript>
+                    <programArguments>-q "${installdir}/php/bin/fixreg.php" "${installdir}/PEAR/.channels" "@@XAMPP_APACHE_ROOTDIR@@" "${installdir}/apache2"</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/php.exe</program>
+                    <wrapInScript>1</wrapInScript>
+                    <programArguments>-q "${installdir}/php/bin/fixreg.php" "${installdir}/php/PEAR/.registry" "@@XAMPP_PHP_ROOT@@" "${installdir}/php"</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <runProgram>
+                    <program>${installdir}/php/php.exe</program>
+                    <wrapInScript>1</wrapInScript>
+                    <programArguments>-q "${installdir}/php/bin/fixreg.php" "${installdir}/PEAR/.registry" "@@XAMPP_APACHE_ROOTDIR@@" "${installdir}/apache2"</programArguments>
+                    <abortOnError>0</abortOnError>
+                    <showMessageOnError>1</showMessageOnError>
+                </runProgram>
+                <deleteFile>
+                    <path>${php_directory}/bin/fixreg.php</path>
+                    <ruleList>
+                        <compareValues value1="${php_nodelete_fixreg}" logic="equals" value2="0"/>
+                    </ruleList>
+                </deleteFile>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </actionGroup>
+        <actionGroup>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <actionList>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-create -w "${php_directory_long_path}" pear.ini</programArguments>
+                    <workingDirectory>${php_directory}</workingDirectory>
+                </runProgram>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-set ext_dir "${php_directory_long_path}\ext"</programArguments>
+                </runProgram>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-set php_dir "${php_directory_long_path}\pear"</programArguments>
+                </runProgram>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-set php_ini "${php_directory_long_path}\php.ini"</programArguments>
+                </runProgram>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-set data_dir "${php_directory_long_path}\PEAR\data"</programArguments>
+                </runProgram>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-set test_dir "${php_directory_long_path}\tmp"</programArguments>
+                </runProgram>
+                <runProgram>
+                    <program>${php_directory}/pear</program>
+                    <programArguments>config-set www_dir "${installdir}\apache2\htdocs"</programArguments>
+                </runProgram>
+            </actionList>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </actionGroup>
+    </postInstallationActionList>
+</component>

@@ -1,0 +1,5 @@
+============ CHANGELOG =============
+
+Version @@XAMPP_APPLICATION_VERSION@@      @@XAMPP_DATE@@
+* Fixed SpectreRSB Vulnerability (CVE-2018-15572)
+* Updated XAMPP

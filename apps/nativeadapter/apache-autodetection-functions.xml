@@ -1,0 +1,275 @@
+<component>
+    <name>apacheautodetection</name>
+    <description>//Apache Autodetection</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+
+    <functionDefinitionList>
+      <actionDefinition name="autodetectApache">
+	<parameterList>
+          <stringParameter name="targetPlatform" default="" description="Target Platform"/>
+	  <stringParameter name="port" default="" description="Autodetected Apache Port"/>
+	  <stringParameter name="sslPort" default="" description="Autodetected Apache SSL Port"/>
+	  <stringParameter name="rootDirectory" default="" description="Autodetected Root Directory"/>
+          <stringParameter name="domainName" default="" description="Autodetected Domain Name"/>
+          <stringParameter name="apacheUser" default="" description="Apache user"/>
+          <stringParameter name="apacheGroup" default="" description="Apache group"/>
+          <stringParameter name="configurationDirectory" default="" description="Autodetected Configuration Directory"/> 
+	</parameterList>
+	<actionList>
+          <setInstallerVariable name="apache_autodetected" value="0"/>
+          <globalVariables names="apache_autodetected"/>
+          <globalVariables names="${port} ${sslPort} ${rootDirectory} ${domainName} ${configurationDirectory} ${apacheUser} ${apacheGroup}"/>
+
+          <!-- RedHat START -->          
+          <actionGroup>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <actionList>
+
+              <setInstallerVariable name="apache_autodetected" value="1"/>
+
+              <setInstallerVariable name="httpd_conf_text" value=""/>
+              <readFile path="/etc/httpd/conf/httpd.conf" name="httpd_conf_text">
+                <ruleList>
+                  <fileExists path="/etc/httpd/conf/httpd.conf"/>
+                </ruleList>
+              </readFile>
+              
+              <setInstallerVariable name="ssl_conf_text" value=""/>              
+              <readFile path="/etc/httpd/conf.d/ssl.conf" name="ssl_conf_text">
+                <ruleList>
+                  <fileExists path="/etc/httpd/conf.d/ssl.conf"/>
+                </ruleList>
+              </readFile>
+
+              <!-- Native stacks are installed as root -->
+              <setInstallerVariable name="${port}" value="80" persist="1"/>
+              <setInstallerVariableFromRegEx name="${port}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*Listen \s*&quot;?([\d]+).*" substitution="\2"/> 
+              
+              <setInstallerVariable name="${sslPort}" value="443" persist="1"/>
+              <setInstallerVariableFromRegEx name="${sslPort}" text="${ssl_conf_text}" pattern="(^|.*\n)\s*Listen \s*&quot;?([\d]+).*" substitution="\2"/> 
+
+
+              <setInstallerVariable name="${apacheUser}" value="apache" persist="1"/>
+              <setInstallerVariableFromRegEx name="${apacheUser}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*User \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/> 
+
+              <setInstallerVariable name="${apacheGroup}" value="apache" persist="1"/>
+              <setInstallerVariableFromRegEx name="${apacheGroup}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*Group \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/>
+
+              <setInstallerVariable name="${rootDirectory}" value="/etc/httpd" persist="1"/>
+              <setInstallerVariableFromRegEx name="${rootDirectory}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*ServerRoot \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/> 
+
+              <!-- The below sets an internal ip address when installing in bch
+                 <setInstallerVariable name="${domainName}" value="${machine_hostname}" persist="1"/>
+              -->
+              <setInstallerVariable name="${domainName}" value="127.0.0.1" persist="1"/>
+              <setInstallerVariable name="${configurationDirectory}" value="${${rootDirectory}}/conf" persist="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="redhat"/>
+              <compareText text="${targetPlatform}" logic="equals" value="fedora"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- RedHat END -->
+
+          
+          <!-- XAMP START -->
+
+          <actionGroup>
+            <actionList>
+	      <setInstallerVariable name="xampp_root" value="/opt/lampp" >
+		<ruleList>
+		  <platformTest type="linux"/>
+		</ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="xampp_root" value="/Applications/XAMPP/xamppfiles" >
+		<ruleList>
+		  <platformTest type="osx"/>
+		</ruleList>
+              </setInstallerVariable>
+	      <actionGroup>
+		  <actionList>
+		      <registryGet key="HKEY_LOCAL_MACHINE\SOFTWARE\xampp" name="Install_Dir" variable="xampp_root">
+		      </registryGet>
+		      <setInstallerVariable name="xampp_root" value="${installdir}" >
+			  <ruleList>
+			      <stringTest text="${xampp_root}" type="empty" />
+			  </ruleList>
+		      </setInstallerVariable>
+		      <setInstallerVariable name="xampp_root" value="${installdir}" >
+			  <ruleEvaluationLogic>or</ruleEvaluationLogic>
+			  <ruleList>
+			      <fileExists path="${installdir}/etc/httpd.conf" />
+			      <fileExists path="${installdir}/apache/conf/httpd.conf" />
+			  </ruleList>
+		      </setInstallerVariable>
+		  </actionList>
+		  <ruleList>
+		      <platformTest type="windows"/>
+		  </ruleList>
+	      </actionGroup>
+
+              <setInstallerVariable name="apache_autodetected" value="1"/>
+
+              <setInstallerVariable name="httpd_conf_text" value=""/>
+              <readFile path="${xampp_root}/etc/httpd.conf" name="httpd_conf_text">
+                <ruleList>
+                  <fileExists path="${xampp_root}/etc/httpd.conf"/>
+		  <platformTest type="unix"/>
+                </ruleList>
+              </readFile>
+              <readFile path="${xampp_root}/apache/conf/httpd.conf" name="httpd_conf_text">
+                <ruleList>
+                  <fileExists path="${xampp_root}/apache/conf/httpd.conf"/>
+		  <platformTest type="windows"/>
+                </ruleList>
+              </readFile>
+              
+              <setInstallerVariable name="ssl_conf_text" value=""/>              
+              <readFile path="${xampp_root}/etc/extra/httpd-ssl.conf" name="ssl_conf_text">
+                <ruleList>
+		  <platformTest type="unix"/>
+                  <fileExists path="${xampp_root}/etc/extra/httpd-ssl.conf"/>
+                </ruleList>
+              </readFile>
+              <readFile path="${xampp_root}/apache/conf/extra/httpd-ssl.conf" name="ssl_conf_text">
+                <ruleList>
+		  <platformTest type="windows"/>
+                  <fileExists path="${xampp_root}/apache/conf/extra/httpd-ssl.conf"/>
+                </ruleList>
+              </readFile>
+
+              <!-- Native stacks are installed as root -->
+              <setInstallerVariable name="${port}" value="80"/>
+              <setInstallerVariableFromRegEx name="${port}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*Listen \s*&quot;?([\d]+).*" substitution="\2"/> 
+              
+              <setInstallerVariable name="${sslPort}" value="443"/>
+              <setInstallerVariableFromRegEx name="${sslPort}" text="${ssl_conf_text}" pattern="(^|.*\n)\s*Listen \s*&quot;?([\d]+).*" substitution="\2"/> 
+
+              <setInstallerVariable name="${apacheUser}" value="nobody" persist="1"/>
+              <setInstallerVariableFromRegEx name="${apacheUser}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*User \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/>
+              <setInstallerVariable name="${apacheGroup}" value="nogroup" persist="1"/>
+              <setInstallerVariableFromRegEx name="${apacheGroup}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*Group \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/>
+              
+              <setInstallerVariable name="${rootDirectory}" value="${xampp_root}">
+                <ruleList>
+		  <platformTest type="unix"/>
+                </ruleList>		
+	      </setInstallerVariable>
+
+              <setInstallerVariable name="${rootDirectory}" value="${xampp_root}/apache">
+                <ruleList>
+		  <platformTest type="windows"/>
+                </ruleList>		
+	      </setInstallerVariable>
+
+
+              <setInstallerVariableFromRegEx name="${rootDirectory}" text="${httpd_conf_text}" pattern="(^|.*\n)\s*ServerRoot \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/> 
+              <setInstallerVariable name="${domainName}" value="${machine_hostname}"/>
+              <setInstallerVariable name="${configurationDirectory}" value="${xampp_root}/etc">
+                <ruleList>
+		  <platformTest type="unix"/>
+                </ruleList>		
+	      </setInstallerVariable>
+              <setInstallerVariable name="${configurationDirectory}" value="${xampp_root}/apache/conf">
+                <ruleList>
+		  <platformTest type="windows"/>
+                </ruleList>		
+	      </setInstallerVariable>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="xampp"/>
+            </ruleList>
+          </actionGroup>          
+
+          <!-- XAMP END -->
+          
+          <!-- Ubuntu START -->          
+          <actionGroup>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <actionList>
+
+              <setInstallerVariable name="apache_autodetected" value="1"/>
+
+              <setInstallerVariable name="apache2_conf_text" value=""/>
+              <readFile path="/etc/apache2/apache2.conf" name="apache2_conf_text">
+                <ruleList>
+                  <fileExists path="/etc/apache2/apache2.conf"/>
+                </ruleList>
+              </readFile>
+              
+              <setInstallerVariable name="ports_conf_text" value=""/>              
+              <readFile path="/etc/apache2/ports.conf" name="ports_conf_text">
+                <ruleList>
+                  <fileExists path="/etc/apache2/ports.conf"/>
+                </ruleList>
+              </readFile>
+              
+              <setInstallerVariable name="envvars_text" value=""/>              
+              <readFile path="/etc/apache2/envvars" name="envvars_text">
+                <ruleList>
+                  <fileExists path="/etc/apache2/envvars"/>
+                </ruleList>
+              </readFile>
+              
+              <setInstallerVariable name="default_site_text" value=""/>              
+              <readFile path="/etc/apache2/sites-enabled/000-default" name="default_site_text">
+                <ruleList>
+                  <fileExists path="/etc/apache2/sites-enabled/000-default"/>
+                </ruleList>
+              </readFile>
+
+              <!-- Native stacks are installed as root -->
+              <setInstallerVariable name="${port}" value="80" persist="1"/>
+              <setInstallerVariableFromRegEx name="${port}" text="${ports_conf_text}" pattern="(^|.*\n)Listen \s*&quot;?([\d]+).*" substitution="\2"/> 
+              
+              <setInstallerVariable name="${sslPort}" value="443" persist="1"/>
+              <setInstallerVariableFromRegEx name="${sslPort}" text="${ports_conf_text}" pattern="(^|.*\n).*mod_ssl.*Listen \s*&quot;?([\d]+).*" substitution="\2"/> 
+
+
+              <setInstallerVariable name="${apacheUser}" value="www-data" persist="1"/>
+              <setInstallerVariableFromRegEx name="${apacheUser}" text="${envvars_text}" pattern="(^|.*\n)\s*export APACHE_RUN_USER\=([^\n&quot;]+)\s*(\n.*|$)" substitution="\2"/> 
+
+              <setInstallerVariable name="${apacheGroup}" value="www-data" persist="1"/>
+              <setInstallerVariableFromRegEx name="${apacheGroup}" text="${envvars_text}" pattern="(^|.*\n)\s*export APACHE_RUN_GROUP\=([^\n&quot;]+)\s*(\n.*|$)" substitution="\2"/>
+
+              <setInstallerVariable name="${rootDirectory}" value="/var/www" persist="1"/>
+              <setInstallerVariableFromRegEx name="${rootDirectory}" text="${default_site_text}" pattern="(^|.*\n)\s*DocumentRoot \s*&quot;?([^\n&quot;]+)&quot;?\s*(\n.*|$)" substitution="\2"/> 
+
+              <!-- The below sets an internal ip address when installing in bch
+                 <setInstallerVariable name="${domainName}" value="${machine_hostname}" persist="1"/>
+              -->
+              <setInstallerVariable name="${domainName}" value="127.0.0.1" persist="1"/>
+              <setInstallerVariable name="${configurationDirectory}" value="/etc/apache2" persist="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${targetPlatform}" logic="equals" value="ubuntu"/>
+            </ruleList>
+          </actionGroup>
+          
+          <!-- Ubuntu END -->
+	  
+	  <actionGroup>
+	      <actionList>
+		  <setInstallerVariable name="apache_htdocs_directory" value="${${rootDirectory}}/htdocs" persist="1" />
+		  <globalVariables names="apache_htdocs_directory" />
+	      </actionList>
+	      <ruleList>
+		  <platformTest type="unix" />
+		  <compareText text="${targetPlatform}" logic="equals" value="xampp"/>
+	      </ruleList>
+	  </actionGroup>
+
+	  <!-- Overwrite values -->
+	  <setInstallerVariable name="${port}" value="${apache_port}" persist="1">
+	    <ruleList>
+	      <compareText text="${apache_port}" logic="does_not_equal" value=""/>
+	    </ruleList>
+	  </setInstallerVariable>
+	</actionList>
+      </actionDefinition>
+    </functionDefinitionList>
+
+</component>

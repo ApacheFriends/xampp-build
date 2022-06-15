@@ -1,0 +1,218 @@
+<component>
+    <name>apachebitnami</name>
+    <description>//Apache Bitnami</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <parameterList>
+        <stringParameter ask="0" name="ssl_certificate_file" value="${apachessl_cert_directory.unix}/server.crt"/>
+        <stringParameter ask="0" name="ssl_certificate_key_file" value="${apachessl_cert_directory.unix}/server.key"/>
+    </parameterList>    
+    <preInstallationActionList>
+	<setInstallerVariable name="component(apachessl).parameter(apachessl_enable_default_config).value" value="0" >
+	    <ruleList>
+		<componentTest name="apachessl" logic="exists" />
+	    </ruleList>
+	</setInstallerVariable>
+    </preInstallationActionList>
+
+    <postInstallationActionList>
+        <setInstallerVariable>
+            <name>apachebitnami_certificates_configuration</name>
+            <value>SSLEngine on
+SSLCertificateFile "${ssl_certificate_file}"
+SSLCertificateKeyFile "${ssl_certificate_key_file}"
+            </value>
+            <ruleList>
+                <compareText text="${component(apachessl).parameter(apachessl_certificate_options).value}" logic="does_not_equal" value="none"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable>
+            <name>apachebitnami_certificates_configuration</name>
+            <value>#SSLEngine on
+#SSLCertificateFile "${ssl_certificate_file}"
+#SSLCertificateKeyFile "${ssl_certificate_key_file}"
+            </value>
+            <ruleList>
+                <compareText text="${component(apachessl).parameter(apachessl_certificate_options).value}" logic="equals" value="none"/>
+            </ruleList>
+        </setInstallerVariable>        
+
+        
+        <!-- Enable http compression by default, refs #12462 -->
+	    <actionGroup>
+	        <actionList>
+		        <apacheModule moduleName="mod_filter" />
+                <apacheModule moduleName="mod_deflate" />            
+                <writeFile>
+                    <path>${web_server_configuration_directory}/deflate.conf</path>
+                    <text>
+&lt;IfModule mod_deflate.c&gt;
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE application/x-javascript application/javascript application/ecmascript
+  AddOutputFilterByType DEFLATE application/rss+xml
+&lt;/IfModule&gt;
+
+</text>
+                </writeFile>
+                <actionGroup>
+                    <actionList>
+                        <apacheModule moduleName="mod_brotli" />
+                        <writeFile>
+		                    <path>${web_server_configuration_directory}/brotli.conf</path>
+		                    <text>
+&lt;IfModule mod_brotli.c&gt;
+   AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript application/x-javascript application/javascript application/json application/x-font-ttf application/vnd.ms-fontobject image/x-icon
+&lt;/IfModule&gt;
+
+</text>
+                            <ruleList>
+                                <platformTest type="osx" negate="1" />
+                            </ruleList>
+		                </writeFile>
+                    </actionList>
+                </actionGroup>
+                <readFile name="text" path="${web_server_configuration_directory}/httpd.conf"/>
+
+                <setInstallerVariable>
+                    <name>includeFiles</name>
+                    <value>Include "conf/deflate.conf"&#xA;</value>
+                </setInstallerVariable>
+
+                <setInstallerVariable>
+                    <name>includeFiles</name>
+                    <value>Include "conf/brotli.conf"&#xA;Include "conf/deflate.conf"&#xA;</value>
+                    <ruleList>
+                        <platformTest type="osx" negate="1" />
+                    </ruleList>
+                </setInstallerVariable>
+                
+                <if>
+                    <conditionRuleList>
+                        <regExMatch>
+                            <text>${text}</text>
+                            <logic>matches</logic>
+                            <pattern>\s*#*Include\s+conf/pagespeed.conf.*</pattern>
+                        </regExMatch>
+                    </conditionRuleList>
+                    <actionList>
+                        <substitute>
+                            <enableBackreferences>1</enableBackreferences>
+                            <files>${web_server_configuration_directory}/httpd.conf</files>
+                            <type>regexp</type>
+                        <substitutionList>
+                            <substitution>
+                                <pattern>\s*#*Include\s+conf/pagespeed.conf.*</pattern>
+                                <value>${includeFiles}\0</value>
+                            </substitution>
+                        </substitutionList>
+                        </substitute>
+                    </actionList>
+                    <elseActionList>
+                        <addTextToFile>
+                            <file>${web_server_configuration_directory}/httpd.conf</file>
+                            <text>${includeFiles}</text>
+                        </addTextToFile>                        
+                    </elseActionList>
+                </if>
+	        </actionList>
+	    </actionGroup>
+	<setInstallerVariable name="apachessl_cert_directory" value="${web_server_configuration_directory}" >
+	    <ruleList>
+		<componentTest name="apachessl" logic="does_not_exist" />
+	    </ruleList>
+	</setInstallerVariable>
+	<createDirectory>
+	    <path>${web_server_configuration_directory}/bitnami</path>
+	    <ruleList>
+		<fileTest path="${web_server_configuration_directory}/bitnami" condition="not_exists" />
+	    </ruleList>
+	</createDirectory>
+	<addTextToFile>
+	    <file>${web_server_configuration_directory}/httpd.conf</file>
+	    <text>Include "${web_server_configuration_directory.unix}/bitnami/bitnami.conf"
+</text>
+	</addTextToFile>
+	<writeFile>
+	    <path>${web_server_configuration_directory}/bitnami/bitnami.conf</path>
+	    <text># Default Virtual Host configuration.
+
+&lt;IfVersion &lt; 2.3 &gt;
+  NameVirtualHost *:${web_server_port}
+  NameVirtualHost *:${web_server_ssl_port}
+&lt;/IfVersion&gt;
+
+&lt;VirtualHost _default_:${web_server_port}&gt;
+  DocumentRoot "${apache_server_directory.unix}/htdocs"
+  &lt;Directory "${apache_server_directory.unix}/htdocs"&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    &lt;IfVersion &lt; 2.3 &gt;
+      Order allow,deny                          
+      Allow from all
+    &lt;/IfVersion&gt;
+    &lt;IfVersion &gt;= 2.3 &gt;
+      Require all granted
+    &lt;/IfVersion&gt;
+  &lt;/Directory&gt;
+
+  # Error Documents
+  ErrorDocument 503 /503.html
+
+  # Bitnami applications installed with a prefix URL (default)
+  Include "${web_server_configuration_directory.unix}/bitnami/bitnami-apps-prefix.conf"
+&lt;/VirtualHost&gt;
+
+# Default SSL Virtual Host configuration.
+
+&lt;IfModule !ssl_module&gt;
+  LoadModule ssl_module modules/mod_ssl.so
+&lt;/IfModule&gt;
+
+Listen ${web_server_ssl_port}
+SSLProtocol all -SSLv2 -SSLv3
+SSLHonorCipherOrder on
+SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !EDH !RC4"
+SSLPassPhraseDialog  builtin
+SSLSessionCache "shmcb:${apache_server_directory.unix}/logs/ssl_scache(512000)"
+SSLSessionCacheTimeout  300
+
+&lt;VirtualHost _default_:${web_server_ssl_port}&gt;
+  DocumentRoot "${apache_server_directory.unix}/htdocs"
+  ${apachebitnami_certificates_configuration}
+  &lt;Directory "${apache_server_directory.unix}/htdocs"&gt;
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    &lt;IfVersion &lt; 2.3 &gt;
+      Order allow,deny                          
+      Allow from all
+    &lt;/IfVersion&gt;
+    &lt;IfVersion &gt;= 2.3 &gt;
+      Require all granted
+    &lt;/IfVersion&gt;
+  &lt;/Directory&gt;
+
+  # Error Documents
+  ErrorDocument 503 /503.html
+        
+  # Bitnami applications installed with a prefix URL (default)
+  Include "${web_server_configuration_directory.unix}/bitnami/bitnami-apps-prefix.conf"
+&lt;/VirtualHost&gt;
+
+# Bitnami applications that uses virtual host configuration
+Include "${web_server_configuration_directory.unix}/bitnami/bitnami-apps-vhosts.conf"
+</text>
+	</writeFile>
+	<writeFile>
+	    <path>${web_server_configuration_directory}/bitnami/bitnami-apps-prefix.conf</path>
+	    <text># Bitnami applications installed in a prefix URL
+</text>
+	</writeFile>
+	<writeFile>
+	    <path>${web_server_configuration_directory}/bitnami/bitnami-apps-vhosts.conf</path>
+	    <text># Bitnami applications installed in a Virtual Host
+</text>
+	</writeFile>
+    </postInstallationActionList>
+</component>
+

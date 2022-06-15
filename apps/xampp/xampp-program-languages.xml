@@ -1,0 +1,19 @@
+<componentGroup>
+    <name>xampp_program_languages</name>
+    <description>Program Languages</description>
+    <canBeEdited>0</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+    <componentList>
+      <include file="xampp-php.xml"/>
+      <include file="xampp-perl.xml"/>
+    </componentList>
+    <postInstallationActionList>
+      <deleteFile path="${installdir}/htdocs/xampp/navilinks/perlexamples.perl">
+	<ruleList>
+	  <isFalse value="${component(xampp_program_languages).component(xampp_perl).selected}"/>
+	</ruleList>
+      </deleteFile>
+    </postInstallationActionList>
+
+</componentGroup>

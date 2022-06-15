@@ -1,0 +1,40 @@
+<component>
+  <name>common_native_adapter</name>
+  <description>Native Adaptation Layer - Common</description>
+  <canBeEdited>0</canBeEdited>
+  <show>0</show>
+  <!-- This must be explicitly enabled -->
+  <selected>0</selected>
+  <folderList>
+    <folder>
+      <name>common</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory allowWildcards="1" origin="files/common/*"/>
+      </distributionFileList>
+      <actionList>
+        <substitute>
+          <files>${installdir}/ctlscript.sh;${installdir}/ctlscript.bat</files>
+          <substitutionList>
+            <substitution pattern="@@XAMPP_INSTALLDIR@@" value="${installdir}"/>
+          </substitutionList>
+        </substitute>
+        <setInstallerVariable name="ctlscript_unix" value="ctlscript.sh"/>
+        <actionGroup>
+            <actionList>
+                <deleteFile abortOnError="0" showMessageOnError="0" path="${installdir}/ctlscript.bat"/>
+                <deleteFile abortOnError="0" showMessageOnError="0" path="${installdir}/killprocess.bat"/>
+            </actionList>
+            <ruleList>
+                <platformTest type="unix" />
+            </ruleList>
+        </actionGroup>
+        <deleteFile abortOnError="0" showMessageOnError="0" path="${installdir}/ctlscript.sh" >
+            <ruleList>
+                <platformTest type="windows" />
+            </ruleList>
+        </deleteFile>
+      </actionList>
+    </folder>
+  </folderList>
+</component>

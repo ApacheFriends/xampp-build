@@ -1,0 +1,152 @@
+<project>
+  <vendor>Bitnami</vendor>
+  <productUrlHelpLink>https://community.bitnami.com</productUrlHelpLink>
+  <productUrlInfoAbout>http://apachefriends.org</productUrlInfoAbout>
+  <productDisplayIcon>${installdir}/install/xampp.ico</productDisplayIcon>
+  <fullName>XAMPP</fullName>
+  <shortName>xamppstack</shortName>
+  <windowsARPRegistryPrefix>xampp</windowsARPRegistryPrefix>
+  <windowsSoftwareRegistryPrefix>xampp</windowsSoftwareRegistryPrefix>
+  <version>@@XAMPP_VERSION@@</version>
+  <installerFilename>xampp-windows-x64-${product_version}-${xampp_vcredist_name}-installer.${platform_exec_suffix}</installerFilename>
+  <allowComponentSelection>1</allowComponentSelection>
+  <showFileUnpackingProgress>0</showFileUnpackingProgress>
+  <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
+  <enableRollback>0</enableRollback>
+  <leftImage>images/xampp-left.png</leftImage>
+  <logoImage>images/xampp-top-right.png</logoImage>
+  <height>393</height>
+
+  <slideShowLoop>yes</slideShowLoop>
+  <slideShowTiming>10</slideShowTiming>
+  <slideShowImageList>
+      <slideShowImage path="images/xampp-slide1.png" />
+  </slideShowImageList>
+
+  <componentList>
+    <include file="base-functions.xml" />
+
+    <include file="base-parameter-dir.xml" />
+    <!--<include file="base-parameter-adminaccount.xml" />-->
+    <include file="bitnami-settings.xml" />
+    <!--<include file="common.xml" />-->
+    <!--<include file="base-write-properties.xml"/>-->
+    <include file="common-native-adapter.xml"/>
+    <include file="mysql-functions.xml" />
+    <include file="apache-functions.xml" />
+    <include file="php-functions.xml" />
+    <include file="environment-autodetection-functions.xml" />
+    <include file="bitnami-functions.xml"/>
+    <include file="xampp-functions.xml" />
+    <include file="xampp-module-adapter.xml"/>
+    <include file="native-apache-adapter.xml"/>
+    <include file="native-mysql-adapter.xml"/>
+    <include file="bitnami-xampp-shortcuts.xml"/>
+    <include file="xampp-vcredist.xml" />
+    <include file="xampp-common.xml" />
+    <include file="xampp-server.xml" />
+    <include file="xampp-program-languages.xml" />
+    <include file="xampp-tools.xml" />
+  </componentList>
+
+  <postInstallationActionList>
+      <apacheServer action="stop"/>
+  </postInstallationActionList>
+
+  <finalPageActionList>
+    <actionGroup>
+      <progressText>Do you want to start the Control Panel now?</progressText>
+      <actionList>
+	<runProgram>
+	  <program>explorer</program>
+	  <programArguments>"${installdir}\xampp-control.exe" &gt;NUL 2&gt;NUL &amp;</programArguments>
+	  <ruleList>
+	    <isFalse value="${start_xampp_services}" />
+	    <platformTest>
+	      <type>windows</type>
+	    </platformTest>
+	  </ruleList>
+	</runProgram>
+	<runProgram>
+	  <program>explorer</program>
+	  <programArguments>"${installdir}\apache_start.bat" &amp;</programArguments>
+	  <ruleList>
+	    <isTrue value="${start_xampp_services}" />
+	    <platformTest>
+	      <type>windows</type>
+	    </platformTest>
+	  </ruleList>
+	</runProgram>
+	<runProgram>
+	  <program>explorer</program>
+	  <programArguments>"${installdir}\mysql_start.bat" &amp;</programArguments>
+	  <ruleList>
+	    <isTrue value="${start_xampp_services}" />
+	    <platformTest>
+	      <type>windows</type>
+	    </platformTest>
+	  </ruleList>
+	</runProgram>
+      </actionList>
+    </actionGroup>
+  </finalPageActionList>
+
+  <preUninstallationActionList>
+      <showQuestion>
+	  <text>Remove the ${installdir}\htdocs folder too?</text>
+	  <variable>confirm_remove</variable>
+      </showQuestion>
+      <actionGroup>
+	  <actionList>
+	      <deleteFile path="${installdir.dos}\htdocs" />
+	  </actionList>
+	  <ruleList>
+	      <isTrue value="${confirm_remove}"/>
+	  </ruleList>
+      </actionGroup>
+  </preUninstallationActionList>
+  <postUninstallationActionList>
+        <deleteFile path="${installdir}/apps" abortOnError="0" />
+        <deleteFile path="${installdir}/install" abortOnError="0" />
+        <deleteFile path="${installdir}/mailtodisk" abortOnError="0" />
+        <deleteFile path="${installdir}/properties.ini" abortOnError="0" />
+        <deleteFile path="${installdir}/xampp-control.ini" abortOnError="0" />
+	<deleteFile path="${installdir}/ctlscript.bat" abortOnError="0" />
+        <deleteFile path="${installdir}/xampp_shell.bat" abortOnError="0" />
+        <deleteFile path="${installdir}/xampp-control.log" abortOnError="0" />
+	<deleteFile>
+	    <abortOnError>0</abortOnError>
+	    <path>${installdir}/apache</path>
+	</deleteFile>
+	<deleteFile>
+	    <abortOnError>0</abortOnError>
+	    <path>${installdir}/mysql</path>
+	</deleteFile>
+	<deleteFile>
+	    <abortOnError>0</abortOnError>
+	    <path>${installdir}/tmp</path>
+	</deleteFile>
+	<deleteFile>
+	    <abortOnError>0</abortOnError>
+	    <path>${installdir}/php</path>
+	</deleteFile>
+	<deleteFile>
+	    <abortOnError>0</abortOnError>
+	    <path>${installdir}/tomcat</path>
+	</deleteFile>
+        <deleteFile>
+            <path>${installdir}</path>
+            <ruleList>
+                <fileTest path="${installdir}" condition="is_empty"/>
+            </ruleList>
+        </deleteFile>
+  </postUninstallationActionList>
+  <readyToInstallActionList>
+      <setInstallerVariable name="target_platform" value="xampp"/>
+      <!--      <createDirectory path="${installdir}"/>
+           <adaptPlatform nativePlatformType="xampp" onlyPopulateVariables="0"/>-->
+  </readyToInstallActionList>
+  <preBuildActionList>
+      <enableAdapterComponents/>
+  </preBuildActionList>
+</project>

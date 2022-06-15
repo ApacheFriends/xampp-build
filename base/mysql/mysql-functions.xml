@@ -1,0 +1,1062 @@
+<component>
+    <name>mysqlfunctions</name>
+    <description>//MySQL Functions</description>
+    <canBeEdited>1</canBeEdited>
+    <selected>1</selected>
+    <show>0</show>
+    <functionDefinitionList>
+        <actionDefinition name="mysqlServer">
+            <parameterList>
+                <stringParameter name="action" default="start" description="//start/stop/restart"/>
+                <stringParameter name="serviceName" default="@@XAMPP_MYSQL_FLAVOUR@@" description="//mysql/mariadb"/>
+                <stringParameter name="serviceUniqueName" default="${mysql_unique_service_name}"/>
+                <stringParameter name="serverPort" default="${database_port}"/>
+            </parameterList>
+            <actionList>
+                <logMessage text="[mysql-functions:mysqlServer] ${action}ing database server"/>
+                <setInstallerVariable name="redirect" value="&gt; /dev/null 2&gt;&amp;1"/>
+
+                <!-- Start -->
+                <actionGroup>
+                    <ruleList>
+                        <compareText text="${action}" logic="equals" value="start"/>
+                    </ruleList>
+                    <actionList>
+                        <!-- Unix -->
+                        <runProgram>
+                            <program>${installdir}/ctlscript.sh</program>
+                            <programArguments>start ${serviceName} ${redirect}</programArguments>
+                            <ruleList>
+                                <platformTest type="unix"/>
+                            </ruleList>
+                        </runProgram>
+                        <!-- Windows -->
+                        <actionGroup>
+                            <ruleList>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                            <actionList>
+                                <runProgram>
+                                    <abortOnError>0</abortOnError>
+                                    <showMessageOnError>0</showMessageOnError>
+                                    <program>cmd.exe</program>
+                                    <programArguments>/C start /MIN "" "${mysql_root_directory}/scripts/ctl.bat" START &amp;</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${mysql_root_directory}/scripts/ctl.bat"/>
+                                    </ruleList>
+                                </runProgram>
+                                <logMessage text="[mysql-functions:mysqlServer] Checking service ${serviceUniqueName}"/>
+                                <logMessage text="[mysql-functions:mysqlServer] The service ${serviceUniqueName} is running, skipping">
+                                    <ruleList>
+                                        <platformTest type="windows"/>
+                                        <windowsServiceTest service="${serviceUniqueName}" condition="is_running" />
+                                    </ruleList>
+                                </logMessage>
+                                <actionGroup>
+                                    <ruleList>
+                                        <windowsServiceTest service="${serviceUniqueName}" condition="is_not_running" />
+                                    </ruleList>
+                                    <actionList>
+                                        <logMessage text="[mysql-functions:mysqlServer] The service ${serviceUniqueName} is not running, starting"/>
+                                        <logMessage text="[mysql-functions:mysqlServer] Launching ${installdir}/mysql/scripts/ctl.bat script">
+                                            <ruleList>
+                                                <fileExists path="${installdir}/mysql/scripts/ctl.bat"/>
+                                            </ruleList>
+                                        </logMessage>
+                                        <runProgram>
+                                            <abortOnError>0</abortOnError>
+                                            <showMessageOnError>0</showMessageOnError>
+                                            <program>cmd.exe</program>
+                                            <programArguments>/C start /MIN "" "${installdir}/mysql/scripts/ctl.bat" START &amp;</programArguments>
+                                            <ruleList>
+                                                <fileExists path="${installdir}/mysql/scripts/ctl.bat"/>
+                                            </ruleList>
+                                        </runProgram>
+                                        <logMessage text="[mysql-functions:mysqlServer] Starting service ${serviceUniqueName}">
+                                            <ruleList>
+                                                <fileExists path="${installdir}/ctlscript.bat" negate="1"/>
+                                            </ruleList>
+                                        </logMessage>
+                                        <runProgram>
+                                            <program>cmd.exe</program>
+                                            <programArguments>/C start /MIN net start ${serviceUniqueName}</programArguments>
+                                            <ruleList>
+                                                <fileExists path="${installdir}/ctlscript.bat" negate="1"/>
+                                            </ruleList>
+                                        </runProgram>
+                                    </actionList>
+                                </actionGroup>
+                            </actionList>
+                        </actionGroup>
+                        <logMessage text="[mysql-functions:mysqlServer] Waiting for ${serverPort} to be in use"/>
+                        <waitForPort port="${serverPort}" timeout="10000"/>
+                    </actionList>
+                </actionGroup>
+
+                <!-- Stop -->
+                <actionGroup>
+                    <ruleList>
+                        <compareText text="${action}" logic="equals" value="stop"/>
+                    </ruleList>
+                    <actionList>
+                        <runProgram>
+                            <program>${installdir}/ctlscript.sh</program>
+                            <programArguments>stop ${serviceName} ${redirect}</programArguments>
+                            <ruleList>
+                                <platformTest type="unix"/>
+                            </ruleList>
+                        </runProgram>
+                        <actionGroup>
+                            <actionList>
+                                <runProgram>
+                                    <abortOnError>0</abortOnError>
+                                    <showMessageOnError>0</showMessageOnError>
+                                    <program>cmd.exe</program>
+                                    <programArguments>/C start /MIN "" "${mysql_root_directory}/scripts/ctl.bat" STOP &amp;</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${mysql_root_directory}/scripts/ctl.bat"/>
+                                    </ruleList>
+                                </runProgram>
+                                <runProgram>
+                                    <program>cmd.exe</program>
+                                    <programArguments>/C start /MIN net stop ${serviceUniqueName}</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${installdir}/ctlscript.bat" negate="1"/>
+                                    </ruleList>
+                                </runProgram>
+                            </actionList>
+                            <ruleList>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                        </actionGroup>
+                        <waitForPort port="${serverPort}" timeout="10000" state="free"/>
+                    </actionList>
+                </actionGroup>
+
+                <!-- Restart -->
+                <actionGroup>
+                    <ruleList>
+                        <compareText text="${action}" logic="equals" value="restart"/>
+                    </ruleList>
+                    <actionList>
+                        <runProgram>
+                            <program>${installdir}/ctlscript.sh</program>
+                            <programArguments>restart ${serviceName} ${redirect}</programArguments>
+                            <ruleList>
+                                <platformTest type="unix"/>
+                            </ruleList>
+                        </runProgram>
+                        <actionGroup>
+                            <actionList>
+                                <runProgram>
+                                    <abortOnError>0</abortOnError>
+                                    <showMessageOnError>0</showMessageOnError>
+                                    <program>cmd.exe</program>
+                                    <programArguments>/C start /MIN "" "${mysql_root_directory}/scripts/ctl.bat" STOP &amp;</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${mysql_root_directory}/scripts/ctl.bat"/>
+                                    </ruleList>
+                                </runProgram>
+                                <waitForPort port="${serverPort}" timeout="10000" state="free"/>
+                                <runProgram>
+                                    <abortOnError>0</abortOnError>
+                                    <showMessageOnError>0</showMessageOnError>
+                                    <program>cmd.exe</program>
+                                    <programArguments>/C start /MIN "" "${mysql_root_directory}/scripts/ctl.bat" START &amp;</programArguments>
+                                    <ruleList>
+                                        <fileExists path="${mysql_root_directory}/scripts/ctl.bat"/>
+                                    </ruleList>
+                                </runProgram>
+                                <actionGroup>
+                                    <actionList>
+                                        <runProgram>
+                                            <program>cmd.exe</program>
+                                            <programArguments>/C start /MIN net stop ${serviceUniqueName}</programArguments>
+                                        </runProgram>
+                                        <waitForPort port="${serverPort}" timeout="10000" state="free"/>
+                                        <runProgram>
+                                            <program>cmd.exe</program>
+                                            <programArguments>/C start /MIN net start ${serviceUniqueName}</programArguments>
+                                        </runProgram>
+                                    </actionList>
+                                    <ruleList>
+                                        <fileExists path="${installdir}/ctlscript.bat" negate="1"/>
+                                    </ruleList>
+                                </actionGroup>
+                            </actionList>
+                            <ruleList>
+                                <platformTest type="windows"/>
+                            </ruleList>
+                        </actionGroup>
+                        <waitForPort port="${serverPort}" timeout="10000"/>
+                    </actionList>
+                </actionGroup>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="mysqlSaveConfigurationToFile">
+            <parameterList>
+                <stringParameter name="mysqlPropertiesFile" default="${installdir}/properties.ini" />
+                <stringParameter name="mysqlPort" default="${mysql_port}"/>
+                <stringParameter name="mysqlHost" default="${mysql_hostname}"/>
+                <stringParameter name="mysqlRootDirectory" default="${mysql_root_directory}"/>
+                <stringParameter name="mysqlDataDirectory" default="${mysql_data_directory}"/>
+                <stringParameter name="mysqlBinaryDirectory" default="${mysql_binary_directory}"/>
+                <stringParameter name="mysqlArguments" default="${mysql_arguments}"/>
+                <stringParameter name="mysqlSocket" default="${mysql_socket}"/>
+                <stringParameter name="mysqlWindowsServiceName" default="${mysql_unique_service_name}"/>
+                <stringParameter name="mysqlConfigurationDirectory" default="${mysql_configuration_directory}" />
+                <stringParameter name="mysqlInstalledVersion" default="${mysql_bundled_version}" />
+                <stringParameter name="mysqlType" default="${mysql_database_type}"/>
+            </parameterList>
+            <actionList>
+                <stringModify logic="tolower" text="${mysqlType}" variable="mysqlType"/>
+                <setInstallerVariable name="mysqlSocket" value="">
+                    <ruleList>
+                        <platformTest type="windows" />
+                    </ruleList>
+                </setInstallerVariable>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_port</key>
+                    <value>${mysqlPort}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_host</key>
+                    <value>${mysqlHost}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_root_directory</key>
+                    <value>${mysqlRootDirectory}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_binary_directory</key>
+                    <value>${mysqlBinaryDirectory}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_data_directory</key>
+                    <value>${mysqlDataDirectory}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_configuration_directory</key>
+                    <value>${mysqlConfigurationDirectory}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_arguments</key>
+                    <value>${mysqlArguments}</value>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_socket</key>
+                    <value>${mysqlSocket}</value>
+                    <ruleList>
+                        <platformTest type="unix" />
+                    </ruleList>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_unique_service_name</key>
+                    <value>${mysqlWindowsServiceName}</value>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_version</key>
+                    <value>${mysqlInstalledVersion}</value>
+                    <ruleList>
+                        <componentTest name="mysql" logic="exists"/>
+                    </ruleList>
+                </iniFileSet>
+                <iniFileSet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_database_type</key>
+                    <value>${mysqlType}</value>
+                    <ruleList>
+                        <compareText text="${mysqlType}" logic="does_not_contain" value="***unknown variable"/>
+                    </ruleList>
+                </iniFileSet>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="mysqlLoadConfigurationFromFile">
+            <parameterList>
+                <stringParameter name="mysqlPropertiesFile" default="${installdir}/properties.ini" />
+                <stringParameter name="mysqlPort" default="database_port" />
+                <stringParameter name="mysqlHost" default="database_hostname" />
+                <stringParameter name="mysqlClientHost" default="database_client_hostname" />
+                <stringParameter name="mysqlRootDirectory" default="database_root_directory" />
+                <stringParameter name="mysqlBinaryDirectory" default="database_binary_directory" />
+                <stringParameter name="mysqlDataDirectory" default="database_data_directory" />
+                <stringParameter name="mysqlConfigurationDirectory" default="database_configuration_directory" />
+                <stringParameter name="mysqlArguments" default="database_arguments" />
+                <stringParameter name="mysqlSocket" default="database_socket" />
+                <stringParameter name="mysqlWindowsServiceName" default="mysql_unique_service_name" />
+                <stringParameter name="mysqlInstalledVersion" default="mysql_installed_version" />
+            </parameterList>
+            <actionList>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_port</key>
+                    <variable>${mysqlPort}</variable>
+                </iniFileGet>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_host</key>
+                    <variable>${mysqlHost}</variable>
+                </iniFileGet>
+                <setInstallerVariable name="${mysqlHost}" value="localhost">
+                    <ruleList>
+                        <compareText text="${${mysqlHost}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="${mysqlClientHost}" value="${${mysqlHost}}"/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="${mysqlClientHost}" value="${machine_ipaddr}"/>
+                        <actionGroup>
+                            <actionList>
+                                <setInstallerVariableFromScriptOutput>
+                                    <name>ip</name>
+                                    <exec>ifconfig</exec>
+                                    <abortOnError>0</abortOnError>
+                                    <showMessageOnError>0</showMessageOnError>
+                                    <execArgs>| grep inet | awk 'NR==1 {print $2}' | awk 'BEGIN { FS=":" } { print $2 }'</execArgs>
+                                </setInstallerVariableFromScriptOutput>
+                                <setInstallerVariable name="${mysqlClientHost}" value="${ip}">
+                                    <ruleList>
+                                        <regExMatch>
+                                            <logic>matches</logic>
+                                            <pattern>^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$</pattern>
+                                            <text>${ip}</text>
+                                      </regExMatch>
+                                    </ruleList>
+	                              </setInstallerVariable>
+                            </actionList>
+                            <ruleList>
+	                              <platformTest type="linux"/>
+                            </ruleList>
+                        </actionGroup>
+                    </actionList>
+                    <ruleList>
+                        <compareText text="${${mysqlHost}}" logic="does_not_equal" value="localhost"/>
+                        <compareText text="${${mysqlHost}}" logic="does_not_equal" value="127.0.0.1"/>
+                    </ruleList>
+                </actionGroup>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_root_directory</key>
+                    <variable>${mysqlRootDirectory}</variable>
+                </iniFileGet>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_data_directory</key>
+                    <variable>${mysqlDataDirectory}</variable>
+                </iniFileGet>
+                <setInstallerVariable name="${mysqlDataDirectory}" value="${${mysqlRootDirectory}}/data" >
+                    <ruleList>
+                        <compareText text="${${mysqlDataDirectory}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_binary_directory</key>
+                    <variable>${mysqlBinaryDirectory}</variable>
+                </iniFileGet>
+                <setInstallerVariable name="${mysqlBinaryDirectory}" value="${${mysqlRootDirectory}}/bin" >
+                    <ruleList>
+                        <compareText text="${${mysqlBinaryDirectory}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_configuration_directory</key>
+                    <variable>${mysqlConfigurationDirectory}</variable>
+                </iniFileGet>
+                <setInstallerVariable name="${mysqlConfigurationDirectory}" value="${${mysqlRootDirectory}}" >
+                    <ruleList>
+                        <compareText text="${${mysqlConfigurationDirectory}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_arguments</key>
+                    <variable>${mysqlArguments}</variable>
+                </iniFileGet>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_socket</key>
+                    <variable>${mysqlSocket}</variable>
+                </iniFileGet>
+                <setInstallerVariable name="${mysqlSocket}" value="${${mysqlRootDirectory}}/tmp/mysql.sock" >
+                    <ruleList>
+                        <compareText text="${${mysqlSocket}}" logic="equals" value=""/>
+                        <platformTest type="unix" />
+                   </ruleList>
+                </setInstallerVariable>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_unique_service_name</key>
+                    <variable>${mysqlWindowsServiceName}</variable>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </iniFileGet>
+                <iniFileGet>
+                    <file>${mysqlPropertiesFile}</file>
+                    <section>MySQL</section>
+                    <key>mysql_version</key>
+                    <variable>${mysqlInstalledVersion}</variable>
+                </iniFileGet>
+                <setInstallerVariable name="${mysqlInstalledVersion}" value="0.0.0" >
+                    <ruleList>
+                        <compareText text="${${mysqlInstalledVersion}}" logic="equals" value=""/>
+                    </ruleList>
+                </setInstallerVariable>
+                <foreach variables="var" values="${mysqlPort} ${mysqlClientHost} ${mysqlHost} ${mysqlRootDirectory} ${mysqlDataDirectory} ${mysqlBinaryDirectory} ${mysqlArguments} ${mysqlSocket} ${mysqlConfigurationDirectory} ${mysqlWindowsServiceName} ${mysqlInstalledVersion}">
+                    <actionList>
+                        <setInstallerVariable name="${var}" value="${${var}}" persist="1"/>
+                        <globalVariables names="${var}"/>
+                    </actionList>
+                </foreach>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition name="mysql">
+            <parameterList>
+                <stringParameter name="id" default=""/>
+                <stringParameter name="password" default=""/>
+                <stringParameter name="user" default=""/>
+                <stringParameter name="port" default=""/>
+                <stringParameter name="host" default=""/>
+                <stringParameter name="socket" default=""/>
+                <stringParameter name="binaryDirectory" default=""/>
+            </parameterList>
+            <actionList>
+                <foreach variables="setting" values="user port host socket binaryDirectory">
+                    <actionList>
+                        <setInstallerVariable name="mysql(${id}).${setting}" value="${${setting}}" persist="1"/>
+                        <!-- Set the variable as global -->
+                        <globalVariables names="mysql(${id}).${setting}"/>
+                    </actionList>
+                </foreach>
+
+                <!-- We cannot use .password as the name because it is an ib suffix -->
+                <setInstallerVariable name="mysql(${id}).mysql_password" value="${password}" persist="1"/>
+                <globalVariables names="mysql(${id}).mysql_password"/>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="mysql(${id}).binary" value="${mysql(${id}).binaryDirectory.dos}\mysql.exe" persist="1"/>
+                        <!-- The arguments won't contain the password because .password would not have any effect then (it will be just ignored). It will be appended later -->
+                        <setInstallerVariable name="mysql(${id}).arguments" value="--user=${mysql(${id}).user} --host=${mysql(${id}).host} --port=${mysql(${id}).port}" persist="1"/>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </actionGroup>
+                <actionGroup>
+                    <actionList>
+                        <setInstallerVariable name="mysql(${id}).binary" value="${mysql(${id}).binaryDirectory}/mysql" persist="1"/>
+                        <!-- The arguments won't contain the password because .password would not have any effect then (it will be just ignored). It will be appended later -->
+                        <setInstallerVariable name="mysql(${id}).arguments" value="--user=${mysql(${id}).user} --host=${mysql(${id}).host} --socket=&quot;${mysql(${id}).socket}&quot;" persist="1"/>
+                    </actionList>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </actionGroup>
+                <globalVariables names="mysql(${id}).binary"/>
+                <globalVariables names="mysql(${id}).arguments"/>
+	          </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="mysqlExecute">
+          <parameterList>
+              <stringParameter name="id" default=""/>
+              <stringParameter name="sql" default=""/>
+              <stringParameter name="sqlFile" default=""/>
+              <stringParameter name="database" default=""/>
+          </parameterList>
+          <actionList>
+              <throwError text="Unknown ${mysql_database_type} definition identifier '${id}'">
+                  <ruleList>
+                      <compareText text="${mysql(${id}).binaryDirectory}" logic="contains" value="***unknown variable"/>
+                  </ruleList>
+              </throwError>
+
+              <mysqlServer action="start" />
+              <!-- Source SQL file -->
+              <actionGroup>
+                  <actionList>
+                      <throwError text="Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist">
+                          <ruleList>
+                              <fileExists path="${sqlFile}" negate="1"/>
+                          </ruleList>
+                      </throwError>
+                      <throwError text="Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user">
+                          <ruleList>
+                              <fileTest path="${sqlFile}" condition="not_readable"/>
+                          </ruleList>
+                      </throwError>
+
+                      <setInstallerVariable name="arguments" value="${mysql(${id}).arguments}"/>
+                      <setInstallerVariable name="arguments" value="${arguments} --database=${database}">
+                          <ruleList>
+                              <compareText text="${database}" logic="does_not_equal" value=""/>
+                          </ruleList>
+                      </setInstallerVariable>
+
+                      <runProgram program="${mysql(${id}).binary.dos}"
+                                  programArguments="${arguments} &quot;--password=${mysql(${id}).mysql_password.password}&quot; -e &quot;SOURCE ${sqlFile.dos.unix};&quot;"/>
+                  </actionList>
+                  <ruleList>
+                      <compareText text="${sqlFile}" logic="does_not_equal" value=""/>
+                  </ruleList>
+              </actionGroup>
+
+              <!-- Execute SQL statements -->
+              <actionGroup>
+                  <actionList>
+                      <setInstallerVariable name="arguments" value="${mysql(${id}).arguments}"/>
+                      <setInstallerVariable name="arguments" value="${arguments} --database=${database}">
+                          <ruleList>
+                              <compareText text="${database}" logic="does_not_equal" value=""/>
+                          </ruleList>
+                      </setInstallerVariable>
+                      <runProgram program="${mysql(${id}).binary.dos}"
+                                  programArguments="${arguments} &quot;--password=${mysql(${id}).mysql_password.password}&quot; -e &quot;${sql}&quot;">
+                          <ruleList>
+                              <platformTest type="windows"/>
+                          </ruleList>
+                      </runProgram>
+                      <!-- We use the heredoc to prevent bash from resolving variables -->
+                      <runProgram program="${mysql(${id}).binary.dos}"
+                                  programArguments="${arguments} -p${mysql(${id}).mysql_password.password} &lt;&lt;&quot;EOF&quot;&#xA;${sql}&#xA;EOF">
+                          <ruleList>
+                              <platformTest type="unix"/>
+                              <stringTest text="${mysql(${id}).mysql_password}" type="not_empty" />
+                          </ruleList>
+                      </runProgram>
+                      <runProgram program="${mysql(${id}).binary.dos}"
+                                  programArguments="${arguments} --password=&quot;${mysql(${id}).mysql_password.password}&quot; &lt;&lt;&quot;EOF&quot;&#xA;${sql}&#xA;EOF">
+                          <ruleList>
+                              <platformTest type="unix"/>
+                              <stringTest text="${mysql(${id}).mysql_password}" type="empty" />
+                          </ruleList>
+                      </runProgram>
+                  </actionList>
+                  <ruleList>
+                      <compareText text="${sqlFile}" logic="equals" value=""/>
+                  </ruleList>
+              </actionGroup>
+	        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="mysqlValueGet">
+	<parameterList>
+          <stringParameter name="id" default=""/>
+          <stringParameter name="sql" default=""/>
+          <stringParameter name="database" default=""/>
+          <stringParameter name="column" default=""/>
+          <stringParameter name="condition" default=""/>
+          <stringParameter name="tablename" default=""/>
+          <stringParameter name="name" default=""/>
+
+	</parameterList>
+        <actionList>
+          <throwError text="Unknown ${mysql_database_type} definition identifier '${id}'">
+            <ruleList>
+              <compareText text="${mysql(${id}).binaryDirectory}" logic="contains" value="***unknown variable"/>
+            </ruleList>
+          </throwError>
+
+          <setInstallerVariable name="errorMessage" value=""/>
+          <actionGroup>
+              <actionList>
+                  <setInstallerVariable name="errorMessage" value="${errorMessage}You need to specify the 'database' parameter.&#10;">
+                      <ruleList>
+                          <compareText text="${database}" logic="equals" value=""/>
+                      </ruleList>
+                  </setInstallerVariable>
+                  <setInstallerVariable name="errorMessage" value="${errorMessage}You need to specify the 'column' parameter.&#10;">
+                      <ruleList>
+                          <compareText text="${column}" logic="equals" value=""/>
+                      </ruleList>
+                  </setInstallerVariable>
+                  <setInstallerVariable name="errorMessage" value="${errorMessage}You need to specify the 'condition' parameter.&#10;">
+                      <ruleList>
+                          <compareText text="${condition}" logic="equals" value=""/>
+                      </ruleList>
+                  </setInstallerVariable>
+                  <setInstallerVariable name="errorMessage" value="${errorMessage}You need to specify the 'tablename' parameter.&#10;">
+                      <ruleList>
+                          <compareText text="${tablename}" logic="equals" value=""/>
+                      </ruleList>
+                  </setInstallerVariable>
+              </actionList>
+              <ruleList>
+                  <compareText text="${sql}" logic="equals" value=""/>
+              </ruleList>
+          </actionGroup>
+          <setInstallerVariable name="errorMessage" value="${errorMessage}You need to specify the 'name' parameter.&#10;">
+              <ruleList>
+                  <compareText text="${name}" logic="equals" value=""/>
+              </ruleList>
+          </setInstallerVariable>
+
+          <throwError text="${errorMessage}">
+            <ruleList>
+              <compareText text="${errorMessage}" logic="does_not_equal" value=""/>
+            </ruleList>
+          </throwError>
+
+          <mysqlServer action="start" />
+
+          <setInstallerVariable name="sql" value="select ${column} from ${database}.${tablename} ${condition};">
+              <ruleList>
+                  <compareText text="${sql}" logic="equals" value=""/>
+              </ruleList>
+          </setInstallerVariable>
+
+          <!-- Execute SQL statements -->
+          <actionGroup>
+            <actionList>
+              <setInstallerVariable name="arguments" value="${mysql(${id}).arguments}"/>
+              <setInstallerVariable name="arguments" value="${arguments} --database=${database}">
+                <ruleList>
+                  <compareText text="${database}" logic="does_not_equal" value=""/>
+                </ruleList>
+              </setInstallerVariable>
+
+              <setInstallerVariableFromScriptOutput
+                  abortOnError="1" showMessageOnError="1"
+                  name="${name}" exec="${mysql(${id}).binary.dos}"
+                  execArgs="${arguments} -B --skip-column-names &quot;--password=${mysql(${id}).mysql_password.password}&quot; -e &quot;${sql}&quot;">
+                  <ruleList>
+                      <platformTest type="windows"/>
+                  </ruleList>
+              </setInstallerVariableFromScriptOutput>
+
+              <!-- We use the heredoc to prevent bash from resolving variables -->
+              <setInstallerVariableFromScriptOutput
+                  abortOnError="1" showMessageOnError="1"
+                  name="${name}" exec="${mysql(${id}).binary.dos}"
+                  execArgs="${arguments} -B --skip-column-names &quot;--password=${mysql(${id}).mysql_password.password}&quot; &lt;&lt;&quot;EOF&quot;&#xA;${sql}&#xA;EOF">
+                  <ruleList>
+                      <platformTest type="unix"/>
+                  </ruleList>
+              </setInstallerVariableFromScriptOutput>
+              <globalVariables names="${name}"/>
+
+            </actionList>
+            <ruleList>
+              <compareText text="${sql}" logic="does_not_equal" value=""/>
+            </ruleList>
+          </actionGroup>
+	</actionList>
+      </actionDefinition>
+
+      <actionDefinition>
+	      <name>mysqlCreateUser</name>
+          <parameterList>
+              <stringParameter name="database" default=""/>
+              <stringParameter name="user" default=""/>
+              <stringParameter name="password" default=""/>
+              <stringParameter name="allowedHost" default=""/>
+              <stringParameter name="id" default="root"/>
+          </parameterList>
+          <actionList>
+              <mysqlExecute id="${id}" sql="CREATE USER IF NOT EXISTS '${user}'@'${allowedHost}' IDENTIFIED BY '${password}';"/>
+              <mysqlExecute id="${id}" sql="GRANT ALL PRIVILEGES ON ${database}.* TO '${user}'@'${allowedHost}';flush privileges;"/>
+          </actionList>
+      </actionDefinition>
+
+      <actionDefinition>
+	      <name>mysqlCreateApplicationDatabase</name>
+          <parameterList>
+              <stringParameter name="applicationId" default=""/>
+          </parameterList>
+          <actionList>
+	          <setInstallerVariable name="local_machine_db_hostname" value="${database_hostname}"/>
+	          <setInstallerVariableFromScriptOutput>
+	              <name>local_machine_db_hostname</name>
+	              <exec>ifconfig</exec>
+	              <abortOnError>0</abortOnError>
+	              <showMessageOnError>0</showMessageOnError>
+	              <execArgs>| grep inet | awk 'NR==1 {print $2}' | awk 'BEGIN { FS=":" } { print $2 }'</execArgs>
+	              <onErrorActionList>
+	                  <setInstallerVariable name="local_machine_db_hostname" value="${database_hostname}"/>
+	              </onErrorActionList>
+	              <ruleList>
+	                  <platformTest type="linux"/>
+                      <compareText text="${database_hostname}" logic="does_not_equal" value="localhost"/>
+                      <compareText text="${database_hostname}" logic="does_not_equal" value="127.0.0.1"/>
+	              </ruleList>
+	          </setInstallerVariableFromScriptOutput>
+
+          <mysqlExecute id="root" sql="create database ${app(${applicationId}).database_name};"/>
+          <mysqlCreateUser database="${app(${applicationId}).database_name}" user="${app(${applicationId}).database_user}" password="${'${app(${applicationId}).database_password}'}" allowedHost="${local_machine_db_hostname}"/>
+          <!-- skip-name-resolve=1 will make a MySQL server not to resolve an allowed domain. As consequence, it will not resolve localhost neither. It is safe to set 127.0.0.1 too -->
+          <!-- Avoid running the CREATE USER command twice for 127.0.0.1 -->
+          <actionGroup>
+            <actionList>
+                <mysqlCreateUser database="${app(${applicationId}).database_name}" user="${app(${applicationId}).database_user}" password="${'${app(${applicationId}).database_password}'}" allowedHost="127.0.0.1"/>
+            </actionList>
+            <ruleList>
+                <compareText text="${local_machine_db_hostname}" logic="does_not_equal" value="127.0.0.1"/>
+            </ruleList>
+          </actionGroup>
+        </actionList>
+    </actionDefinition>
+
+      <actionDefinition name="mysqlSetUnixPermissions">
+          <actionList>
+              <actionGroup>
+                  <actionList>
+                      <actionGroup>
+                          <actionList>
+                              <runProgram>
+                                  <program>chown</program>
+                                  <programArguments>-R root:root ${mysql_root_directory}</programArguments>
+                              </runProgram>
+                              <runProgram>
+                                  <program>chown</program>
+                                  <programArguments>-R mysql ${mysql_data_directory}</programArguments>
+                              </runProgram>
+                          </actionList>
+                          <ruleList>
+                              <isTrue value="${installer_root_install}"/>
+                          </ruleList>
+                      </actionGroup>
+                      <changePermissions>
+                          <files>${mysql_root_directory}/tmp</files>
+                          <permissions>777</permissions>
+                      </changePermissions>
+                  </actionList>
+                  <ruleList>
+                      <compareText text="${installer_root_install}" logic="equals" value="1"/>
+                  </ruleList>
+              </actionGroup>
+          </actionList>
+      </actionDefinition>
+
+      <!-- mysqlGetVersion returns the mysql or mariadb version
+           @param variable     - Variable name where the data will be returned
+           @return ${variable} - Database version
+      -->
+      <actionDefinition name="mysqlGetVersion">
+          <parameterList>
+              <stringParameter name="variable" value="current_database_version"/>
+              <stringParameter name="bindir" default="${mysql_binary_directory}"/>
+          </parameterList>
+          <actionList>
+              <globalVariables names="${variable}"/>
+              <setInstallerVariableFromScriptOutput>
+                    <exec>${bindir}/mysql</exec>
+                    <execArgs>--version</execArgs>
+                    <name>db_version_output</name>
+                </setInstallerVariableFromScriptOutput>
+                <setInstallerVariableFromRegEx>
+                    <pattern>^.*Distrib\s*(.*?),*$</pattern>
+                    <substitution>\1</substitution>
+                    <name>db_version</name>
+                    <text>${db_version_output}</text>
+                </setInstallerVariableFromRegEx>
+                <setInstallerVariableFromRegEx>
+                    <pattern>^.*Distrib\s*([0-9\.]+)-MariaDB.*$</pattern>
+                    <substitution>\1</substitution>
+                    <name>db_version</name>
+                    <text>${db_version_output}</text>
+                    <ruleList>
+                        <compareText text="${db_version_output}" logic="contains" value="MariaDB"/>
+                    </ruleList>
+                </setInstallerVariableFromRegEx>
+                <setInstallerVariable name="${variable}" value="${db_version}"/>
+          </actionList>
+      </actionDefinition>
+
+      <!-- mysqlGetInnoDBBufferPoolSize calculates and return a proper value for the
+           innodb_buffer_pool_size value
+           @param variable      - Variable name where the data will be returned
+           @return ${variable}  - innodb_buffer_pool_size value
+      -->
+      <actionDefinition name="mysqlGetInnoDBBufferPoolSize">
+          <parameterList>
+              <stringParameter name="variable" value="innodb_buffer_pool_size"/>
+          </parameterList>
+          <actionList>
+              <globalVariables names="${variable}"/>
+
+              <!-- Default the buffer to 512M -->
+              <setInstallerVariable name="${variable}" value="512M"/>
+
+              <!-- If RAM is greater than 1024 and less than 4096 -->
+              <setInstallerVariable name="${variable}" value="1024M">
+                  <ruleList>
+                      <compareValues value1="${machine_total_memory}" logic="greater" value2="1024"/>
+                      <compareValues value1="${machine_total_memory}" logic="less" value2="4096"/>
+                  </ruleList>
+              </setInstallerVariable>
+
+              <!-- If RAM is greater or equal than 4096 -->
+              <setInstallerVariable name="${variable}" value="2048M">
+                  <ruleList>
+                      <compareValues value1="${machine_total_memory}" logic="greater_or_equal" value2="4096"/>
+                  </ruleList>
+              </setInstallerVariable>
+          </actionList>
+      </actionDefinition>
+
+      <!-- @rule mysqlGetMyCnfFile      - Set MySQL configuration file depending on the platform
+           @param {string} variable     - Name of the variable to return
+           @global {variable} variable  - File to MySQL conf file
+      -->
+      <actionDefinition name="mysqlGetMyCnfFile">
+          <parameterList>
+              <stringParameter name="variable"/>
+          </parameterList>
+          <actionList>
+              <logMessage text="[mysqlGetMyCnfFile] Getting my.cnf file"/>
+              <setInstallerVariable name="mycnf_file" value="my.cnf"/>
+              <setInstallerVariable name="mycnf_file" value="my.ini">
+                  <ruleList>
+                      <platformTest type="windows"/>
+                  </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="${variable}" value="${mycnf_file}"/>
+              <globalVariables names="${variable}"/>
+              <logMessage text="Found: ${variable}"/>
+          </actionList>
+      </actionDefinition>
+
+      <!-- @rule mysqlGetMyCnfPath      - Set MySQL configuration path depending on the platform
+           @param {string} variable     - Name of the variable to return
+           @global {variable} variable  - Path to MySQL conf file
+      -->
+      <actionDefinition name="mysqlGetMyCnfPath">
+          <parameterList>
+              <stringParameter name="variable"/>
+          </parameterList>
+          <actionList>
+              <logMessage text="[mysqlGetMyCnfPath] Getting my.cnf file"/>
+              <setInstallerVariable name="mycnf_path" value="${installdir}/mysql"/>
+              <setInstallerVariable name="mycnf_path" value="${installdir}/mariadb">
+                  <ruleList>
+                      <fileExists path="${installdir}/mariadb"/>
+                  </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="mycnf_path" value="${installdir}/mysql/bin">
+                  <ruleList>
+                      <platformTest type="windows"/>
+                      <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                  </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="mycnf_path" value="${installdir}/etc">
+                  <ruleList>
+                      <platformTest type="unix"/>
+                      <compareText text="${bitnami_platform_name}" logic="equals" value="XAMPP"/>
+                  </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="${variable}" value="${mycnf_path}"/>
+              <globalVariables names="${variable}"/>
+              <logMessage text="Found: ${variable}"/>
+          </actionList>
+      </actionDefinition>
+
+      <!-- @rule mysqlAvoidChecks - Avoid strict checks introduced with MySQL 5.7-->
+      <actionDefinition name="mysqlAvoidChecks">
+          <actionList>
+              <mysqlGetMyCnfFile>
+                  <variable>mycnf_file</variable>
+              </mysqlGetMyCnfFile>
+              <mysqlGetMyCnfPath>
+                  <variable>mycnf_path</variable>
+              </mysqlGetMyCnfPath>
+              <logMessage text="[mysqlAvoidChecks] Set MySQL mode to NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION in ${mycnf_path}/${mycnf_file}"/>
+              <substitute>
+                  <files>${mycnf_path}/${mycnf_file}</files>
+                  <type>exact</type>
+                  <substitutionList>
+                      <substitution>
+                          <pattern>[mysqld]</pattern>
+                          <value>[mysqld]
+sql_mode=NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION
+log_bin_trust_function_creators = 1</value>
+                      </substitution>
+                  </substitutionList>
+                  <ruleList>
+                      <fileContentTest path="${mycnf_path}/${mycnf_file}" logic="does_not_contain" text="NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION"/>
+                  </ruleList>
+              </substitute>
+              <mysqlServer action="restart" serviceName="mysql"/>
+              <mysqlServer action="restart" serviceName="mariadb">
+                  <ruleList>
+                      <fileExists path="${installdir}/mariadb"/>
+                  </ruleList>
+              </mysqlServer>
+          </actionList>
+      </actionDefinition>
+
+      <!-- @rule mysqlAreCredentialsWrong   - Sets whether the given credentials are wrong or not
+           @param {string} bindir           - Database binary directory
+           @param {string} arguments        - Arguments to be passed to the database client
+           @param {string} user             - Connection username
+           @param {string} password         - Connection password
+           @param {string} port             - Connection port
+           @param {string} host             - Connection host
+           @param {string} variable         - Name of the variable to return
+           @global {variable} variable      - yes or no
+
+           @example <mysqlAreCredentialsWrong variable="wrong_credentials" arguments="${mysql_extra_arguments}" user="root" password="${current_mysql_base_password}" port="${database_port}" host="${database_hostname}"/>
+       -->
+        <actionDefinition name="mysqlAreCredentialsWrong">
+            <parameterList>
+                <stringParameter name="bindir" default="${mysql_binary_directory}"/>
+                <stringParameter name="arguments" default=""/>
+                <stringParameter name="user" default="root"/>
+                <stringParameter name="password" default=""/>
+                <stringParameter name="port" default="3306"/>
+                <stringParameter name="host" default="localhost"/>
+                <stringParameter name="variable" default="wrong_credentials"/>
+            </parameterList>
+            <actionList>
+                <logMessage text="[mysql-functions:mysqlAreCredentialsWrong] Validating ${user}:${password.password}@${host}:${port}"/>
+                <globalVariables names="${variable}"/>
+                <setInstallerVariable name="${variable}" value="no"/>
+                <runProgram abortOnError="0" showMessageOnError="0" program="${bindir}/mysql">
+                    <programArguments>${arguments} -u ${user} '--password=${password.password}' -P${port} -h${host} -e "show databases;"</programArguments>
+                    <ruleList>
+                        <platformTest type="unix"/>
+                    </ruleList>
+                </runProgram>
+                <runProgram abortOnError="0" showMessageOnError="0" program="${bindir}/mysql.exe">
+                    <programArguments>${arguments} -u ${user} "--password=${password.password}" -P${port} -h${host} -e "show databases;"</programArguments>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                        <stringTest text="${password}" type="not_empty" />
+                    </ruleList>
+                </runProgram>
+                <runProgram abortOnError="0" showMessageOnError="0" program="${bindir}/mysql.exe">
+                    <programArguments>${arguments} -u ${user} -P${port} -h${host} -e "show databases;"</programArguments>
+                    <ruleList>
+                        <platformTest type="windows"/>
+                        <stringTest text="${password}" type="empty" />
+                    </ruleList>
+                </runProgram>
+                <setInstallerVariable name="${variable}" value="yes" ruleEvaluationLogic="or">
+                    <ruleList>
+                        <compareText text="${program_stderr}" logic="contains" value="ERROR 1045"/>
+                        <compareText text="${program_stderr}" logic="contains" value="ERROR 2002"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <logMessage text="[mysql-functions:mysqlAreCredentialsWrong] Credentials are OK, got: ${program_stdout}">
+                    <ruleList>
+                        <compareText text="${{variable}}" logic="equals" value="yes"/>
+                    </ruleList>
+                </logMessage>
+                <logMessage text="[mysql-functions:mysqlAreCredentialsWrong] Credentials are BAD, got: ${program_stderr}">
+                    <ruleList>
+                        <compareText text="${{variable}}" logic="equals" value="yes"/>
+                    </ruleList>
+                </logMessage>
+            </actionList>
+        </actionDefinition>
+        <actionDefinition name="mysqlSetMode">
+            <parameterList>
+                <stringParameter name="id" default=""/>
+                <stringParameter name="enable" default=""/>
+                <stringParameter name="disable" default=""/>
+            </parameterList>
+            <actionList>
+                <mysqlValueGet id="${id}" name="sqlMode" sql="SELECT @@sql_mode"/>
+                <tclEval>
+                    <code><![CDATA[
+set sqlMode [split [installbuilder::substText {${sqlMode}}] ,]
+set enableModes [installbuilder::substText {${enable}}]
+set disableModes [installbuilder::substText {${disable}}]
+# Add new modes
+foreach enable $enableModes {
+    set pos [lsearch $sqlMode $enable]
+    if {$pos == -1} {
+        lappend sqlMode $enable
+    }
+}
+# Remove unwanted modes
+foreach disable $disableModes {
+    set pos [lsearch $sqlMode $disable]
+    set sqlMode [lreplace $sqlMode $pos $pos]
+}
+installbuilder::setVariable sqlMode [join $sqlMode ,]
+]]></code>
+                </tclEval>
+                <!-- The 'mysql_configuration_file' variable is not defined in modules -->
+                <setInstallerVariable name="mysql_conf" value="${database_configuration_directory}/my.cnf"/>
+                <setInstallerVariable name="mysql_conf" value="${database_configuration_directory.dos}\my.ini">
+                    <ruleList>
+                        <platformTest type="windows"/>
+                    </ruleList>
+                </setInstallerVariable>
+                <iniFileSet file="${mysql_conf}" section="mysqld" key="sql_mode" value="${sqlMode}"/>
+                <mysqlServer action="restart"/>
+            </actionList>
+        </actionDefinition>
+
+        <actionDefinition>
+            <name>avoidInstallationWithMySQL8</name>
+            <actionList>
+                <mysqlLoadConfigurationFromFile/>
+                <setInstallerVariableFromScriptOutput>
+                    <name>mysql_db_type</name>
+                    <exec>${database_binary_directory}/mysql</exec>
+                    <execArgs>--version</execArgs>
+                    <workingDirectory>${database_binary_directory}</workingDirectory>
+                </setInstallerVariableFromScriptOutput>
+                <throwError>
+                    <text>Versions of MySQL greater than 8.0.0 are not supported. Currently supported versions are 5.7.x and lower</text>
+                    <ruleList>
+                        <compareVersions version1="${mysql_installed_version}" logic="greater_or_equal" version2="8.0.0"/>
+                        <compareText text="${mysql_db_type}" logic="does_not_contain" value="MariaDB" />
+                    </ruleList>
+                </throwError>
+            </actionList>
+        </actionDefinition>
+
+        <!-- Configure utf8mb4 values -->
+        <actionDefinition name="configureUtf8mb4Encoding">
+            <parameterList>
+                <stringParameter name="mysqlCfgFile" default=""/>
+            </parameterList>
+            <actionList>
+                <iniFileSet file="${mysqlCfgFile}" key="character-set-server" section="mysqld" value="utf8mb4" />
+                <iniFileSet file="${mysqlCfgFile}" key="collation-server" section="mysqld" value="utf8mb4_general_ci" />
+                <iniFileSet file="${mysqlCfgFile}" key="default-character-set" section="client" value="utf8mb4" />
+            </actionList>
+        </actionDefinition>
+    </functionDefinitionList>
+</component>

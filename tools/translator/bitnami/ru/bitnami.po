@@ -1,0 +1,965 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-10-07 13:07+0200\n"
+"PO-Revision-Date: 2012-02-17 18:40+0200\n"
+"Last-Translator: Wjacheslav <wolski.ru@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Pootle 2.1.6\n"
+
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr ""
+"Чтобы получить доступ к ${product_fullname}, откройте\n"
+"http://localhost:${web_server_port} в вашем браузере."
+
+msgid "Please choose a number for Port"
+msgstr "Выберите номер порта"
+
+msgid "Default email provider:"
+msgstr "Email провайдер по умолчанию"
+
+msgid "Re-enter"
+msgstr "Повторите"
+
+msgid "Creating Database"
+msgstr "Создание базы данных"
+
+msgid "${mysql_database_type} Information"
+msgstr "Информация ${mysql_database_type}"
+
+msgid "Please configure Drupal installation"
+msgstr "Пожалуйста, сконфигурируйте установку Drupal"
+
+msgid "Database Installation"
+msgstr "Установка базы данных"
+
+msgid "Drupal"
+msgstr "Drupal"
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Вы хотите сохранить базу данных Joomla! ? Она будет сохранена в "
+"${installdir}/backups"
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "Удаление службы ${product_fullname}"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr "Joomla ${project.version} packaged by Bitnami"
+
+msgid "Configuration Report"
+msgstr "Отчет о конфигурации"
+
+msgid "GMail password"
+msgstr "Пароль GMail"
+
+msgid "SSL Port"
+msgstr "Порт SSL"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "Узнать больше о хостинге Bitnami Cloud"
+
+msgid "Login must not have capital letters"
+msgstr "Логин не должен содержать заглавных букв"
+
+msgid "Do you want to keep the redmine database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Хотите сохранить базу данных redmine? Она будет сохранена в "
+"${installdir}/backups"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "Я хочу использовать имеющуюся базу данных ${mysql_database_type}"
+
+msgid "Starting Subversion server"
+msgstr "Запуск сервера субверсий"
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"Пожалуйста, введите порт, который слушает Apache. Убедитесь, что этот порт "
+"не занят каким-либо другим процессом, запущенным на сервере."
+
+msgid "${product_fullname} admin user creation"
+msgstr "Создание учётной записи администратора для ${product_fullname}"
+
+msgid "Please enter your database root username"
+msgstr "Пожалуйста, введите пароль root пользователя базы данных."
+
+msgid "Installing Thin Cluster as services."
+msgstr "Установка Thin Cluster как служб."
+
+msgid "Please select which database configuration you wish to use"
+msgstr ""
+"Пожалуйста, выберите конфигурацию базы данных, которую вы хотите "
+"использовать"
+
+msgid "BitRock Nginx"
+msgstr "BitRock Nginx"
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"Установщик обнаружил, что папка установки ${app(wordpress).installdir} не "
+"пуста. Пожалуйста, убедитесь что все прежние версии этого приложения "
+"удалены, так как продолжение установки может их нарушить. Продолжить?"
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"Установщик обнаружил, что папка установки ${app(joomla).installdir} "
+"не пуста. Пожалуйста, убедитесь что все прежние версии этого приложения "
+"удалены, так как продолжение установки может их нарушить. Продолжить?"
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "Таймаут соединения ${mysql_database_type}. Установка была прервана."
+
+msgid "New Database"
+msgstr "Новая База Данных"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr ""
+"Путь к папке установки слишком длинный. Максимальное число символов - "
+"${base_installdir_max_characters}."
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "Остановка служб (это может занять несколько минут)"
+
+msgid "Unable to get free disk space."
+msgstr "Невозможно получить свободное место на диске."
+
+msgid "Unable to start Apache"
+msgstr "Невозможно запустить Apache"
+
+msgid "SMTP Host"
+msgstr "Хост SMTP"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+"Ruby on Rails - веб-ориентированная среда разработки с открытым кодом, "
+"оптимизироанная для удобства программирования и устойчивой "
+"производительности. Это даёт Вам возможность писать прекрасный код, "
+"используя соглашения вместо конфигураций."
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr ""
+"Невозможно привязать mysql_port к ${mysql_port}. Пожалуйста, выберите "
+"другой."
+
+msgid "DB Prefix"
+msgstr "Префикс Базы Данных"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr ""
+"По всей видимости, папка установки содержит некорректно установленное "
+"приложение ${bitnami_platform_name}. Файл properties.ini отсутствует или "
+"установка была некорректной."
+
+msgid "${mysql_database_type} Server root password"
+msgstr "root-пароль сервера ${mysql_database_type}"
+
+msgid "Select a folder"
+msgstr "Выберите директорию"
+
+msgid "Default mail server configuration."
+msgstr "Конфигурация почтового сервера по умолчанию"
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr ""
+"SQLite - программная библиотека, предоставляющая самодостаточный, "
+"бессерверный, не требующий настройки, транзакционный SQL механизм баз "
+"данных."
+
+msgid "Password must contain both letters and numbers"
+msgstr "Пароль должен содержать буквы и цифры"
+
+msgid "IP / Hostname"
+msgstr "IP / Имя хоста"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr ""
+"Папка установки может содержать в своём пути только буквы, цифры и символы "
+"'/', '.', '-' , '_'."
+
+msgid "Bitnami RubyStack"
+msgstr "Bitnami RubyStack"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+"Облачный хостинг Bitnami - новое предложение, которое позволит Вам размещать "
+"свои приложения Bitnami в «облаке». Кликните ссылку ниже, если Вы хотите "
+"узнать больше о Bitnami, в то время как Вы ждете окончания установки. Ссылка "
+"откроется в новом окне."
+
+msgid "Hebrew"
+msgstr "Иврит"
+
+msgid "French"
+msgstr "Французский"
+
+msgid "Bitnami Redmine Module"
+msgstr "Bitnami Redmine Module"
+
+msgid "Login and password must not be the same"
+msgstr "Логин и пароль не должны совпадать"
+
+msgid "Secure connection"
+msgstr "Защищённое соединение"
+
+msgid "No, I will do this after installation"
+msgstr "Нет, я сделаю это после установки."
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr ""
+"Установка Apache как службы Windows с именем ${apache_unique_service_name}"
+
+msgid "Web Server Port"
+msgstr "Порт веб-сервера"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr ""
+"Установщик создаст стандартные базы данных *_production, *_development, and "
+"*_test , основанные на Вашем префиксе."
+
+msgid "Removing Thin Cluster as services."
+msgstr "Удаление служб Thin Cluster."
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr ""
+"Минимальная версия, требуемая для этого модуля - Bitnami RubyStack "
+"${bitnami_minimum_required_rubystack_version}. Вы пытаетесь установить на "
+"версию ${base_stack_name} ${base_stack_version}. Вы можете загрузить свежую "
+"версию Bitnami RubyStack на www.bitnami.com"
+
+msgid "Launch ${product_fullname}"
+msgstr "Запустить ${product_fullname}"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "Пожалуйста, используйте только латинские буквы и цифры"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "Пожалуйста, используйте только латинские буквы и цифры"
+
+msgid "Stopping services."
+msgstr "Остановка служб."
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "Я хочу использовать встроенную ${mysql_database_type} базу данных"
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "Пожалуйста, выберите папку установки ${bitnami_platform_name}."
+
+msgid "Set the database name and user name which will be created or used."
+msgstr ""
+"Установите имя базы данных и имя пользователя, которые будут создаваться или "
+"использоваться."
+
+msgid "${product_fullname} Subversion Service"
+msgstr "Служба субверсий ${product_fullname}"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr ""
+"Похоже, у Вас недостаточно прав для открытия порта "
+"${apachethinmodule_port2} или этот порт уже используется другим "
+"приложением. Пожалуйста, выберите другой порт."
+
+msgid "Language for default data configuration"
+msgstr "Язык для конфигурации данных по умолчанию"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr ""
+"Установщик не может подключиться к серверу ${mysql_database_type}. Пожалуйста, убедитесь что "
+"${mysql_database_type} запущен."
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "Вы хотите удалить также все сохраненные файлы данных?"
+
+msgid "Development Settings"
+msgstr "Настройки разработки"
+
+msgid "Your real name"
+msgstr "Ваше реальное имя"
+
+msgid "Running database migration"
+msgstr "Запуск миграции базы данных"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "Пожалуйста, введите допустимый IP-адрес или имя хоста"
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "${mysql_database_type} Server port"
+msgstr "Порт сервера ${mysql_database_type}"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+"Длина пароля должна быть не меньше ${component(paramadminaccount).parameter("
+"base_required_password_length).value}"
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr ""
+"Невозможно установить Apache как службу с именем "
+"${apache_unique_service_name}"
+
+msgid "Create databases for the rails project."
+msgstr "Создать базу данных для rails проекта."
+
+msgid "Do you want to configure mail support?"
+msgstr "Вы хотите настроить поддержку почты?"
+
+msgid "This is required so your application can send notifications via email."
+msgstr "Это необходимо для отправки email уведомлений Вашим приложением."
+
+msgid "Apache Web Server Port"
+msgstr "Порт веб-сервера Apache"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr ""
+"${mysql_database_type} предоставляет очень быстрый, многопоточный, многопользовательский и "
+"устойчивый сервер базы данных SQL."
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "New Component"
+msgstr "Новый компонент"
+
+msgid "Web Server Domain"
+msgstr "Домен веб-сервера"
+
+msgid "Thin Server Port"
+msgstr "Порт сервера Thin"
+
+msgid "Nginx Port"
+msgstr "Порт Nginx"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "Папка установки не должна содержать пробелы."
+
+msgid "Custom"
+msgstr "Вручную"
+
+msgid "${product_fullname} database root user creation"
+msgstr "Создание root пользователя базы данных для ${product_fullname}"
+
+msgid "Configure SMTP Settings"
+msgstr "Настройка SMTP"
+
+msgid "Stop ${product_fullname} service"
+msgstr "Остановка службы ${product_fullname}"
+
+msgid "Web Server port"
+msgstr "Порт веб-сервера"
+
+msgid "German"
+msgstr "Немецкий"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "Невозможно определить файл ${mysql_database_type} '${sqlFile}': Не существует"
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr ""
+"Пожалуйста, введите существующий ${mysql_database_type} пароль для ${bitnami_platform_name}"
+
+msgid "Manager tool"
+msgstr "Инструмент управления"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr ""
+"Права на файлы и параметры конфигурации будут установлены, помня о "
+"безопасности и производительности. Установка некоторых плагинов, тем и "
+"обновлений может потребовать ручных изменений или установки дополнительных "
+"служб, таких как FTP. Рекомендуется, если этот стек будет развернут на "
+"общедоступном сервере."
+
+msgid "Yes, please prompt me"
+msgstr "Да, спросить меня"
+
+msgid "Czech"
+msgstr "Чешский"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr "Неверный префикс. Пожалуйста, выберите другой."
+
+msgid "Portuguese/Brazilian"
+msgstr "Португальский/Бразильский"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "Китайский"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"Вы пытаетесь установить 32-битный модуль на 64-битную установку. Это "
+"невозможно. Пожалуйста, загрузите корректный модуль с bitnami.com"
+
+msgid "Launch Redmine application."
+msgstr "Запуск приложения Redmine."
+
+msgid "Waiting Subversion to start."
+msgstr "Ожидание субверсии для запуска."
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+"Длина имени пользователя должна быть не меньше ${component(paramadminaccount"
+").parameter(base_required_username_length).value}"
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr ""
+"Создание базы данных / Инициализация учётной записи. Это может занять "
+"некоторое время."
+
+msgid "Web Server domain"
+msgstr "Домен веб-сервера"
+
+msgid "Bulgarian"
+msgstr "Болгарский"
+
+msgid "DB User Password"
+msgstr "Пароль пользователя БД"
+
+msgid "Production settings"
+msgstr "Настройки производительности"
+
+msgid "${product_fullname} Service"
+msgstr "Служба ${product_fullname}"
+
+msgid "Bitnami WordPress Module"
+msgstr "Модуль Bitnami WordPress"
+
+msgid "Installing RubyGems, please be patient."
+msgstr "Установка RubyGems. Пожалуйста, подождите."
+
+msgid "sphinx Server port"
+msgstr "Порт сервера sphinx"
+
+msgid "Populating database."
+msgstr "Заполнение базы данных."
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr ""
+"Программа установки попытается установить новые базы данных и перезапишет "
+"любую существующую копию. Продолжить?"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "Служба ${product_fullname} ${mysql_database_type}"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+"Недостаточно свободного места на ${installdir}. Необходимо как минимум "
+"${base_needed_space} MB чтобы установить ${product_fullname}"
+
+msgid "Licenses destination"
+msgstr "Назначение лицензий"
+
+msgid "Drupal packaged by Bitnami"
+msgstr "Drupal packaged by Bitnami"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Shutting down services."
+msgstr "Выключение служб."
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Sample data for Joomla (English)"
+msgstr "Тестовые данные для Joomla (на английском языке)"
+
+msgid "Installing gems, please be patient."
+msgstr "Установка gems. Пожалуйста, подождите."
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "Пожалуйста, введите информацию о базе данных ${mysql_database_type}:"
+
+msgid "${product_fullname} Apache Service"
+msgstr "Служба ${product_fullname} Apache"
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr ""
+"Имя хоста используется для создания внутренних URL. Если он введён неверно, "
+"Вы не сможете получить доступ к установке с других компьютеров."
+
+msgid "Romanian"
+msgstr "Румынский"
+
+msgid "Dutch"
+msgstr "Голландский"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr "Создать учётную запись 'root' для ${mysql_database_type}"
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"Установщик обнаружил, что папка установки ${app(drupal).installdir} "
+"не пуста. Пожалуйста, убедитесь что все предыдущие версии приложения "
+"удалена, так как продолжение установки может их нарушить. Продолжить?"
+
+msgid "Populating database. This may take some time."
+msgstr "Заполнение базы данных. Это может занять некоторое время."
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "Пожалуйста, введите IP адрес или имя хоста для Вашей базы данных"
+
+msgid "WordPress packaged by Bitnami"
+msgstr "WordPress packaged by Bitnami"
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr "Пожалуйста, введите порт сервера субверсий по умолчанию."
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "Пожалуйста, введите порт сервера Apache по умолчанию."
+
+msgid "Hostname"
+msgstr "Имя хоста"
+
+msgid "Create Admin account"
+msgstr "Создание учётной записи администратора"
+
+msgid "English"
+msgstr "Английский"
+
+msgid "TLS"
+msgstr "TLS"
+
+msgid "Re-enter password"
+msgstr "Повторите ввод пароля"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr ""
+"По всей видимости, путь ${mysql_binary_directory} неверный. Пожалуйста, "
+"проверьте, содержит ли данная папка необходимые бинарные файлы."
+
+msgid "Blog name"
+msgstr "Название блога"
+
+msgid "DB User Name"
+msgstr "Имя пользователя БД"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr ""
+"Невозможно определить файл ${mysql_database_type} '${sqlFile}': недоступно для этого "
+"пользователя"
+
+msgid "Login"
+msgstr "Вход"
+
+msgid "Thin Processes"
+msgstr "процессы Thin"
+
+msgid "Install ${product_fullname} as service"
+msgstr "Установить ${product_fullname} как службу"
+
+msgid "Restarting Apache"
+msgstr "Перезапуск Apache"
+
+msgid "Installation Report"
+msgstr "Отчёт об установке"
+
+msgid "Start ${product_fullname} service"
+msgstr "Запуск службы ${product_fullname}"
+
+msgid "Quick Start Guide"
+msgstr "Руководство по быстрому старту"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr ""
+"Хотели бы Вы настроить Ваши выбранные приложения прямо в этом установщике?"
+
+msgid "Select your language for default data configuration:"
+msgstr "Выберите Ваш язык для конфигурации по умолчанию:"
+
+msgid "Please select the use of this Stack"
+msgstr "Пожалуйста, выберите использование этого стека"
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr ""
+"Имя хоста или IP адрес Вашего сервера. Если это поле заполнено некорректно, "
+"Вы не сможете получить доступ к Вашей установке Joomla! с других "
+"компьютеров."
+
+msgid "Serbian"
+msgstr "Сербский"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr "Тип установки"
+
+msgid "Swedish"
+msgstr "Шведский"
+
+msgid "${mysql_database_type} Service"
+msgstr "Служба ${mysql_database_type}"
+
+msgid "GMail address"
+msgstr "Gmail адрес"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "Удалить ${product_fullname}"
+
+msgid "Portuguese"
+msgstr "Португальский"
+
+msgid "Updating mysql directory permissions"
+msgstr "Обновление разрешений mysql директории"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr "Установить пароль для баз данных вашего нового Rails приложения"
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr ""
+"Установка сервера субверсий как службы Windows с именем "
+"${SubversionUniqueServiceName}"
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr ""
+"Похоже, у Вас нет прав для подключения к порту или порт уже занят другим "
+"приложением. Пожалуйста, выберите другой."
+
+msgid "Unable to add text to httpd.conf"
+msgstr "Невозможно добавить текст в httpd.conf"
+
+msgid "Subversion Server Port"
+msgstr "Порт сервера субверсий"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr "Открыть ${product_fullname} в браузере"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "Облачный хостинг Bitnami"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr ""
+"Похоже, у Вас нет прав для подключения к порту ${apachethinmodule_port1} "
+"или порт уже занят другим приложением. Пожалуйста, выберите другой."
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr ""
+"Redmine - гибкое веб-приложение управления проектами. Будучи написанным с "
+"использованием фреймворка Ruby on Rails, оно является кроссплатформенным и "
+"независимым от типа БД."
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "Неизвестный идентификатор определения ${mysql_database_type} '${id}'"
+
+msgid "Thin port nr 1"
+msgstr "Порт Thin №1"
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Thin port nr 2"
+msgstr "Порт Thin №2"
+
+msgid "Number of thin servers"
+msgstr "Число серверов thin"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "Учётные данные ${mysql_database_type}"
+
+msgid "Please enter a password"
+msgstr "Пожалуйста, введите пароль"
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Хотите сохранить базу данных Drupal? Она будет сохранена в "
+"${installdir}/backups"
+
+msgid "Starting application."
+msgstr "Запуск приложения."
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "Пожалуйста, введите верный пароль, чтобы подключиться к серверу ${mysql_database_type}."
+
+msgid "DB Name"
+msgstr "Имя БД"
+
+msgid "Hostname or IP Address"
+msgstr "Имя хоста или IP адрес"
+
+msgid "Korean"
+msgstr "Корейский"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "Папка исполняемых файлов ${mysql_database_type}"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr ""
+"Невозможно установить ${mysql_database_type} как службу с именем ${mysql_unique_service_name}"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr ""
+"Невозможно подключиться к указанному порту. Пожалуйста, выберите другой."
+
+msgid "Select installation type"
+msgstr "Выберите тип установки."
+
+msgid "Installation type"
+msgstr "Тип установки"
+
+msgid "Use ${product_fullname}"
+msgstr "Использовать ${product_fullname}"
+
+msgid "Installation folder"
+msgstr "Папка установки"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "Ожидание ${mysql_database_type} для запуска"
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr ""
+"WordPress - персональная платформа для организации блога, ориентированная на "
+"эстетику, соблюдение веб-стандартов и удобство в использовании."
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr ""
+"Из-за нехватки системных ресурсов (ЦП или память), невозможно соединиться с "
+"локальным сервером ${mysql_database_type}. Хотите повторить соединение с сервером ${mysql_database_type} и "
+"продолжить с установкой?"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "Ожидание ${mysql_database_type} для запуска."
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr ""
+"Установщик не может получить свободное пространство на ${installdir}. "
+"Пожалуйста, убедитесь, что на выбранном диске достаточно места для установки "
+"${product_fullname}"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "Инициализация БД ${mysql_database_type}. Это может занять пару минут."
+
+msgid "Please enter your database root user password"
+msgstr "Пожалуйста, введите пароль root пользователя Вашей базы данных"
+
+msgid "Memcached Server port"
+msgstr "Порт сервера Memcached"
+
+msgid "Starting Apache."
+msgstr "Запуск Apache."
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "Невозможно записать файл: ${apache_server_directory}/conf/ssi.conf"
+
+msgid "Please configure WordPress installation"
+msgstr "Пожалуйста, настройте установку WordPress"
+
+msgid "Subversion Server port"
+msgstr "Порт сервера субверсий"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+"Невозможно подключиться к БД ${mysql_hostname}:${mysql_port}. Пожалуйста, "
+"проверьте правильность параметров и разрешены ли TCP/IP подключения в "
+"конфигурации ${mysql_database_type}."
+
+msgid "Please select the ports for Thin servers. Those will be added to the Apache configuration file."
+msgstr ""
+"Пожалуйста, выберите порты для серверов Thin. Они будут добавлены в "
+"конфигурационный файл Apache."
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr ""
+"Ruby не установлен в Вашем стеке. Этому модулю требуется установленный Ruby."
+
+msgid "Polish"
+msgstr "Польский"
+
+msgid "This will create a sample Rails project."
+msgstr "Будет создан тестовый Rails проект."
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"Пожалуйста, введите порт для сервера баз данных ${mysql_database_type}. Введённый порт не "
+"должен быть занят каким-либо другим процессом, запущенным на сервере."
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr ""
+"Установка ${mysql_database_type} как службы Windows с именем ${mysql_unique_service_name}"
+
+msgid "Bitnami Drupal Module"
+msgstr "Модуль Bitnami Drupal"
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "Инициализация базы данных. Это может занять некоторое время."
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Хотите сохранить базу данных ${appName}? Она будет сохранена в "
+"${installdir}/backups"
+
+msgid "Joomla!"
+msgstr "Joomla!"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "Невозможно установить авторизованного пользователя phpmyadmin"
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "Выключение ${mysql_database_type}"
+
+msgid "${product_fullname} Thin Service"
+msgstr "Служба ${product_fullname} Thin"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "Выбранная папка не пуста. Пожалуйста, выберите другую папку."
+
+msgid "Site name"
+msgstr "Название сайта"
+
+msgid "Japanese"
+msgstr "Японский"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr ""
+"Введите доменное имя или IP адрес для Вашего веб-сервера (www.example.com)"
+
+msgid "You need to provide a non-empty password"
+msgstr "Пароль не может быть пустым"
+
+msgid "Configuring database"
+msgstr "Конфигурация базы данных"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr ""
+"Предоставляет демонстрационные данные Joomla. Только на английском языке."
+
+msgid "SMTP Port"
+msgstr "Порт SMTP"
+
+msgid "Chinese/Taiwan"
+msgstr "Китайский/Тайваньский"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr ""
+"Из соображений безопасности не рекомендуется оставлять пароль root "
+"пользователя ${mysql_database_type} пустым. Хотите задать пароль?"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "Email Address"
+msgstr "Email адрес"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr ""
+"Вы хотите сохранить базу данных wordpress? Она будет сохранена в "
+"${installdir}/backups"
+
+msgid "Sample Rails Application"
+msgstr "Пример приложения на Rails"
+
+msgid "Italian"
+msgstr "Итальянский"
+
+msgid "Ruby On Rails"
+msgstr "Ruby On Rails"
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+"Drupal - платформа управления контентом, которая позволяет человеку или "
+"сообществу пользователей легко публиковать и управлять всеми видами контента "
+"на веб-сайте. Вообще, Drupal используется для создания веб-порталов "
+"сообществ, обсуждений, корпоративных сайтов, приложений для внутренних сетей "
+"интранет, персональных веб-сайтов или блогов, фан-сайтов, приложений "
+"электронной коммерции, каталогов и социальных сетей"
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr ""
+"Включение изменений в разрешения файлов и конфигурации упрощает установку "
+"плагинов, тем и обновлений для некоторых приложений, однако с точки зрения "
+"безопасности это не лучшее решение. Рекомендуется, если вы используете этот "
+"стек в целях разработки или внутри Вашей компании."
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+"Папка проекта ${rubystack_project_directory}/${samplerails_application_name}"
+"-${product_version} уже существует. Пожалуйста, выберите другой префикс."
+
+msgid "Please enter a password to use for the database root user"
+msgstr "Пожалуйста, введите пароль root пользователя баз данных."
+
+msgid "Creating web application."
+msgstr "Создание веб-приложения."
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "Пожалуйста, выберите папку для установки ${product_fullname}"
+
+msgid "Please configure Joomla! installation"
+msgstr "Пожалуйста, сконфигурируйте установку Joomla!"
+
+msgid "Uninstalling services."
+msgstr "Удаление служб."
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr ""
+"phpMyAdmin - инструмент, написанный на PHP для ручного администрирования "
+"${mysql_database_type} через веб-интерфейс."
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr "Модуль Bitnami Joomla ${project.version}"
+
+msgid "Redmine packaged by Bitnami"
+msgstr "Redmine packaged by Bitnami"
+
+msgid "Bitnami Website"
+msgstr "Веб-сайт Bitnami"
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"Вы пытаетесь установить 64-битный модуль на 32-битной установке. Это "
+"невозможно. Пожалуйста, загрузите подходящий модуль с bitnami.com"
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+"Joomla! это популярная система управления контентом, которая может "
+"использоваться, для создания личные/корпоративных веб-сайтов или порталов, "
+"веб-сайтов для малого бизнеса, некоммерческих сайтов и сайтов организаций, "
+"приложений для правительства, корпоративных внутрисетевых и глобальных "
+"сайтов, школьных и церковных сайтов, порталов для сообществ."
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "Пожалуйста, используйте только латинские буквы и цифры."
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "Пожалуйста, используйте только латинские буквы и цифры."
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "Пожалуйста, используйте только латинские буквы и цифры."
+
+msgid "Please confirm your password"
+msgstr "Пожалуйста, подтвердите Ваш пароль"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr ""
+"Пожалуйста, введите порт, который будет использоваться сервером Apache для "
+"SSL доступа."
+
+msgid "Spanish"
+msgstr "Испанский"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""

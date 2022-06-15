@@ -1,0 +1,32 @@
+<component>
+  <name>native_proftpd_adapter</name>
+  <description>//Native Proftpd Adaptation Layer</description>
+  <canBeEdited>0</canBeEdited>
+  <show>0</show>
+  <!-- This must be explicitly enabled -->
+  <selected>0</selected>
+  <folderList>
+    <folder>
+      <name>proftpd_xampp_linux</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/linux/proftpd"/>
+      </distributionFileList>
+      <ruleList>
+	<platformTest type="linux"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder>
+    <folder>
+      <name>proftpd_xampp_osx</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/osx/proftpd"/>
+      </distributionFileList>
+      <ruleList>
+	<platformTest type="osx"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder>
+  </folderList>
+</component>

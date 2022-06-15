@@ -1,0 +1,183 @@
+<component>
+  <name>xamppfunctions</name>
+  <show>0</show>
+    <functionDefinitionList>
+      <actionDefinition name="writeXamppBaseConsole">
+        <parameterList>
+	  <stringParameter name="file" value=""/>
+        </parameterList>
+        <actionList>
+	  <writeFile>
+	    <path>${file}</path>
+	    <text><![CDATA[@ECHO OFF
+GOTO weiter
+:setenv
+SET "MIBDIRS=%~dp0php\extras\mibs"
+SET "MIBDIRS=%MIBDIRS:\=/%"
+SET "MYSQL_HOME=%~dp0mysql\bin"
+SET "OPENSSL_CONF=%~dp0apache\conf\openssl.cnf"
+SET "OPENSSL_CONF=%OPENSSL_CONF:\=/%"
+SET "PHP_PEAR_SYSCONF_DIR=%~dp0php"
+SET "PHP_PEAR_BIN_DIR=%~dp0php"
+SET "PHP_PEAR_TEST_DIR=%~dp0php\tests"
+SET "PHP_PEAR_WWW_DIR=%~dp0php\www"
+SET "PHP_PEAR_CFG_DIR=%~dp0php\cfg"
+SET "PHP_PEAR_DATA_DIR=%~dp0php\data"
+SET "PHP_PEAR_DOC_DIR=%~dp0php\docs"
+SET "PHP_PEAR_PHP_BIN=%~dp0php\php.exe"
+SET "PHP_PEAR_INSTALL_DIR=%~dp0php\pear"
+SET "PHPRC=%~dp0php"
+SET "TMP=%~dp0tmp"
+SET "PERL5LIB="
+SET "Path=%~dp0;%~dp0php;%~dp0perl\site\bin;%~dp0perl\bin;%~dp0apache\bin;%~dp0mysql\bin;%~dp0FileZillaFTP;%~dp0MercuryMail;%~dp0sendmail;%~dp0webalizer;%~dp0tomcat\bin;%Path%"
+GOTO :EOF
+:weiter
+
+IF "%1" EQU "setenv" (
+    ECHO.
+    ECHO Setting environment for using XAMPP for Windows.
+    CALL :setenv
+) ELSE (
+    SETLOCAL
+    TITLE XAMPP for Windows
+    PROMPT %username%@%computername%$S$P$_#$S
+    START "" /B %COMSPEC% /K "%~f0" setenv
+)
+
+]]></text>
+	  </writeFile>
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="addPathToXamppConsole">
+        <parameterList>
+          <stringParameter name="extraPath" value=""/>
+	  <stringParameter name="file" value=""/>
+        </parameterList>
+        <actionList>
+	  <writeXamppBaseConsole file="${file}">
+	    <ruleList>
+	      <fileExists path="${file}" negate="1"/>
+	    </ruleList>
+	  </writeXamppBaseConsole>
+          <substitute>
+            <files>${file}</files>
+            <type>regexp</type>
+            <substitutionList>
+              <substitution>
+		<pattern>SET\s+"Path=</pattern>
+		<value>SET "Path=${extraPath};</value>
+	      </substitution>
+            </substitutionList>
+          </substitute>
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="writeXamppConsole">
+        <parameterList>
+          <stringParameter name="extraPath" value=""/>
+	  <stringParameter name="file" value=""/>
+        </parameterList>
+        <actionList>
+	  <writeXamppBaseConsole file="${file}"/>
+	  <addPathToXamppConsole file="${file}" extraPath="${extraPath}"/>
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition>
+        <name>verifyServiceBinaryPath</name>
+        <actionList>
+          <globalVariables names="${outputvariable}"/>
+          <setInstallerVariable>
+            <name>${outputvariable}</name>
+            <value>0</value>
+          </setInstallerVariable>
+          <actionGroup>
+            <actionList>
+              <runProgram>
+                <program>sc</program>
+                <programArguments>qc "${servicename}"</programArguments>
+              </runProgram>
+              <actionGroup>
+                <actionList>
+                  <setInstallerVariableFromRegEx>
+                    <name>service_binary</name>
+                    <pattern>^.*BINARY_PATH_NAME\s+:\s+(.*?)
+  .*$</pattern>
+                    <substitution>\1</substitution>
+                    <text>${program_stdout}</text>
+                  </setInstallerVariableFromRegEx>
+                  <if>
+                    <actionList>
+                      <setInstallerVariableFromRegEx>
+                        <name>service_binary</name>
+                        <pattern>^\s*"(.*?)".*$</pattern>
+                        <substitution>\1</substitution>
+                        <text>${service_binary}</text>
+                      </setInstallerVariableFromRegEx>
+                    </actionList>
+                    <conditionRuleList>
+                      <regExMatch>
+                        <logic>matches</logic>
+                        <pattern>^\s*"(.*?)".*$</pattern>
+                        <text>${service_binary}</text>
+                      </regExMatch>
+                    </conditionRuleList>
+                    <elseActionList>
+                      <setInstallerVariableFromRegEx>
+                        <name>service_binary</name>
+                        <pattern>^\s*(.*?) .*$</pattern>
+                        <substitution>\1</substitution>
+                        <text>${service_binary}</text>
+                      </setInstallerVariableFromRegEx>
+                    </elseActionList>
+                  </if>
+                  <pathManipulation>
+                    <action>absolutize</action>
+                    <path>${service_binary}</path>
+                    <variable>service_binary</variable>
+                  </pathManipulation>
+                  <pathManipulation>
+                    <action>absolutize</action>
+                    <path>${servicepath}</path>
+                    <variable>servicepath</variable>
+                  </pathManipulation>
+                  <setInstallerVariable>
+                    <name>${outputvariable}</name>
+                    <value>1</value>
+                    <ruleList>
+                      <compareText>
+                        <logic>equals</logic>
+                        <nocase>1</nocase>
+                        <text>${service_binary}</text>
+                        <value>${servicepath}</value>
+                      </compareText>
+                    </ruleList>
+                  </setInstallerVariable>
+                </actionList>
+                <ruleList>
+                  <regExMatch>
+                    <logic>matches</logic>
+                    <pattern>^.*BINARY_PATH_NAME\s+:\s+(.*?)
+  .*$</pattern>
+                    <text>${program_stdout}</text>
+                  </regExMatch>
+                </ruleList>
+              </actionGroup>
+            </actionList>
+            <ruleList>
+              <windowsServiceTest>
+                <condition>exists</condition>
+                <service>${servicename}</service>
+              </windowsServiceTest>
+            </ruleList>
+          </actionGroup>
+        </actionList>
+        <parameterList>
+          <stringParameter name="servicename"/>
+          <stringParameter name="servicepath"/>
+          <stringParameter name="outputvariable"/>
+        </parameterList>
+      </actionDefinition>
+    </functionDefinitionList>
+</component>

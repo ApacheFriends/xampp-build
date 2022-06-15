@@ -1,0 +1,1112 @@
+ msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-13 11:52+0200\n"
+"PO-Revision-Date: 2012-01-13 02:14+0200\n"
+"Last-Translator: reghar <luc.anthonissen@googlemail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 2.1.6\n"
+
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr "Pour accéder à ${product_fullname}, allez à l'adresse\nhttp://localhost:${web_server_port} dans votre navigateur."
+
+msgid "Please choose a number for Port"
+msgstr "Veuillez choisir un numéro de port"
+
+msgid "Default email provider:"
+msgstr "Adresse électronique par défaut du fournisseur de service de courrier :"
+
+msgid "Re-enter"
+msgstr "Ré-entrez"
+
+msgid "Creating Database"
+msgstr "Création de la base de données"
+
+msgid "${mysql_database_type} Information"
+msgstr "Information ${mysql_database_type}"
+
+msgid "Database Installation"
+msgstr "Installation de la base de données"
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "Désinstaller le service ${product_fullname}"
+
+msgid "Configuration Report"
+msgstr "Rapport de configuration"
+
+msgid "GMail password"
+msgstr "mot de passe GMail"
+
+msgid "SSL Port"
+msgstr "port SSL"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "En savoir plus sur l'hébergement du Cloud Bitnami"
+
+msgid "Login must not have capital letters"
+msgstr "Le login ne doit pas contenir de lettres majuscules"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "Je souhaite utiliser une base de données ${mysql_database_type} existante"
+
+msgid "Starting Subversion server"
+msgstr "Démarrage du serveur Subversion"
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr "Veuillez entrer le port sur lequel Apache écoutera. Ce numéro de port ne devrait être utilisé par aucun autre processus fonctionnant sur le serveur."
+
+msgid "${product_fullname} admin user creation"
+msgstr "Création de l'utilisateur admin de ${product_fullname}"
+
+msgid "Please enter your database root username"
+msgstr "Veuillez entrer le nom d'utilisateur root de votre base de données"
+
+msgid "Installing Mongrel Cluster as services."
+msgstr "Installation des services Mongrel Cluster."
+
+msgid "Please select which database configuration you wish to use"
+msgstr "Veuillez sélectionner la configuration de la base de données que vous souhaitez utiliser"
+
+msgid "BitRock Nginx"
+msgstr "BitRock Nginx"
+
+
+#, fuzzy
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "La connexion à ${mysql_database_type} a échoué. L'installation a été interrompue."
+
+msgid "New Database"
+msgstr "Nouvelle base de données"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr "Le chemin du répertoire d'installation est trop long. Le nombre de caractères maximum autorisés est de ${base_installdir_max_characters}."
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "Arrêt des services (cela peu prendre quelques minutes)"
+
+#, fuzzy
+msgid "Unable to get free disk space."
+msgstr "Impossible d'obtenir de l'espace disque disponible."
+
+msgid "Unable to start Apache"
+msgstr "Impossible de démarrer Apache"
+
+msgid "SMTP Host"
+msgstr "Hôte SMTP"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr "Ruby on Rails est un framework full-stack MVC pour des applications web adossées à des bases de données. Il est optimisé pour le plus grand confort du programmeur et pour une programmation durable."
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr "Liaison impossible avec le port ${mysql_database_type} sur ${mysql_port}. Veuillez en sélectionner un autre."
+
+#, fuzzy
+msgid "DB Prefix"
+msgstr "Préfixe de la base de données"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr "Ce dossier ne semble pas contenir une installation valide de ${bitnami_platform_name}. Le fichier properties.ini est manquant ou ce n'est pas une installation valide."
+
+msgid "${mysql_database_type} Server root password"
+msgstr "Mot de passe root du serveur ${mysql_database_type}"
+
+msgid "Select a folder"
+msgstr "Sélectionnez un dossier"
+
+msgid "Default mail server configuration."
+msgstr "Configuration par défaut du serveur de courrier électronique."
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr "SQLite est une bibliothèque qui implémente un moteur de base de données transactionnelles SQL autonome, sans serveur et sans configuration."
+
+msgid "Password must contain both letters and numbers"
+msgstr "Le mot de passe doit contenir à la fois des lettres et des chiffres"
+
+msgid "IP / Hostname"
+msgstr "Adresse IP / Nom d'hôte"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr "Le répertoire d'installation doit avoir un chemin qui ne contient que des lettres, des chiffres et les caractères '/', '.', '-' et '_'."
+
+msgid "Bitnami RubyStack"
+msgstr "Bitnami RubyStack"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr "L'hébergement du Cloud Bitnami est une nouvelle offre qui vous permet d'héberger vos applications Bitnami sur le Cloud. Cliquez ci-dessous pour en savoir plus sur Bitnami. Une fenêtre de navigation apparaîtra en attendant la fin de l'installation."
+
+msgid "Hebrew"
+msgstr "Hébreu"
+
+msgid "French"
+msgstr "Français"
+
+msgid "Bitnami Redmine Module"
+msgstr "Module Redmine Bitnami"
+
+msgid "Login and password must not be the same"
+msgstr "Le login et le mot de passe doivent être différents"
+
+msgid "Secure connection"
+msgstr "Connexion sécurisée"
+
+msgid "No, I will do this after installation"
+msgstr "Non, je le ferai après l'installation"
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr "Installation d'Apache en tant que service Windows sous le nom ${apache_unique_service_name}"
+
+msgid "Web Server Port"
+msgstr "Port du serveur Web"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr "Le programme d'installation créera les bases de données conventionnelles *_production, *_development et *_test basées sur votre préfixe."
+
+msgid "Removing Mongrel Cluster as services."
+msgstr "Supprimer le service Mongrel Custer."
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr "Ce module nécessite au minimum Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. Vous êtes en train d'installer au dessus de ${base_stack_name} ${base_stack_version}. Vous pouvez télécharger le dernier Bitnami RubyStack depuis www.bitnami.com"
+
+msgid "Launch ${product_fullname}"
+msgstr "Démarrer ${product_fullname}"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "Veuillez n'utiliser que des caractères alphanumériques ASCII"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "Veuillez n'utiliser que des caractères alphanumériques ASCII"
+
+msgid "Stopping services."
+msgstr "Arrêt des services"
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "Je souhaite utiliser la base de données ${mysql_database_type} fournie"
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "Veuillez sélectionner un dossier contenant une installation de ${bitnami_platform_name}."
+
+msgid "Set the database name and user name which will be created or used."
+msgstr "Donnez le nom de la base de données ainsi que celui de l'utilisateur qui seront créés ou utilisés."
+
+msgid "${product_fullname} Subversion Service"
+msgstr "Service Subversion ${product_fullname}"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachemongrelmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr "Il semble que vous n'ayiez pas les droits suffisants pour se relier au port ${apachemongrelmodule_port2} ou le port est déjà utilisé par une autre application. Veuillez en choisir un autre."
+
+msgid "Language for default data configuration:"
+msgstr "Langage pour la configuration par défaut des données :"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr "Le programme d'installation n'a pas pu se connecter au serveur ${mysql_database_type}. Veuillez vérifier que ${mysql_database_type} est en service."
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "Souhaitez-vous aussi supprimer tous les fichiers de données sauvegardés?"
+
+msgid "Development Settings"
+msgstr "Paramétrages pour développement"
+
+msgid "Your real name"
+msgstr "Votre nom réel"
+
+msgid "Running database migration"
+msgstr "Migration de la base de données en cours"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "Veuillez entrer une adresse IP ou un nom d'hôte valide"
+
+msgid "${mysql_database_type} Server port"
+msgstr "Port du serveur ${mysql_database_type}"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr "La longueur du mot de passe doit être égale ou supérieure à ${component(paramadminaccount).parameter(base_required_password_length).value}"
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr "Impossible d'installer le service Apache sous le nom ${apache_unique_service_name}"
+
+msgid "Create databases for the rails project."
+msgstr "Création de bases de données pour le projet Rails."
+
+msgid "Do you want to configure mail support? This is required so your application can send notifications via email."
+msgstr "Voulez-vous configurer le support du courrier? Il s'agit d'une exigence pour que votre application puisse envoyer des notifications par courrier électronique."
+
+msgid "Apache Web Server Port"
+msgstr "Port du serveur Web Apache"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr "Le logiciel ${mysql_database_type} fourni un serveur de base de données très rapide, robuste, multi-tâches et multi-utilisateurs."
+
+msgid "Russian"
+msgstr "Russe"
+
+msgid "New Component"
+msgstr "Nouveau composant"
+
+msgid "Web Server Domain"
+msgstr "Domaine du serveur Web"
+
+msgid "Mongrel Server Port"
+msgstr "Port du serveur Mongrel"
+
+msgid "Nginx Port"
+msgstr "Port du serveur Nginx"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "Le nom du dossier d'installation ne peut pas contenir d'espaces."
+
+msgid "Custom"
+msgstr "Sur mesure"
+
+msgid "${product_fullname} database root user creation"
+msgstr "Création de la base de données ${product_fullname} pour l'utilisateur root"
+
+msgid "Configure SMTP Settings"
+msgstr "Configurer les réglages SMTP"
+
+msgid "Stop ${product_fullname} service"
+msgstr "Arrêt du service ${product_fullname}"
+
+msgid "Web Server port"
+msgstr "Port du serveur Web"
+
+msgid "German"
+msgstr "Allemand"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "Impossible de trouver le fichier '${sqlFile}' pour ${mysql_database_type} : n'existe pas"
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr "Veuillez entrer le mot de passe existant ${mysql_database_type} pour ${bitnami_platform_name}"
+
+msgid "Manager tool"
+msgstr "Outil graphique de gestion de serveurs"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr "Les permissions sur les fichiers et les paramètres de configuration seront réglés en tenant compte de la sécurité et des performances. L'installation de certains plugins, thèmes et mises à jour peuvent nécessiter des changements manuels ou l'installation de services additionnels tels que FTP. Ceci est conseillé dans le cas d'un serveur public."
+
+msgid "Yes, please prompt me"
+msgstr "Oui, demandez-moi"
+
+msgid "Czech"
+msgstr "Tchèque"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr "Préfixe invalide. Veuillez en choisir un autre."
+
+msgid "Portuguese/Brazilian"
+msgstr "Portugais/Brésilien"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "Chinois"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "Non supporté : vous êtes en train de vouloir installer un module 32bit sur une installation 64bit. Veuillez télécharger le module adéquat depuis bitnami.com"
+
+msgid "Launch Redmine application."
+msgstr "Lancement de l'application Redmine"
+
+msgid "Waiting Subversion to start."
+msgstr "En train d'attente Subversion pour pouvoir démarrer."
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr "La longueur du nom d'utilisateur doit être supérieure à ${component(paramadminaccount).parameter(base_required_username_length).value}"
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr "Création de la base de données / Initialisation du compte utilisateur. Ceci va prendre du temps."
+
+# 94%
+#, fuzzy
+msgid "Web Server domain"
+msgstr "Domaine du serveur Web"
+
+msgid "Bulgarian"
+msgstr "Bulgare"
+
+msgid "DB User Password"
+msgstr "Mot de passe utilisateur pour la base de données"
+
+msgid "Production settings"
+msgstr "Paramétrages de production"
+
+# 81%
+#, fuzzy
+msgid "${product_fullname} Service"
+msgstr "Service ${product_fullname}"
+
+msgid "Installing RubyGems, please be patient."
+msgstr "Veuillez patienter : installation de RubyGems."
+
+msgid "Sphinx Server port"
+msgstr "Port du serveur Sphinx"
+
+msgid "Populating database."
+msgstr "Remplissage de la base de données."
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr "La procédure essaiera d'installer de nouvelles bases de données. Elle écrasera aussi toutes duplications. Souhaitez-vous continuer?"
+
+# 81%
+# 81%
+#, fuzzy
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "Service ${mysql_database_type} ${product_fullname}"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr "Espace disque insuffisant sur ${installdir}. Pour installer ${product_fullname}, vous avez besoin d'au moins ${base_needed_space} MB"
+
+msgid "Licenses destination"
+msgstr "Dossier recevant les fichiers de licences"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Shutting down services."
+msgstr "Arrêt des services."
+
+msgid "None"
+msgstr "Sans"
+
+msgid "Installing Gems, please be patient."
+msgstr "Veuillez patienter : installation de Gems."
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "Veuillez saisir votre information de base de données ${mysql_database_type} :"
+
+# 81%
+# 79%
+#, fuzzy
+msgid "${product_fullname} Apache Service"
+msgstr "Service Apache ${product_fullname}"
+
+msgid "Romanian"
+msgstr "Roumain"
+
+msgid "Dutch"
+msgstr "Néerlandais"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr "Création du compte ${mysql_database_type} 'root'"
+
+msgid "Populating database. This may take some time."
+msgstr "Remplissage de la base de données. Ceci va prendre du temps."
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "Veuillez entrer l'adresse IP ou le nom d'hôte de votre base de données"
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr "Veuillez entrer le port par défaut sur lequel le serveur Subversion devra écouter."
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "Veuillez entrer le port par défaut sur lequel le serveur Apache fourni devra écouter."
+
+msgid "Hostname"
+msgstr "Nom d'hôte"
+
+msgid "Create Admin account"
+msgstr "Création du compte Admin"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "TLS"
+msgstr "TLS"
+
+msgid "Re-enter password"
+msgstr "Ré-entrez le mot de passe"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr "Le chemin ${mysql_binary_directory} semble erroné. Veuillez vérifier que le répertoire contient les binaires nécessaires."
+
+msgid "Blog name"
+msgstr "Nom du blog"
+
+msgid "DB User Name"
+msgstr "Nom d'utilisateur de base de données"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr "Impossible de trouver le fichier '${sqlFile}' pour ${mysql_database_type} : illisible par l'utilisateur courant"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Mongrel Processes"
+msgstr "Processus Mongrel"
+
+# 84%
+#, fuzzy
+msgid "Install ${product_fullname} as service"
+msgstr "Installation de ${product_fullname} en tant que service"
+
+msgid "Restarting Apache"
+msgstr "Redémarrage d'Apache"
+
+msgid "Installation Report"
+msgstr "Rapport d'installation"
+
+# 90%
+#, fuzzy
+msgid "Start ${product_fullname} service"
+msgstr "Démarrage du service ${product_fullname}"
+
+msgid "Quick Start Guide"
+msgstr "Guide de prise en main rapide"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr "A partir de ce programme d'installation, souhaitez-vous être averti pour régler vos propres applications?"
+
+msgid "Select your language for default data configuration:"
+msgstr "Sélectionner votre langage pour la configuration par défaut des données :"
+
+msgid "Please select the use of this Stack"
+msgstr "Veuillez sélectionner l'utilisation"
+
+msgid "Serbian"
+msgstr "Serbe"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr "Type d'installation"
+
+msgid "Swedish"
+msgstr "Suédois"
+
+msgid "${mysql_database_type} Service"
+msgstr "Service ${mysql_database_type}"
+
+msgid "GMail address"
+msgstr "Adresse GMail"
+
+# 78%
+#, fuzzy
+msgid "Uninstall ${product_fullname}"
+msgstr "Désinstaller ${product_fullname}"
+
+msgid "Portuguese"
+msgstr "Portuguais"
+
+msgid "Updating ${mysql_database_type} directory permissions"
+msgstr "Mise à jour des permissions sur le répertoire ${mysql_database_type}"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr "Définir le mot de passe pour vos nouvelles bases de données d'applicatifs Rails."
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr "Installation du server Subversion en tant que service Windows sous le nom ${SubversionUniqueServiceName}"
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr "Il semble que vous n'ayiez pas les droits suffisants pour se relier au port ou le port est déjà utilisé par une autre application. Veuillez en choisir un autre."
+
+msgid "Unable to add text to httpd.conf"
+msgstr "Impossible d'ajouter du texte à httpd.conf"
+
+msgid "Subversion Server Port"
+msgstr "Port du serveur Subversion"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr "${product_fullname}. Ouverture dans le navigateur"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "Hébergement du Cloud Bitnami"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachemongrelmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr "Il semble que vous n'ayiez pas les droits suffisants pour se relier au port ${apachemongrelmodule_port1} ou le port est déjà utilisé par une autre application. Veuillez en choisir un autre."
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr "Redmine est un gestionnaire de projet souple pour application web. Ecrit en Ruby sur un cadre de travail Rails, il est multi-plateforme, multi base de données."
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "Définition d'identifiant ${mysql_database_type} inconnu '${id}'"
+
+msgid "Mongrel port nr 1"
+msgstr "Port Mongrel n°1"
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Mongrel port nr 2"
+msgstr "Port Mongrel n°2"
+
+msgid "Number of Mongrel servers"
+msgstr "Nombre de serveurs Mongrel"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "Authentifications ${mysql_database_type}"
+
+msgid "Please enter a password"
+msgstr "Veuillez entrer un mot de passe"
+
+msgid "Starting application."
+msgstr "Application de démarrage"
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "Veuillez entrer un mot de passe valide pour se connecter au serveur ${mysql_database_type}"
+
+msgid "DB Name"
+msgstr "Nom de la base de données"
+
+msgid "Hostname or IP Address"
+msgstr "Nom d'hôte ou adresse IP"
+
+msgid "Korean"
+msgstr "Coréen"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "Répertoire de binaires ${mysql_database_type}"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "Impossible d'installer le service ${mysql_database_type} sous le nom ${mysql_unique_service_name}"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr "Liaison impossible sur le numéro de port indiqué. Veuillez en choisir un autre."
+
+msgid "Select installation type"
+msgstr "Choissez le type d'installation"
+
+msgid "Installation type"
+msgstr "Type d'installation"
+
+# 76%
+#, fuzzy
+msgid "Use ${product_fullname}"
+msgstr "Utiliser ${product_fullname}"
+
+msgid "Installation folder"
+msgstr "Dossier d'installation"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "En attente du démarrage de ${mysql_database_type}."
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr "L'installation ne peut pas se connecter au serveur local ${mysql_database_type} à cause d'une insuffisance de ressources (CPU ou mémoire). Voulez-vous ré-essayer de se connecter au serveur ${mysql_database_type} et continuer avec l'installation?"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "En attente du démarrage de ${mysql_database_type}."
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr "Le logiciel d'installation pourrait ne pas obtenir d'espace sur ${installdir}. Veuillez vérifier qu'il y a suffisamment d'espace disponible pour installer ${product_fullname}"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "Initialisation de la base de données ${mysql_database_type}. Ceci va prendre quelques minutes."
+
+# 82%
+#, fuzzy
+msgid "Please enter your database root user password"
+msgstr "Veuillez entrer le mot de passe root de votre base de données"
+
+msgid "Memcached Server port"
+msgstr "Port du serveur Memcached"
+
+msgid "Starting Apache."
+msgstr "Démarrage d'Apache"
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "Impossible d'écrire le fichier : ${apache_server_directory}/conf/ssi.conf"
+
+msgid "Subversion Server port"
+msgstr "Port du serveur Subversion"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr "Impossible de se connecter à la base de données  ${mysql_hostname}:${mysql_port}. Veuillez vérifier que les paramètres sont corrects et que votre configuration de ${mysql_database_type} accepte les connexions TCP/IP."
+
+msgid "Please select the ports for Mongrel servers. Those will be added to the Apache configuration file."
+msgstr "Veuillez sélectionner les ports des serveurs Mongrel. Ceux-ci seront ajoutés au fichier de configuration Apache."
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr "Ruby n'est pas installé de votre côté. Ce module nécessite l'installation du langage Ruby."
+
+msgid "Polish"
+msgstr "Polonais"
+
+msgid "This will create a sample Rails project."
+msgstr "Ceci créera un exemple de projet Rails."
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr "Veuillez entrer le port sur lequel le serveur de la base de données ${mysql_database_type} devra écouter. Ce numéro de port ne devrait être utilisé par aucun autre processus fonctionnant sur le serveur."
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr "Installation de ${mysql_database_type} en tant que service Windows sous le nom ${mysql_unique_service_name}"
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "Initialisation de la base de données. Ceci prendra un certain temps."
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr "Voulez-vous conserver la base de données ${appName}? Elle sera sauvegardée dans ${installdir}/backups"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "Impossible de définir l'utilisateur autorisé PhpMyAdmin"
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "Arrêt de ${mysql_database_type}"
+
+# 81%
+# 77%
+#, fuzzy
+msgid "${product_fullname} Mongrel Service"
+msgstr "Service Mongrel ${product_fullname}"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "Le dossier choisi n'est pas vide. Veuillez choisir un autre dossier"
+
+msgid "Site name"
+msgstr "Nom du site"
+
+msgid "Japanese"
+msgstr "Japonais"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr "Entrez le nom de domaine ou l'adresse IP de votre serveur web (www.example.com)"
+
+msgid "You need to provide a non-empty password"
+msgstr "Veuillez fournir un mot de passe non vide"
+
+msgid "Configuring database"
+msgstr "Configuration de la base de données"
+
+# 77%
+#, fuzzy
+msgid "SMTP Port"
+msgstr "Port SMTP"
+
+msgid "Chinese/Taiwan"
+msgstr "Chinois/Taïwan"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr "Par mesure de sécurité il est recommandé de mettre un mot de passe non vide pour l'utilisateur root de ${mysql_database_type}. Voulez-vous définir un mot de passe pour l'utilisateur root de ${mysql_database_type}?"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "Email Address"
+msgstr "Adresse du courrier électronique"
+
+msgid "Sample Rails Application"
+msgstr "Exemple d'application Rails"
+
+msgid "Italian"
+msgstr "Italien"
+
+msgid "Ruby On Rails"
+msgstr "Ruby On Rails"
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr "Autorise les changements de permissions sur les fichiers et les paramètres de configuration qui facilitent l'installation de plugins, thèmes et mises à jour pour certaines applications. D'un point de vue sécurité, elles ne sont pas optimales. Ceci est recommandé pour un usage en interne dans votre entreprise ou pour du développement."
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr "Le répertoire du projet ${rubystack_project_directory}/${samplerails_application_name}-${product_version} existe déjà. Veuillez choisir un préfixe différent."
+
+msgid "Please enter a password to use for the database root user"
+msgstr "Veuillez entrer un mot de passe pour utiliser la base de données de l'utilisateur root"
+
+msgid "Creating web application."
+msgstr "Création de l'application web."
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "Veuillez choisir un dossier pour installer ${product_fullname}"
+
+msgid "Uninstalling services."
+msgstr "Désinstallation des services"
+
+msgid "PhpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr "PhpMyAdmin est un outil écrit en PHP. Il est destiné à gérer l'administration de ${mysql_database_type} sur le Web"
+
+msgid "Bitnami Website"
+msgstr "Site Web Bitnami"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr "Non supporté : vous êtes en train de vouloir installer un module 64bit sur une installation 32bit. Veuillez télécharger le module adéquat depuis bitnami.com"
+
+
+# 86%
+#, fuzzy
+msgid "Please use only alphanumeric characters in your password"
+msgstr "Veuillez n'utiliser que des caractères alphanumériques"
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "Veuillez n'utiliser que des caractères alphanumériques"
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "Veuillez n'utiliser que des caractères alphanumériques"
+
+msgid "Please confirm your password"
+msgstr "Veuillez confirmer votre mot de passe"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr "Veuillez entrer le port utilisé par le serveur Apache fourni pour les accès SSL."
+
+msgid "Spanish"
+msgstr "Espagnol"
+
+msgid "Homepage"
+msgstr "Page d'accueil"
+
+msgid "Readme"
+msgstr "Lisez-moi"
+
+msgid "Changelog"
+msgstr "Journal des modifications"
+
+msgid "Quick Start Guide"
+msgstr "Guide de prise en main rapide"
+
+msgid "Categories"
+msgstr "Catégories"
+
+msgid "Technologies"
+msgstr "Technologies"
+
+msgid "Licenses"
+msgstr "Licences"
+
+msgid "Download"
+msgstr "Téléchargement"
+
+msgid "Free Download"
+msgstr "Téléchargement libre"
+
+msgid "Learn more"
+msgstr "Pour en savoir plus"
+
+msgid "Downloads"
+msgstr "Téléchargements"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Add-ons"
+msgstr "Add-ons"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Tools"
+msgstr "Outils"
+
+msgid "Cloud"
+msgstr "Cloud"
+
+msgid "cloud"
+msgstr "cloud"
+
+msgid "Enterprise"
+msgstr "Entreprise"
+
+msgid "Catalog"
+msgstr "Catalogue"
+
+msgid "My Account"
+msgstr "Mon compte"
+
+msgid "Sign Out"
+msgstr "Se déconnecter"
+
+msgid "Sign In"
+msgstr "Se connecter"
+
+msgid "Sign Up"
+msgstr "S'enregistrer"
+
+msgid "Forum"
+msgstr "Forum"
+
+msgid "forums"
+msgstr "forums"
+
+msgid "Wiki"
+msgstr "Wiki"
+
+msgid "Modules"
+msgstr "Modules"
+
+msgid "module"
+msgstr "module"
+
+msgid "virtual machine"
+msgstr "machine virtuelle"
+
+msgid "installer"
+msgstr "logiciel d'installation"
+
+msgid "native installer"
+msgstr "logiciel d'installation natif"
+
+msgid "cloud server"
+msgstr "serveur Cloud"
+
+msgid "username"
+msgstr "nom d'utilisateur"
+
+msgid "password"
+msgstr "mot de passe"
+
+msgid "FAQ"
+msgstr "FAQ"
+
+msgid "View all operating systems"
+msgstr "Voir tous les systèmes d'expoitation"
+
+msgid "View all virtual appliances"
+msgstr "Voir toutes les appliances virtuelles"
+
+msgid "View all cloud server options"
+msgstr "Voir toutes les options serveur Cloud"
+
+msgid "Get Started"
+msgstr "Démarrer"
+
+msgid "VMware Virtual Machines"
+msgstr "Machines virtuelles VMware"
+
+msgid "Amazon Machine Images"
+msgstr "Amazon Machine Images"
+
+msgid "Post your questions and help others in our %{forum}. Frequently asked questions and tips in our %{wiki}"
+msgstr "Posez vos questions et aidez les autres sur notre %{forum}. Questions fréquentes et astuces sur notre %{wiki}"
+
+msgid "Bitnami native installers automate the setup of a Bitnami application stack on Windows, Linux or Mac OS X. Each installer includes all of the software necessary to run out of the box (the stack). The process is simple; just download, click next-next-next and you are done! Bitnami stacks are completely self contained and will not interfere with other software on your system. %{learn_more}"
+msgstr "Les logiciels d'installation natifs Bitnami automatisent le paramétrage d'un applicatif Bitnami sur Windows, Linux ou Mac OS X. Chaque logiciel d'installation contient tous les logiciels nécessaires pour être immédiatement opérationnel. La procédure est simple : téléchargez, cliquez sur suivant-suivant-suivant. C'est terminé! Les applicatifs Bitnami sont complètement autonomes. Ils n'interféreront avec aucun des logiciels déjà installés sur votre système. %{learn_more}"
+
+msgid "Bitnami virtual machine images contain a minimal Linux operating system and a fully configured Bitnami application stack. Running virtual machine images requires a hypervisor such as VMware or VirtualBox, so it is recommended for system administrators and advanced users. %{learn_more}"
+msgstr "Les images de machines virtuelles Bitnami contiennent un système d'exploitation Linux minimal et un applicatif Bitnami totalement configuré. Exécuter des images de machines virtuelles nécessite un hyperviseur tel que VMware ou VirtualBox. L'usage est donc conseillé aux administrateurs systèmes ainsi qu'aux utilisateurs avancés. %{learn_more}"
+
+msgid "Default application login information. Please change this to avoid unauthorized access:"
+msgstr "Information du login de l'application par défaut. Veuillez le modifier pour éviter les accès non autorisés :"
+
+msgid "You can find additional documentation at the Bitnami Virtual Machine %{faq}"
+msgstr "Vous trouverez un complément de documentation sur la machine virtuelle Bitnami %{faq}"
+
+msgid "If you are using *VMware ESX*, *ESXi* or *VirtualBox*, check our article on %{how_to_start_virtual_appliances}."
+msgstr "Si vous utilisez *VMware ESX*, *ESXi* ou *VirtualBox*, consultez notre article sur  %{how_to_start_virtual_appliances}."
+
+msgid "how to start Bitnami virtual appliances"
+msgstr "comment démarrer les appliances virtuelles Bitnami"
+
+msgid "Bitnami Cloud Images extend stack appliances to run in a cloud computing environment. You can run Bitnami applications on a pay-as-you-go basis, programmatically starting and stopping them. Bitnami Cloud Images are currently available for Amazon EC2, with support for additional cloud environments planned for the future. In addition to providing free, ready to deploy Amazon Machine Images (AMIs), we also offer %{bch}, a subscription service that simplifies the process of deploying and managing open source applications to the Amazon EC2 Cloud. You can sign up for a free trial and learn more on the %{bch_website}."
+msgstr "Les images Bitnami Cloud permettent aux appliances de fonctionner dans un environnement de cloud computing. Vous pouvez utiliser les applications Bitnami sur la base du 'Ne-payez-que-ce-que-vous-consommez', de façon programmées pour les démarrer et les arrêter. Les images Bitnami Cloud sont disponibles actuellement pour Amazon EC2 avec support pour les environnements additionnels futurs du cloud. De plus, pour fournir librement des images Amazon Machines (AMIs), nous offrons aussi %{bch}, un service de souscription qui simplifie la procédure de déploiement et de gestion des applications open source sur le Cloud Amazon EC2. Vous pouvez vous enregistrer pour un essai gratuit et en savoir plus sur %{bch_website}."
+
+msgid "Bitnami Cloud Hosting website"
+msgstr "Site web d'hébergement Bitnami Cloud"
+
+msgid "For the Amazon AMIs, the default application login information is provided below. Please change this to avoid unauthorized access:"
+msgstr "L'Information du login de l'application par défaut est fournie ci-dessous pour les images Amazon AMIs. Veuillez le modifier pour éviter les accès non autorisés :"
+
+msgid "You can find additional documentation at the Cloud Image %{faq}"
+msgstr "Vous trouverez de la documentation supplémentaire sur Cloud Image %{faq}"
+
+msgid "If you already have an AWS account simply click one of the links below to deploy a Bitnami Stack on Amazon EC2. If not, you can copy the appropriate AMI name from the table below (based on whether you want to deploy on servers in the US, Europe or Asia) and visit the %{guide} for a tutorial on how to get started. Alternatively, %{cloud_amazon_bch_sign_up} for the easiest way to deploy and manage applications in the cloud, with one-click resize and backup functionality."
+msgstr "Si vous avez un compte AWS, pour déployer une Bitnami Stack sur Amazon EC2 cliquez tout simplement sur l'un des liens ci-dessous. Dans le cas contraire, vous pouvez copier le nom approprié AMI depuis la table ci-dessous (selon que vous souhaitez déployer sur des serveurs aux USA, en Europe ou en Asie) et visiter le %{guide} pour un tutoriel sur comment démarrer. Sinon, %{cloud_amazon_bch_sign_up} pour la façon la plus simple de déployer et de gérer des applicatifs sur le cloud avec des fonctionalités de redimentionnement et de sauvegarde en un seul clic."
+
+msgid "sign up for Bitnami Cloud Hosting"
+msgstr "s'enregistrer pour un hébergement Bitnami Cloud"
+
+msgid "Bitnami AMI Guide"
+msgstr "Guide Bitnami AMI"
+
+msgid "To deploy a Bitnami Stack on Amazon Cloud Formation, save the template file and use it in the AWS Console. Please visit %{cloud_formation_get_started} for a tutorial on how to get started."
+msgstr "Pour déployer une Bitnami Stack sur Amazon Cloud Formation, sauvegardez le modèle de fichier et utilisez-le dans la console AWS. Veuillez visiter %{cloud_formation_get_started} pour un tutoriel sur comment démarrer."
+
+msgid "Getting Started with Bitnami on AWS Cloud Formation"
+msgstr "Démarrer avec Bitnami sur AWS Cloud Formation"
+
+msgid "Get this stack for free on the Amazon App Store"
+msgstr "Pour l'obtenir gratuitement depuis Amazon App Store"
+
+msgid "The %{product_name} native installers were packaged using BitRock's %{cross_platform_installer} tool."
+msgstr "Les programmes d'installation natifs %{product_name} ont été empaquetés avec l'outil BitRock's %{cross_platform_installer}."
+
+msgid "cross platform installer"
+msgstr "logiciel d'installation multi-plateforme"
+
+msgid "US-East"
+msgstr "US-Est"
+
+msgid "N Virginia"
+msgstr "N Virginie"
+
+msgid "US-West"
+msgstr "US-Ouest"
+
+msgid "N California"
+msgstr "N Californie"
+
+msgid "Oregon"
+msgstr "Oregon"
+
+msgid "Europe"
+msgstr "Europe"
+
+msgid "Ireland"
+msgstr "Irelande"
+
+msgid "Asia Pacific"
+msgstr "Asie Pacifique"
+
+msgid "Singapore"
+msgstr "Singapour"
+
+msgid "Tokyo"
+msgstr "Tokyo"
+
+msgid "Brazil"
+msgstr "Brésil"
+
+msgid "Sao Paulo"
+msgstr "Sao Paulo"
+
+msgid "Sydney"
+msgstr "Sydney"
+
+msgid "Bitnami Contest"
+msgstr "Concours Bitnami"
+
+msgid "Don't see your application? Click %{here} to see more apps or submit your own."
+msgstr "Votre application n'apparaît pas? Cliquez %{here} pour lister davantage d'applications ou soumettre la vôtre."
+
+msgid "Each month we start an open Application Contest. The winner of the contest will be added to our Bitnami library."
+msgstr "Chaque mois nous lançons un concours d'applications. Ce concours est libre. Le gagnant est ajouté à la bibliothèque Bitnami."
+
+msgid "Installing PostgreSQL as a Windows service with name ${postgres_unique_service_name}"
+msgstr "Installation de PostgreSQL en tant que service Windows sous le nom ${postgres_unique_service_name}"
+
+msgid "Database Server port"
+msgstr "Port du bases de données serveur"
+
+msgid "PostgreSQL is a powerful, open source object-relational database system."
+msgstr "PostgreSQL est un puissant système de base de données open source objet-relationnel."
+
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+msgid "I wish to use the bundled PostgreSQL database"
+msgstr "Je souhaite utiliser la base de données PostgreSQL fournie"
+
+msgid "Set the user that will use the database."
+msgstr "Définit l'utilisateur qui va utiliser la base de données."
+
+msgid "Set the password for the user that will use the database."
+msgstr "Définir le mot de passe pour l'utilisateur qui va utiliser la base de données."
+
+msgid "Unable to set the phppgadmin authorized user"
+msgstr "Impossible de définir l'utilisateur autorisé PhpPgAdmin"
+
+msgid "Database Configuration"
+msgstr "Configuration de base de données"
+
+msgid "PostgreSQL Binary Directory"
+msgstr "Répertoire de binaires PostgreSQL"
+
+msgid "Noalyss packaged by Bitnami"
+msgstr "Noalyss packaged by Bitnami"
+
+msgid "Database name"
+msgstr "Nom de la base de données"
+
+msgid "I wish to use an existing PostgreSQL database"
+msgstr "Je souhaite utiliser une base de données PostgreSQL existante"
+
+msgid "Please enter your database 'postgres' user password."
+msgstr "Veuillez entrer le nom d'utilisateur 'postgres' de votre base de données"
+
+msgid "It seems you do not have enough permissions to bind to the port ${postgres_port} or the port is already taken by another application. Please select another one."
+msgstr "Il semble que vous n'ayiez pas les droits suffisants pour se relier au port ${postgres_port} ou le port est déjà utilisé par une autre application. Veuillez en choisir un autre."
+
+msgid "Not a PostgreSQL version 8.1.4 installation. PostgreSQL 8.1.4 recommended."
+msgstr "Pas une version PostgreSQL 8.1.4 installation. PostgreSQL 8.1.4 recommandée."
+
+msgid "The path ${postgres_binary_directory} does not seem to contain a pg_vacuumdb executable."
+msgstr "Le chemin ${postgres_binary_directory} ne semble pas contenir un exécutable pg_vacuumdb."
+
+msgid "Sorry, we only support PostgreSQL as service."
+msgstr "Désolé, nous ne supportons PostgreSQL en tant que service."
+
+msgid "Sorry, you need to be administrator."
+msgstr "Désolé, vous devez être administrateur."
+
+msgid "Database Server Parameters"
+msgstr "Les paramètres du serveur de bases de données"
+
+msgid "Initializing database"
+msgstr "Initialisation de la base de données"
+
+msgid "phpPgAdmin is a tool written in PHP intended to handle the administration of PostgreSQL over the Web."
+msgstr "phpPgAdmin est un outil écrit en PHP. Il est destiné à gérer l'administration de PostgreSQL sur le Web."
+
+msgid "Please specify the directory where the psql, pg_restore and vacuumdb binaries are located"
+msgstr "Veuillez indiquer le répertoire où le psql, pg_restore et vacuumdb binaires sont situés"
+
+msgid "The path ${postgres_binary_directory} does not seem to contain a pg_restore executable."
+msgstr "Le chemin ${postgres_binary_directory} ne semble pas contenir un exécutable pg_restore."
+
+msgid "Please enter the port of your database."
+msgstr "Veuillez entrer dans le port de votre base de données."
+
+msgid "Phppgadmin destination"
+msgstr "Dossier recevant PhpPgAdmin"
+
+msgid "Waiting for Postmaster"
+msgstr "En attente du démarrage de Postmaster"
+
+msgid "PostgreSQL postgres user password"
+msgstr "Mot de passe utilisateur pour la base de données"
+
+msgid "Noalyss is an application adapted to the Belgium legislation in terms of accounting. It will allow you to maintain your accounting in a centralized way."
+msgstr "Noalyss est un logiciel libre de comptabilité en ligne, libre c'est-à-dire que vous pouvez librement l'utiliser, le modifier et le distribuer; de comptabilité c'est-à-dire une comptabilité double, adapté à la France et à la Belgique; cependant l'interface permet de l'adapter à la législation de n'importe quel pays."
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "${product.fullName} requires a PostgreSQL database encoding ${postgres_encoding} and your current encoding is ${postgres_encoding_existing}."
+msgstr "${product.fullName} nécessite une base de données PostgreSQL codage de ${postgres_encoding} et votre encodage actuel est de ${postgres_encoding_existing}."
+
+msgid "Unable to connect to database. Please check your configuration."
+msgstr "L'installation ne peut pas se connecter au serveur local ${mysql_database_type}. Veuillez vérifiez votre configuration."
+
+msgid "PhpPgAdmin"
+msgstr "PhpPgAdmin"
+
+msgid "Creating user and database"
+msgstr "Création de la base de données"
+
+msgid "Noalyss"
+msgstr "Noalyss"
+
+msgid "The installer detected that the installation folder ${noalyss_installation_directory} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr "Le programme d'installation a détecté que le dossier d'installation de ${noalyss_installation_directory} n'est pas vide. Veuillez assurez-vous que toute version antérieure de til application est désinstallée, que de poursuivre l'installation peut corrompre l'actuel. Voulez-vous continuer?"
+
+msgid "The path ${postgres_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr "Le chemin ${postgres_binary_directory} semble être invalide. Veuillez vérifiez si le répertoire contient le nécessaire binaires."
+
+msgid "Set the database name for the database that will be created."
+msgstr "Donnez le nom de la base de données qui seront créés ou utilisés."
+
+msgid "Please enter the IP address or hostname from which your database will accept connections"
+msgstr "Veuillez entrer l'adresse IP ou le nom d'hôte de votre base de données qui va accepter les connexions"
+

@@ -1,0 +1,124 @@
+
+<!-- APACHE, PHP AND MYSQL REQUIRED:
+ * apache_server_directory
+ * php_directory
+ * ${installdir}/mysql
+ * mysql_port
+ * mysql_root_password
+required.
+ -->
+
+<!-- PHPMYADMIN 1.0
+Componentname: PHPMYADMIN
+
+Short Description:
+This component is able to install and configurate PhpMyAdmin with php and mysql.
+
+Created: 20061110
+Copyrighted by BitRock
+
+System variables provided by this component:
+
+
+-->
+<component>
+    <name>phpmyadmin</name>
+    <description>PhpMyAdmin</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+    <folderList>
+        <folder>
+            <description>//Program Files</description>
+            <destination>${installdir}/${phpmyadmin_destination}</destination>
+            <name>phpmyadmin</name>
+            <distributionFileList>
+                <distributionDirectory origin="phpmyadmin"/>
+            </distributionFileList>
+            <actionList>
+                <substitute>
+                    <files>${php_directory}/etc/php.ini</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>mysql.default_socket =</pattern>
+                            <value>mysql.default_socket= "${database_socket}"</value>
+                            <ruleList>
+                                <platformTest type="unix" />
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_PORT@@</pattern>
+                            <value>${mysql_port}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <substitute>
+                    <files>*/config.inc.php;*/config.default.php</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_MYSQL_PASSWORD@@</pattern>
+                            <value>${mysql_root_password}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+                <addTextToFile>
+                    <file>${apache_server_directory}/conf/httpd.conf</file>
+                    <text>&lt;Directory "${installdir}/${phpmyadmin_destination}/phpmyadmin"&gt;
+AuthType Basic
+AuthName phpMyAdmin
+AuthUserFile "${installdir}/apache2/users"
+Require valid-user
+Order allow,deny
+Allow from 127.0.0.1
+Satisfy all
+ErrorDocument 403 /pmaforbidden.html
+&lt;/Directory&gt;
+          	    </text>
+                </addTextToFile>
+                <runProgram>
+                    <program>${installdir.dos.unix}/apache2/bin/htpasswd</program>
+                    <programArguments>-cb "${installdir}/apache2/users" ${phpmyadmin_root} ${phpmyadmin_password}</programArguments>
+                </runProgram>
+            </actionList>
+        </folder>
+    </folderList>
+    <parameterList>
+        <stringParameter>
+            <ask>0</ask>
+            <default/>
+            <!--description>Phpmyadmin destination</description-->
+            <name>phpmyadmin_destination</name>
+            <value>apache2/htdocs</value>
+        </stringParameter>
+        <stringParameter>
+            <name>phpmyadmin_root</name>
+            <title>phpMyAdmin Root Username</title>
+            <explanation>phpMyAdmin Root Username</explanation>
+            <description>Username</description>
+            <value>administrator</value>
+            <default>administrator</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>no</ask>
+            <width>40</width>
+        </stringParameter>
+        <passwordParameter>
+            <name>phpmyadmin_password</name>
+            <title>phpMyAdmin Password</title>
+            <description>Password</description>
+            <descriptionRetype>Re-enter</descriptionRetype>
+            <explanation>Initial access password for the MySQL management tool phpMyAdmin. Pl
+ease refer to the documentacion for further details.The username will be '${phpmyadmin_root}'.</explanation>
+            <ask>yes</ask>
+            <width>40</width>
+            <validationActionList>
+                <throwError>
+                    <text>You need to provide a non-empty password</text>
+                    <ruleList>
+                        <compareText text="${phpmyadmin_password}" logic="equals" value=""/>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+        </passwordParameter>
+    </parameterList>
+</component>
+

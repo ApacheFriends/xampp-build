@@ -1,0 +1,353 @@
+<component>
+  <name>native_apache_adapter</name>
+  <description>Native Apache Adaptation Layer</description>
+  <canBeEdited>0</canBeEdited>
+  <show>0</show>
+  <!-- This must be explicitly enabled -->
+  <selected>0</selected>
+  <folderList>
+    <folder>
+      <name>apache_fedora</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/fedora/apache2"/>
+      </distributionFileList>
+      <actionList>
+        <bitnamiDescription>
+          <bitnamiPage>${installdir}/apache2/htdocs/index.html</bitnamiPage>
+          <applicationDescription>The Bitnami LAMPStack Adaptation layer allows you to install Bitnami modules on top of your native LAMP</applicationDescription>
+          <applicationVendorUrl>http://www.bitnami.com</applicationVendorUrl>
+          <applicationDependencies>Apache, MySQL and PHP</applicationDependencies>
+          <applicationPort>${web_server_port}</applicationPort>
+          <applicationHost>${web_server_domain_name}</applicationHost>
+          <!-- For the image ... -->
+          <applicationName>lampstack</applicationName>
+          <applicationOriginalName>lampstack</applicationOriginalName>
+          <applicationLink></applicationLink>
+        </bitnamiDescription>
+      </actionList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value="fedora"/>
+      </ruleList>
+    </folder>
+    <folder>
+      <name>apache_redhat</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/redhat/apache2"/>
+      </distributionFileList>
+      <actionList>
+        <bitnamiDescription>
+          <bitnamiPage>${installdir}/apache2/htdocs/index.html</bitnamiPage>
+          <applicationDescription>The Bitnami LAMPStack Adaptation layer allows you to install Bitnami modules on top of your native LAMP</applicationDescription>
+          <applicationVendorUrl>https://bitnami.com</applicationVendorUrl>
+          <applicationDependencies>Apache, MySQL and PHP</applicationDependencies>
+          <applicationPort>${web_server_port}</applicationPort>
+          <applicationHost>${web_server_domain_name}</applicationHost>
+          <!-- For the image ... -->
+          <applicationName>lampstack</applicationName>
+          <applicationOriginalName>lampstack</applicationOriginalName>
+          <applicationLink></applicationLink>
+        </bitnamiDescription>
+      </actionList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value="redhat"/>
+      </ruleList>
+    </folder>
+    <folder>
+      <name>apache_xampp_linux</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/linux/apache2"/>
+      </distributionFileList>
+      <actionList>
+	<removeFilesFromUninstaller files="*/apache2/*" />
+        <bitnamiDescription>
+          <bitnamiPage>${installdir}/apache2/htdocs/index.html</bitnamiPage>
+          <applicationDescription>The Bitnami LAMPStack Adaptation layer allows you to install Bitnami modules on top of your XAMPP Stack</applicationDescription>
+          <applicationVendorUrl>https://bitnami.com</applicationVendorUrl>
+          <applicationDependencies>Apache, MySQL and PHP</applicationDependencies>
+          <applicationPort>${web_server_port}</applicationPort>
+          <applicationHost>${web_server_domain_name}</applicationHost>
+          <!-- For the image ... -->
+          <applicationName>lampstack</applicationName>
+          <applicationOriginalName>lampstack</applicationOriginalName>
+          <applicationLink></applicationLink>
+        </bitnamiDescription>
+      </actionList>
+      <ruleList>
+	<platformTest type="linux"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder>
+
+    <folder>
+      <name>apache_xampp_osx</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/osx/apache2"/>
+      </distributionFileList>
+      <actionList>
+	<removeFilesFromUninstaller files="*/apache2/*" />
+        <bitnamiDescription>
+          <bitnamiPage>${installdir}/apache2/htdocs/index.html</bitnamiPage>
+          <applicationDescription>The Bitnami LAMPStack Adaptation layer allows you to install Bitnami modules on top of your XAMPP Stack</applicationDescription>
+          <applicationVendorUrl>https://bitnami.com</applicationVendorUrl>
+          <applicationDependencies>Apache, MySQL and PHP</applicationDependencies>
+          <applicationPort>${web_server_port}</applicationPort>
+          <applicationHost>${web_server_domain_name}</applicationHost>
+          <!-- For the image ... -->
+          <applicationName>lampstack</applicationName>
+          <applicationOriginalName>lampstack</applicationOriginalName>
+          <applicationLink></applicationLink>
+        </bitnamiDescription>
+      </actionList>
+      <ruleList>
+	<platformTest type="osx"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder>
+    <folder>
+      <name>apache_xampp_windows</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/xampp/windows/apache"/>
+      </distributionFileList>
+      <actionList>
+	<removeFilesFromUninstaller files="*/apache/*" />
+	  <substitute>
+	      <files>*.bat</files>
+	      <substitutionList>
+		  <substitution pattern="@@XAMPP_INSTALLDIR@@" value="${installdir}"/>
+	      </substitutionList>
+	  </substitute>
+        <bitnamiDescription>
+          <bitnamiPage>${installdir}/apache/htdocs/index.html</bitnamiPage>
+          <applicationDescription>The Bitnami LAMPStack Adaptation layer allows you to install Bitnami modules on top of your XAMPP Stack</applicationDescription>
+          <applicationVendorUrl>https://bitnami.com</applicationVendorUrl>
+          <applicationDependencies>Apache, MySQL and PHP</applicationDependencies>
+          <applicationPort>${web_server_port}</applicationPort>
+          <applicationHost>${web_server_domain_name}</applicationHost>
+          <!-- For the image ... -->
+          <applicationName>lampstack</applicationName>
+          <applicationOriginalName>lampstack</applicationOriginalName>
+          <applicationLink></applicationLink>
+        </bitnamiDescription>
+      </actionList>
+      <ruleList>
+	<platformTest type="windows"/>
+        <compareText text="${target_platform}" logic="equals" value="xampp"/>
+      </ruleList>
+    </folder>
+
+    <folder>
+      <name>apache_ubuntu</name>
+      <destination>${installdir}/</destination>
+      <distributionFileList>
+        <distributionDirectory origin="files/ubuntu/apache2"/>
+      </distributionFileList>
+      <actionList>
+        <bitnamiDescription>
+          <bitnamiPage>${installdir}/apache2/htdocs/index.html</bitnamiPage>
+          <applicationDescription>The Bitnami LAMPStack Adaptation layer allows you to install Bitnami modules on top of your native LAMP</applicationDescription>
+          <applicationVendorUrl>https://bitnami.com</applicationVendorUrl>
+          <applicationDependencies>Apache, MySQL and PHP</applicationDependencies>
+          <applicationPort>${web_server_port}</applicationPort>
+          <applicationHost>${web_server_domain_name}</applicationHost>
+          <!-- For the image ... -->
+          <applicationName>lampstack</applicationName>
+          <applicationOriginalName>lampstack</applicationOriginalName>
+          <applicationLink></applicationLink>
+        </bitnamiDescription>
+        <createSymLink>
+            <linkName>/etc/apache2/mods-enabled/version.load</linkName>
+            <target>../mods-available/version.load</target>
+            <ruleList>
+                <fileExists path="/etc/apache2/mods-enabled/version.load" negate="1"/>
+            </ruleList>
+        </createSymLink>
+        <createSymLink>
+            <linkName>/etc/apache2/mods-enabled/rewrite.load</linkName>
+            <target>../mods-available/rewrite.load</target>
+            <ruleList>
+                <fileExists path="/etc/apache2/mods-enabled/rewrite.load" negate="1"/>
+            </ruleList>
+        </createSymLink>
+      </actionList>
+      <ruleList>
+        <compareText text="${target_platform}" logic="equals" value="ubuntu"/>
+      </ruleList>
+    </folder>
+  </folderList>
+  <postInstallationActionList>
+    <actionGroup>
+        <actionList>
+            <substitute>
+                <abortOnError>0</abortOnError>
+                <showMessageOnError>0</showMessageOnError>
+                <files>${installdir}/htdocs/xampp/navi.php</files>
+                <type>regexp</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>TEXT\['navi-components'\]\s*;?\s*\?&gt;&lt;/a&gt;&lt;br&gt;</pattern>
+                        <value>TEXT['navi-components']; ?&gt;&lt;/a&gt;&lt;br&gt;
+&lt;a class="n" target="content" onclick="h(this);" href="/applications.html"&gt;&lt;?= "Applications" ?&gt;&lt;/a&gt;&lt;br&gt;
+</value>
+                        <ruleList>
+                            <fileContentTest path="${installdir}/htdocs/xampp/navi.php" logic="does_not_contain" text="applications.html"/>
+                        </ruleList>
+                    </substitution>
+                </substitutionList>
+            </substitute>
+            <substitute>
+                <abortOnError>0</abortOnError>
+                <showMessageOnError>0</showMessageOnError>
+                <files>${installdir}/htdocs/xampp/applications.html</files>
+                <type>exact</type>
+                <substitutionList>
+                    <substitution>
+                        <pattern>"module_access"&gt;&lt;a href</pattern>
+                        <value>"module_access"&gt;&lt;a target="_blank" href</value>
+                    </substitution>
+                </substitutionList>
+            </substitute>
+        </actionList>
+        <ruleList>
+            <compareText text="${target_platform}" logic="equals" value="xampp"/>
+        </ruleList>
+    </actionGroup>
+    <substitute>
+      <files>${installdir}/apache2/conf/httpd.conf</files>
+      <substitutionList>
+        <substitution pattern="@@XAMPP_INSTALLDIR@@" value="${installdir}"/>
+      </substitutionList>
+    </substitute>
+    <actionGroup>
+	<actionList>
+	    <!-- Support virtual host configuration, refs #12039 -->
+	    <deleteFile path="${installdir}/apache2/conf/httpd.conf" />
+	    <writeFile>
+		<path>${installdir}/apache2/conf/httpd.conf</path>
+		<text>
+Include "${installdir}/apache2/conf/bitnami/bitnami.conf"
+</text>
+	    </writeFile>
+        <addTextToFile>
+            <file>${installdir}/apache2/conf/bitnami/bitnami.conf</file>
+            <text>
+&lt;IfModule headers_module&gt;
+    &lt;IfVersion &gt;= 2.4.7 &gt;
+        Header always setifempty X-Frame-Options SAMEORIGIN
+    &lt;/IfVersion&gt;
+    &lt;IfVersion &lt; 2.4.7 &gt;
+        Header always merge X-Frame-Options SAMEORIGIN
+    &lt;/IfVersion&gt;
+&lt;/IfModule&gt;
+</text>
+            <ruleList>
+                <fileContentTest logic="does_not_contain" path="${installdir}/apache2/conf/bitnami/bitnami.conf" text="X-Frame-Options SAMEORIGIN" />
+            </ruleList>
+        </addTextToFile>
+	    <renameFile abortOnError="0" showMessageOnError="0" origin="/etc/httpd/conf.d/ssl.conf" destination="/etc/httpd/conf.d/ssl.conf.disabled"/>
+	    <createSymLink linkName="${installdir}/apache2/conf/server.key" target="/etc/pki/tls/private/localhost.key" />
+	    <createSymLink linkName="${installdir}/apache2/conf/server.crt" target="/etc/pki/tls/certs/localhost.crt" />
+	    <createDirectory abortOnError="0" showMessageOnError="0" path="${installdir}/apache2/logs" />
+	</actionList>
+	<ruleList>
+	    <componentTest name="apachebitnami" logic="exists" />
+	</ruleList>
+    </actionGroup>
+    <substitute>
+      <files>${installdir}/apache2/htdocs/*html</files>
+      <substitutionList>
+        <substitution pattern="@@XAMPP_WEBSTACK@@" value=""/>
+        <substitution pattern="@@XAMPP_SHORTNAME@@" value="lampstack"/>
+      </substitutionList> 
+    </substitute>
+    <runProgram>
+      <program>chown</program>
+      <programArguments>-R root:${web_server_group} "${installdir}/apache2/htdocs"</programArguments>
+      <ruleList>
+        <platformTest type="unix"/>
+        <compareText text="${installer_root_install}" logic="equals" value="1"/>
+        <userTest username="bitnami" logic="not_exists" />
+      </ruleList>
+    </runProgram>
+    <runProgram>
+      <program>chown</program> 
+      <programArguments>-R bitnami:${web_server_group} "${installdir}/apache2/htdocs"</programArguments>
+      <ruleList>
+        <platformTest type="unix"/>
+        <compareText text="${installer_root_install}" logic="equals" value="1"/>
+        <userTest username="bitnami" logic="exists" />
+      </ruleList>
+    </runProgram>
+    <runProgram>
+      <program>chown</program> 
+      <programArguments>-R ${web_server_user}:${web_server_group} "${installdir}/apache2/logs"</programArguments>
+      <ruleList>
+        <platformTest type="unix"/>
+        <fileExists path="${installdir}/apache2/logs"/>
+        <compareText text="${installer_root_install}" logic="equals" value="1"/>
+      </ruleList>
+    </runProgram>                        
+    <!-- Include the bitnami httpd.conf in the system httpd.conf file -->
+    <addTextToFile>
+      <file>${system_web_server_configuration_directory}/httpd.conf</file>
+      <text>Include "${installdir}/apache2/conf/httpd.conf"
+      </text>
+      <ruleList>
+	  <platformTest type="unix" />
+	  <fileContentTest logic="does_not_contain" path="${system_web_server_configuration_directory.unix}/httpd.conf" text="${installdir}/apache2/conf/httpd.conf"/>
+      </ruleList>
+    </addTextToFile>
+    <actionGroup>
+	<actionList>
+	    <apacheModule action="enable" moduleName="mod_version" apacheConfigurationFile="${web_server_configuration_directory}/httpd.conf" />
+	    <iniFileSet>
+		<file>${php_configuration_directory}/php.ini</file>
+		<key>error_reporting</key>
+		<section>PHP</section>
+		<value>E_ALL &amp; ~E_DEPRECATED &amp; ~E_STRICT</value>
+	    </iniFileSet>
+	    <phpExtension action="enable" extensionName="php_openssl" >
+		<ruleList>
+		    <platformTest type="windows" />
+		</ruleList>
+	    </phpExtension>
+	    <phpExtension action="enable" extensionName="php_curl" >
+		<ruleList>
+		    <platformTest type="windows" />
+		</ruleList>
+	    </phpExtension>
+	</actionList>
+	<ruleList>
+	    <compareText text="${target_platform}" logic="equals" value="xampp"/>
+	</ruleList>
+    </actionGroup>
+    <addMonit name="apache" dirName="apache2" pidFile="/var/run/httpd/httpd.pid" >
+	<ruleList>
+	    <compareText text="${target_platform}" logic="equals" value="redhat"/>
+	</ruleList>
+    </addMonit>
+    <apacheServer action="restart"/>
+  </postInstallationActionList>
+
+  <preUninstallationActionList>
+    <substitute>
+      <files>${system_web_server_configuration_directory}/httpd.conf</files>
+      <type>exact</type>
+      <substitutionList>
+        <substitution>
+          <pattern>Include "${installdir}/apache2/conf/httpd.conf"</pattern>
+          <value></value>
+        </substitution>
+      </substitutionList>
+    </substitute>
+  </preUninstallationActionList>
+
+  <parameterList>
+      <stringParameter name="apache_port" value="" ask="0"/>
+  </parameterList>
+
+</component>

@@ -1,0 +1,106 @@
+<component>
+    <name>bitnamifunctions</name>
+    <description/>
+    <canBeEdited>0</canBeEdited>
+    <selected>1</selected>
+    <show>0</show>
+    <functionDefinitionList>
+        <actionDefinition name="bitnamiDescription">
+            <parameterList>
+                <stringParameter name="applicationTitle" default="${product_fullname}" />
+                <stringParameter name="applicationHost" default="${application_server_domain}" />
+                <stringParameter name="applicationPort" default="${application_server_port}" />
+                <stringParameter name="applicationOriginalName" default="${component(${product_shortname}).description}" />
+                <stringParameter name="applicationName" default="${product_shortname}" />
+                <stringParameter name="applicationLink" default="${product_shortname}" />
+                <stringParameter name="applicationDescription" default="" />
+                <stringParameter name="applicationVendorUrl" />
+                <stringParameter name="applicationDependencies" />
+                <stringParameter name="applicationLicense" default=""/>
+                <stringParameter name="bitnamiPage" default="" />
+            </parameterList>
+            <actionList>
+                <setInstallerVariable name="bitnamiPage" value="${apache_server_directory}/htdocs/index.html">
+                    <ruleList>
+                        <compareText text="${bitnamiPage}" logic="equals" value="" />
+                        <fileExists path="${apache_server_directory}/htdocs/index.html" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="bitnamiPage" value="${bitnamiPage};${apache_server_directory}/htdocs/applications.html">
+                    <ruleList>
+                        <stringTest text="${bitnamiPage}" type="not_empty"/>
+                        <fileExists path="${apache_server_directory}/htdocs/applications.html" />
+                    </ruleList>
+                </setInstallerVariable>
+                <setInstallerVariable name="bitnamiPage" value="${installdir}/apache-tomcat/webapps/ROOT/index.html">
+                    <ruleList>
+                        <compareText text="${bitnamiPage}" logic="equals" value="" />
+                        <fileExists path="${installdir}/apache-tomcat/webapps/ROOT/index.html" />
+                    </ruleList>
+                </setInstallerVariable>
+                <substitute>
+                    <files>${bitnamiPage}</files>
+                    <substitutionList>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_HOST@@</pattern>
+                            <value>${applicationHost}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_PORT@@</pattern>
+                            <value>${applicationPort}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_TITLE@@</pattern>
+                            <value>${applicationTitle}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_NAME@@</pattern>
+                            <value>${applicationName}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_LINK@@</pattern>
+                            <value>${applicationLink}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_VENDOR_URL@@</pattern>
+                            <value>${applicationVendorUrl}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_DEPENDENCIES@@</pattern>
+                            <value>${applicationDependencies}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_DESCRIPTION@@</pattern>
+                            <value>${applicationDescription}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_APPLICATION_ORIGINALNAME@@</pattern>
+                            <value>${applicationOriginalName}</value>
+                        </substitution>
+                        <substitution>                        
+                            <pattern>@@XAMPP_APPLICATION_LICENSE_DESCRIPTION@@</pattern>
+                            <value>${applicationLicense}</value>
+                            <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                            <ruleList>
+                                <compareText logic="does_not_equal" text="${applicationLicense}" value=""/>
+                            </ruleList>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_INSTALLDIR@@</pattern>
+                            <value>${installdir}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_SHORTNAME@@</pattern>
+                            <value>${applicationName}</value>
+                        </substitution>
+                        <substitution>
+                            <pattern>@@XAMPP_WEBSTACK@@</pattern>
+                            <value>${applicationTitle}</value>
+                        </substitution>
+                    </substitutionList>
+                </substitute>
+            </actionList>
+        </actionDefinition>
+    </functionDefinitionList>
+</component>
+

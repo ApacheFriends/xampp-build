@@ -1,0 +1,317 @@
+<component>
+    <name>paramadminaccount</name>
+    <description>//AdminAccount</description>
+    <canBeEdited>0</canBeEdited>
+    <selected>1</selected>
+    <show>0</show>
+    <parameterList>
+        <booleanParameter>
+            <name>base_required_password_alphanumeric</name>
+            <default>1</default>
+            <value>1</value>
+            <ask>0</ask>
+        </booleanParameter>
+        <booleanParameter>
+            <name>base_required_password_basiclatin</name>
+            <default>0</default>
+            <value>0</value>
+            <ask>0</ask>
+        </booleanParameter>
+        <booleanParameter>
+            <name>base_user_alphanumeric</name>
+            <default>0</default>
+            <value>1</value>
+            <ask>0</ask>
+        </booleanParameter>
+        <booleanParameter>
+            <name>base_user_required_letters</name>
+            <default>0</default>
+            <value>1</value>
+            <ask>0</ask>
+        </booleanParameter>
+        <stringParameter>
+            <name>base_required_password_letters_numbers</name>
+            <default>0</default>
+            <value>0</value>
+            <ask>0</ask>
+        </stringParameter>
+        <stringParameter>
+            <name>base_required_password_letters_numbers_symbols</name>
+            <default>0</default>
+            <value>0</value>
+            <ask>0</ask>
+        </stringParameter>
+        <stringParameter>
+            <name>base_required_password_lowercase_uppercase_letters_numbers</name>
+            <default>0</default>
+            <value>0</value>
+            <ask>0</ask>
+        </stringParameter>
+        <stringParameter>
+            <name>base_required_password_length</name>
+            <default>1</default>
+            <value>1</value>
+            <ask>0</ask>
+        </stringParameter>
+        <stringParameter>
+            <name>base_required_username_length</name>
+            <default>1</default>
+            <value>1</value>
+            <ask>0</ask>
+        </stringParameter>
+        <stringParameter name="base_forbidden_usernames" default="" value="" ask="0"/>
+        <stringParameter name="base_forbidden_passwords" default="" value="" ask="0"/>
+        <parameterGroup>
+            <title>Create Admin account</title>
+            <name>base_general_configuration</name>
+            <description>Create Admin account</description>
+            <explanation>${product_fullname} admin user creation</explanation>
+            <parameterList>
+                <stringParameter>
+                    <name>base_user_name</name>
+                    <default>User Name</default>
+                    <value>User Name</value>
+                    <description>Your real name</description>
+                    <allowEmptyValue>0</allowEmptyValue>
+                </stringParameter>
+                <stringParameter>
+                    <name>base_user_firstname</name>
+                    <default>UserName</default>
+                    <description>First Name</description>
+                    <ask>0</ask>
+                </stringParameter>
+                <stringParameter>
+                    <name>base_user_lastname</name>
+                    <default>LastName</default>
+                    <description>Last Name</description>
+                    <ask>0</ask>
+                </stringParameter>
+                <stringParameter>
+                    <name>base_mail</name>
+                    <default>user@example.com</default>
+                    <value>user@example.com</value>
+                    <description>Email Address</description>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <validationActionList>
+                        <throwError>
+                            <text>Email account not valid.</text>
+                            <ruleList>
+                                <stringTest type="not_empty" text="${base_mail}"/>
+                                <regExMatch>
+                                    <logic>does_not_match</logic>
+                                    <pattern>[a-zA-Z0-9>_-]+@[a-zA-Z0-9>_-]+</pattern>
+                                    <text>${base_mail}</text>
+                                </regExMatch>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </stringParameter>
+                <labelParameter>
+                    <name>base_user_label</name>
+                    <description>Login: admin</description>  
+                    <ask>0</ask>
+                </labelParameter>
+                <stringParameter>
+                    <name>base_user</name>
+                    <default>user</default>
+                    <value>user</value>
+                    <description>Login</description>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <validationActionList>
+                        <baseValidateNotForbiddenUsername username="${base_user}" forbiddenUsernames="${component(paramadminaccount).parameter(base_forbidden_usernames).value}"/>
+                        <throwError>
+                            <text>The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}</text>
+                            <ruleList>
+                                <compareTextLength text="${base_user}" logic="less" length="${component(paramadminaccount).parameter(base_required_username_length).value}"/>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Please use only alphanumeric characters in your username</text>
+                            <ruleList>
+                                <isTrue value="${base_user_alphanumeric}"/>
+                                <stringTest text="${base_user}" type="not_alphanumeric" />
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>The username cannot be a sequence of only digits (i.e. must contain at least one letter)</text>
+                            <ruleList>
+                                <compareText>
+                                    <logic>equals</logic>
+                                    <text>${base_user_required_letters}</text>
+                                    <value>1</value>
+                                </compareText>
+                                <stringTest text="${base_user}" type="digit" />
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </stringParameter>
+                <labelParameter>
+                  <name>base_password_info</name>
+                  <description>Please note the following password will be used to set the initial values of the ${product_fullname} application and the ${mysql_database_type} root user.</description>
+                  <ask>0</ask>
+                </labelParameter>
+                <passwordParameter>
+                    <name>base_password</name>
+                    <default/>
+                    <value/>
+                    <description>Password</description>
+                    <descriptionRetype>Please confirm your password</descriptionRetype>
+                    <validationActionList>
+                        <baseValidateNotForbiddenPassword password="${base_password}" forbiddenPasswords="${base_forbidden_passwords}"/>
+                        <throwError>
+                            <text>Please enter a password</text>
+                            <ruleList>
+                                <compareText text="${base_password}" logic="equals" value=""/>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Please enter a password using any Basic Latin character except &apos; &quot; ` \</text>
+                            <ruleList>
+                                <isTrue value="${base_required_password_basiclatin}"/>
+                                <isStringBasicLatin text="${base_password}" logic="false"/>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Please use only alphanumeric characters in your password</text>
+                            <ruleList>
+                                <ruleGroup>
+                                    <ruleList>
+                                        <isTrue value="${base_required_password_alphanumeric}"/>
+                                        <ruleGroup>
+                                            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                                            <ruleList>
+                                                <isTrue value="${mysql_alphanumeric_password}"/>
+                                                <isTrue value="${postgres_alphanumeric_password}"/>
+                                            </ruleList>
+                                        </ruleGroup>
+                                        <stringTest text="${base_password}" type="not_alphanumeric"/>
+                                    </ruleList>
+                                </ruleGroup>
+                                <compareText text="${base_password}" logic="does_not_equal" value=""/>
+                            </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Password must contain both letters and numbers</text>
+                                <ruleList>
+                                    <compareText>
+                                        <logic>equals</logic>
+                                        <text>${base_required_password_letters_numbers}</text>
+                                        <value>1</value>
+                                    </compareText>
+                                    <regExMatch>
+                                        <logic>does_not_match</logic>
+                                        <pattern>(?!^[0-9]*$)(?!^[a-zA-Z?]*$)^([a-zA-Z?0-9]+)$</pattern>
+                                        <text>${base_password}</text>
+                                    </regExMatch>
+                                </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Password must contain lowercase and uppercase letters, and at least one number</text>
+                                <ruleList>
+                                    <compareText>
+                                        <logic>equals</logic>
+                                        <text>${base_required_password_lowercase_uppercase_letters_numbers}</text>
+                                        <value>1</value>
+                                    </compareText>
+                                    <regExMatch>
+                                        <logic>does_not_match</logic>
+                                        <pattern>^(?=.*?[a-z])(?=.*?[A-Z])(?=.*\d).*$</pattern>
+                                        <text>${base_password}</text>
+                                    </regExMatch>
+                                </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>Password must contain lowercase and uppercase letters, at least one number, and one symbol</text>
+                                <ruleList>
+                                    <compareText>
+                                        <logic>equals</logic>
+                                        <text>${base_required_password_letters_numbers_symbols}</text>
+                                        <value>1</value>
+                                    </compareText>
+                                    <regExMatch>
+                                        <logic>does_not_match</logic>
+                                        <pattern>^(?=.*?[a-z])(?=.*?[A-Z])(?=.*\d)(?=.*?[ !&quot;#$%&amp;&apos;()*+,-.\/:;&lt;=&gt;?@[\]^_`{|}~]).*$</pattern>
+                                        <text>${base_password}</text>
+                                    </regExMatch>
+                                </ruleList>
+                        </throwError>
+                        <throwError>
+                            <text>The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}</text>
+                            <ruleList>
+                                <compareTextLength text="${base_password}" logic="less" length="${component(paramadminaccount).parameter(base_required_password_length).value}"/>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </passwordParameter>
+		<passwordParameter name="base_application_password" value="" allowEmptyValue="0" description="Enter the application password" ask="0" />
+            </parameterList>
+            <validationActionList>
+                <throwError>
+                    <text>Login and password must not be the same</text>
+                    <ruleList>
+                        <compareText text="${base_user}" logic="equals" value="${base_password}"/>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>Login must not have capital letters</text>
+                    <ruleList>
+                        <regExMatch text="${base_user}" pattern="[A-Z]"/>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+            <ruleList>
+                <isFalse value="${upgrade_stack}" />
+            </ruleList>
+        </parameterGroup>
+    </parameterList>
+    <readyToInstallActionList>
+        <baseValidateNotForbiddenUsername username="${base_user}" forbiddenUsernames="${component(paramadminaccount).parameter(base_forbidden_usernames).value}">
+            <ruleList>
+                <compareText text="${installer_ui}" logic="equals" value="unattended"/>
+            </ruleList>
+        </baseValidateNotForbiddenUsername>
+        <baseValidateNotForbiddenPassword password="${base_password}" forbiddenPasswords="${base_forbidden_passwords}">
+            <ruleList>
+                <compareText text="${installer_ui}" logic="equals" value="unattended"/>
+            </ruleList>
+        </baseValidateNotForbiddenPassword>
+        <throwError>
+            <text>Please enter a password using any Basic Latin character except &apos; &quot; ` \</text>
+            <ruleList>
+                <isTrue value="${base_required_password_basiclatin}"/>
+                <isStringBasicLatin text="${base_password}" logic="false"/>
+            </ruleList>
+        </throwError>
+        <throwError>
+            <text>Please use only alphanumeric characters in your password</text>
+            <ruleList>
+                <isTrue value="${base_required_password_alphanumeric}"/>
+                <isTrue value="${mysql_alphanumeric_password}"/>
+                <stringTest text="${base_password}" type="not_alphanumeric"/>
+                <compareText text="${base_password}" logic="does_not_equal" value=""/>
+                <compareText text="${installer_ui}" logic="equals" value="unattended"/>
+            </ruleList>
+        </throwError>
+        <throwError>
+            <text>The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}</text>
+            <ruleList>
+                <compareTextLength text="${base_password}" logic="less" length="${component(paramadminaccount).parameter(base_required_password_length).value}"/>
+                <compareText text="${installer_ui}" logic="equals" value="unattended"/>
+                <isFalse value="${upgrade_stack}" />
+            </ruleList>
+        </throwError>
+        <setInstallerVariable name="database_root_password" value="${base_password}"/>
+        <md5 variable="base_md5_password" text="${base_password}"/>
+        <actionGroup>
+            <actionList>
+                <setInstallerVariable name="base_user_name" value="${base_user_firstname} ${base_user_lastname}" />
+            </actionList>
+            <ruleList>
+                <compareText text="${base_user_name}" logic="equals" value="${component(paramadminaccount).parameter(base_general_configuration).parameter(base_user_name).default}" />
+                <stringTest text="${base_user_firstname}" type="not_empty" />
+                <stringTest text="${base_user_lastname}" type="not_empty" />
+            </ruleList>
+        </actionGroup>
+    </readyToInstallActionList>
+</component>
+

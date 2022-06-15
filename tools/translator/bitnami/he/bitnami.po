@@ -1,0 +1,906 @@
+msgid "To access the ${product_fullname}, go to\nhttp://localhost:${web_server_port} from your browser."
+msgstr ""
+"כדי לגשת אל ${product_fullname}, יש לפנות לכתובת\n"
+"http://localhost:${web_server_port} באמצעות הדפדפן שלך."
+
+msgid "Please choose a number for Port"
+msgstr "נא לבחור מספר עבור הפתחה"
+
+msgid "Default email provider:"
+msgstr "ספק הדוא״ל כבררת מחדל:"
+
+msgid "Re-enter"
+msgstr "הזנה מחדש"
+
+msgid "Creating Database"
+msgstr "מסד הנתונים נוצר"
+
+msgid "${mysql_database_type} Information"
+msgstr "פרטי ה־${mysql_database_type}"
+
+msgid "Please configure Drupal installation"
+msgstr "נא להגדיר את התקנת הדרופל"
+
+msgid "Database Installation"
+msgstr "התקנת מסד נתונים"
+
+msgid "Drupal"
+msgstr "Drupal"
+
+msgid "Do you want to keep the Joomla! database? It will be saved at ${installdir}/backups"
+msgstr ""
+"האם ברצונך לשמור את מסד הנתונים של ג׳ומלה? מסד הנתונים יישמר תחת "
+"${installdir}/backups"
+
+msgid "Uninstall ${product_fullname} service"
+msgstr "הסרת השירות ${product_fullname}"
+
+msgid "Joomla ${project.version} packaged by Bitnami"
+msgstr "Joomla ${project.version} packaged by Bitnami"
+
+msgid "Configuration Report"
+msgstr "דוח תצורה"
+
+msgid "GMail password"
+msgstr "ססמת הג׳ימייל"
+
+msgid "SSL Port"
+msgstr "פתחת SSL"
+
+msgid "Launch ${product_shortname} in the cloud with Bitnami"
+msgstr "מידע נוסף על אחסון הענן של Bitnami"
+
+msgid "Login must not have capital letters"
+msgstr "אין לכלול אותיות גדולות בשם הכניסה"
+
+msgid "Do you want to keep the redmine database? It will be saved at ${installdir}/backups"
+msgstr ""
+"האם ברצונך לשמור על מסד הנתונים של redmine? מסד הנתונים יישמר תחת "
+"${installdir}/backups"
+
+msgid "I wish to use an existing ${mysql_database_type} database"
+msgstr "ברצוני להשתמש במסד נתונים מסוג ${mysql_database_type} קיים"
+
+msgid "Starting Subversion server"
+msgstr "שרת ה־Subversion מופעל"
+
+msgid "Please enter the port that Apache web server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"נא להזין את הפתחה ששרת ה־Apache יאזין לה. אסור שייעשה שימוש במספר פתחה זו על "
+"ידי שום שירות אחר שמופעל על השרת."
+
+msgid "${product_fullname} admin user creation"
+msgstr "יצירת משתמש ניהול עבור ${product_fullname}"
+
+msgid "Please enter your database root username"
+msgstr "נא להזין את שם משתמש העל (root) של מסד הנתונים שלך"
+
+msgid "Installing Thin Cluster as services."
+msgstr "Thin Cluster מותקן כשירותים."
+
+msgid "Please select which database configuration you wish to use"
+msgstr "נא לבחור בתצורת מסד הנתונים בה ברצונך להשתמש"
+
+msgid "BitRock Nginx"
+msgstr "BitRock Nginx"
+
+msgid "The installer detected that the installation folder ${app(wordpress).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"תכנית ההתקנה זיהתה שתיקיית ההתקנה ${app(wordpress).installdir} אינה ריקה. נא "
+"לוודא שכל הגרסאות הקודמות של היישום הוסרו, כיוון שהמשך ההתקנה עלול לפגוע "
+"בגרסה הנוכחית. האם ברצונך להמשיך?"
+
+msgid "The installer detected that the installation folder ${app(joomla).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"תכנית ההתקנה זיהתה שתיקיית ההתקנה ${app(joomla).installdir} אינה "
+"ריקה. נא לוודא שכל הגרסאות הקודמות של היישום הוסרו, כיוון שהמשך ההתקנה עלול "
+"לפגוע בגרסה הנוכחית. האם ברצונך להמשיך?"
+
+msgid "${mysql_database_type} connection timed out. The installation has been stopped."
+msgstr "החיבור ל־${mysql_database_type} פג. ההתקנה נעצרה."
+
+msgid "New Database"
+msgstr "מסד נתונים חדש"
+
+msgid "Installation directory path is too long. The maximum number of characters allowed is ${base_installdir_max_characters}."
+msgstr ""
+"נתיב תיקיית ההתקנה ארוך מדי. מספר התווים המרבי המותר לשימוש הוא "
+"${base_installdir_max_characters}."
+
+msgid "Shutting down services (this may take a few minutes)"
+msgstr "השירותים נכבים (פעולה זו עלולה להימשך מספר דקות)"
+
+msgid "Unable to get free disk space."
+msgstr "לא ניתן לקבל את הנפח הפנוי בכונן."
+
+msgid "Unable to start Apache"
+msgstr "לא ניתן להפעיל את Apache"
+
+msgid "SMTP Host"
+msgstr "שרת SMTP"
+
+msgid "Ruby on Rails is a full-stack MVC framework for database-backed web applications that is optimized for programmer happiness and sustainable productivity."
+msgstr ""
+
+msgid "Unable to bind the mysql_port to ${mysql_port}. Please select another one."
+msgstr "לא ניתן לאגד את פתחת ה־mysql_port אל ${mysql_port}. נא לבחור באחת אחרת."
+
+msgid "DB Prefix"
+msgstr "קידומת מסד הנתונים"
+
+msgid "That folder does not seem to contain a valid installation of ${bitnami_platform_name}. The file properties.ini is missing or it is not a valid installation."
+msgstr ""
+"מסתבר כי תיקייה זו אינה מכילה התקנה תקנית של ${bitnami_platform_name}. הקובץ "
+"properties.ini חסר או שזו אינה התקנה תקנית."
+
+msgid "${mysql_database_type} Server root password"
+msgstr "ססמת משתמש העל של שרת ה־${mysql_database_type} "
+
+msgid "Select a folder"
+msgstr "בחירת תיקייה"
+
+msgid "Default mail server configuration."
+msgstr "תצורת שרת הדוא״ל כבררת מחדל."
+
+msgid "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine."
+msgstr ""
+"SQLite הנה ספריית תכנה שמיישמת מסד נתונים מסוג SQL באופן עצמאי, ללא שרת, ללא "
+"תצורה ועם אפשרות להעברת נתונים."
+
+msgid "Password must contain both letters and numbers"
+msgstr "הססמה חייבת להכיל גם אותיות וגם מספרים"
+
+msgid "IP / Hostname"
+msgstr "IP / שם מארח"
+
+msgid "The installation directory must be a path containing only letters, numbers and the characters '/', '.', '-' and '_'."
+msgstr ""
+"על תיקיית ההתקנה להיות נתיב המכיל אותיות, ספרות ואת התווים '/', '.', '-' "
+"ו־'_' בלבד."
+
+msgid "Bitnami RubyStack"
+msgstr "Bitnami RubyStack"
+
+msgid "Bitnami simplifies the way popular server applications and development stacks are created and deployed in the cloud. With over a million deployments each month, Bitnami.com has become the world's most popular destination for deploying today's most popular open source applications."
+msgstr ""
+"אירוח הענן של Bitnami הנה הצעה חדשה המאפשרת לך לאחסן את יישומי ה־Bitnami שלך "
+"בענן. ניתן לעיין במידע שלהלן כדי לקבל מידע נוסף על Bitnami עד לסיום ההתקנה. "
+"לצורך כך יופיע חלון דפדפן."
+
+msgid "Hebrew"
+msgstr "עברית"
+
+msgid "French"
+msgstr "צרפתית"
+
+msgid "Bitnami Redmine Module"
+msgstr "מודול Redmine עבור Bitnami"
+
+msgid "Login and password must not be the same"
+msgstr "שם הכניסה והססמה חייבים להיות שונים זה מזה"
+
+msgid "Secure connection"
+msgstr "חיבור מאובטח"
+
+msgid "No, I will do this after installation"
+msgstr "לא, פעולה זו תתבצע לאחר ההתקנה"
+
+msgid "Installing Apache as a Windows service with name ${apache_unique_service_name}"
+msgstr "התכנית Apache מותקנת כשירות ל־Windows בשם ${apache_unique_service_name}"
+
+msgid "Web Server Port"
+msgstr "פתחת שרת האינטרנט"
+
+msgid "The installer will create the conventional *_production, *_development, and *_test databases based on your prefix."
+msgstr ""
+"תכנית ההתקנה תיצור את מסדי הנתונים ‎*_production, *_development, ו־‎*_test "
+"המקובלים בהתבסס על הקידומת שציינת."
+
+msgid "Removing Thin Cluster as services."
+msgstr "Thin Cluster מוסר כשירותים."
+
+msgid "This module requires at least Bitnami RubyStack ${bitnami_minimum_required_rubystack_version}. You are trying to install on top of ${base_stack_name} ${base_stack_version}. You can donwload the latest Bitnami RubyStack from www.bitnami.com"
+msgstr ""
+"מודול זה דורש את Bitnami RubyStack "
+"${bitnami_minimum_required_rubystack_version}. הגרסה המיועדת להתקנה על גבי "
+"${base_stack_name} ${base_stack_version}. ניתן להוריד את Bitnami RubyStack "
+"העדכנית ביותר מהכתובת www.bitnami.com"
+
+msgid "Launch ${product_fullname}"
+msgstr "הפעלת ${product_fullname}"
+
+msgid "Please use only ascii alphanumeric characters in your password"
+msgstr "יש להשתמש בתווי ASCII אלפאנומריים בלבד"
+
+msgid "Please use only ascii alphanumeric characters in your username"
+msgstr "יש להשתמש בתווי ASCII אלפאנומריים בלבד"
+
+msgid "Stopping services."
+msgstr "השירותים נעצרים."
+
+msgid "I wish to use the bundled ${mysql_database_type} database"
+msgstr "ברצוני להשתמש במסד הנתונים מסוג ${mysql_database_type} המאוגד"
+
+msgid "Please choose a folder that contains an installation of ${bitnami_platform_name}."
+msgstr "נא לבחור תיקייה שמכילה את ההתקנה של ${bitnami_platform_name}."
+
+msgid "Set the database name and user name which will be created or used."
+msgstr "יש להגדיר את שם מסד הנתונים ושם המשתמש שיווצרו או שבהם ייעשה שימוש."
+
+msgid "${product_fullname} Subversion Service"
+msgstr "שירות ה־Subversion של ${product_fullname}"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port2} or the port is already taken by another application. Please select another one."
+msgstr ""
+"מסתבר כי אין לך את ההרשאות הדרושות לאיגוד הפתחה ${apachethinmodule_port2} "
+"או שהפתחה כבר נתפסה על ידי יישום אחר. נא לבחור בפתחה אחרת."
+
+msgid "Language for default data configuration"
+msgstr "השפה לתצורת הנתונים כבררת מחדל"
+
+msgid "The installer was not able to connect to the ${mysql_database_type} server. Please make sure ${mysql_database_type} is running."
+msgstr ""
+"תכנית ההתקנה לא הצליחה להתחבר לשרת ה־${mysql_database_type}. נא לוודא כי ${mysql_database_type} אינו פעיל."
+
+msgid "Do you wish to delete all saved datafiles too?"
+msgstr "האם ברצונך למחוק גם את כל קובצי הנתונים שנשמרו?"
+
+msgid "Development Settings"
+msgstr "הגדרות פיתוח"
+
+msgid "Your real name"
+msgstr "שמך האמתי"
+
+msgid "Running database migration"
+msgstr "הגירת מסד הנתונים מופעלת"
+
+msgid "Please enter a valid IP address or hostname"
+msgstr "נא להזין כתובת IP או שם מארח תקניים"
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "${mysql_database_type} Server port"
+msgstr "פתחת שרת ה־${mysql_database_type}"
+
+msgid "The length of the password must be equal or greater than ${component(paramadminaccount).parameter(base_required_password_length).value}"
+msgstr ""
+"אורך הססמה חייב להיות שווה או גדול מכמות של${component(paramadminaccount).pa"
+"rameter(base_required_password_length).value}"
+
+msgid "Unable to install Apache as a service with name ${apache_unique_service_name}"
+msgstr "לא ניתן להתקין את Apache כשירות מערכת בשם ${apache_unique_service_name}"
+
+msgid "Create databases for the rails project."
+msgstr "יצירת מסדי נתונים עבור המיזם rails."
+
+msgid "Do you want to configure mail support?"
+msgstr "האם ברצונך להגדיר תמיכה בדוא״ל?"
+
+msgid "This is required so your application can send notifications via email."
+msgstr " תמיכה זו נדרשת כדי שהיישום שלך יוכל לשלוח התרעות באמצעות דוא״ל."
+
+msgid "Apache Web Server Port"
+msgstr "פתחת שרת האינטרנט Apache"
+
+msgid "${mysql_database_type} software delivers a very fast, multi-threaded, multi-user, and robust SQL database server."
+msgstr ""
+"התכנית ${mysql_database_type} מספקת שרת מסד נתונים מהיר מאוד, מרובה משתמשים ויציב מסוג SQL."
+
+msgid "Russian"
+msgstr "רוסית"
+
+msgid "New Component"
+msgstr "רכיב חדש"
+
+msgid "Web Server Domain"
+msgstr "שם מתחם שרת האינטרנט"
+
+msgid "Thin Server Port"
+msgstr "פתחת שרת ה־Thin"
+
+msgid "Nginx Port"
+msgstr "הפתחה של Nginx"
+
+msgid "Installation folder cannot contain spaces."
+msgstr "אין לכלול רווחים בשם תיקיית ההתקנה."
+
+msgid "Custom"
+msgstr "התאמה אישית"
+
+msgid "${product_fullname} database root user creation"
+msgstr "יצירת משתמש על (root) במסד נתונים של ${product_fullname}"
+
+msgid "Configure SMTP Settings"
+msgstr "הגדרת תצורת ה־SMTP"
+
+msgid "Stop ${product_fullname} service"
+msgstr "עצירת השירות ${product_fullname}"
+
+msgid "Web Server port"
+msgstr "פתחת שרת האינטרנט"
+
+msgid "German"
+msgstr "גרמנית"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It does not exist"
+msgstr "לא ניתן לשאוב מקובץ מקור של ${mysql_database_type} ‏'${sqlFile}': הקובץ אינו קיים"
+
+msgid "Please enter the existing ${mysql_database_type} password for ${bitnami_platform_name}"
+msgstr "נא להזין את ססמת ה־${mysql_database_type} הנוכחית עבור ${bitnami_platform_name}"
+
+msgid "Manager tool"
+msgstr "כלי הניהול"
+
+msgid "File permissions and configuration settings will be set with security and performance in mind. Installing certain plugins, themes and updates may require manual changes or installing additional services like FTP.  Recommended if this stack will be deployed on a public server."
+msgstr ""
+"הרשאות הקובץ והגדרות התצורה יוגדרו תוך התחשבות באילוצי אבטחה ושיקולי "
+"ביצועים. התקנה של תוספים, ערכות נושא ועדכונים מסוימים עלולים לאלץ אותך לבצע "
+"שינויים ידניים או להתקין שירותים נוספים כדוגמת FTP.  פעולה זו מומלצת אם "
+"חבילה זו תוטמע בשרת ציבורי."
+
+msgid "Yes, please prompt me"
+msgstr "כן, נא להודיע לי"
+
+msgid "Czech"
+msgstr "צ׳כית"
+
+msgid "Invalid Prefix. Please choose a different one."
+msgstr "קידומת שגויה. נא לבחור באחת אחרת."
+
+msgid "Portuguese/Brazilian"
+msgstr "פורטוגזית ברזילאית"
+
+msgid "${mysql_database_type}"
+msgstr "${mysql_database_type}"
+
+msgid "Chinese"
+msgstr "סינית"
+
+msgid "You are trying to install a 32bit module on a 64bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"המודול המועמד להתקנה הוא מסוג 32 סיביות בעוד התקנת המערכת היא 64 סיביות. "
+"פעולה זו אינה נתמכת. נא להוריד את המודול הנכון מהאתר bitnami.com"
+
+msgid "Launch Redmine application."
+msgstr "טעינת היישום Redmine."
+
+msgid "Waiting Subversion to start."
+msgstr "בהמתנה להפעלת Subversion."
+
+msgid "The length of the username must be greater than ${component(paramadminaccount).parameter(base_required_username_length).value}"
+msgstr ""
+"אורך שם המשתמש חייב להיות ארוך מאשר ${component(paramadminaccount).parameter"
+"(base_required_username_length).value}"
+
+msgid "Creating database / Initializing user account. This may take some time."
+msgstr "מסד הנתונים נוצר / חשבון המשתמש נוצר. פעולה זו עלולה לארוך זמן מה."
+
+msgid "Web Server domain"
+msgstr "שם מתחם שרת האינטרנט"
+
+msgid "Bulgarian"
+msgstr "בולגרית"
+
+msgid "DB User Password"
+msgstr "ססמת המשתמש במסד הנתונים"
+
+msgid "Production settings"
+msgstr "הגדרות הפקה"
+
+msgid "${product_fullname} Service"
+msgstr "שירות ${product_fullname}"
+
+msgid "Bitnami WordPress Module"
+msgstr "מודול Bitnami לוורדפרס"
+
+msgid "Installing RubyGems, please be patient."
+msgstr "מתבצעת התקנת RubyGems, נא להתאזר בסבלנות."
+
+msgid "sphinx Server port"
+msgstr "פתחת שרת ה־sphinx"
+
+msgid "Populating database."
+msgstr "מסד הנתונים מתמלא."
+
+msgid "Setup will try to install new databases and will overwrite any existing duplicate. Do you wish you continue?"
+msgstr ""
+"תכנית ההתקנה תנסה להתקין מסדי נתונים חדשים ותשכתב על כל עותק קיים. האם "
+"ברצונך להמשיך?"
+
+msgid "${product_fullname} ${mysql_database_type} Service"
+msgstr "שירות ה־${mysql_database_type} של ${product_fullname}"
+
+msgid "There is not enough free space on ${installdir}. You need at least ${base_needed_space} MB in order to install ${product_fullname}"
+msgstr ""
+"אין די מקום פנוי תחת ${installdir}. על מנת להתקין את ${product_fullname} "
+"יידרשו לך לפחות ${base_needed_space} מ״ב פנויים"
+
+msgid "Licenses destination"
+msgstr "יעד הרישיונות"
+
+msgid "Drupal packaged by Bitnami"
+msgstr "Drupal packaged by Bitnami"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "Shutting down services."
+msgstr "השירותים נכבים."
+
+msgid "None"
+msgstr "אין"
+
+msgid "Installing gems, please be patient."
+msgstr "gems מותקנים, נא להתקין."
+
+msgid "Please enter your ${mysql_database_type} database information:"
+msgstr "נא להזין את פרטי מסד הנתונים שלך מסוג ${mysql_database_type}:"
+
+msgid "${product_fullname} Apache Service"
+msgstr "שירות ה־Apache של ${product_fullname}"
+
+msgid "Hostname that will be used to create internal URLs. If this value is incorrect, you may be unable to access your WordPress installation from other computers."
+msgstr ""
+"שם המארח בו ייעשה שימוש כדי ליצור כתובות פנימיות. אם ערך זה שכוי, יתכן שלא "
+"תהיה לך אפשרות לגשת להתקנת הוורדפרס שלך ממחשבים אחרים."
+
+msgid "Romanian"
+msgstr "רומנית"
+
+msgid "Dutch"
+msgstr "הולנדית"
+
+msgid "Create ${mysql_database_type} 'root' Account"
+msgstr "יצירת חשבון 'root' (משתמש על) ב־${mysql_database_type}"
+
+msgid "The installer detected that the installation folder ${app(drupal).installdir} is not empty. Please make sure that any older version of the application is uninstalled, as continuing with the installation may corrupt the current one. Do you want to continue?"
+msgstr ""
+"תכנית ההתקנה זיהתה שתיקיית ההתקנה ${app(drupal).installdir} אינה "
+"ריקה. נא לוודא שאין גרסה ישנה יותר של היישום מותקנת כיוון שהמשך תהליך ההתקנה "
+"ישחית את ההתקנה הנוכחית. האם ברצונך להמשיך?"
+
+msgid "Populating database. This may take some time."
+msgstr "מסד הנתונים מתמלא. פעולה זו עלולה לארוך זמן מה."
+
+msgid "Please enter the IP address or hostname for your database"
+msgstr "נא להזין את כתובת ה־IP או שם המארח של מסד הנתונים שלך"
+
+msgid "WordPress packaged by Bitnami"
+msgstr "WordPress packaged by Bitnami"
+
+msgid "Please enter the port that the Subversion Server will listen to by default."
+msgstr "נא להזין את הפתחה שאליה יאזין שרת ה־Subversion כבררת מחדל."
+
+msgid "Please enter the port that the bundled Apache Server will listen to by default."
+msgstr "נא להזין את הפתחה שאליה יאזין שרת ה־Apache המאוגד כבררת מחדל."
+
+msgid "Hostname"
+msgstr "שם מארח"
+
+msgid "Create Admin account"
+msgstr "יצירת חשבון מנהל (Admin)"
+
+msgid "English"
+msgstr "אנגלית"
+
+msgid "TLS"
+msgstr "TLS"
+
+msgid "Re-enter password"
+msgstr "הזנת הססמה שוב"
+
+msgid "The path ${mysql_binary_directory} seems to be invalid. Please check if the directory contains the required binaries."
+msgstr ""
+"מסתבר כי הנתיב ${mysql_binary_directory} שגוי. נא לבדוק האם התיקייה מכילה את "
+"הקבצים הבינריים הנחוצים."
+
+msgid "Blog name"
+msgstr "שם הבלוג"
+
+msgid "DB User Name"
+msgstr "שם המשתמש במסד הנתונים"
+
+msgid "Cannot source ${mysql_database_type} file '${sqlFile}': It is not readable by the current user"
+msgstr ""
+"לא ניתן להשתמש בקובץ המקור של ${mysql_database_type}‏ '${sqlFile}': הקובץ אינו ניתן לקריאה על "
+"ידי המשתמש הנוכחי"
+
+msgid "Login"
+msgstr "כניסה"
+
+msgid "Thin Processes"
+msgstr "תהליכי Thin"
+
+msgid "Install ${product_fullname} as service"
+msgstr "התקנת ${product_fullname} כשירות"
+
+msgid "Restarting Apache"
+msgstr "Apache מופעל מחדש"
+
+msgid "Installation Report"
+msgstr "דוח התקנה"
+
+msgid "Start ${product_fullname} service"
+msgstr "הפעלת השירות ${product_fullname}"
+
+msgid "Quick Start Guide"
+msgstr "מדריך להתחלה מהירה"
+
+msgid "Would you like to be prompted to customize your chosen applications from within this installer?"
+msgstr ""
+"האם ברצונך לקבל התרעה כדי להתאים אישית את היישומים הנבחרים מתוך תכנית "
+"ההתקנה?"
+
+msgid "Select your language for default data configuration:"
+msgstr "נא לבחור את שפת בררת המחדל לתצורת הנתונים:"
+
+msgid "Please select the use of this Stack"
+msgstr "נא לבחור את אופן השימוש בחבילה זו"
+
+msgid "Hostname or IP addres of your server. If this value is incorrect, you may be unable to access your Joomla! installation from other computers."
+msgstr ""
+"שם המארח או כתובת ה־IP של השרת שלך. אם ערך זה שגוי, יתכן שלא תהיה לך גישה "
+"להתקנת הג׳ומלה! שלך ממחשבים אחרים."
+
+msgid "Serbian"
+msgstr "סרבית"
+
+msgid "Redmine"
+msgstr "Redmine"
+
+msgid "Installation Type"
+msgstr "סוג ההתקנה"
+
+msgid "Swedish"
+msgstr "שבדית"
+
+msgid "${mysql_database_type} Service"
+msgstr "שירות ה־${mysql_database_type}"
+
+msgid "GMail address"
+msgstr "כתובת GMail"
+
+msgid "Uninstall ${product_fullname}"
+msgstr "הסרת ${product_fullname}"
+
+msgid "Portuguese"
+msgstr "פורטוגזית"
+
+msgid "Updating mysql directory permissions"
+msgstr "הרשאות תיקיית ה־mysql מתעדכנות"
+
+msgid "Set the password for your new Rails application's databases."
+msgstr "הגדרת הססמה עבור מסד הנתונים החדש שלך מסוג Rails."
+
+msgid "Installing Subversion Server as a Windows service with name ${SubversionUniqueServiceName}"
+msgstr "שרת ה־Subversion כשירות Windows תחת השם ${SubversionUniqueServiceName}"
+
+msgid "It seems you do not have enough permissions to bind to the port or the port is already taken by another application. Please select another one."
+msgstr ""
+"מסתבר כי אין לך הרשאות המספיקות לאיגוד הפתחה או שהפתחה כבר נתפסה על ידי "
+"יישום אחר. נא לבחור באחת אחרת."
+
+msgid "Unable to add text to httpd.conf"
+msgstr "לא ניתן להוסיף טקסט ל־httpd.conf"
+
+msgid "Subversion Server Port"
+msgstr "פתחת שרת ה־Subversion"
+
+msgid "Open ${product_fullname} in Browser"
+msgstr "פתיחת ${product_fullname} בדפדפן"
+
+msgid "Deploy ${product_shortname} to the Cloud in One Click"
+msgstr "אירוח ענן של Bitnami"
+
+msgid "It seems you do not have enough permissions to bind to the port ${apachethinmodule_port1} or the port is already taken by another application. Please select another one."
+msgstr ""
+"מסתבר כי ההרשאות שלך אינן מספיקות לאיגוד הפתחה ${apachethinmodule_port1} "
+"או שהפתחה כבר נתפסה על ידי יישום אחר. נא לבחור באחת אחרת."
+
+msgid "Redmine is a flexible project management web application. Written using Ruby on Rails framework, it is cross-platform and cross-database."
+msgstr ""
+"Redmine הנו יישום מקוון וגמיש לניהול מיזמים. היישום נכתב באמצעות תשתית "
+"הפיתוח Ruby on Rails, היישום ניתן להפעלה על מגוון מערכות הפעלה ולהשתמש "
+"במגוון של מסדי נתונים."
+
+msgid "Unknown ${mysql_database_type} definition identifier '${id}'"
+msgstr "מזהה הגדרה בלתי ידוע של ${mysql_database_type}‏ '${id}'"
+
+msgid "Thin port nr 1"
+msgstr "פתחת Thin מס׳ 1"
+
+msgid "GMail"
+msgstr "GMail"
+
+msgid "Thin port nr 2"
+msgstr "פתחת Thin מס׳ 2"
+
+msgid "Number of thin servers"
+msgstr "מספר שרתי ה־thin"
+
+msgid "${mysql_database_type} Credentials"
+msgstr "פרטי אימות מול ה־${mysql_database_type}"
+
+msgid "Please enter a password"
+msgstr "נא להזין ססמה"
+
+msgid "Do you want to keep the Drupal database? It will be saved at ${installdir}/backups"
+msgstr ""
+"האם ברצונך לשמור על מסד הנתונים של דרופל? המסד יישמר תחת "
+"${installdir}/backups"
+
+msgid "Starting application."
+msgstr "היישום מופעל."
+
+msgid "Please introduce a valid password to connect to the ${mysql_database_type} server."
+msgstr "נא להציג ססמה תקפה כדי להתחבר לשרת ה־${mysql_database_type}."
+
+msgid "DB Name"
+msgstr "שם מסד הנתונים"
+
+msgid "Hostname or IP Address"
+msgstr "שם המארח או כתובת ה־IP"
+
+msgid "Korean"
+msgstr "קוריאנית"
+
+msgid "${mysql_database_type} Binary Directory"
+msgstr "תיקייה בינרית של ${mysql_database_type}"
+
+msgid "Unable to install ${mysql_database_type} as a service with name ${mysql_unique_service_name}"
+msgstr "לא ניתן להתקין את ${mysql_database_type} כשירות תחת השם ${mysql_unique_service_name}"
+
+msgid "Password"
+msgstr "ססמה"
+
+msgid "Unable to bind to the given port number. Please select another one."
+msgstr "לא ניתן להתאגד עם מס׳ הפתחה הנתון. נא לבחור באחת אחרת."
+
+msgid "Select installation type"
+msgstr "נא לבחור את סוג ההתקנה"
+
+msgid "Installation type"
+msgstr "סוג ההתקנה"
+
+msgid "Use ${product_fullname}"
+msgstr "שימוש ב־${product_fullname}"
+
+msgid "Installation folder"
+msgstr "תיקיית ההתקנה"
+
+msgid "Waiting for ${mysql_database_type} to Start."
+msgstr "בהמתנה לעליית ה־${mysql_database_type}."
+
+msgid "PhpMyAdmin"
+msgstr "PhpMyAdmin"
+
+msgid "WordPress is a personal blog publishing platform with a focus on aesthetics, web standards, and usability."
+msgstr ""
+"וורדפרס הנה פלטפורמה המאפשרת לנהל בלוג המתמקדת באסתטיקה, תקני עמודי אינטרנט "
+"ושימושיות."
+
+msgid "Due to a lack of system resources (CPU or memory), the installation is unable to connect to the local ${mysql_database_type} server. Would you like to retry to connect to the ${mysql_database_type} server and continue with the installation?"
+msgstr ""
+"עקב חוסר במשאבי מערכת (מעבד או זיכרון) ההתקנה לא מצליחה להתחבר לשרת ה־${mysql_database_type} "
+"המקומי. האם ברצונך לנסות להתחבר לשרת ה־${mysql_database_type} עם נוספת ולהמשיך בהתקנה?"
+
+msgid "Waiting ${mysql_database_type} to start."
+msgstr "בהמתנה לעליית ה־${mysql_database_type}."
+
+msgid "The installer could not get the current free space on ${installdir}. Please check that there is free space enough to install ${product_fullname}"
+msgstr ""
+"תכנית ההתקנה לא הצליחה לאתר כמה מקום פנוי יש תחת ${installdir}. נא לבדוק שיש "
+"די מקום כדי להתקין את ${product_fullname}"
+
+msgid "Initializing ${mysql_database_type} Database. This could take a couple of minutes."
+msgstr "מסד הנתונים של ${mysql_database_type} מופעל לראשונה. פעולה זו עלולה לארוך מספר דקות."
+
+msgid "Please enter your database root user password"
+msgstr "נא להזין את ססמת משתמש העל (root) של מסד הנתונים שלך"
+
+msgid "Memcached Server port"
+msgstr "פתחת שרת ה־Memcached"
+
+msgid "Starting Apache."
+msgstr "Apache מופעל."
+
+msgid "http://bitnami.com/forums"
+msgstr "http://bitnami.com/forums"
+
+msgid "Unable to write file: ${apache_server_directory}/conf/ssi.conf"
+msgstr "לא ניתן לכתוב לקובץ: ${apache_server_directory}/conf/ssi.conf"
+
+msgid "Please configure WordPress installation"
+msgstr "נא להגדיר את התקנת הוורדפרס"
+
+msgid "Subversion Server port"
+msgstr "פתחת שרת ה־Subversion"
+
+msgid "Unable to connect to database ${mysql_hostname}:${mysql_port}. Please check that the parameters are correct and your ${mysql_database_type} configuration accepts TCP/IP connections."
+msgstr ""
+"לא ניתן להתחבר למסד הנתונים ${mysql_hostname}:${mysql_port}. נא לבדוק האם "
+"המשתנים נכונים ושתצורת ה־${mysql_database_type} שלך מקבלת חיבורי TCP/IP."
+
+msgid "Please select the ports for Thin servers. Those will be added to the Apache configuration file."
+msgstr "נא לבחור את הפתחות לשרתי ה־Thin. אלו יתווספו לקובץ התצורה של Apache."
+
+msgid "Ruby is not installed in your stack. This module requires to have Ruby installed."
+msgstr ""
+"אין התקנה של Ruby כחלק מהחבילה שלך. מודול זה נדרש כדי שתהיה לך התקנה של "
+"Ruby."
+
+msgid "Polish"
+msgstr "פולנית"
+
+msgid "This will create a sample Rails project."
+msgstr "פעולה זו תיצור מיזם Rails פשוט."
+
+msgid "Please enter the port that the ${mysql_database_type} database server will listen to. The entered port number should not be used by any other process running on the server."
+msgstr ""
+"נא להזין את הפתחה אליה יאזין שרת מסד הנתונים ${mysql_database_type}. אין להשתמש במספר הפתחה "
+"שהוזן על ידי שום תהליך אחר הפועל על השרת."
+
+msgid "Installing ${mysql_database_type} as a Windows service with name ${mysql_unique_service_name}"
+msgstr "${mysql_database_type} מותקן כשירות Windows תחת השם ${mysql_unique_service_name}"
+
+msgid "Bitnami Drupal Module"
+msgstr "מודול דרופל של Bitnami"
+
+msgid "SQLite"
+msgstr "SQLite"
+
+msgid "Initializing database. This may take some time."
+msgstr "מסד הנתונים מופעל לראשונה. פעולה זו עלולה לארוך זמן מה."
+
+msgid "Do you want to keep the ${appName} database? It will be saved at ${installdir}/backups"
+msgstr ""
+"האם ברצונך לשמור על מסד הנתונים של ${appName}? המסד יישמר תחת "
+"${installdir}/backups"
+
+msgid "Joomla!"
+msgstr "Joomla!"
+
+msgid "Unable to set the phpmyadmin authorized user"
+msgstr "לא ניתן להגדיר את המשתמש המורשה ל־phpmyadmin"
+
+msgid "Shutting down ${mysql_database_type}"
+msgstr "ה־${mysql_database_type} נכבה"
+
+msgid "${product_fullname} Thin Service"
+msgstr "שירות ה־Thin של ${product_fullname}"
+
+msgid "The selected folder is not empty. Please select a different folder"
+msgstr "התיקייה הנבחרת אינה ריקה. נא לבחור בתיקייה אחרת"
+
+msgid "Site name"
+msgstr "שם האתר"
+
+msgid "Japanese"
+msgstr "יפנית"
+
+msgid "Enter the domain name or the IP address for you web server (www.example.com)"
+msgstr ""
+"נא להזין את את שם המתחם או את כתובת ה־IP של שרת האינטרנט שלך (www.דוגמה.com)"
+
+msgid "You need to provide a non-empty password"
+msgstr "עליך לספק ססמה שאינה ריקה"
+
+msgid "Configuring database"
+msgstr "מסד הנתונים מוגדר"
+
+msgid "Provides sample data for Joomla. English only."
+msgstr "מספק נתונים לדוגמה עבור ג׳ומלה. באנגלית בלבד."
+
+msgid "SMTP Port"
+msgstr "פתחת SMTP"
+
+msgid "Chinese/Taiwan"
+msgstr "סינית של טאיוואן"
+
+msgid "For security reasons it is recomended to set a non blank password for ${mysql_database_type} root user. Do you want to set a password for the ${mysql_database_type} root user?"
+msgstr ""
+"מטעמי אבטחה מומלץ להגדיר ססמה שאינה ריקה עבור משתמש העל (root) ב־${mysql_database_type}. האם "
+"ברצונך להגדיר ססמה עבור משתמש העל (root) של ה־${mysql_database_type}?"
+
+msgid "www.bitnami.com"
+msgstr "www.bitnami.com"
+
+msgid "Email Address"
+msgstr "כתובת דוא״ל"
+
+msgid "Do you want to keep the wordpress database? It will be saved at ${installdir}/backups"
+msgstr ""
+"האם ברצונך לשמור על מסד הנתונים של וורדפרס? הוא יישמר תחת "
+"${installdir}/backups"
+
+msgid "Sample Rails Application"
+msgstr "יישום Rails לדוגמה"
+
+msgid "Italian"
+msgstr "איטלקית"
+
+msgid "Ruby On Rails"
+msgstr "Ruby On Rails"
+
+msgid "Drupal is a content management platform that allows an individual or community of users to easily publish, manage, and organize a wide variety of content on a website. In general, Drupal is used for community web portals, discussion sites, corporate web sites, intranet applications, personal web sites or blogs, aficionado sites, e-commerce applications, resource directories, and social networking sites"
+msgstr ""
+"דרופל היא פלטפורמה לניהול תוכן המאפשרת ליחיד או לקבוצה של משתמשים לפרסם, "
+"לנהל ולארגן בקלות מגוון רחב של תוכן באתר. באופן כללי, דרופל משמשת לשערי תוכן "
+"קהילתיים, אתרי דיונים, אתרים של תאגידים, יישומים פנים ארגוניים, אתרים או "
+"בלוגים פרטיים, אתרי מעריצים, ספריות משאבים ואתרי רשתות חברתיות"
+
+msgid "Enables changes to file permissions and configuration settings that make it easy to install plugins, themes and updates for certain applications, but that are not optimal from a security standpoint. Recommended if you are using this stack for development purposes or within your company."
+msgstr ""
+"התכנית מאפשרת ביצוע שינויים בהרשאות קבצים והגדרות תצורה שמסייעות להתקין "
+"תוספים, ערכות עיצוב ועדכונים ליישומים מסוימים בקלות, אך הגדרות אלה אינן "
+"מיטביות מהיבט האבטחה. מומלץ אם חבילה זו משמשת לצורכי פיתוח או באופן פנימי "
+"לצורכי החברה שלך."
+
+msgid "Project directory ${rubystack_project_directory}/${samplerails_application_name}-${product_version} already exists. Please choose a different prefix."
+msgstr ""
+"תיקיית המיזם ${rubystack_project_directory}/${samplerails_application_name}-"
+"${product_version} כבר קיימת. נא לבחור בקידומת אחרת."
+
+msgid "Please enter a password to use for the database root user"
+msgstr "נא להזין ססמה לשימוש עבור משתמש העל (root) של מסד הנתונים"
+
+msgid "Creating web application."
+msgstr "היישום המקוון נוצר."
+
+msgid "Please, choose a folder to install ${product_fullname}"
+msgstr "נא לבחור תיקייה להתקנת ${product_fullname}"
+
+msgid "Please configure Joomla! installation"
+msgstr "נא להגדיר את התקנת הג׳ומלה!"
+
+msgid "Uninstalling services."
+msgstr "מתבצעת הסרת השירותים."
+
+msgid "phpMyAdmin is a tool written in PHP intended to handle the administration of ${mysql_database_type} over the Web."
+msgstr "phpMyAdmin הוא כלי שנכתב ב־PHP המיועד לטיפול ב־${mysql_database_type} באמצעות הדפדפן."
+
+msgid "Bitnami Joomla ${project.version} Module"
+msgstr "מודול ג׳ומלה ${project.version} של Bitnami"
+
+msgid "Redmine packaged by Bitnami"
+msgstr "Redmine packaged by Bitnami"
+
+msgid "Bitnami Website"
+msgstr "האתר של Bitnami"
+
+msgid "Username"
+msgstr "שם משתמש"
+
+msgid "You are trying to install a 64bit module on a 32bit installation. This is not supported. Please download the correct module from bitnami.com"
+msgstr ""
+"הגרסה המועמדת להתקנה היא של מודול עבור 64 סיביות על התקנה של 32 סיביות. "
+"פעולה זו אינה נתמכת. נא להוריד את המודול הנכון מ־bitnami.com"
+
+msgid "Joomla! is an award-winning content management system that can be used to build personal/corporate websites or portals, small business websites, non-profit and organizational websites, government applications, corporate intranets and extranets, school and church websites, and community-based portals"
+msgstr ""
+"ג׳ומלה! הנה מערכת עטורת פרסים לניהול תוכן בה ניתן להשתמש כדי לבנות אתרים "
+"פרטיים/מסחריים או שערי תוכן, אתרים לעסקים קטנים, אתרים של ארגונים או עמותות "
+"ללא מטרות רווח, יישומים ממשלתיים, רשתות פנים עסקיות וחוץ עסקיות, אתרי בתי "
+"ספר וכנסיות ושערי תוכן מבוססי קהילה"
+
+msgid "Please use only alphanumeric characters in your password"
+msgstr "נא להשתמש בתווים אלפאנומריים בלבד"
+
+msgid "Please use only alphanumeric characters in your application password"
+msgstr "נא להשתמש בתווים אלפאנומריים בלבד"
+
+msgid "Please use only alphanumeric characters in your username"
+msgstr "נא להשתמש בתווים אלפאנומריים בלבד"
+
+msgid "Please confirm your password"
+msgstr "נא לאשר את הססמה שלך"
+
+msgid "Please enter the port that the bundled Apache Server will use for SSL access."
+msgstr "נא להזין את הפתחה בה ישתמש שרת ה־Apache המאוגד לצורכי גישה עם SSL."
+
+msgid "Spanish"
+msgstr "ספרדית"
+
+msgid "The Certificate Common Name is too long. The maximum number of characters allowed is 64."
+msgstr ""

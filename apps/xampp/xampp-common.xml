@@ -1,0 +1,232 @@
+<componentGroup>
+    <name>xampp_common</name>
+    <description>//XAMPP Common</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+
+    <preInstallationActionList>
+      <setInstallerVariable name="component(baseparamdir).parameter(installdir).value" value="${env(SYSTEMDRIVE)}\xampp"  />
+      <showWarning text="Important! Because an activated User Account Control (UAC) on your system some functions of XAMPP are possibly restricted. With UAC please avoid to install XAMPP to ${windows_folder_program_files} (missing write permisssions). Or deactivate UAC with msconfig after this setup.">
+	<ruleList>
+	  <isTrue value="${windows_os_uac_enabled}"/>
+	  <isFalse value="${disable_uac_warning}"/>
+	</ruleList>
+      </showWarning>
+    </preInstallationActionList>
+    <initializationActionList>
+      <!-- Detect VCredist? -->
+      <!--
+      <setInstallerVariable name="vc_redist_detected" value="0"/>
+      <foreach variables="key name">
+	<values>"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{FF66E9F6-83E7-3A3E-AF14-8DE9A809A6A4}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{350AA351-21FA-3270-8B7A-835434E766AD}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{2B547B43-DB50-3139-9EBE-37D419E0F5FA}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{9A25302D-30C0-39D9-BD6F-21E6EC160475}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{8220EEFE-38CD-377E-8595-13398D740ACE}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{5827ECE1-AEB0-328E-B813-6FC68622C1F9}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{1F1C2DFC-2D24-3E06-BCB8-725134ADF989}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{4B6C7001-C7D6-3710-913E-5BC23FCE91E6}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{977AD349-C2A8-39DD-9273-285C08987C7B}" DisplayVersion
+"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\VC\\VCRedist\\x86" Installed
+"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\VC\\VCRedist\\x64" Installed
+"HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\VC\\VCRedist\\ia64" Installed
+"HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\10.0\\VC\\VCRedist\\x64" Installed
+	</values>
+	<actionList>
+	  <registryGet key="${key}" name="${name}" variable="tmpVar"/>
+	  <actionGroup>
+	    <actionList>
+	      <setInstallerVariable name="vc_redist_detected" value="1"/>
+	      <break/>
+	    </actionList>
+	    <ruleList>
+              <compareText text="${tmpVar}" logic="does_not_equal" value=""/>
+            </ruleList>
+	  </actionGroup>
+	</actionList>
+      </foreach>
+      <actionGroup>
+	<actionList>
+	  <showQuestion text="Warning: XAMPP (PHP) cannot work without the Microsoft Visual C++ 2008 Redistributable Package. Open the Microsoft page for this download now?" variable="downloadVcpp"/>
+          <launchBrowser url="http://www.microsoft.com/en-us/download/details.aspx?id=5582">
+	    <ruleList>
+	      <isTrue value="${downloadVcpp}"/>
+	    </ruleList>
+	  </launchBrowser>
+	  <actionGroup>
+	    <actionList>
+              <showQuestion text="XAMPP may not work without the MS VC++ 2008 runtime library. Still go on with the XAMPP installation?" variable="shouldContinue"/>
+	      <exit>
+		<ruleList>
+		  <isFalse value="${shouldContinue}"/>
+		</ruleList>
+	      </exit>
+	    </actionList>
+	    <ruleList>
+	      <isFalse value="${downloadVcpp}"/>
+	    </ruleList>
+	  </actionGroup>
+	</actionList>
+	<ruleList>
+	  <isFalse value="${vc_redist_detected}"/>
+	</ruleList>
+      </actionGroup>
+      -->
+    </initializationActionList>
+    <parameterList>
+      <booleanParameter>
+        <name>disable_uac_warning</name>
+        <default>0</default>
+        <ask>0</ask>
+        <cliOptionName>disable-uac-warning</cliOptionName>
+      </booleanParameter>
+    </parameterList>
+    <readyToInstallActionList>
+    </readyToInstallActionList>
+
+    <folderList>
+        <folder>
+            <description>//XAMPP Files</description>
+            <destination>${installdir}</destination>
+            <name>xampp_root</name>
+            <distributionFileList>
+              <distributionDirectory origin="xampp/*" allowWildcards="1">
+		<excludeFiles>*/xampp/apache;*/xampp/mysql;*/xampp/FileZillaFTP;*/xampp/MercuryMail;*/xampp/tomcat;*/xampp/php;*/xampp/perl;*/xampp/phpMyAdmin;*/xampp/webalizer;*/xampp/sendmail</excludeFiles>
+	      </distributionDirectory>
+	    </distributionFileList>
+	    <actionList>
+		<addPathToXamppConsole file="${installdir}/xampp_shell.bat" />
+	    </actionList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+      <foreach variables="key value">
+	<values>Edition "" Editor notepad.exe Browser "" Debug "0" Debuglevel 0 TomcatVisible 1 Language ""</values>
+	<actionList>
+	  <iniFileSet file="${installdir}/xampp-control.ini" key="${key}" section="Common" value="${value}"/>
+	</actionList>
+      </foreach>
+      <actionGroup>
+	<actionList>
+	    <runProgram>
+            <program>cmd.exe</program>
+            <programArguments>/C start /MIN "" "${installdir.dos}/php/php.exe" -n -d output_buffering=0 -f "install/install.php"</programArguments>
+            <workingDirectory>${installdir}</workingDirectory>
+            <customErrorMessage>"Installation failed (php.exe). Perhaps you have to install the Microsoft Visual C++ 2008 Redistributable package. After that please execute the setup_xampp.bat in the xampp folder manually.</customErrorMessage>
+        </runProgram>
+	  <!-- We preserve this for backwards compatibility -->
+	  <registrySet key="HKEY_LOCAL_MACHINE\Software\xampp" name="Install_Dir" value="${installdir}"/>
+      <!--<registrySet key="" name="" value=""/>
+	  <registrySet key="" name="" value=""/>-->
+        <substitute>
+            <files>${installdir}/mysql_stop.bat;${installdir}/apache_stop.bat</files>
+            <type>exact</type>
+            <substitutionList>
+                <substitution pattern="@@XAMPP_INSTALLDIR@@" value="${installdir}"/>
+            </substitutionList>
+        </substitute>
+	</actionList>
+	<ruleList>
+	  <platformTest type="windows"/>
+	</ruleList>
+      </actionGroup>
+      <removeFilesFromUninstaller files="${installdir}/htdocs/*" />
+    </postInstallationActionList>
+    <preUninstallationActionList>
+      <registryDelete key="HKEY_LOCAL_MACHINE\Software\xampp" name="Install_Dir">
+	<ruleList>
+	  <platformTest type="windows"/>
+	</ruleList>
+      </registryDelete>
+      <actionGroup>
+	<actionList>
+	  <!-- delete XAMPP services if they were created -->
+	  <foreach>
+	    <values>
+	      "Apache2.4" "Apache2.4" "apache/bin/httpd.exe"
+	      "Tomcat" "Apache Tomcat" "tomcat/bin/tomcat8.exe"
+	      "mysql" "mysql" "mysql/bin/mysqld.exe"
+	      "FileZillaServer" "FileZillaServer" "filezillaftp/filezillaserver.exe"
+	      "FileZilla Server" "FileZilla Server FTP server" "filezillaftp/filezillaserver.exe"
+	    </values>
+	    <variables>service_name service_display_name service_path</variables>
+	    <actionList>
+	      <verifyServiceBinaryPath servicename="${service_name}" servicepath="${installdir}/${service_path}" outputvariable="service_exists"/>
+	      <stopWindowsService abortOnError="0" showMessageOnError="0">
+		<delay>15000</delay>
+		<displayName>${service_display_name}</displayName>
+		<serviceName>${service_name}</serviceName>
+		<ruleList>
+		  <isTrue value="${service_exists}"/>
+		  <windowsServiceTest service="${service_name}" condition="is_running"/>
+		</ruleList>
+	      </stopWindowsService>
+	      <deleteWindowsService abortOnError="0" showMessageOnError="0">
+		<displayName>${service_display_name}</displayName>
+		<serviceName>${service_name}</serviceName>
+		<ruleList>
+		  <isTrue value="${service_exists}"/>
+		</ruleList>
+	      </deleteWindowsService>
+	    </actionList>
+	  </foreach>
+
+          <!-- stop the XAMPP processes before uninstallation -->
+          <runProgram abortOnError="0" showMessageOnError="0" workingDirectory="${installdir}" program="./apache_stop.bat">
+            <ruleList>
+              <fileExists path="${installdir}/apache_stop.bat"/>
+            </ruleList>
+          </runProgram>
+	  <runProgram abortOnError="0" showMessageOnError="0" workingDirectory="${installdir}" program="./mysql_stop.bat">
+            <ruleList>
+              <fileExists path="${installdir}/mysql_stop.bat"/>
+            </ruleList>
+          </runProgram>
+	  <runProgram abortOnError="0" showMessageOnError="0" workingDirectory="${installdir}" program="./filezilla_stop.bat">
+            <ruleList>
+              <fileExists path="${installdir}/filezilla_stop.bat"/>
+            </ruleList>
+          </runProgram>
+	  <runProgram abortOnError="0" showMessageOnError="0" workingDirectory="${installdir}" program="./mercury_stop.bat">
+            <ruleList>
+              <fileExists path="${installdir}/mercury_stop.bat"/>
+            </ruleList>
+          </runProgram>
+	  <runProgram abortOnError="0" showMessageOnError="0" workingDirectory="${installdir}" program="./catalina_stop.bat">
+            <ruleList>
+              <fileExists path="${installdir}/catalina_stop.bat"/>
+            </ruleList>
+          </runProgram>
+	  <!-- filezilla cannot be stopped using filezilla_stop.bat if either
+	    filezilla_start.bat or filezilla_stop.bat has different UAC elevation;
+	    kill if it is still running, wait for 1s to give time to exit gracefully -->
+	  <wait ms="1000">
+	    <ruleList>
+	      <fileIsLocked path="${installdir}/FileZillaFTP/FileZillaServer.exe" />
+	    </ruleList>
+	  </wait>
+          <kill name="FileZillaServer.exe">
+	    <ruleList>
+	      <fileIsLocked path="${installdir}/FileZillaFTP/FileZillaServer.exe" />
+	    </ruleList>
+	  </kill>
+	  <!-- kill XAMPP control if it is currently running -->
+          <kill name="xampp-control.exe">
+	    <ruleList>
+	      <fileIsLocked path="${installdir}/xampp-control.exe" />
+	    </ruleList>
+	  </kill>
+	  <!-- the XAMPP control needs some time to exit - otherwise it can leave files locked -->
+	  <wait ms="1000">
+	    <ruleList>
+	      <fileIsLocked path="${installdir}/xampp-control.exe" />
+	    </ruleList>
+	  </wait>
+	</actionList>
+	<ruleList>
+	  <platformTest type="windows"/>
+	</ruleList>
+      </actionGroup>
+    </preUninstallationActionList>
+</componentGroup>

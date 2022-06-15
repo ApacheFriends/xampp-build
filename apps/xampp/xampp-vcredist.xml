@@ -1,0 +1,45 @@
+<componentGroup>
+    <name>xampp_vcredist</name>
+    <description>//XAMPP Visual C++ Redistributable</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+
+    <folderList>
+        <folder>
+          <description>//XAMPP Files</description>
+          <destination>${installdir}/vcredist</destination>
+          <name>xampp_mysql_folder</name>
+          <distributionFileList>
+            <distributionDirectory origin="vcredist_x64.exe"/>
+          </distributionFileList>
+	  <actionList>
+	  </actionList>
+        </folder>
+        <folder>
+          <description>//Test PHP script</description>
+          <destination>${installdir}</destination>
+          <name>test_php</name>
+          <distributionFileList>
+              <distributionDirectory origin="xampp/test_php.bat"/>
+          </distributionFileList>
+	  <actionList>
+	  </actionList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+	<runProgram>
+	    <program>./vcredist_x64.exe</program>
+	    <programArguments>/q</programArguments>
+	    <showMessageOnError>0</showMessageOnError>
+	    <abortOnError>0</abortOnError>
+	    <workingDirectory>${installdir}/vcredist</workingDirectory>
+	</runProgram>
+	<wait ms="1000" />
+	<deleteFile>
+	  <path>${installdir}/vcredist</path>
+	  <abortOnError>0</abortOnError>
+	  <showMessageOnError>0</showMessageOnError>
+	</deleteFile>
+    </postInstallationActionList>
+</componentGroup>

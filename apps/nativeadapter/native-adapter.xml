@@ -1,0 +1,181 @@
+<component>
+  <name>nativeadapter</name>
+  <postInstallationActionList>
+    <!-- Added licenses folder -->
+    <createDirectory abortOnError="0" showMessageOnError="0" path="${installdir}/licenses" />
+
+    <!-- Base configuration -->
+    
+    <baseSaveGeneralStackConfigurationToFile baseStackPropertiesFile="${installdir}/properties.ini">
+      <baseStackName>${project.fullName}</baseStackName>
+      <baseStackVersion>${project.version}</baseStackVersion>
+      <baseStackPlatform>${platform_name}</baseStackPlatform>
+      <baseStackInstallDir>${installdir}</baseStackInstallDir>
+    </baseSaveGeneralStackConfigurationToFile>
+    
+    <!-- Adapt Apache -->
+    
+    <!-- Add information to properties.ini -->
+    <!-- Some of the written properties point to the bitnami lampstack htdocs as
+         we will later register it with the native apache -->
+    <apacheSaveConfigurationToFile>
+      <apachePropertiesFile>${installdir}/properties.ini</apachePropertiesFile>
+      <apacheServerPort>${web_server_port}</apacheServerPort>
+      <apacheUser>${web_server_user}</apacheUser>
+      <apacheGroup>${web_server_group}</apacheGroup>
+      <apacheSSLPort>${web_server_ssl_port}</apacheSSLPort>
+      <!-- We do not use the real one but the adapted, that is going to
+           be included in the system httpd.conf -->
+      <!-- <apacheRootDirectory>${system_apache_server_directory}</apacheRootDirectory>-->
+      <apacheRootDirectory>${apache_server_directory}</apacheRootDirectory>
+      <apacheHtdocsDirectory>${apache_server_directory}/htdocs</apacheHtdocsDirectory>
+      <apacheDomainName>127.0.0.1</apacheDomainName>
+      <!-- We do not use the real one but the adapted, that is going to
+           be included in the system httpd.conf -->
+      <!-- <apacheConfigurationDirectory>${system_web_server_configuration_directory}</apacheConfigurationDirectory>-->
+      <apacheConfigurationDirectory>${web_server_configuration_directory}</apacheConfigurationDirectory>
+    </apacheSaveConfigurationToFile>      
+    <!-- Adapt MySQL -->
+    
+    <!-- Add information to properties.ini -->
+    
+    <mysqlSaveConfigurationToFile mysqlPropertiesFile="${installdir}/properties.ini">
+      <mysqlPort>${database_port}</mysqlPort>
+      <mysqlHost>${database_hostname}</mysqlHost>
+      <mysqlRootDirectory>${database_root_directory}</mysqlRootDirectory>
+      <mysqlDataDirectory>${database_data_directory}</mysqlDataDirectory>
+      <mysqlBinaryDirectory>${database_binary_directory}</mysqlBinaryDirectory>
+      <mysqlArguments>${database_arguments}</mysqlArguments>
+      <mysqlSocket>${database_socket}</mysqlSocket>
+      <mysqlConfigurationDirectory>${database_configuration_directory}</mysqlConfigurationDirectory>
+    </mysqlSaveConfigurationToFile>
+    
+    <!-- Adapt PHP -->
+    <phpSaveConfigurationToFile>
+      <phpPropertiesFile>${installdir}/properties.ini</phpPropertiesFile>
+      <phpConfigurationDirectory>${php_configuration_directory}</phpConfigurationDirectory>
+      <phpBinaryDirectory>${php_binary_directory}</phpBinaryDirectory>
+      <phpExtensionsDirectory>${php_extensions_directory}</phpExtensionsDirectory>
+    </phpSaveConfigurationToFile>
+    
+    <changePermissions>
+      <files>${installdir}/properties.ini</files>
+      <permissions>0700</permissions>
+      <ruleList>
+        <platformTest type="unix"/>
+      </ruleList>
+    </changePermissions>
+    
+    <!-- Hacks, this is just for the demo -->
+    <!-- Php deprecated setting warnings -->
+    <iniFileSet>
+      <file>${php_configuration_directory}/php.ini</file>
+      <key>error_reporting</key>
+      <section>PHP</section>
+      <value>E_ALL &amp; ~E_NOTICE &amp; ~E_DEPRECATED</value>
+    </iniFileSet>
+
+
+    <!-- Sugar and others -->
+
+    <actionGroup>
+      <actionList>
+        <readFile path="${php_configuration_directory}/php.ini" name="phpini_text"/>
+        <substitute>
+          <files>${php_configuration_directory}/php.ini</files>
+          <type>regexp</type>
+          <substitutionList>
+            <substitution pattern=";\s*date\.timezone\s*=\s*.*" value="date.timezone=America/Los_Angeles" />
+          </substitutionList>
+          <ruleList>
+            <regExMatch>
+              <logic>matches</logic>
+              <pattern>.*;\s*date\.timezone\s*=\s*.*</pattern>
+              <text>${phpini_text}</text>
+            </regExMatch>
+          </ruleList>
+        </substitute>
+        <iniFileSet>
+          <file>${php_configuration_directory}/php.ini</file>
+          <key>date.timezone</key>
+          <section>Date</section>
+          <value>America/Los_Angeles</value>
+          <ruleList>
+            <regExMatch>
+              <logic>does_not_match</logic>
+              <pattern>.*;\s*date\.timezone\s*=\s*.*</pattern>
+              <text>${phpini_text}</text>
+            </regExMatch>
+          </ruleList>
+        </iniFileSet>
+        <substitute>
+          <files>${php_configuration_directory}/php.ini</files>
+          <type>regexp</type>
+          <substitutionList>
+            <substitution pattern="upload_max_filesize\s*=\s*.*" value="upload_max_filesize=40M" />
+            <substitution pattern="post_max_size\s*=\s*.*" value="post_max_size=40M" />
+          </substitutionList>
+        </substitute>
+      </actionList>
+      <ruleList>
+        <fileExists path="${php_configuration_directory}/php.ini"/>
+      </ruleList>
+    </actionGroup>
+    <apacheServer action="restart"/>
+  </postInstallationActionList>
+  <preInstallationActionList>
+    <actionGroup>
+      <actionList>
+        <autodetectPlatform nativePlatformType="auto" variable="target_platform"/>
+        <throwError text="The installer couldn't detect any suitable platform">
+          <ruleList>
+            <compareText text="${target_platform}" logic="equals" value=""/>
+          </ruleList>
+        </throwError>    
+      </actionList>
+      <ruleList> 
+        <compareText text="${target_platform}" logic="equals" value=""/>
+      </ruleList>        
+    </actionGroup>
+  </preInstallationActionList>
+  <parameterList>
+    <stringParameter name="target_platform" value="" ask="0"/>
+  </parameterList>
+  
+  <readyToInstallActionList>
+    <autodetectApache>
+      <port>web_server_port</port>
+      <sslPort>web_server_ssl_port</sslPort>
+      <rootDirectory>system_apache_server_directory</rootDirectory>
+      <configurationDirectory>system_web_server_configuration_directory</configurationDirectory>
+      <domainName>web_server_domain_name</domainName>
+      <apacheUser>web_server_user</apacheUser>
+      <apacheGroup>web_server_group</apacheGroup>
+      <targetPlatform>${target_platform}</targetPlatform>
+    </autodetectApache>
+
+    <!-- We do not use the real ones but the adapted, that is going to
+         be included in the system httpd.conf -->
+    <setInstallerVariable name="web_server_configuration_directory" value="${installdir}/apache2/conf" persist="1"/>
+    <setInstallerVariable name="apache_server_directory"  value="${installdir}/apache2" persist="1"/>
+    
+
+    <autodetectMySQL>
+      <port>database_port</port>
+      <host>database_hostname</host>
+      <rootDirectory>database_root_directory</rootDirectory>
+      <binaryDirectory>database_binary_directory</binaryDirectory>
+      <dataDirectory>database_data_directory</dataDirectory>
+      <databaseArguments>database_arguments</databaseArguments>
+      <databaseSocket>database_socket</databaseSocket>
+      <targetPlatform>${target_platform}</targetPlatform>
+      <configurationDirectory>database_configuration_directory</configurationDirectory>
+    </autodetectMySQL>
+    <autodetectPHP>
+      <configurationDirectory>php_configuration_directory</configurationDirectory>
+      <binaryDirectory>php_binary_directory</binaryDirectory>
+      <extensionsDirectory>php_extensions_directory</extensionsDirectory>
+      <targetPlatform>${target_platform}</targetPlatform>
+    </autodetectPHP>
+  </readyToInstallActionList>
+</component>

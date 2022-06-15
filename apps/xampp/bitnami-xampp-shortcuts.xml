@@ -1,0 +1,42 @@
+<component>
+    <name>xampp_shortcuts</name>
+    <description>//Bitnami XAMPP Shortcuts</description>
+    <canBeEdited>0</canBeEdited>
+    <selected>1</selected>
+    <show>0</show>
+    <startMenuShortcutList>
+      <startMenuLinkShortcut>
+        <comment>Bitnami for XAMPP</comment>
+        <name>Bitnami for XAMPP</name>
+	<url>https://bitnami.com/stack/xampp?utm_source=bitnami&amp;utm_medium=installer&amp;utm_campaign=XAMPP%2BInstaller</url>
+	<windowsIcon>${installdir}/install/xampp.ico</windowsIcon>
+      </startMenuLinkShortcut>
+      <startMenuShortcut>
+        <comment>Uninstall ${product_fullname}</comment>
+        <name>Uninstall ${product_fullname}</name>
+        <windowsExec>${installdir}\uninstall.exe</windowsExec>
+        <windowsExecArgs/>
+        <windowsIcon/>
+        <windowsPath>${installdir}</windowsPath>
+      </startMenuShortcut>
+      <startMenuShortcut>
+        <comment>XAMPP Control Panel</comment>
+        <name>XAMPP Control Panel</name>
+        <windowsExec>${installdir}\xampp-control.exe</windowsExec>
+        <windowsExecArgs/>
+        <windowsIcon/>
+        <windowsPath>${installdir}</windowsPath>
+      </startMenuShortcut>
+      <startMenuFileShortcut>
+	<comment>XAMPP htdocs folder</comment>
+        <name>XAMPP htdocs folder</name>
+        <filePath>${installdir}/htdocs</filePath>
+        <icon>${installdir}/install/folder.ico</icon>
+        <platforms>all</platforms>
+        <runAsAdmin>0</runAsAdmin>
+        <runInTerminal>0</runInTerminal>
+        <windowsIcon></windowsIcon>
+      </startMenuFileShortcut>
+    </startMenuShortcutList>
+</component>
+

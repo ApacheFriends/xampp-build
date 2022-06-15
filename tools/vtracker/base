@@ -1,0 +1,14 @@
+config = {
+  dldefaultno
+  dlprefs   = \.(tar\.|t)gz$;\.tar\.bz2$;\.zip$;\.Z$
+  lastcheck = "2022-06-07 13:05"
+  verbose
+}
+
+prog pagespeed = {
+  comment   = BITROCK_DETECTED_DATE=2021-04-19_07:18
+  version   = 1.14.36.1
+  dlversion = 1.13.35.2-r0
+  url       = https://www.modpagespeed.com/doc/release_notes
+  regex     = "Release (__VER__)"
+}

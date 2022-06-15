@@ -1,0 +1,104 @@
+MySQL Libs
+Open LDAP Component
+Program Files Linux
+Ruby Component
+I wish to use an existing MySQL database
+Service script name:
+Base Write Properties
+Days of validity
+Apache - Subversion
+README Folder Component
+PERL Existing Component
+Modifies my.cnf or my.ini and sets the default character encoding to UTF-8
+Program Files Windows
+ImageMagick Write Properties
+Apache Python Component
+Licenses Files
+MONGREL installation directory
+MySQL connector java
+Base Get Properties
+MySQL Init
+RGLOADER Component
+Common Component
+New Component
+Common installation directory
+README destination
+RUBY19 Component
+License Folder Component
+RGLOADER installation directory
+Please enter your product key
+Apache Write Properties
+Program Files
+mysql-connector-java
+Rails Component
+Bitnami Module Link
+Certificate validity period
+ImageMagick version
+ImageMagick installation directory
+New Folder
+Open SSL Component
+Licenses destination
+Apache installation directory
+Stack Scripts Directory
+MySQL Write Properties
+ImageMagick Component
+Choose port numbers manually.
+Apache - PHP
+SUBVERSION Component
+No delete fixreg.php
+Apache 2.0 Component
+Typical
+Apache Passenger Module
+GIT installation directory
+WEBRICK installation directory
+Apache SQLite Component
+GIT Component
+Subversion Write Properties
+Changelog File
+Product Key
+RUBY19 installation directory
+Install as a service
+mysql libs
+WEBRICK Component
+Installation Type
+Certificate Common Name
+SUBVERSION installation directory
+PDF destination
+Apache Mongrel Module
+Apache htdocs directory
+Bitnami Cloud Hosting
+Copies mysql libs
+License Key
+Invalid Product Key, please contact ${project.vendor} Support
+MySQL Binary Directory
+SQLITE installation directory
+Apache WSGI Python Component
+Installation folder
+MONGREL Component
+Changelog Folder Component
+PHP 5 Component
+PDF Folder Component
+Allow to choose an already installed service name if it contains a call to installdir/ctlscript
+OPENSSL installation directory
+www.bitnami.com
+openSSL Component
+Apache Group
+Changelog destination
+PDF File
+Ruby Write Properties
+Apache-MySQL
+Period not valid
+Ruby installation directory
+PERL Component
+Phpmyadmin destination
+Django is a high-level Python Web framework that encorages rapid development and clean, pragmatic design.
+New Project
+Please configure your Django project
+BitNami Plone Stack
+Plone
+plonefiles
+Plone packaged by Bitnami
+Login: admin
+Whether or not to show the antivirus warning
+Mediawiki
+Domain

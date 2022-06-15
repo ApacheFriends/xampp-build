@@ -1,0 +1,392 @@
+<componentGroup>
+    <name>environmentautodetection</name>
+    <description>Autodetect System LAMP</description>
+    <canBeEdited>0</canBeEdited>
+    <show>0</show>
+    <selected>1</selected>
+
+    <componentList>
+	<include file="apache-autodetection-functions.xml" />
+	<include file="php-autodetection-functions.xml" />
+	<include file="mysql-autodetection-functions.xml" />
+	<component>
+	        <name>commonautodetection</name>
+		<description>//Autodetection</description>
+		<canBeEdited>0</canBeEdited>
+		<show>0</show>
+		<selected>1</selected>
+    <functionDefinitionList>
+      <actionDefinition name="autodetectPlatform">
+        <parameterList>
+          <!-- This should be set to auto -->
+          <choiceParameter name="nativePlatformType" default="redhat">
+            <optionList>
+              <option value="fedora" text="Fedora"/>
+              <option value="ubuntu" text="Ubuntu"/>
+              <option value="redhat" text="Red Hat"/>
+              <option value="xampp" text="Apache Friends XAMPP"/>
+              <option value="auto" text="Auto Detect"/>
+            </optionList>
+          </choiceParameter>
+          <stringParameter name="variable" value=""/>
+          <stringParameter name="installationDirectory" value="" />
+        </parameterList>
+        <actionList>
+          <setInstallerVariable name="isFedora" value="0"/>
+          <actionGroup>
+            <ruleEvaluationLogic>and</ruleEvaluationLogic>
+            <actionList>
+              <setInstallerVariable name="isRedHat" value="0"/>
+              <setInstallerVariable name="isFedora" value="1"/>
+            </actionList>
+            <ruleList>
+              <compareText text="${linux_distribution_shortname}" logic="equals" value="fedora"/>
+              <compareVersions version1="${linux_distribution_version}" logic="greater_or_equal" version2="15"/>
+            </ruleList>
+          </actionGroup>
+
+          <setInstallerVariable name="isRedHat" value="0"/>
+          <setInstallerVariable name="isRedHat" value="1">
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+              <ruleList>
+                   <compareText text="${linux_distribution_shortname}" logic="equals" value="rh"/>
+                   <compareText text="${linux_distribution_shortname}" logic="equals" value="rhel"/>
+                   <compareText text="${linux_distribution_shortname}" logic="equals" value="fedora"/>
+              </ruleList>
+          </setInstallerVariable>
+
+          <setInstallerVariable name="xamppIsInstalled" value="0"/>
+          <setInstallerVariable name="xamppIsInstalled" value="1" >
+	    <ruleList>
+	      <platformTest type="linux"/>
+	      <fileExists path="/opt/lampp/lampp"/>
+	    </ruleList>
+          </setInstallerVariable>
+          <setInstallerVariable name="xamppIsInstalled" value="1" >
+	    <ruleList>
+	      <platformTest type="osx"/>
+	      <fileExists path="/Applications/XAMPP/xamppfiles/xampp"/>
+	    </ruleList>
+          </setInstallerVariable>
+	   <setInstallerVariable name="xamppIsInstalled" value="1" >
+	    <ruleList>
+	      <platformTest type="windows"/>
+          <ruleGroup>
+              <ruleEvaluationLogic>or</ruleEvaluationLogic>
+              <ruleList>
+                  <registryTest key="HKEY_LOCAL_MACHINE\SOFTWARE\xampp" name="Install_Dir" logic="exists"/>
+                  <ruleGroup>
+                      <ruleEvaluationLogic>and</ruleEvaluationLogic>
+                      <ruleList>
+                          <compareText text="${installationDirectory}" logic="does_not_equal" value="" />
+                          <fileTest path="${installdir}/xampp-control.exe" condition="exists"/>
+                      </ruleList>
+                  </ruleGroup>
+              </ruleList>
+          </ruleGroup>
+	    </ruleList>
+          </setInstallerVariable>
+
+          <setInstallerVariable name="isUbuntu" value="0"/>
+          <setInstallerVariable name="isUbuntu" value="1">
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+              <compareText text="${linux_distribution_shortname}" logic="equals" value="debian"/>
+            </ruleList>
+          </setInstallerVariable>
+
+          <!-- Give priority to redhat -->
+          <setInstallerVariable name="${variable}" value="redhat">
+            <ruleList>
+              <!-- Just set it if it was not yet detected -->
+              <compareText text="${${variable}}" logic="equals" value=""/>
+              <isTrue value="${isRedHat}"/>
+              <ruleGroup>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                  <compareText text="${nativePlatformType}" logic="equals" value="redhat"/>
+                  <compareText text="${nativePlatformType}" logic="equals" value="auto"/>
+                </ruleList>
+              </ruleGroup>
+            </ruleList>
+          </setInstallerVariable>
+          <setInstallerVariable name="${variable}" value="fedora">
+            <ruleList>
+              <!-- Just set it if it was not yet detected -->
+              <compareText text="${${variable}}" logic="equals" value=""/>
+              <isTrue value="${isFedora}"/>
+              <ruleGroup>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                  <compareText text="${nativePlatformType}" logic="equals" value="fedora"/>
+                  <compareText text="${nativePlatformType}" logic="equals" value="auto"/>
+                </ruleList>
+              </ruleGroup>
+            </ruleList>
+          </setInstallerVariable>
+
+          <!-- Give priority to xampp -->
+          <setInstallerVariable name="${variable}" value="xampp">
+            <ruleList>
+              <!-- Just set it if it was not yet detected -->
+              <compareText text="${${variable}}" logic="equals" value=""/>
+              <isTrue value="${xamppIsInstalled}"/>
+              <ruleGroup>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                  <compareText text="${nativePlatformType}" logic="equals" value="xampp"/>
+                  <compareText text="${nativePlatformType}" logic="equals" value="auto"/>
+                </ruleList>
+              </ruleGroup>
+            </ruleList>
+          </setInstallerVariable>
+          <!-- Add Ubuntu here -->
+          <setInstallerVariable name="${variable}" value="ubuntu">
+            <ruleList>
+              <!-- Just set it if it was not yet detected -->
+              <compareText text="${${variable}}" logic="equals" value=""/>
+              <isTrue value="${isUbuntu}"/>
+              <ruleGroup>
+                <ruleEvaluationLogic>or</ruleEvaluationLogic>
+                <ruleList>
+                  <compareText text="${nativePlatformType}" logic="equals" value="ubuntu"/>
+                  <compareText text="${nativePlatformType}" logic="equals" value="auto"/>
+                </ruleList>
+              </ruleGroup>
+            </ruleList>
+          </setInstallerVariable>
+        </actionList>
+      </actionDefinition>
+
+      <actionDefinition name="adaptPlatform">
+          <parameterList>
+              <booleanParameter name="onlyPopulateVariables" default="1"/>
+              <stringParameter name="propertiesFile"/>
+              <stringParameter name="targetPlatform"/>
+              <stringParameter name="installationDirectory"/>
+              <choiceParameter name="nativePlatformType" default="auto">
+                  <optionList>
+                      <option value="fedora" text="Fedora"/>
+                      <option value="ubuntu" text="Ubuntu"/>
+                      <option value="redhat" text="Red Hat"/>
+                      <option value="xampp" text="Apache Friends XAMPP"/>
+                      <option value="auto" text="Auto Detect"/>
+                </optionList>
+              </choiceParameter>
+          </parameterList>
+          <actionList>
+              <setInstallerVariable name="target_platform" value="${targetPlatform}"/>
+              <setInstallerVariable name="installationDirectory" value="${installdir}" >
+                  <ruleList>
+                      <!-- For XAMPP zip installations -->
+                      <compareText text="${nativePlatformType}" logic="equals" value="xampp" />
+                      <compareText text="${installationDirectory}" logic="equals" value= "" />
+                      <fileExists path="${installdir}" />
+                  </ruleList>
+              </setInstallerVariable>
+            <autodetectPlatform nativePlatformType="${nativePlatformType}" variable="target_platform" installationDirectory="${installationDirectory}">
+                <ruleList>
+                    <compareText text="${target_platform}" logic="equals" value=""/>
+                </ruleList>
+            </autodetectPlatform>
+            <setInstallerVariable name="target_platform" value="${nativePlatformType}" >
+                <ruleList>
+                    <compareText text="${target_platform}" logic="equals" value=""/>
+                </ruleList>
+            </setInstallerVariable>
+            <globalVariables names="target_platform" />
+            <autodetectApache>
+                <port>web_server_port</port>
+                <sslPort>web_server_ssl_port</sslPort>
+                <rootDirectory>system_apache_server_directory</rootDirectory>
+                <configurationDirectory>system_web_server_configuration_directory</configurationDirectory>
+                <domainName>web_server_domain_name</domainName>
+                <apacheUser>web_server_user</apacheUser>
+                <apacheGroup>web_server_group</apacheGroup>
+                <targetPlatform>${target_platform}</targetPlatform>
+            </autodetectApache>
+            <!-- We do not use the real ones but the adapted, that is going to
+                 be included in the system httpd.conf -->
+            <setInstallerVariable name="web_server_configuration_directory" value="${installdir}/apache2/conf" persist="1"/>
+            <setInstallerVariable name="apache_server_directory"  value="${installdir}/apache2" persist="1"/>
+            <actionGroup>
+                <actionList>
+                    <!-- They already have an apache folder so we reuse it -->
+                    <actionGroup>
+                        <actionList>
+                            <setInstallerVariable name="web_server_configuration_directory" value="${installdir}/apache/conf" persist="1"/>
+                            <setInstallerVariable name="apache_server_directory"  value="${installdir}/apache" persist="1"/>
+			    <setInstallerVariable name="apache_htdocs_directory" value="${installdir}/htdocs" persist="1" />
+                        </actionList>
+                        <ruleList>
+                            <platformTest type="windows"/>
+                        </ruleList>
+                    </actionGroup>
+                    <actionGroup>
+                        <actionList>
+                            <setInstallerVariable name="ssl_certificate_file" value="${system_web_server_configuration_directory}/ssl.crt/server.crt"/>
+                            <!--<globalVariables names="ssl_certificate_file"/>-->
+                        </actionList>
+                        <ruleList>
+                            <fileExists path="${system_web_server_configuration_directory}/ssl.crt/server.crt"/>
+                        </ruleList>
+                    </actionGroup>
+                    <actionGroup>
+                        <actionList>
+                            <setInstallerVariable name="ssl_certificate_key_file" value="${system_web_server_configuration_directory}/ssl.key/server.key"/>
+                            <!--<globalVariables names="ssl_certificate_key_file"/>-->
+                        </actionList>
+                        <ruleList>
+                            <fileExists path="${system_web_server_configuration_directory}/ssl.crt/server.crt"/>
+                        </ruleList>
+                    </actionGroup>
+                </actionList>
+                <ruleList>
+                    <compareText text="${target_platform}" logic="equals" value="xampp"/>
+                </ruleList>
+            </actionGroup>
+            <globalVariables names="web_server_configuration_directory"/>
+            <globalVariables names="apache_server_directory"/>
+	    <globalVariables names="apache_htdocs_directory" />
+            <autodetectMySQL>
+                <port>database_port</port>
+                <host>database_hostname</host>
+                <rootDirectory>database_root_directory</rootDirectory>
+                <binaryDirectory>database_binary_directory</binaryDirectory>
+                <dataDirectory>database_data_directory</dataDirectory>
+                <configurationDirectory>database_configuration_directory</configurationDirectory>
+                <databaseArguments>database_arguments</databaseArguments>
+                <databaseSocket>database_socket</databaseSocket>
+                <targetPlatform>${target_platform}</targetPlatform>
+            </autodetectMySQL>
+            <autodetectPHP>
+                <configurationDirectory>php_configuration_directory</configurationDirectory>
+                <binaryDirectory>php_binary_directory</binaryDirectory>
+                <extensionsDirectory>php_extensions_directory</extensionsDirectory>
+                <targetPlatform>${target_platform}</targetPlatform>
+            </autodetectPHP>
+            <actionGroup>
+                <actionList>
+                    <setInstallerVariable name="project.component(native_apache_adapter).selected" value="1"/>
+                    <setInstallerVariable name="project.component(native_mysql_adapter).selected" value="1"/>
+                <!-- Base configuration -->
+
+            <baseSaveGeneralStackConfigurationToFile baseStackPropertiesFile="${installdir}/properties.ini">
+                <baseStackName>${project.fullName}</baseStackName>
+                <baseStackVersion>${project.version}</baseStackVersion>
+                <baseStackPlatform>${platform_name}</baseStackPlatform>
+                <baseStackInstallDir>${installdir}</baseStackInstallDir>
+            </baseSaveGeneralStackConfigurationToFile>
+
+            <!-- Adapt Apache -->
+
+            <!-- Add information to properties.ini -->
+            <!-- Some of the written properties point to the bitnami lampstack htdocs as
+         we will later register it with the native apache -->
+
+            <apacheSaveConfigurationToFile>
+                <apachePropertiesFile>${installdir}/properties.ini</apachePropertiesFile>
+                <apacheServerPort>${web_server_port}</apacheServerPort>
+                <apacheUser>${web_server_user}</apacheUser>
+                <apacheGroup>${web_server_group}</apacheGroup>
+                <apacheSSLPort>${web_server_ssl_port}</apacheSSLPort>
+                <apacheRootDirectory>${system_apache_server_directory}</apacheRootDirectory>
+                <apacheDomainName>127.0.0.1</apacheDomainName>
+                <!--<apacheConfigurationDirectory>${system_web_server_configuration_directory}</apacheConfigurationDirectory>-->
+                <apacheConfigurationDirectory>${web_server_configuration_directory}</apacheConfigurationDirectory>
+                <apacheWindowsServiceName></apacheWindowsServiceName>
+            </apacheSaveConfigurationToFile>
+            <!-- Adapt MySQL -->
+
+            <!-- Add information to properties.ini -->
+
+            <mysqlSaveConfigurationToFile mysqlPropertiesFile="${installdir}/properties.ini">
+                <mysqlPort>${database_port}</mysqlPort>
+                <mysqlHost>${database_hostname}</mysqlHost>
+                <mysqlRootDirectory>${database_root_directory}</mysqlRootDirectory>
+                <mysqlDataDirectory>${database_data_directory}</mysqlDataDirectory>
+                <mysqlConfigurationDirectory>${database_configuration_directory}</mysqlConfigurationDirectory>
+                <mysqlBinaryDirectory>${database_binary_directory}</mysqlBinaryDirectory>
+                <mysqlArguments>${database_arguments}</mysqlArguments>
+                <mysqlSocket>${database_socket}</mysqlSocket>
+                <mysqlWindowsServiceName></mysqlWindowsServiceName>
+            </mysqlSaveConfigurationToFile>
+
+            <!-- Adapt PHP -->
+            <phpSaveConfigurationToFile>
+                <phpPropertiesFile>${installdir}/properties.ini</phpPropertiesFile>
+                <phpConfigurationDirectory>${php_configuration_directory}</phpConfigurationDirectory>
+                <phpBinaryDirectory>${php_binary_directory}</phpBinaryDirectory>
+                <phpExtensionsDirectory>${php_extensions_directory}</phpExtensionsDirectory>
+            </phpSaveConfigurationToFile>
+                </actionList>
+                <ruleList>
+                    <isFalse value="${onlyPopulateVariables}"/>
+                </ruleList>
+            </actionGroup>
+	</actionList>
+      </actionDefinition>
+
+      <actionDefinition name="adapterComponentsSelection">
+          <parameterList>
+              <stringParameter name="select" value=""/>
+              <stringParameter name="deselect" value=""/>
+          </parameterList>
+          <actionList>
+              <setInstallerVariable name="allComponents" value="common_native_adapter native_mysql_adapter native_apache_adapter native_subversion_adapter native_proftpd_adapter"/>
+              <setInstallerVariable name="select" value="${allComponents}">
+                  <ruleList>
+                      <compareText text="${select}" logic="equals" value="all"/>
+                  </ruleList>
+              </setInstallerVariable>
+              <setInstallerVariable name="deselect" value="${allComponents}">
+                  <ruleList>
+                      <compareText text="${deselect}" logic="equals" value="all"/>
+                  </ruleList>
+              </setInstallerVariable>
+
+              <foreach>
+                  <variables>component</variables>
+                  <values>${deselect}</values>
+                  <actionList>
+                      <componentSelection deselect="${component}">
+                          <ruleList>
+                              <componentTest name="${component}" logic="exists"/>
+                          </ruleList>
+                      </componentSelection>
+                  </actionList>
+              </foreach>
+              <foreach>
+                  <variables>component</variables>
+                  <values>${select}</values>
+                  <actionList>
+                      <componentSelection select="${component}">
+                          <ruleList>
+                              <componentTest name="${component}" logic="exists"/>
+                          </ruleList>
+                      </componentSelection>
+                  </actionList>
+              </foreach>
+          </actionList>
+      </actionDefinition>
+      <actionDefinition name="enableAdapterComponents">
+          <parameterList>
+              <stringParameter name="components" value="all"/>
+          </parameterList>
+          <actionList>
+              <adapterComponentsSelection select="${components}"/>
+          </actionList>
+      </actionDefinition>
+      <actionDefinition name="disableAdapterComponents">
+          <parameterList>
+              <stringParameter name="components" value="all"/>
+          </parameterList>
+          <actionList>
+              <adapterComponentsSelection deselect="${components}"/>
+          </actionList>
+      </actionDefinition>
+  </functionDefinitionList>
+	</component>
+    </componentList>
+</componentGroup>
+
