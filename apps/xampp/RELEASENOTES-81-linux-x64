@@ -5,6 +5,14 @@ This version of XAMPP contains the following software releases:
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+[2022-10-01] XAMPP for Linux 8.1.10-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.54
+   - PHP 8.1.10
+   - OpenSSL 1.1.1q
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 [2022-05-16] XAMPP for Linux 8.1.6-0
 This version of XAMPP contains the following software releases:
    - Apache 2.4.53
