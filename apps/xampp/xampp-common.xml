@@ -7,7 +7,7 @@
 
     <preInstallationActionList>
       <setInstallerVariable name="component(baseparamdir).parameter(installdir).value" value="${env(SYSTEMDRIVE)}\xampp"  />
-      <showWarning text="Important! Because an activated User Account Control (UAC) on your system some functions of XAMPP are possibly restricted. With UAC please avoid to install XAMPP to ${windows_folder_program_files} (missing write permisssions). Or deactivate UAC with msconfig after this setup.">
+      <showWarning text="Important: Because there is an activated User Account Control (UAC) on your system, some functions of XAMPP may be restricted. Please avoid installing XAMPP to ${windows_folder_program_files} (missing write permisssions) or deactivate UAC with msconfig after this setup.">
 	<ruleList>
 	  <isTrue value="${windows_os_uac_enabled}"/>
 	  <isFalse value="${disable_uac_warning}"/>
