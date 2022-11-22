@@ -903,7 +903,6 @@ fi
                     exit 1
                 }
 	    }
-            file delete -force [file normalize $IBPath/license.xml]
         }
     }
     $be stopTimer "product.installBuilder"

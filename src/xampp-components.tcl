@@ -1161,7 +1161,7 @@ UseFtpUsers}]
 		set platform linux
 	    }
             set name "xampp-htdocs-$platform"
-            set version 20180510
+            set version 20221122
             set rev 0
             set tarballName $name-$version.tar.gz
             set licenseRelativePath ""
@@ -1748,7 +1748,6 @@ UseFtpUsers}]
             set ::opts(mysql.prefix) [prefix]
             set ::opts(mysql.srcdir) [srcdir]
         }
-
         public method install {} {
             chain
             foreach f {INSTALL-BINARY README COPYING data sql-bench docs mysql-test bin/mysql.server} {
@@ -1831,9 +1830,7 @@ UseFtpUsers}]
             set fullname MariaDB
             set version [versions::get "MariaDB" "10"]
             if {[$be targetPlatform] == "osx-x64"} {
-                set version 10.4.21
-                set supportsParallelBuild 0
-                set patchList {TokuDB-MacOS.patch}
+                set patchList {TokuDB-MacOS.patch mariadb-clock_realtime.patch}
             }
         }
         public method srcdir {} {
@@ -2226,7 +2223,6 @@ UseFtpUsers}]
         public method srcdir {} {
             return [file join [$be cget -src] "libgd-gd-$version"]
         }
-
         public method cmakeOptions {} {
             return [list -DCMAKE_INSTALL_PREFIX=[$be cget -output] -DENABLE_FONTCONFIG=0 -DENABLE_XPM=0 \
                         -DENABLE_PNG=1 -DPNG_LIBRARY=[$be cget -output] -DPNG_PNG_INCLUDE_DIR=[$be cget -output]/include \

@@ -1,6 +1,5 @@
 <project>
-  <vendor>Bitnami</vendor>
-  <productUrlHelpLink>https://community.bitnami.com</productUrlHelpLink>
+  <vendor>Apache Friends</vendor>
   <productUrlInfoAbout>http://apachefriends.org</productUrlInfoAbout>
   <productDisplayIcon>${installdir}/install/xampp.ico</productDisplayIcon>
   <fullName>XAMPP</fullName>
@@ -13,13 +12,14 @@
   <allowComponentSelection>1</allowComponentSelection>
   <showFileUnpackingProgress>0</showFileUnpackingProgress>
   <compressionAlgorithm>lzma-ultra</compressionAlgorithm>
+  <createOsxBundleDmg>1</createOsxBundleDmg>
   <enableRollback>0</enableRollback>
   <osxApplicationBundleIcon>images/xampp.icns</osxApplicationBundleIcon>
   <leftImage>images/xampp-left.png</leftImage>
   <logoImage>images/xampp-top-right.png</logoImage>
   <uninstallerDirectory>${xampp_installdir_root}</uninstallerDirectory>
   <height>393</height>
-
+  <splashImage>images/xampp-slide1.png</splashImage>
   <slideShowLoop>yes</slideShowLoop>
   <slideShowTiming>10</slideShowTiming>
   <slideShowImageList>
