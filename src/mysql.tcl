@@ -899,11 +899,9 @@ no-auto-rehash
         chain $environment
     } {
         set name mariadb
-        #set version [versions::get "MariaDB" 10]
-        # Issues with 10.4.22
-        set version 10.4.21
+        set version [versions::get "MariaDB" 10]
         set supportsParallelBuild 0
-        set patchList {TokuDB-MacOS.patch}
+        set patchList {TokuDB-MacOS.patch mariadb-clock_realtime.patch}
     }
     public method setEnvironment {} {
         set ::opts(mysql.prefix) [prefix]

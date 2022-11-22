@@ -5,6 +5,14 @@ This version of XAMPP contains the following software releases:
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+[2022-11-22] XAMPP for OS X 7.4.33-0
+This version of XAMPP contains the following software releases:
+   - PHP 7.4.33
+   - OpenSSL 1.1.1s
+   - MariaDB 10.4.27
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 [2022-05-16] XAMPP for OS X 7.4.29-1
 This version of XAMPP contains the following software releases:
    - Apache 2.4.53

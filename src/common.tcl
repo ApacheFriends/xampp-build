@@ -1403,9 +1403,9 @@ if {$::tcl_platform(os) == "SunOS"} {
             } elseif {[::xampptcl::util::isOSX1010Chroot]} {
                 # New OS X machines have a VM with 8 cores and 2 chroots each one.
                 # Here we split those 8 cores between both chroots.
-                return [list [findMake] --jobs=2]
+                return [list [findMake] --jobs=5]
             } else {
-                return [list [findMake] --jobs=2]
+                return [list [findMake] --jobs=5]
             }
         } else {
             return [findMake]

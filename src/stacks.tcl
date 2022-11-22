@@ -920,6 +920,9 @@
                 set tarballPath [$stack findTarball]
                 message info "Uncompressing Base System from Tarball: $tarballPath"
                 if {[catch {
+                    if {[$be cget -target]=="osx-x64"} {
+                        set dest [file join [$be cget -output] xamppfiles]
+                    }
                     if {$dest == ""} {
                         set dest [$be cget -output]
                     }
