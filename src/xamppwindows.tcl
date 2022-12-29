@@ -36,7 +36,7 @@
     public method setReadmeVersion {component version} {
         foreach file {readme_de.txt readme_en.txt} {
             xampptcl::util::substituteParametersInFile [file join $xamppoutputdir $file] \
-                [list "@@XAMPP_${component}_VERSION@@" $version]
+                [list "@@BITROCK_${component}_VERSION@@" $version]
         }
     }
 }
