@@ -815,6 +815,23 @@
         return xamppinstallerphp81
     }
 }
+::itcl::class xamppportableinstaller82stack {
+    inherit xamppportableinstallerstack
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+        set application ::xampp::php82
+        set xampp_vcredist_name VS16
+    } {
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppPortableInstallerPhp82Stack
+    }
+    public method confFileName {} {
+        return xamppinstallerphp82
+    }
+}
 ::itcl::class xampp {
     inherit phpBitnamiProgram
     constructor {environment} {

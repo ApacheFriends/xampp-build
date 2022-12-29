@@ -742,3 +742,28 @@
 	    windowsXamppPortablePhp81
     }
 }
+::itcl::class windows64XamppPortableInstallerPhp82Stack {
+    inherit stack
+       constructor {environment} {
+        chain $environment
+    } {
+	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	    windowsXamppHtdocs \
+	    windows64XamppVcredist2019 \
+	    windows64XamppApachePhp82 \
+	    windowsXamppApacheAddons \
+	    windowsXamppSendmail \
+	    windows64XamppMariaDb \
+	    windowsXamppMysqlData \
+	    windows64XamppPerl \
+	    windowsXamppPerlAddons \
+	    windows64XamppPhp82 \
+	    windowsXamppPhpAddons \
+	    windowsXamppPhpPear \
+	    windowsXamppPhpADODB \
+	    windowsXamppPhpMyAdmin \
+	    windows64XamppCurl \
+	    windows64XamppTomcat \
+	    windowsXamppPortablePhp82
+    }
+}
