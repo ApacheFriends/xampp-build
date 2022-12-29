@@ -299,7 +299,7 @@
         set version [::xampp::php::getXAMPPVersion 80]
         set rev [::xampp::php::getXAMPPRevision 80]
         set vcVersion VS16
-        set opensslVersion 1.1.0g
+        set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
@@ -313,7 +313,7 @@
         set version [::xampp::php::getXAMPPVersion 81]
         set rev [::xampp::php::getXAMPPRevision 81]
         set vcVersion VS16
-        set opensslVersion 1.1.0g
+        set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
@@ -327,7 +327,7 @@
         set version [::xampp::php::getXAMPPVersion 82]
         set rev [::xampp::php::getXAMPPRevision 82]
         set vcVersion VS16
-        set opensslVersion 1.1.0g
+        set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
