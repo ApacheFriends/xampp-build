@@ -84,9 +84,15 @@
     } {
         set tarballName httpd-${version}-win64-VS16.zip
     }
+    public method preparefordist {} {
+        chain
+        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"]
+    }
     public method install {} {
         chain
         xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php5" "php8"]
+        # PHP 8.0 is installed as 'php_module', and .7z and .zip assets don't run the preparefordist method
+        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"] 1
     }
 }
 
@@ -112,17 +118,7 @@
     } {
         set tarballName httpd-${version}-win64-VS16.zip
     }
-    public method preparefordist {} {
-        chain
-        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"]
-    }
-    public method install {} {
-        chain
-        # PHP 8.0 is installed as 'php_module', and .7z and .zip assets don't run the preparefordist method
-        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"] 1
-    }
 }
-
 ::itcl::class windows64XamppApachePhp81 {
     inherit windows64XamppApachePhp8
     constructor {environment} {
@@ -130,14 +126,13 @@
     } {
         set tarballName httpd-${version}-win64-VS16.zip
     }
-    public method preparefordist {} {
-        chain
-        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"]
-    }
-    public method install {} {
-        chain
-        # PHP 8.1 is installed as 'php_module', and .7z and .zip assets don't run the preparefordist method
-        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"] 1
+}
+::itcl::class windows64XamppApachePhp82 {
+    inherit windows64XamppApachePhp8
+    constructor {environment} {
+	    chain $environment
+    } {
+        set tarballName httpd-${version}-win64-VS16.zip
     }
 }
 
@@ -267,6 +262,12 @@
         set opensslVersion [versions::get "OpenSSL" stable]
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
+    public method install {} {
+        chain
+        # Fix warning message related to SQLite not being properly loaded
+        xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
+          "LoadModule\\s+php_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadModule php_module"] 1
+    }
 }
 
 ::itcl::class windows64XamppPhp74 {
@@ -301,12 +302,6 @@
         set opensslVersion 1.1.0g
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
-     public method install {} {
-        chain
-        # Fix warning message related to SQLite not being properly loaded
-        xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
-          "LoadModule\\s+php_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadModule php_module"] 1
-    }
 }
 
 ::itcl::class windows64XamppPhp81 {
@@ -321,11 +316,19 @@
         set opensslVersion 1.1.0g
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
-     public method install {} {
-        chain
-        # Fix warning message related to SQLite not being properly loaded
-        xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
-          "LoadModule\\s+php_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadModule php_module"] 1
+}
+
+::itcl::class windows64XamppPhp82 {
+  inherit windows64XamppPhp8
+    constructor {environment} {
+        chain $environment
+    } {
+        set name windows64XamppPhp82
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+        set vcVersion VS16
+        set opensslVersion 1.1.0g
+        set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
 
@@ -565,6 +568,38 @@
 	    windowsXamppWebalizer \
 	    windowsXamppWebalizerAddons \
         windowsXamppStandardPhp80
+    }
+}
+
+::itcl::class windows64XamppInstallerPhp82Stack {
+    inherit stack
+       constructor {environment} {
+        chain $environment
+    } {
+	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	    windowsXamppHtdocs \
+	    windows64XamppVcredist2019 \
+	    windows64XamppApachePhp82 \
+	    windowsXamppApacheAddons \
+	    windowsXamppFileZillaFTP \
+	    windowsXamppFileZillaFTPSource \
+	    windowsXamppMercuryMail \
+	    windowsXamppMercuryMailAddons \
+	    windowsXamppSendmail \
+	    windows64XamppMariaDb \
+	    windowsXamppMysqlData \
+	    windows64XamppPerl \
+	    windowsXamppPerlAddons \
+	    windows64XamppPhp82 \
+	    windows64XamppPhpAddons \
+	    windowsXamppPhpMyAdmin \
+	    windows64XamppCurl \
+	    windowsXamppPhpPear \
+	    windowsXamppPhpADODB \
+	    windows64XamppTomcat \
+	    windowsXamppWebalizer \
+	    windowsXamppWebalizerAddons \
+        windowsXamppStandardPhp82
     }
 }
 

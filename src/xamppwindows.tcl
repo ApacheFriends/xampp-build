@@ -1221,6 +1221,17 @@ mssql.secure_connection=Off"
     }
 }
 
+::itcl::class windowsXamppStandardPhp82 {
+    inherit windowsXamppStandardPhp7
+    constructor {environment} {
+	chain $environment
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+        set xampp_vcredist_name VS16
+    } {
+    }
+}
+
 ::itcl::class windowsXamppPortable {
     inherit windowsXamppComponent
     protected variable rev 0

@@ -438,6 +438,20 @@
         return XamppInstallerPhp80Stack
     }
 }
+::itcl::class xamppinstaller82stack {
+    inherit xamppinstallerstack
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+        set application ::xampp::php82
+        set xampp_vcredist_name VS16
+    } {
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstallerPhp82Stack
+    }
+}
 ::itcl::class xamppinstaller81stack {
     inherit xamppinstallerstack
     constructor {environment} {
