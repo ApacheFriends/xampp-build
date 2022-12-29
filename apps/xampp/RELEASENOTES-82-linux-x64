@@ -1,15 +1,15 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-[@@XAMPP_DATE@@] XAMPP for Windows @@XAMPP_APPLICATION_VERSION@@
+[@@XAMPP_DATE@@] XAMPP for Linux @@XAMPP_APPLICATION_VERSION@@
 This version of XAMPP contains the following software releases:
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-[2022-12-29] XAMPP for Windows 8.2.0-0
+[2022-12-29] XAMPP for Linux 8.2.0-0
 This version of XAMPP contains the following software releases:
    - Apache 2.4.54
    - MariaDB 10.4.27
-   - OpenSSL 1.1.1p
+   - OpenSSL 1.1.1s
    - PEAR 1.7.1
    - PHP 8.2.0
    - phpMyAdmin 5.2.0
