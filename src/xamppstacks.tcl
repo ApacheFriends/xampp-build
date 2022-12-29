@@ -143,21 +143,19 @@
     }
 }
 ::itcl::class linuxXamppInstaller81Stack {
-    inherit linuxXamppInstallerXStack
+    inherit linuxXamppInstaller80Stack
     constructor {environment} {
         chain $environment
     } {
-        # There is an issue with PHP if gd is previously compiled
-        removeComponents ::xampp::gd
-        replaceComponent ::xampp::php {oniguruma {::xampp::php81} ::xampp::gd}
-        replaceComponent ::xampp::xamppSkeleton ::xampp::xamppSkeletonDev
+        replaceComponent ::xampp::php80 ::xampp::php81
     }
-    public method componentsToBuild {} {
-        if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
-        } else {
-            return [lremove [chain] [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
-        }
+}
+::itcl::class linuxXamppInstaller82Stack {
+    inherit linuxXamppInstaller81Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php81 ::xampp::php82
     }
 }
 
@@ -204,6 +202,13 @@
 }
 ::itcl::class linux64XamppInstaller81Stack {
     inherit linuxXamppInstaller81Stack
+    constructor {environment} {
+        chain $environment
+    } {
+    }
+}
+::itcl::class linux64XamppInstaller82Stack {
+    inherit linuxXamppInstaller82Stack
     constructor {environment} {
         chain $environment
     } {
@@ -292,7 +297,6 @@
     constructor {environment} {
         chain $environment
     } {
-        # There is an issue with PHP if gd is previously compiled
         removeComponents ::xampp::gd
         replaceComponent ::xampp::php {oniguruma {::xampp::php80} ::xampp::gd}
         replaceComponent ::xampp::xamppSkeleton ::xampp::xamppSkeletonDev
@@ -306,21 +310,19 @@
     }
 }
 ::itcl::class osx64XamppInstaller81Stack {
-    inherit osx64XamppInstallerXStack
+    inherit osx64XamppInstaller80Stack
     constructor {environment} {
         chain $environment
     } {
-        # There is an issue with PHP if gd is previously compiled
-        removeComponents ::xampp::gd
-        replaceComponent ::xampp::php {oniguruma {::xampp::php81} ::xampp::gd}
-        replaceComponent ::xampp::xamppSkeleton ::xampp::xamppSkeletonDev
+        replaceComponent ::xampp::php80 ::xampp::php81
     }
-    public method componentsToBuild {} {
-        if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
-        } else {
-            return [lremove [chain] [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
-        }
+}
+::itcl::class osx64XamppInstaller82Stack {
+    inherit osx64XamppInstaller81Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php81 ::xampp::php82
     }
 }
 # XAMPP Installer - standard version
@@ -706,6 +708,22 @@
     }
     public method confFileName {} {
         return xamppinstallerphp81
+    }
+}
+::itcl::class xamppunixinstaller82stack {
+    inherit xamppunixinstallerXstack
+    constructor {environment} {
+        chain $environment
+    } {
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+        set application ::xampp::php82
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstaller82Stack
+    }
+    public method confFileName {} {
+        return xamppinstallerphp82
     }
 }
 # XAMPP Installer - portable lite version
