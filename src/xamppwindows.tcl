@@ -1221,6 +1221,17 @@ mssql.secure_connection=Off"
     }
 }
 
+::itcl::class windowsXamppStandardPhp82 {
+    inherit windowsXamppStandardPhp7
+    constructor {environment} {
+	chain $environment
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+        set xampp_vcredist_name VS16
+    } {
+    }
+}
+
 ::itcl::class windowsXamppPortable {
     inherit windowsXamppComponent
     protected variable rev 0
@@ -1349,12 +1360,10 @@ mssql.secure_connection=Off"
     }
 }
 
-::itcl::class windowsXamppPortablePhp80 {
-    inherit windowsXamppPortablePhp7
+::itcl::class windowsXamppPortablePhp8 {
+    inherit windowsXamppPortable
     constructor {environment} {
         chain $environment
-        set version [::xampp::php::getXAMPPVersion 80]
-        set rev [::xampp::php::getXAMPPRevision 80]
         set xampp_vcredist_name VS16
     } {
     }
@@ -1365,19 +1374,33 @@ mssql.secure_connection=Off"
     }
 }
 
+::itcl::class windowsXamppPortablePhp80 {
+    inherit windowsXamppPortablePhp8
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 80]
+        set rev [::xampp::php::getXAMPPRevision 80]
+    } {
+    }
+}
+
 ::itcl::class windowsXamppPortablePhp81 {
-    inherit windowsXamppPortablePhp7
+    inherit windowsXamppPortablePhp8
     constructor {environment} {
         chain $environment
         set version [::xampp::php::getXAMPPVersion 81]
         set rev [::xampp::php::getXAMPPRevision 81]
-        set xampp_vcredist_name VS16
     } {
     }
-    public method packXampp {} {
-        # PHP 8.1 is installed as 'php_module', and portable classes don't run the preparefordist method
-        xampptcl::util::substituteParametersInFile $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list "php8_module" "php_module"]
-        chain
+}
+
+::itcl::class windowsXamppPortablePhp82 {
+    inherit windowsXamppPortablePhp8
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 82]
+        set rev [::xampp::php::getXAMPPRevision 82]
+    } {
     }
 }
 
