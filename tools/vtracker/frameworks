@@ -31,7 +31,7 @@ prog composer = {
   regex   = tag/([0-9\\.]+(?!.*(alpha|beta|rc*|ALPHA|BETA|RC*)))
 }
 prog phpmyadmin = {
-  version = 5.2.0
+  version = 5.2.1
   url     = http://www.phpmyadmin.net/home_page/downloads.php
   regex   = ">phpMyAdmin (__VER__)</"
 }

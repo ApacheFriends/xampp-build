@@ -1,7 +1,11 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-[@@XAMPP_DATE@@] XAMPP for OS X @@XAMPP_APPLICATION_VERSION@@
+[2023-04-08] XAMPP for OS X 8.2.4-0
 This version of XAMPP contains the following software releases:
+   - Apache 2.4.56
+   - MariaDB 10.4.28
+   - OpenSSL 1.1.1t
+   - PHP 8.2.4
+   - phpMyAdmin 5.2.1
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
