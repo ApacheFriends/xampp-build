@@ -10,16 +10,6 @@ prog cacertificates = {
   url     = https://curl.haxx.se/docs/caextract.html
   regex   = cacert-(__VER__).pem
 }
-prog cakeapp = {
-  version = 3.10.1
-  url     = https://github.com/cakephp/app/tags
-  regex   = (3\.[0-9]+\.[0-9]+)\n
-}
-prog cakephp = {
-  version = 3.10.4
-  url     = https://github.com/cakephp/cakephp/tags
-  regex   = (3\.[0-9]+\.[0-9]+)\n
-}
 prog codeigniter = {
   version = 4.2.0
   url     = https://github.com/codeigniter4/CodeIgniter4/releases
