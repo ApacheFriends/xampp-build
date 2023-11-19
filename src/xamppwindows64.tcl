@@ -82,7 +82,7 @@
     constructor {environment} {
 	chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS16.zip
+        set tarballName httpd-${version}-win64-VS17.zip
     }
     public method preparefordist {} {
         chain
@@ -116,7 +116,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS16.zip
+        set tarballName httpd-${version}-win64-VS17.zip
     }
 }
 ::itcl::class windows64XamppApachePhp81 {
@@ -124,7 +124,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS16.zip
+        set tarballName httpd-${version}-win64-VS17.zip
     }
 }
 ::itcl::class windows64XamppApachePhp82 {
@@ -132,7 +132,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS16.zip
+        set tarballName httpd-${version}-win64-VS17.zip
     }
 }
 
@@ -338,7 +338,7 @@
         chain $environment
     } {
         set name windows64XamppCurl
-        set version 7.64.0
+        set version 8.4.0_6
         set licenseRelativePath {}
         set tarballName curl-${version}-win64-mingw
         set cacertificatesVersion [getVtrackerField cacertificates version frameworks]
