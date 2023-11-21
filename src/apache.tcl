@@ -479,9 +479,9 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
         # 32 bits is necessary for zlib1 in drupal
         foreach winVersion [list win32 win64] {
             set version [getVtrackerField windows-apache version infrastructure]
-            foreach vcVersion [list VC15 VS16] {
+            foreach vcVersion [list VC15 VS16 VS17] {
                 set downloadTarballName httpd-$version-$winVersion-$vcVersion.zip
-                if { $vcVersion == "VS16" } {
+                if { $vcVersion == "VS17" } {
                     set downloadUrl https://www.apachelounge.com/download/$vcVersion/binaries/$downloadTarballName
                 } else {
                     set downloadUrl https://home.apache.org/~steffenal/$vcVersion/binaries/$downloadTarballName
