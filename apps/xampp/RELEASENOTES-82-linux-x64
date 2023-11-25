@@ -1,4 +1,14 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+[2023-11-25] XAMPP for Linux 8.2.12-0
+This version of XAMPP contains the following software releases:
+   - Apache 2.4.58
+   - MariaDB 10.4.32
+   - OpenSSL 1.1.1w
+   - PHP 8.2.12
+   - phpMyAdmin 5.2.1
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 [2023-04-08] XAMPP for Linux 8.2.4-0
 This version of XAMPP contains the following software releases:
    - Apache 2.4.56
