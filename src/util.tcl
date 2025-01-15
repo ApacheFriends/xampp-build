@@ -770,7 +770,7 @@ proc buildProgram {p be} {
 }
 
 proc buildProject {project be buildType {license {}} {extraSetVars {}} {onlyGenerateScript 0}} {
-    set IBversion [findInstallBuilderVersion $be]
+    set IBversion 24.7.0
     populateEmptyDirs [file dirname $project]
     message info "Building installer with IB version $IBversion"
     if {[info exists ::env(BITNAMI_AUTOMATIC_BUILD)]} {
@@ -949,15 +949,6 @@ proc includeLibGcc {be {destination {}}} {
     }
 }
 
-proc findInstallBuilderVersion {be} {
-    if {[catch {set file [open [file join [$be cget -projectDir] src ibversion] r]}]} {
-	message error "'ibversion' file couldn't be found in [$be cget -projectDir]/src"
-	exit 1
-    }
-    set ibversion [gets $file]
-    close $file
-    return $ibversion
-}
 proc populateEmptyDirs {directory} {
     # The reason is that when the customers uncompress the files we send to them
     # for building on their side, some Winzip utilities would ignore by default

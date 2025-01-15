@@ -25,11 +25,11 @@ You can build the XAMPP base tarballs from the `src` directory. You can get the 
 Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, your can run the commands below to create the desired installer depending on the platform. You can use the container to compile the binaries for Linux x64 but you will need access to an OS X higher than 10.6 to compile the binaries from OS X there.
 
 ```
-tclkit createstack.tcl buildTarball xamppunixinstaller80stack linux-x64
-tclkit createstack.tcl buildTarball xamppunixinstaller80stack osx-x64
+tclsh createstack.tcl buildTarball xamppunixinstaller80stack linux-x64
+tclsh createstack.tcl buildTarball xamppunixinstaller80stack osx-x64
 ```
 
-> NOTE: you can build other PHP versions (7.4.x, 8.0.x, or 8.1.x) replacing `80` with `74` or `81`.
+> NOTE: you can build other PHP versions (7.4.x, 8.0.x, 8.1.x, or 8.2.x) replacing `80` with `74`, `81`, or `82`.
 
 Once the tarball is compressed, you can move it to the `/tmp/tarball` mounted directory to use it in the next step.
 
@@ -40,12 +40,12 @@ You can build the XAMPP installers from the `src` directory. The Linux and OS X 
 Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, your can run the commands below to create the desired installer depending on the platform.
 
 ```
-tclkit createstack.tcl pack xamppunixinstaller80stack linux-x64
-tclkit createstack.tcl pack xamppunixinstaller80stack osx-x64
-tclkit createstack.tcl pack xamppinstaller80stack windows-x64
+tclsh createstack.tcl pack xamppunixinstaller80stack linux-x64
+tclsh createstack.tcl pack xamppunixinstaller80stack osx-x64
+tclsh createstack.tcl pack xamppinstaller80stack windows-x64
 ```
 
-> NOTE: you can pack other PHP versions (7.4.x, 8.0.x, or 8.1.x) replacing `80` with `74` or `81`.
+> NOTE: you can pack other PHP versions (7.4.x, 8.0.x, 8.1.x, or 8.2.x) replacing `80` with `74`, `81`, or `82`.
 
 The installers will be accessible at `/opt/installbuilder/output/`.
 
