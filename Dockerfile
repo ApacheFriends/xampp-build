@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 LABEL maintainer="Apache Friends"
-ARG IB_VERSION=24.7.0
+ARG IB_VERSION=25.6.0
 
 # Install necessary tools and dependencies
 RUN apt-get update && apt-get install -y \

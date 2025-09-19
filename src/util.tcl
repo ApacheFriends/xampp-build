@@ -770,7 +770,7 @@ proc buildProgram {p be} {
 }
 
 proc buildProject {project be buildType {license {}} {extraSetVars {}} {onlyGenerateScript 0}} {
-    set IBversion 24.7.0
+    set IBversion 25.6.0
     populateEmptyDirs [file dirname $project]
     message info "Building installer with IB version $IBversion"
     if {[info exists ::env(BITNAMI_AUTOMATIC_BUILD)]} {
