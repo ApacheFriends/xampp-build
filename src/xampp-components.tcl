@@ -2762,4 +2762,30 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             }
         }
     }
+
+    ::itcl::class php83 {
+        inherit php
+        constructor {environment} {
+            chain $environment
+        } {
+            set vtrackerName XAMPP83
+            set version [::xampp::php::getXAMPPVersion 83]
+            if {[string match osx* [$be cget -target]]} {
+                set patchList {fix-opcache-support-php-8.OS-X.patch}
+            }
+        }
+    }
+
+    ::itcl::class php84 {
+        inherit php
+        constructor {environment} {
+            chain $environment
+        } {
+            set vtrackerName XAMPP84
+            set version [::xampp::php::getXAMPPVersion 84]
+            if {[string match osx* [$be cget -target]]} {
+                set patchList {fix-opcache-support-php-8.OS-X.patch}
+            }
+        }
+    }
 }

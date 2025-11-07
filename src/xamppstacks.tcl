@@ -159,6 +159,24 @@
     }
 }
 
+::itcl::class linuxXamppInstaller83Stack {
+    inherit linuxXamppInstaller82Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php82 ::xampp::php83
+    }
+}
+
+::itcl::class linuxXamppInstaller84Stack {
+    inherit linuxXamppInstaller83Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php83 ::xampp::php84
+    }
+}
+
 ::itcl::class linux64XamppInstallerStack {
     inherit linuxXamppInstallerStack
     constructor {environment} {
@@ -214,6 +232,23 @@
     } {
     }
 }
+
+::itcl::class linux64XamppInstaller83Stack {
+    inherit linuxXamppInstaller83Stack
+    constructor {environment} {
+        chain $environment
+    } {
+    }
+}
+
+::itcl::class linux64XamppInstaller84Stack {
+    inherit linuxXamppInstaller84Stack
+    constructor {environment} {
+        chain $environment
+    } {
+    }
+}
+
 ::itcl::class osx64XamppInstallerStack {
     inherit linuxXamppInstallerStack
     constructor {environment} {
@@ -466,6 +501,34 @@
     }
     public method getBaseNameForPlatform {} {
         return XamppInstallerPhp81Stack
+    }
+}
+::itcl::class xamppinstaller83stack {
+    inherit xamppinstallerstack
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 83]
+        set rev [::xampp::php::getXAMPPRevision 83]
+        set application ::xampp::php83
+        set xampp_vcredist_name VS16
+    } {
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstallerPhp83Stack
+    }
+}
+::itcl::class xamppinstaller84stack {
+    inherit xamppinstallerstack
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 84]
+        set rev [::xampp::php::getXAMPPRevision 84]
+        set application ::xampp::php84
+        set xampp_vcredist_name VS16
+    } {
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstallerPhp84Stack
     }
 }
 
@@ -724,6 +787,38 @@
     }
     public method confFileName {} {
         return xamppinstallerphp82
+    }
+}
+::itcl::class xamppunixinstaller83stack {
+    inherit xamppunixinstallerXstack
+    constructor {environment} {
+        chain $environment
+    } {
+        set version [::xampp::php::getXAMPPVersion 83]
+        set rev [::xampp::php::getXAMPPRevision 83]
+        set application ::xampp::php83
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstaller83Stack
+    }
+    public method confFileName {} {
+        return xamppinstallerphp83
+    }
+}
+::itcl::class xamppunixinstaller84stack {
+    inherit xamppunixinstallerXstack
+    constructor {environment} {
+        chain $environment
+    } {
+        set version [::xampp::php::getXAMPPVersion 84]
+        set rev [::xampp::php::getXAMPPRevision 84]
+        set application ::xampp::php84
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstaller84Stack
+    }
+    public method confFileName {} {
+        return xamppinstallerphp84
     }
 }
 # XAMPP Installer - portable lite version
