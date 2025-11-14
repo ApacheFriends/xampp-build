@@ -135,6 +135,22 @@
         set tarballName httpd-${version}-win64-VS17.zip
     }
 }
+::itcl::class windows64XamppApachePhp83 {
+    inherit windows64XamppApachePhp8
+    constructor {environment} {
+	    chain $environment
+    } {
+        set tarballName httpd-${version}-win64-VS17.zip
+    }
+}
+::itcl::class windows64XamppApachePhp84 {
+    inherit windows64XamppApachePhp8
+    constructor {environment} {
+	    chain $environment
+    } {
+        set tarballName httpd-${version}-win64-VS17.zip
+    }
+}
 
 ::itcl::class windows64XamppPhpAddons {
     inherit windowsXamppPhpAddons
@@ -327,6 +343,34 @@
         set version [::xampp::php::getXAMPPVersion 82]
         set rev [::xampp::php::getXAMPPRevision 82]
         set vcVersion VS16
+        set opensslVersion 1.1.1p
+        set tarballName php-${version}-Win32-${vcVersion}-x64.zip
+    }
+}
+
+::itcl::class windows64XamppPhp83 {
+  inherit windows64XamppPhp8
+    constructor {environment} {
+        chain $environment
+    } {
+        set name windows64XamppPhp83
+        set version [::xampp::php::getXAMPPVersion 83]
+        set rev [::xampp::php::getXAMPPRevision 83]
+        set vcVersion VS16
+        set opensslVersion 1.1.1p
+        set tarballName php-${version}-Win32-${vcVersion}-x64.zip
+    }
+}
+
+::itcl::class windows64XamppPhp84 {
+  inherit windows64XamppPhp8
+    constructor {environment} {
+        chain $environment
+    } {
+        set name windows64XamppPhp84
+        set version [::xampp::php::getXAMPPVersion 84]
+        set rev [::xampp::php::getXAMPPRevision 84]
+        set vcVersion vs17
         set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
@@ -632,6 +676,70 @@
 	    windowsXamppWebalizer \
 	    windowsXamppWebalizerAddons \
         windowsXamppStandardPhp81
+    }
+}
+
+::itcl::class windows64XamppInstallerPhp83Stack {
+    inherit stack
+       constructor {environment} {
+        chain $environment
+    } {
+	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	    windowsXamppHtdocs \
+	    windows64XamppVcredist2019 \
+	    windows64XamppApachePhp83 \
+	    windowsXamppApacheAddons \
+	    windowsXamppFileZillaFTP \
+	    windowsXamppFileZillaFTPSource \
+	    windowsXamppMercuryMail \
+	    windowsXamppMercuryMailAddons \
+	    windowsXamppSendmail \
+	    windows64XamppMariaDb \
+	    windowsXamppMysqlData \
+	    windows64XamppPerl \
+	    windowsXamppPerlAddons \
+	    windows64XamppPhp83 \
+	    windows64XamppPhpAddons \
+	    windowsXamppPhpMyAdmin \
+	    windows64XamppCurl \
+	    windowsXamppPhpPear \
+	    windowsXamppPhpADODB \
+	    windows64XamppTomcat \
+	    windowsXamppWebalizer \
+	    windowsXamppWebalizerAddons \
+        windowsXamppStandardPhp83
+    }
+}
+
+::itcl::class windows64XamppInstallerPhp84Stack {
+    inherit stack
+       constructor {environment} {
+        chain $environment
+    } {
+	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	    windowsXamppHtdocs \
+	    windows64XamppVcredist2019 \
+	    windows64XamppApachePhp84 \
+	    windowsXamppApacheAddons \
+	    windowsXamppFileZillaFTP \
+	    windowsXamppFileZillaFTPSource \
+	    windowsXamppMercuryMail \
+	    windowsXamppMercuryMailAddons \
+	    windowsXamppSendmail \
+	    windows64XamppMariaDb \
+	    windowsXamppMysqlData \
+	    windows64XamppPerl \
+	    windowsXamppPerlAddons \
+	    windows64XamppPhp84 \
+	    windows64XamppPhpAddons \
+	    windowsXamppPhpMyAdmin \
+	    windows64XamppCurl \
+	    windowsXamppPhpPear \
+	    windowsXamppPhpADODB \
+	    windows64XamppTomcat \
+	    windowsXamppWebalizer \
+	    windowsXamppWebalizerAddons \
+        windowsXamppStandardPhp84
     }
 }
 
