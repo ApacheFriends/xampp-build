@@ -396,6 +396,7 @@
     public method updateReleaseNotes {} {
         set phpMajorVersion [join [lrange [split $version .] 0 1] ""]
         file copy -force [$be cget -projectDir]/apps/xampp/RELEASENOTES-$phpMajorVersion-[$be cget -target] /tmp/RELEASENOTES-$phpMajorVersion-[$be cget -target]
+return
         puts "Updating RELEASENOTES based on the metadata"
         set componentsToList "PHP PEAR MariaDB phpMyAdmin Apache OpenSSL"
         set releaseNotesContent "This version of XAMPP contains the following software releases:"

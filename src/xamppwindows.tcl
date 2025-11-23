@@ -601,7 +601,7 @@
         set batFiles [glob [file join perl/bin *.bat]]
         cd $cwd
         # add some other required files
-        set perlScripts [concat $batFiles perl/bin/pod2latex perl/lib/Config_heavy.pl perl/vendor/lib/ppm.xml]
+        set perlScripts [concat $batFiles perl/lib/Config_heavy.pl perl/vendor/lib/ppm.xml]
         # replace C:\strawberry with \xampp
         foreach file $perlScripts {
             # work around read-only mode for certain files
