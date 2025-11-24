@@ -950,9 +950,11 @@ proc includeLibGcc {be {destination {}}} {
 }
 
 proc findInstallBuilderVersion {be} {
-    if {[catch {set file [open [file join [$be cget -projectDir] src ibversion] r]}]} {
-	message error "'ibversion' file couldn't be found in [$be cget -projectDir]/src"
-	exit 1
+    if {[catch {set file [open /opt/installbuilder/ibversion]}]} {
+	if {[catch {set file [open [file join [$be cget -projectDir] src ibversion] r]}]} {
+	    message error "'ibversion' file couldn't be found in [$be cget -projectDir]/src"
+	    exit 1
+	}
     }
     set ibversion [gets $file]
     close $file

@@ -2538,6 +2538,8 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 8.0 - 80 { return [versions::get "PHP" 80] }
                 8.1 - 81 { return [versions::get "PHP" 81] }
                 8.2 - 82 { return [versions::get "PHP" 82] }
+                8.3 - 83 { return [versions::get "PHP" 83] }
+                8.4 - 84 { return [versions::get "PHP" 84] }		
             }
         }
 
@@ -2547,6 +2549,8 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 8.0 - 80 { return [revisions::get "xamppstack" 80] }
                 8.1 - 81 { return [revisions::get "xamppstack" 81] }
                 8.2 - 82 { return [revisions::get "xamppstack" 82] }
+                8.3 - 83 { return [revisions::get "xamppstack" 83] }
+                8.4 - 84 { return [revisions::get "xamppstack" 84] }		
             }
         }
         public method configureOptions {} {

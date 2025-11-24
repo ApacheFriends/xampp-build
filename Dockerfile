@@ -17,16 +17,18 @@ RUN curl -L -o tclkit 'https://tclkits.rkeene.org/fossil/raw/tclkit-8.5.17-rhel5
 && chmod 755 tclkit && mv tclkit /usr/local/bin
 
 # Download and install InstallBuilder
-RUN curl -L -o installbuilder.run "https://releases.installbuilder.com/installbuilder/installbuilder-${IB_VERSION}-linux-x64-installer.run" \
+RUN curl -L -o installbuilder.run "https://releases.installbuilder.com/installbuilder/installbuilder-professional-${IB_VERSION}-linux-x64-installer.run" \
 && chmod 755 installbuilder.run \
 && ./installbuilder.run --mode unattended --prefix /opt/installbuilder \
 && rm installbuilder.run \
-&& ln -sf /opt/installbuilder /root/installbuilder-${IB_VERSION}
+&& ln -sf /opt/installbuilder /root/installbuilder-${IB_VERSION} \
+&& echo $IB_VERSION > /opt/installbuilder/ibversion
 
 # Create tarballs directory
 RUN mkdir -p /tmp/tarballs
 
 # Set working directory
 WORKDIR /opt/xampp-build
+
 
 CMD [ "bash" ]

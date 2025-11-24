@@ -382,7 +382,7 @@
         chain $environment
     } {
         set name windows64XamppCurl
-        set version 8.4.0_6
+        set version 8.15.0_7
         set licenseRelativePath {}
         set tarballName curl-${version}-win64-mingw
         set cacertificatesVersion [getVtrackerField cacertificates version frameworks]
