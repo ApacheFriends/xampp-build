@@ -1,0 +1,97 @@
+name: build
+run-name: Build by ${{ github.actor }}
+on:
+  workflow_dispatch:
+
+env:
+  IB_VERSION: 26.4.0
+jobs:
+  build-xampp:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [83, 84, 85]
+        include:
+          - os: windows-x64
+            base_tarball: "https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/tarballs-windows-202206.tgz"
+            base_tarball_sha256: "7bacd8f8a8774ad0b76b177c16164591cde4cd26260d0b0690bd6d261e71964f"
+            extra_binaries: |
+                https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/strawberry-perl-5.42.2.1-64bit-portable.zip 32d83be90cf04b807cfb9477482bc36302cdee6f5b04cf57e81adecbd8f07898
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup /bitnami dir
+        id: setup-bitnami-dir
+        run: |
+          sudo mkdir /bitnami
+          sudo chown "$USER:$USER" /bitnami
+      - name: Cache tarballs
+        id: cache-tarballs
+        uses: actions/cache@v5
+        with:
+          path: /tmp/tarballs
+          key: tarballs-${{ matrix.os }}-${{ hashFiles('.github/workflows/*') }}
+
+      - name: Install tclkit
+        id: install-tclkit
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent -L -o tclkit 'https://tclkits.rkeene.org/fossil/raw/tclkit-8.5.17-rhel5-x86_64?name=76a197fe41359daaf4f90a2001f46675b3667e26'
+          chmod 755 tclkit
+          sudo mv tclkit /usr/local/bin
+      - name: Install InstallBuilder
+        id: install-ib
+        run: |
+          set -euo pipefail
+          curl --fail --show-error --silent -L -o installbuilder.run "https://releases.installbuilder.com/installbuilder/installbuilder-professional-${{ env.IB_VERSION }}-linux-x64-installer.run"
+          chmod 755 installbuilder.run
+          sudo ./installbuilder.run --mode unattended --prefix /opt/installbuilder
+          sudo chown -R "$USER:$USER" /opt/installbuilder
+          ln -sf /opt/installbuilder ~/installbuilder-${{env.IB_VERSION}}
+          echo "${{env.IB_VERSION}}" > /opt/installbuilder/ibversion
+          rm installbuilder.run
+      - name: Register License
+        id: register-license
+        env:
+          LICENSE_TEXT: ${{ secrets.INSTALLBUILDER_LICENSE }}
+        run: |
+          echo "$LICENSE_TEXT" > /opt/installbuilder/license.xml
+          /opt/installbuilder/bin/builder check-license
+      - name: Get tarballs
+        id: get-tarballs
+        if: steps.cache-tarballs.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          mkdir /tmp/tarballs
+          cd /tmp/tarballs/
+          echo "Downloading base tarball..."
+          curl --fail --show-error --silent --retry 3 -L \
+            -O '${{ matrix.base_tarball }}'
+          BASE_FILE=$(basename '${{ matrix.base_tarball }}')
+          echo "${{ matrix.base_tarball_sha256 }}  $BASE_FILE" | sha256sum -c -
+
+          echo "Extracting $BASE_FILE ..."
+          tar -xzf "$BASE_FILE"
+
+          echo "Downloading extra binaries..."
+          while read -r url sha; do
+            [ -z "$url" ] && continue
+            echo "  -> $url"
+            curl --fail --show-error --silent --retry 3 -L -O "$url"
+            echo "$sha  $(basename "$url")" | sha256sum -c -
+          done <<< "${{ matrix.extra_binaries }}"
+      - name: Build
+        id: build
+        run: |
+          set -euo pipefail
+          cd src
+          tclkit createstack.tcl pack xamppinstaller${{matrix.version}}stack ${{matrix.os}}
+          mkdir /bitnami/dist-${{matrix.version}}-${{matrix.os}}
+          mv /opt/installbuilder/output/* /bitnami/dist-${{matrix.version}}-${{matrix.os}}
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: xampp-${{matrix.version}}-${{matrix.os}}
+          path: |
+            /bitnami/dist-${{matrix.version}}-${{matrix.os}}/*
