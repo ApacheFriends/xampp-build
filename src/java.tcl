@@ -243,7 +243,7 @@
         if {$name == "mysql-connector-java"} {
             set downloadUrl https://dev.mysql.com/get/Downloads/Connector-J/$name-$version.zip
         } else {
-            set downloadUrl http://downloads.mariadb.com/Connectors/java/connector-java-$version/mariadb-java-client-$version.jar
+            set downloadUrl https://downloads.mariadb.com/Connectors/java/connector-java-$version/mariadb-java-client-$version.jar
         }
         chain
     }
@@ -278,7 +278,7 @@
     } {
         set name mariadb-connector-java
         set version [versions::get "MariaDB-Connector-Java" stable]
-        set downloadUrl http://downloads.mariadb.com/Connectors/java/connector-java-$version/mariadb-java-client-$version.jar
+        set downloadUrl https://downloads.mariadb.com/Connectors/java/connector-java-$version/mariadb-java-client-$version.jar
         set licenseRelativePath {}
         set tarballName mariadb-java-client-$version.jar
         set ::opts(mariadb-connector-java.version) $version
