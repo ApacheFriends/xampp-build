@@ -17,6 +17,9 @@ jobs:
             base_tarball_sha256: "7bacd8f8a8774ad0b76b177c16164591cde4cd26260d0b0690bd6d261e71964f"
             extra_binaries: |
                 https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/strawberry-perl-5.42.2.1-64bit-portable.zip 32d83be90cf04b807cfb9477482bc36302cdee6f5b04cf57e81adecbd8f07898
+                https://windows.php.net/downloads/releases/archives/php-8.3.35-Win32-vs16-x64.zip b454bed828a74536125d8a96119eae8ffbb186b305759dd6cf8d9bb4b55968b1
+                https://windows.php.net/downloads/releases/archives/php-8.4.26-Win32-vs17-x64.zip 6e56f0e932e92bfdce208d3a7e6068f6e2f7a19fc2922a5f856fb085f61673f3
+                https://windows.php.net/downloads/releases/archives/php-8.5.11-Win32-vs17-x64.zip c83d5a1e0d760fb026ce695d8a70a73a4c81ac224b3e5c425406b23a7d53e1de
 
     runs-on: ubuntu-latest
     steps:
