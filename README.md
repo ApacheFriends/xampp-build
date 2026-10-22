@@ -38,7 +38,7 @@ The tarball needed for building will be located in `/bitnami/<stack_name>/output
 
 You can build the XAMPP installers from the `src` directory. The Linux and OS X platforms will require a tarball with all the binaries compiled from the previous step.
 
-Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, run the commands below to create the desired installer depending on the platform.
+Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, run the commands below to create the desired installer depending on the platform. For the Linux and OS X platforms this will require the tarball generated from `tclsh createstack.tcl buildTarball` for Windows this will just require the Windows third party tarballs as it does not perform any compilation but packs the existing softwares and configures them.
 
 ```
 tclsh createstack.tcl pack xamppunixinstaller82stack linux-x64
