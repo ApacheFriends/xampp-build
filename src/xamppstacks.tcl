@@ -5,14 +5,14 @@
            chain $environment
        } {
            addComponents baseFiles
-           addComponents m4 libtool ::xampp::pcre ::xampp::zlib ::xampp::libiconv
-           addComponents ::xampp::gettext ::xampp::cmake
+           addComponents m4 libtool ::xampp::pcre2 ::xampp::zlib ::xampp::libiconv
+           addComponents ::xampp::gettext ::xampp::opensslVersioned ::xampp::cmake
 
            # ming requires it
-           addComponents bison flex
-           addComponents ::xampp::ncurses ::xampp::bzip2 ::xampp::libpng ::xampp::tiff ::xampp::jpeg ::xampp::freetype libwebp libzip gd ::xampp::opensslVersioned ::xampp::openldap libmcrypt ::xampp::curl ::xampp::imap ::xampp::expatLib ::xampp::libxml2 ::xampp::libxslt ::xampp::apr ::xampp::aprutil
+           addComponents bison flex pkgconfig
+           addComponents ::xampp::ncurses ::xampp::bzip2 ::xampp::libpng ::xampp::tiff ::xampp::jpeg ::xampp::freetype libwebp libzip libgd groff ::xampp::openldap libmcrypt libpsl ::xampp::curl ::xampp::imap ::xampp::expatLib ::xampp::libxml2 ::xampp::libxslt ::xampp::apr ::xampp::aprutil
            addComponents chrpath ::xampp::oracleInstantclientLinuxX86Lib ::xampp::oracleInstantclientLinuxX86Sdk
-           addComponents ::xampp::nghttp2 ::xampp::apache ::xampp::icu4c  ::xampp::freetds  ::xampp::sqlite  ::xampp::postgresql groff ::xampp::mariadb10 ::xampp::sablotron ::xampp::gdbm  ::xampp::perl libaio ::xampp::php ::xampp::phpPdfClasses ::xampp::fpdf ::xampp::ming ::xampp::pecl_radius ::xampp::pecl_ncurses ::xampp::modperl cpanArchiveZip cpanYAML cpanXSBuilder cpanIoZlib cpanBundleCpan cpanURI cpanIoCompress cpanHTML-Parser cpanHTML-Tagset cpanMakeMaker cpanParseRecDescent cpanDevelCheckLib cpanDBI cpanDBD-mariadb ::xampp::cpanLWP cpanDBDPgPP cpanDBD-SQLite ::xampp::libapreq2 ::xampp::zziplib ::xampp::proftpd ::xampp::mhash ::xampp::webalizer ::xampp::phpmyadmin
+           addComponents ::xampp::nghttp2 ::xampp::apache ::xampp::icu4c ::xampp::freetds ::xampp::sqlite ::xampp::postgresql ::xampp::mariadb12 ::xampp::sablotron ::xampp::gdbm ::xampp::perl libaio ::xampp::php ::xampp::phpPdfClasses ::xampp::fpdf ::xampp::ming ::xampp::pecl_radius ::xampp::pecl_ncurses ::xampp::modperl cpanArchiveZip cpanYAML cpanXSBuilder cpanIoZlib cpanBundleCpan cpanURI cpanIoCompress cpanHTML-Parser cpanHTML-Tagset cpanMakeMaker cpanParseRecDescent cpanDevelCheckLib cpanDBI cpanDBD-mariadb ::xampp::cpanLWP cpanDBDPgPP cpanDBD-SQLite ::xampp::libapreq2 ::xampp::zziplib ::xampp::proftpd ::xampp::mhash ::xampp::webalizer ::xampp::phpmyadmin
 
            # I changed order of XML_Parser and XML_NITF for OS X
            set pearModulesList {Archive_Tar File File_Find File_HtAccess File_SearchReplace Auth Auth_HTTP DB Auth_SASL Benchmark Cache XML_CSSML XML_fo2pdf XML_HTMLSax XML_image2svg  XML_Parser XML_NITF XML_RSS XML_SVG XML_Transformer XML_Tree XML_Util  XML_RPC XML_Serializer Cache_Lite Console_Getopt Console_Table System_Command Contact_Vcard_Build Contact_Vcard_Parse MP3_Id Crypt_CBC Crypt_RC4 Crypt_Xtea DBA DB_ado DB_DataObject DB_ldap DB_NestedSet DB_Pager DB_QueryTool MDB Log MDB_QueryTool FSM Tree HTML_BBCodeParser HTML_BBCodeParser2 HTML_Common HTML_Common2 HTML_Crypt HTML_CSS HTML_Form HTML_Menu HTML_Javascript HTML_Progress HTML_QuickForm I18N HTML_Select_Common HTML_Table HTML_Template_IT HTML_Template_PHPLIB HTML_Template_Sigma HTML_Template_Xipe HTML_TreeMenu Pager HTTP Image_Color Image_GIS Image_GraphViz Image_IPTC Mail Mail_Mime Mail_mimeDecode Mail_Queue Math_Integer Math_Basex Math_Fibonacci Math_Vector Math_Matrix Math_RPN Math_Stats Math_TrigOp Net_CheckIP Net_Curl Net_Dig Net_DNS Net_FTP Net_Geo Net_Ident Net_IPv4 Net_SmartIRC Net_Socket Net_SMTP Net_Sieve Net_NNTP Net_Ping Net_POP3 Net_Portscan Net_Finger Net_Dict Net_URL HTTP_Request HTTP_Upload Net_UserAgent_Detect Net_Whois Numbers_Roman Payment_Clieop Console_Getargs PEAR PEAR_Info PEAR_PackageFileManager_Plugins PEAR_PackageFileManager2 PhpDocumentor YAML File_Iterator Text_Template PHP_TokenStream PHP_CodeCoverage PHP_Timer PHPUnit_MockObject PHPUnit Var_Dump xdebug Science_Chemistry Stream_Var Text_Password Text_Statistics Translation}
@@ -41,7 +41,7 @@
 
                addComponents ::xampp::$pearModule
            }
-           addComponents  ::xampp::sqlite2
+           addComponents ::xampp::sqlite2
            addComponents ::xampp::xamppSkeleton
            addComponents ::xampp::xamppHtdocsUnix
            addComponents ::xampp::manager
@@ -71,8 +71,8 @@
         set ::env(SHARED_LDFLAGS) "-Wl,--rpath -Wl,$output/lib -L$output/lib"
         set ::env(LDFLAGS) "-Wl,--rpath -Wl,$output/lib -L$output/lib -I$output/include"
         set ::env(LD_RUN_PATH) $output/lib
-        set ::env(CPPFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncurses"
-        set ::env(CFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncurses"
+        set ::env(CPPFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncursesw"
+        set ::env(CFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncursesw"
         set ::env(CXXFLAGS) "-O3 -L$output/lib -I$output/include"
         set ::env(LD_LIBRARY_PATH) "/opt/lampp/lib"
         if {[info exists ::env(PATH)]} {
@@ -101,8 +101,8 @@
     constructor {environment} {
         chain $environment
     } {
-        replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.62}}
-        replaceComponent gd {libltdl ::xampp::gd}
+        replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.80}}
+        replaceComponent libgd {libltdl ::xampp::libgd}
         replaceComponent ::xampp::MDB {{::xampp::MDB2}}
         replaceComponent ::xampp::HTML_Form {{::xampp::HTML_QuickForm2}}
         removeComponents [list ::xampp::pecl_radius ::xampp::XML_HTMLSax ::xampp::xdebug ::xampp::Stream_SHM]
@@ -129,9 +129,8 @@
     constructor {environment} {
         chain $environment
     } {
-        # There is an issue with PHP if gd is previously compiled
-        removeComponents ::xampp::gd
-        replaceComponent ::xampp::php {oniguruma {::xampp::php80} ::xampp::gd}
+        removeComponents ::xampp::libgd
+        replaceComponent ::xampp::php {oniguruma {::xampp::php80} ::xampp::libgd}
         replaceComponent ::xampp::xamppSkeleton ::xampp::xamppSkeletonDev
     }
     public method componentsToBuild {} {
@@ -192,7 +191,7 @@
     constructor {environment} {
         chain $environment
     } {
-        replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.62}}
+        replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.80}}
         replaceComponent ::xampp::oracleInstantclientLinuxX86Lib ::xampp::oracleInstantclientLinuxX64Lib
         replaceComponent ::xampp::oracleInstantclientLinuxX86Sdk  ::xampp::oracleInstantclientLinuxX64Sdk
     }
@@ -200,8 +199,8 @@
         set ::env(SHARED_LDFLAGS) "-Wl,--rpath -Wl,$output/lib -L$output/lib"
         set ::env(LDFLAGS) "-Wl,--rpath -Wl,$output/lib -L$output/lib -I$output/include"
         set ::env(LD_RUN_PATH) $output/lib
-        set ::env(CPPFLAGS) "-O3 -fPIC -L$output/lib -I$output/include -I$output/include/ncurses"
-        set ::env(CFLAGS) "-O3 -fPIC -L$output/lib -I$output/include -I$output/include/ncurses"
+        set ::env(CPPFLAGS) "-O3 -fPIC -L$output/lib -I$output/include -I$output/include/ncursesw"
+        set ::env(CFLAGS) "-O3 -fPIC -L$output/lib -I$output/include -I$output/include/ncursesw"
         set ::env(CXXFLAGS) "-O3 -L$output/lib -I$output/include"
         set ::env(LD_LIBRARY_PATH) "/opt/lampp/lib"
         if {[info exists ::env(PATH)]} {
@@ -272,14 +271,14 @@
         chain $environment
     } {
         removeComponents [list chrpath]
-        replaceComponent gd {::xampp::gd}
-        replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.62}}
+        replaceComponent libgd {::xampp::libgd}
+        replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.80}}
         replaceComponent ::xampp::oracleInstantclientLinuxX86Lib ::xampp::oracleInstantclientOsxX64Lib
         replaceComponent ::xampp::oracleInstantclientLinuxX86Sdk ::xampp::oracleInstantclientOsxX64Sdk
         replaceComponent ::xampp::libiconv libiconvOsxNative
         replaceComponent ::xampp::libxml2 libxml2OsxNative
         replaceComponent ::xampp::libxslt libxsltOsxNative
-        replaceComponent ::xampp::cmake {{cmake version 3.9.6}}
+        replaceComponent ::xampp::cmake {{cmake version 4.4.2}}
         replaceComponent libmcrypt {autoconf pkgconfig libtool2 ::xampp::libmcrypt}
     }
     public method preparefordist {} {
@@ -303,8 +302,8 @@
         set ::env(SHARED_LDFLAGS) "-Wl,-rpath -Wl,$output/lib -L$output/lib"
         set ::env(LDFLAGS) "-Wl,-rpath -Wl,$output/lib -L$output/lib -I$output/include -arch x86_64"
         set ::env(LD_RUN_PATH) $output/lib
-        set ::env(CPPFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncurses -arch x86_64"
-        set ::env(CFLAGS) "-O3  -L$output/lib -I$output/include -I$output/include/ncurses -arch x86_64"
+        set ::env(CPPFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncursesw -arch x86_64"
+        set ::env(CFLAGS) "-O3  -L$output/lib -I$output/include -I$output/include/ncursesw -arch x86_64"
         set ::env(CXXFLAGS) "-O3 -L$output/lib -I$output/include"
         if {[info exists ::env(PATH)]} {
             if {![string match $output/bin:* $::env(PATH)]} {
@@ -349,8 +348,8 @@
     constructor {environment} {
         chain $environment
     } {
-        removeComponents ::xampp::gd
-        replaceComponent ::xampp::php {oniguruma {::xampp::php80} ::xampp::gd}
+        removeComponents ::xampp::libgd
+        replaceComponent ::xampp::php {oniguruma {::xampp::php80} ::xampp::libgd}
         replaceComponent ::xampp::xamppSkeleton ::xampp::xamppSkeletonDev
     }
     public method componentsToBuild {} {

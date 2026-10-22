@@ -74,6 +74,7 @@ if {[lindex $argv 0]=="help" || [llength $argv]==0} {
     puts "                                                        to build tarballs based on component(s) + pack + test"
     puts " * getInfrastructureUpdates                           - Get the list of infrastructure components that needs to be updated"
     puts " * updateInfrastructureMetadata                       - This tool takes the latest infrastructure versions and update them in the code"
+    puts " * addComponents                                      - Specify a comma separated list of optional components to include in a given stack. Ex: `java,python`"
     puts ""
     puts "Note that listing Bitnami Stacks wont list non-Bitnami stacks like XAMPP and custom stacks"
     exit
@@ -114,6 +115,28 @@ proc commandSupportsExtraArgs {cmd} {
         }
     }
 }
+
+# Parse optional components after addComponents flag (limits large number of stacks to maintain)
+set optionalComponents [list]
+set cleanArgv [list]
+
+for {set i 0} {$i < [llength $argv]} {incr i} {
+    set arg [lindex $argv $i]
+    if {$arg eq "addComponents"} {
+        incr i
+        set componentsVal [lindex $argv $i]
+        # Split by comma if the user passed multiple values (e.g., "java,python")
+        foreach item [split $componentsVal ","] {
+            set trimmedItem [string trim $item]
+            if {$trimmedItem ne ""} {
+                lappend optionalComponents $trimmedItem
+            }
+        }
+    } else {
+        lappend cleanArgv $arg
+    }
+}
+set argv $cleanArgv
 
 set command [split [lindex $argv 0] =]
 set method [lindex $command 0]
@@ -687,6 +710,7 @@ switch -- $method {
     }
 }
 $be configure -target $target
+$be configure -optionalComponents $optionalComponents
 
 if {[info exists env(BITNAMI_BINARIES_DIRECTORY)]} {
     $be configure -binaries $env(BITNAMI_BINARIES_DIRECTORY)

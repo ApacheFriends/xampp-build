@@ -168,8 +168,8 @@
         return $rc
     }
     public method prepareConfiguredXmlFiles {} {
-       foreach c $components {
-           $pr([lindex $c 0]) prepareXmlFiles
+        foreach c $components {
+            $pr([lindex $c 0]) prepareXmlFiles
         }
     }
     public method findTarball {} {
@@ -252,6 +252,7 @@
     public variable virtualDiskFormat 1
     public variable supportOVF 1
     public variable extraFilesList {}
+    public variable optionalComponentsIncluded {}
     protected variable deleteRPath 1
     protected variable excludeRPathPattern {}
     protected variable stripBinaries 1
@@ -950,7 +951,35 @@
         # Restore the PATH not to interfere with system components (T15293)
         set ::env(PATH) $oldPath
     }
-    public method modifyStackComponents {} {}
+
+    # modify the stack components to add any additional optional components before building it out
+    public method modifyStackComponents {} {
+        set optionalComponentsIncluded [$be cget -optionalComponents]
+
+        foreach comp $optionalComponentsIncluded {
+            switch -exact -- $comp {
+                "java" - "openjdk" {
+                    # add target specific OpenJDK component
+                    if {[string match windows* [$be cget -target]]} {
+                        $stack addComponents windows64XamppOpenJDK
+                    }
+                    # TODO include linux OpenJDK component
+
+                    # add OpenJDK installation XML file and update the tags
+                    lappend tags OpenJDK
+
+                    set xml_files [lindex $extraFilesList 0]
+                    lappend xml_files [file join [$be cget -projectDir] apps xampp xampp-openjdk.xml]
+                    lset extraFilesList 0 $xml_files
+                }
+                "python" {
+                    # TODO add python and other optional packages to easily extend XAMPP functionality across all existing stacks
+                    lappend tags Python
+                }
+            }
+        }
+    }
+    
     public method prepareOutputFiles {} {
         prepareStackComponents
         checkVersion [$this cget -versionFile] [$this cget -versionPattern] [$this cget -versionMajorPattern] [$this cget -versionMinorPattern] [$this cget -versionPatchPattern]

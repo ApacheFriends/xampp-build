@@ -150,7 +150,7 @@
         chain $environment
     } {
         set supportsParallelBuild 0   ;# Apparently only FreeBSD stuff. But its better to disable it on all platforms
-        set licenseRelativePath LICENSE
+        set licenseRelativePath LICENSE.txt
         set licenseNotes http://www.openssl.org/source/license.html
     }
     public method getPatchesToApply {} {
@@ -479,9 +479,9 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
         # 32 bits is necessary for zlib1 in drupal
         foreach winVersion [list win32 win64] {
             set version [getVtrackerField windows-apache version infrastructure]
-            foreach vcVersion [list VC15 VS16 VS17] {
+            foreach vcVersion [list VC15 VS16 VS17 VS18] {
                 set downloadTarballName httpd-$version-$winVersion-$vcVersion.zip
-                if { $vcVersion == "VS17" } {
+                if { $vcVersion == "VS17" || $vcVersion == "VS18" } {
                     set downloadUrl https://www.apachelounge.com/download/$vcVersion/binaries/$downloadTarballName
                 } else {
                     set downloadUrl https://home.apache.org/~steffenal/$vcVersion/binaries/$downloadTarballName
@@ -906,13 +906,13 @@ exec @@XAMPP_PHP_ROOTDIR@@/bin/php-cgi.bin "$@"
    }
 }
 
-::itcl::class gd {
+::itcl::class libgd {
     inherit library
     constructor {environment} {
         chain $environment
     } {
-        set name gd
-        set version 2.0.35
+        set name libgd
+        set version 2.3.3
         set licenseRelativePath COPYING
         set licenseNotes https://bitbucket.org/pierrejoye/gd-libgd/src/733361a31aab7fe1e5e58881ea87ece5ad787ed7/src/COPYING?at=default
     }

@@ -93,7 +93,8 @@
     constructor {environment} {
 	chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        # changed to vs18 and added timestamp in filename
+        set tarballName httpd-${version}-260827-Win64-VS18.zip
     }
     public method preparefordist {} {
         chain
@@ -127,7 +128,8 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        # changed to vs18 and added timestamp in filename
+        set tarballName httpd-${version}-260827-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp81 {
@@ -135,7 +137,8 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        # changed to vs18 and added timestamp in filename
+        set tarballName httpd-${version}-260827-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp82 {
@@ -143,7 +146,8 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        # changed to vs18 and added timestamp in filename
+        set tarballName httpd-${version}-260827-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp83 {
@@ -151,7 +155,8 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        # changed to vs18 and added timestamp in filename
+        set tarballName httpd-${version}-260827-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp84 {
@@ -159,7 +164,8 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        # changed to vs18 and added timestamp in filename
+        set tarballName httpd-${version}-260827-Win64-VS18.zip
     }
 }
 
@@ -203,7 +209,8 @@
     } {
         set name windows64XamppMariaDb
         set fullname MariaDB
-        set version [versions::get "MariaDB" "10"]
+        # change which version of MariaDB is loaded easily by swapping between 10, 11, and 12
+        set version [versions::get "MariaDB" 12]
         set tarballName mariadb-${version}-winx64.zip
         set pathName mariadb-${version}-winx64
         lappend additionalFileList vcruntime140_1.dll
@@ -353,6 +360,7 @@
     }
 }
 
+# OpenSSL Version should be in the 3s, the version is fully dependent on what is packaged with Apache
 ::itcl::class windows64XamppPhp82 {
   inherit windows64XamppPhp8
     constructor {environment} {
@@ -361,7 +369,7 @@
         set name windows64XamppPhp82
         set version [::xampp::php::getXAMPPVersion 82]
         set rev [::xampp::php::getXAMPPRevision 82]
-        set vcVersion VS16
+        set vcVersion vs16
         set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
@@ -532,7 +540,9 @@
         chain $environment
     } {
         set name windows64XamppTomcat
-        set version [versions::get "Tomcat" "85"]
+        # can toggle tomcat between 85, 9, 10, 11
+        # xampp control panel disables all buttons for anything not Tomcat85 (bug should be patched in new control panel)
+        set version [versions::get "Tomcat" 85]
         set licenseRelativePath {}
         set tarballName apache-tomcat-${version}-windows-x64.zip
         set mainComponentXMLName xampp-tomcat
@@ -548,6 +558,32 @@
         copyFromWorkspace tomcat/catalina_start.bat tomcat/catalina_stop.bat tomcat/tomcat_service_install.bat tomcat/tomcat_service_uninstall.bat
     }
 }
+
+::itcl::class windows64XamppOpenJDK {
+  inherit windowsXamppComponent
+    constructor {environment} {
+        chain $environment
+    } {
+        set name windows64XamppOpenJDK
+        set version [versions::get "OpenJDK" 27]
+        set licenseRelativePath {}
+        set tarballName openjdk-${version}_windows-x64_bin.zip
+        set mainComponentXMLName xampp-openjdk
+    }
+    public method install {} {
+        chain
+        file copy -force [file join [$be cget -src] jdk-${version}] [file join $xamppoutputdir openjdk]
+        setReadmeVersion OPENJDK ${version}
+    }
+
+    public method prepareXmlFiles {} {
+        # must modify the xampp-server.xml
+        set endComponentList "</componentList>"
+        set openJDKInjection "  <include file=\"xampp-openjdk.xml\" />\n$endComponentList"
+        xampptcl::util::substituteParametersInFileRegex [file join [$be cget -output] xampp-server.xml] [list $endComponentList $openJDKInjection] 1
+    }
+}
+
 
 ::itcl::class windows64XamppInstallerStack {
     inherit stack

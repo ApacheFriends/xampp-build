@@ -564,6 +564,26 @@ proc logexecIgnoreErrors {args} {
     message default $kk
 }
 
+
+# same thing as logexec, except command output is streamed to stdout in real time
+# useful for debugging and for long running builds to give updates on time to completion
+proc logexecWithOutput {args} {
+    message default "[clk] Running command \"$args\" in [pwd]"
+    if {[catch {eval exec {*}$args >&@ stdout} kk]} {
+        if {$::errorCode != "NONE"} {
+            message error "************************ Running command \"$args\" in [pwd] ************************"
+            message error "************************ ERROR $::errorCode ************************"
+            flush stdout
+            message default "*** $kk"
+            message error "Build Aborted"
+            exit 1
+        }
+    }
+    message default "[clk] Running command \"$args\" in [pwd] completed"
+    return $kk
+}
+
+
 proc logexec {args} {
     message default "[clk] Running command \"$args\" in [pwd]"
     if {[catch {eval exec $args} kk]} {
@@ -915,9 +935,6 @@ fi
 
 proc includeCplusplus {be {destination {}}} {
     set libDir "lib"
-    if {[$be cget -target] == "linux-x64"} {
-	set libDir "lib64"
-    }
     if {$destination == ""} {
 	set destination [file join [$be cget -output] common lib]
     }
@@ -928,7 +945,7 @@ proc includeCplusplus {be {destination {}}} {
 		file copy -force  $f $destination
 	    }
 	} else {
-	    foreach f [glob /usr/$libDir/libstdc++.*] {
+	    foreach f [glob /usr/$libDir/*-linux-gnu/libstdc++.*] {
 		file copy -force  $f $destination
 	    }
 	}
@@ -936,30 +953,37 @@ proc includeCplusplus {be {destination {}}} {
 }
 proc includeLibGcc {be {destination {}}} {
     set libDir "lib"
-    if {[$be cget -target] == "linux-x64"} {
-	set libDir "lib64"
-    }
     if {$destination == ""} {
 	set destination [file join [$be cget -output] common lib]
     }
     if {[$be targetPlatform] == "linux-x64" || [$be targetPlatform] == "linux"} {
-        foreach f [glob /$libDir/libgcc_s.*] {
+        foreach f [glob /$libDir/*-linux-gnu/libgcc_s.*] {
             file copy -force  $f $destination
         }
     }
 }
 
 proc findInstallBuilderVersion {be} {
-    if {[catch {set file [open /opt/installbuilder/ibversion]}]} {
-	if {[catch {set file [open [file join [$be cget -projectDir] src ibversion] r]}]} {
-	    message error "'ibversion' file couldn't be found in [$be cget -projectDir]/src"
-	    exit 1
-	}
+    # Run the InstallBuilder executable to determine its version
+    if {[catch {exec /opt/installbuilder/bin/builder --version} output]} {
+        message error "Error running executable or program returned error output: $output"
+        exit 1
     }
-    set ibversion [gets $file]
-    close $file
-    return $ibversion
+
+    # Split output by whitespace, search for Version, incr it, return result 
+    set words [regexp -all -inline {\S+} $output]
+    set index [lsearch -exact $words "Version"]
+
+    if {$index != -1} {
+        incr index
+        message default "Install Builder Version: [lindex $words $index]"
+        return [lindex $words $index]
+    } else {
+        message error "Could not determine Install Builder version"
+        exit 1
+    }
 }
+
 proc populateEmptyDirs {directory} {
     # The reason is that when the customers uncompress the files we send to them
     # for building on their side, some Winzip utilities would ignore by default

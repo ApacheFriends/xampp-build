@@ -48,9 +48,9 @@
         chain $environment
     } {
         set name windowsXamppWorkspace
-        set version 11
+        set version 12
         set licenseRelativePath {}
-        set rev 0
+        set rev 2
         set controlPanelVersion "3.3.0"
         set tarballName xampp-windows-workspace-${version}-${rev}.zip
     }
@@ -174,24 +174,26 @@
         xampptcl::file::addTextToFile $xamppoutputdir/apache/conf/httpd.conf \
             "# XAMPP: We disable operating system specific optimizations for a listening\n# socket by the http protocol here. IE 64 bit make problems without this.\n\nAcceptFilter http none\nAcceptFilter https none\n# AJP13 Proxy\n<IfModule mod_proxy.c>\n<IfModule mod_proxy_ajp.c>\nInclude \"conf/extra/httpd-ajp.conf\"\n</IfModule>\n</IfModule>\n"
 
+    # In the newest version of Apache httpd-2.4.68 some of the defaults have changed in the httpd.conf file also changed whitespace
+    # Changing the regex to be slightly more loose, will always uncomment if comment out. Will not fail if already uncommented.
 	xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/httpd.conf [list \
         {ServerRoot ".*"} {ServerRoot "/xampp/apache"} \
         {Define SRVROOT ".*"} {Define SRVROOT "/xampp/apache"} \
         {"\${SRVROOT}/htdocs"} {"/xampp/htdocs"} \
         {"\${SRVROOT}/cgi-bin} {"/xampp/cgi-bin} \
-        {#LoadModule access_compat_module modules/mod_access_compat.so} {LoadModule access_compat_module modules/mod_access_compat.so} \
-	    {#LoadModule dav_lock_module modules/mod_dav_lock.so} {LoadModule dav_lock_module modules/mod_dav_lock.so} \
-	    {#LoadModule headers_module modules/mod_headers.so} {LoadModule headers_module modules/mod_headers.so} \
-	    {#LoadModule info_module modules/mod_info.so} {LoadModule info_module modules/mod_info.so} \
-	    {#LoadModule lua_module modules/mod_lua.so} "\\0\nLoadModule cache_disk_module modules/mod_cache_disk.so" \
-	    {#LoadModule proxy_module modules/mod_proxy.so} {LoadModule proxy_module modules/mod_proxy.so} \
-	    {#LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} {LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} \
-	    {#LoadModule rewrite_module modules/mod_rewrite.so} {LoadModule rewrite_module modules/mod_rewrite.so} \
-	    {#LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} {LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} \
-	    {#LoadModule ssl_module modules/mod_ssl.so} {LoadModule ssl_module modules/mod_ssl.so} \
-	    {#LoadModule status_module modules/mod_status.so} {LoadModule status_module modules/mod_status.so} \
-	    {ServerAdmin admin@example.com} {ServerAdmin postmaster@localhost} \
-	    {#ServerName www.example.com:80} {ServerName localhost:80} \
+        {^#?\s*(LoadModule access_compat_module modules/mod_access_compat.so)} {LoadModule access_compat_module modules/mod_access_compat.so} \
+	    {^#?\s*(LoadModule dav_lock_module modules/mod_dav_lock.so)} {LoadModule dav_lock_module modules/mod_dav_lock.so} \
+	    {^#?\s*(LoadModule headers_module modules/mod_headers.so)} {LoadModule headers_module modules/mod_headers.so} \
+	    {^#?\s*(LoadModule info_module modules/mod_info.so)} {LoadModule info_module modules/mod_info.so} \
+	    {^#?\s*(LoadModule lua_module modules/mod_lua.so)} "\\0\nLoadModule cache_disk_module modules/mod_cache_disk.so" \
+	    {^#?\s*(LoadModule proxy_module modules/mod_proxy.so)} {LoadModule proxy_module modules/mod_proxy.so} \
+	    {^#?\s*(LoadModule proxy_ajp_module modules/mod_proxy_ajp.so)} {LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} \
+	    {^#?\s*(LoadModule rewrite_module modules/mod_rewrite.so)} {LoadModule rewrite_module modules/mod_rewrite.so} \
+	    {^#?\s*(LoadModule socache_shmcb_module modules/mod_socache_shmcb.so)} {LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} \
+	    {^#?\s*(LoadModule ssl_module modules/mod_ssl.so)} {LoadModule ssl_module modules/mod_ssl.so} \
+	    {^#?\s*(LoadModule status_module modules/mod_status.so)} {LoadModule status_module modules/mod_status.so} \
+	    {ServerAdmin .*@example.com} {ServerAdmin postmaster@localhost} \
+	    {^#?\s*(ServerName www.example.com:80)} {ServerName localhost:80} \
 	    {<Directory ".*?/htdocs">} {<Directory "/xampp/htdocs">} \
 	    {    Options Indexes FollowSymLinks} {    Options Indexes FollowSymLinks Includes ExecCGI} \
 	    {    AllowOverride None} {    AllowOverride All} \

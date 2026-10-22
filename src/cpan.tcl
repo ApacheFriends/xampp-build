@@ -255,7 +255,7 @@ declareCpanLibrary cpanHTMLTree HTML-Tree 3.20
         chain $environment
     } {
         set name mod_perl
-        set version 2.0.12
+        set version 2.0.13
         set licenseRelativePath LICENSE
     }
     protected method configureOptions {} {

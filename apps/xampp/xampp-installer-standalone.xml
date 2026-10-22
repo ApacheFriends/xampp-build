@@ -134,6 +134,10 @@
 	    <abortOnError>0</abortOnError>
 	    <path>${installdir}/tomcat</path>
 	</deleteFile>
+    <deleteFile>
+	    <abortOnError>0</abortOnError>
+	    <path>${installdir}/openjdk</path>
+	</deleteFile>
         <deleteFile>
             <path>${installdir}</path>
             <ruleList>

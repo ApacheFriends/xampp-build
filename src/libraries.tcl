@@ -12,7 +12,8 @@ declareClass binutils -parentClass builddependency -version 2.25
 declareClass libuuid -parentClass library -name libuuid -version 1.0.3
 declareClass lcms -parentClass library -version 1.18
 declareClass openexr -parentClass library -version 2.2.0
-declareClass libwebp -parentClass library -version 0.6.0
+declareClass libwebp -parentClass library -version 1.6.0
+declareClass libpsl -parentClass library -version 0.23.3
 declareClass ilmbase -parentClass library -version 2.2.0
 declareClass flex -parentClass library -name flex -version 2.6.4
 declareClass harfbuzz -parentClass library -name harfbuzz -version 1.6.0
@@ -64,13 +65,11 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
 	chain $environment
     } {
         set name pkg-config
-        set version 0.28
+        set version 0.29.2
         set supportsParallelBuild 0
     }
     protected method configureOptions {} {
-        set list [chain]
-        lappend list --with-internal-glib
-        return $list
+        return [concat [chain] [list --with-internal-glib --with-libiconv=gnu]]
     }
     public method callConfigure {} {
         if {[info exists ::env(PYTHON)]} {
@@ -78,6 +77,16 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
             unset ::env(PYTHON)
         }
         chain
+    }
+    public method build {} {
+        set ldflags $::env(LDFLAGS)
+        set common [file join [$be cget -output] [$be cget -libprefix]]
+        set ::env(LDFLAGS) "-L$common/lib -liconv"
+        
+        showEnvironmentVars
+        chain
+
+        set ::env(LDFLAGS) $ldflags
     }
     public method install {} {
         chain
@@ -104,13 +113,11 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
 	chain $environment
     } {
         set name pkg-config
-        set version 0.28
+        set version 0.29.2
         set supportsParallelBuild 0
     }
     protected method configureOptions {} {
-        set list [chain]
-        lappend list --with-internal-glib
-        return $list
+        return [concat [chain] [list --with-internal-glib --with-libiconv=gnu]]
     }
     public method callConfigure {} {
         if {[info exists ::env(PYTHON)]} {
@@ -118,6 +125,16 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
             unset ::env(PYTHON)
         }
         chain
+    }
+    public method build {} {
+        set ldflags $::env(LDFLAGS)
+        set common [file join [$be cget -output] [$be cget -libprefix]]
+        set ::env(LDFLAGS) "-L$common/lib -liconv"
+        
+        showEnvironmentVars
+        chain
+
+        set ::env(LDFLAGS) $ldflags
     }
     public method install {} {
         chain
@@ -130,8 +147,8 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
     }
 }
 
-declareClass pkgconfig -parentClass pkg-config -name pkg-config -version 0.28 -licenseRelativePath COPYING
-declareClass pkgconfigBuildDependency -parentClass pkg-configBuildDependency -name pkg-config -version 0.28
+declareClass pkgconfig -parentClass pkg-config -name pkg-config -version 0.29.2 -licenseRelativePath COPYING
+declareClass pkgconfigBuildDependency -parentClass pkg-configBuildDependency -name pkg-config -version 0.29.2
 
 ::itcl::class zip {
     inherit library
@@ -290,7 +307,7 @@ declareClass pkgconfigBuildDependency -parentClass pkg-configBuildDependency -na
         chain $environment
     } {
         set name cmake
-        set version 3.13.0
+        set version 4.4.2
     }
     public method setEnvironment {} {
 	chain
@@ -304,18 +321,32 @@ declareClass pkgconfigBuildDependency -parentClass pkg-configBuildDependency -na
 	}
     }
     public method build {} {
-	if {[$be cget -target] == "osx-x64" && [::xampptcl::util::compareVersions $version 3.0] > 0} {
-	    set ::env(MACOSX_DEPLOYMENT_TARGET) ""
-	}
-	cd [srcdir]
+    
+        # before building need to point it to the openssl root directory and set LDFLAGS to find libiconv
+        # works to point OPENSSL_ROOT_DIR at /opt/lampp as this directory contains /include/openssl and /lib with OSSL libraries
+        set ::env(OPENSSL_ROOT_DIR) [$be cget -output]
+        puts [$be cget -src]
+
+        set ldflags $::env(LDFLAGS)
+        set common [file join [$be cget -output] [$be cget -libprefix]]
+        set ::env(LDFLAGS) "-L$common/lib -liconv"
+
+        if {[$be cget -target] == "osx-x64" && [::xampptcl::util::compareVersions $version 3.0] > 0} {
+            set ::env(MACOSX_DEPLOYMENT_TARGET) ""
+        }
+        cd [srcdir]
         file rename -force Source/CursesDialog/CMakeLists.txt Source/CursesDialog/CMakeLists.txt.bak
         exec touch Source/CursesDialog/CMakeLists.txt
         file rename -force Source/CursesDialog/form/CMakeLists.txt  Source/CursesDialog/form/CMakeLists.txt.bak
         exec touch Source/CursesDialog/form/CMakeLists.txt
+        showEnvironmentVars
         chain
-	if {[$be cget -target] == "osx-x64" && [::xampptcl::util::compareVersions $version 3.0] > 0} {
-	    unset ::env(MACOSX_DEPLOYMENT_TARGET)
+        if {[$be cget -target] == "osx-x64" && [::xampptcl::util::compareVersions $version 3.0] > 0} {
+            unset ::env(MACOSX_DEPLOYMENT_TARGET)
         }
+
+        set ::env(LDFLAGS) $ldflags
+        unset ::env(OPENSSL_ROOT_DIR)
     }
     public method install {} {
         if {[$be cget -target] == "osx-x64"} {
@@ -455,7 +486,7 @@ fi
         chain $environment
     } {
         set name ncurses
-        set version 5.9
+        set version 6.6
         set supportsParallelBuild 0
         set licenseRelativePath ANNOUNCE
         set licenseNotes http://www.gnu.org/software/ncurses/ncurses.html
@@ -849,7 +880,7 @@ includesdir = ${includedir}}] 1
         chain $environment
     } {
         set name libzip
-        set version 1.5.1
+        set version 1.11.4
         set licenseRelativePath LICENSE
     }
     public method install {} {
@@ -897,20 +928,20 @@ includesdir = ${includedir}}] 1
         chain $environment
     } {
         set name m4
-        set version 1.4.11
+        set version 1.4.21
     }
     public method setEnvironment {} {
         set ::opts(m4.prefix) [prefix]
     }
 }
 
-::itcl::class pcre {
+::itcl::class pcre2 {
     inherit library
     constructor {environment} {
         chain $environment
     } {
-        set name pcre
-        set version 8.40
+        set name pcre2
+        set version 10.47
         set supportsParallelBuild 0
         set licenseRelativePath LICENCE
     }

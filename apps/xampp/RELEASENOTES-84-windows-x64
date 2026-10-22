@@ -1,11 +1,11 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-[2026-04-15] XAMPP for Windows 8.4.20-0
+[2026-04-15] XAMPP for Windows 8.4.25
 This version of XAMPP contains the following software releases:
-   - Apache 2.4.65
-   - MariaDB 10.11.16
+   - Apache 2.4.68
+   - MariaDB 10.11.18
    - OpenSSL 3.5.1
-   - PHP 8.4.20
+   - PHP 8.4.25
    - phpMyAdmin 5.2.3
    - Tomcat 8.5.99
    - curl 8.19.0

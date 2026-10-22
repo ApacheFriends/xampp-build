@@ -1,0 +1,60 @@
+<component>
+    <name>xampp_openjdk</name>
+    <description>OpenJDK</description>
+    <canBeEdited>1</canBeEdited>
+    <show>1</show>
+    <selected>1</selected>
+
+    <folderList>
+        <folder>
+            <description>//XAMPP Files</description>
+            <destination>${installdir}/</destination>
+            <name>xampp_openjdk_folder</name>
+            <distributionFileList>
+                <distributionDirectory origin="xampp/openjdk"/>
+            </distributionFileList>
+        </folder>
+    </folderList>
+    <postInstallationActionList>
+        <!-- Set JAVA_HOME environment variable (only on Windows) -->
+        <registrySet>
+            <key>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment</key>
+            <name>JAVA_HOME</name>
+            <type>REG_SZ</type>
+            <value>${installdir}\openjdk</value>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </registrySet>
+
+        <!-- Add OpenJDK bin folder to the Windows PATH variable -->
+        <addDirectoryToPath>
+            <insertAt>end</insertAt>
+            <path>${installdir}\openjdk\bin</path>
+            <scope>system</scope>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </addDirectoryToPath>
+    </postInstallationActionList>
+
+    <preUninstallationActionList>
+        <!-- Remove the JAVA_HOME registry key (only on Windows) -->
+        <registryDelete>
+            <key>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment</key>
+            <name>JAVA_HOME</name>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </registryDelete>
+        
+        <!-- Safely remove OpenJDK bin folder from the Windows PATH variable on uninstall -->
+        <removeDirectoryFromPath>
+            <path>${installdir}\openjdk\bin</path>
+            <scope>system</scope>
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </removeDirectoryFromPath>
+    </preUninstallationActionList>
+</component>
