@@ -29,13 +29,13 @@ tclkit createstack.tcl buildTarball xamppunixinstaller80stack linux-x64
 tclkit createstack.tcl buildTarball xamppunixinstaller80stack osx-x64
 ```
 
-> NOTE: you can build other PHP versions (7.4.x, 8.0.x, or 8.1.x) replacing `80` with `74` or `81`.
+> NOTE: you can build other PHP versions replacing `80` with the PHP major and minor version without the dot (for example `83`, `84` or `85`). The available versions are listed in `metadata/versions/versions.ini`.
 
 Once the tarball is compressed, you can move it to the `/tmp/tarball` mounted directory to use it in the next step.
 
 ## How to build the XAMPP installers
 
-You can build the XAMPP installers from the `src` directory. The Linux and OS X platforms will require a tarball with all the binaries compiled from the previous step.
+You can build the XAMPP installers from the `src` directory. The Linux and OS X platforms will require a tarball with all the binaries compiled from the previous step. Windows does not need that step, see [How to build the Windows installer](#how-to-build-the-windows-installer).
 
 Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, your can run the commands below to create the desired installer depending on the platform.
 
@@ -45,9 +45,33 @@ tclkit createstack.tcl pack xamppunixinstaller80stack osx-x64
 tclkit createstack.tcl pack xamppinstaller80stack windows-x64
 ```
 
-> NOTE: you can pack other PHP versions (7.4.x, 8.0.x, or 8.1.x) replacing `80` with `74` or `81`.
+> NOTE: you can pack other PHP versions replacing `80` with the PHP major and minor version without the dot (for example `83`, `84` or `85`).
 
 The installers will be accessible at `/opt/installbuilder/output/`.
+
+## How to build the Windows installer
+
+The Windows installer does not compile anything: it packs the official Windows binaries (PHP, Apache, MariaDB, Perl...), so you can skip the `buildTarball` step and run everything from the Linux container.
+
+1. Download the Windows thirdparties into the `tarballs` directory. The `.github/workflows/build.yml` workflow lists the exact files and their SHA-256 (the `base_tarball` and `extra_binaries` of the `windows-x64` entry):
+
+    ```
+    $ mkdir -p tarballs && cd tarballs
+    $ curl -LO https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/tarballs-windows-202206.tgz
+    $ tar -xzf tarballs-windows-202206.tgz
+    ```
+
+    The PHP version must match the one in `metadata/versions/versions.ini`. If it is not included in the tarball, download it from [windows.php.net](https://windows.php.net/downloads/releases/archives/) (thread safe build, for example `php-8.4.20-Win32-vs17-x64.zip`) into the same directory.
+
+2. Register an [InstallBuilder](https://installbuilder.com) license (the packing step requires the Professional edition) by copying it to `/opt/installbuilder/license.xml` inside the container.
+
+3. Pack the installer:
+
+    ```
+    tclkit createstack.tcl pack xamppinstaller84stack windows-x64
+    ```
+
+The installer will be accessible at `/opt/installbuilder/output/`. The same steps run in the `build` GitHub workflow, which can be triggered manually (`workflow_dispatch`) from the Actions tab.
 
 ## License
 
