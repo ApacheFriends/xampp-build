@@ -299,9 +299,9 @@
     }
     public method install {} {
         chain
-        # Fix warning message related to SQLite not being properly loaded
+        # Fix warning messages related to SQLite and Sodium not being properly loaded
         xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
-          "LoadModule\\s+php_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadModule php_module"] 1
+          "LoadModule\\s+php_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadFile \"/xampp/php/libsodium.dll\"\nLoadModule php_module"] 1
     }
 }
 
@@ -319,9 +319,9 @@
     }
      public method install {} {
         chain
-        # Fix warning message related to SQLite not being properly loaded
+        # Fix warning messages related to SQLite and Sodium not being properly loaded
         xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
-          "LoadModule\\s+php7_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadModule php7_module"] 1
+          "LoadModule\\s+php7_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadFile \"/xampp/php/libsodium.dll\"\nLoadModule php7_module"] 1
     }
 }
 
