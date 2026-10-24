@@ -5,6 +5,9 @@ on:
 
 env:
   IB_VERSION: 26.4.0
+  # Update IB_SHA256 together with IB_VERSION
+  IB_SHA256: d11fa15beaa56c2722dc8352ca7eea12389aaf02c1455e66a997e3feeaa12823
+  TCLKIT_SHA256: 79c1df37ad470ceb96c14a7730eeaccf5e7c5e18f239689842c13cd85ed25c8c
 jobs:
   build-xampp:
     strategy:
@@ -41,6 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --show-error --silent -L -o tclkit 'https://tclkits.rkeene.org/fossil/raw/tclkit-8.5.17-rhel5-x86_64?name=76a197fe41359daaf4f90a2001f46675b3667e26'
+          echo "${{ env.TCLKIT_SHA256 }}  tclkit" | sha256sum -c -
           chmod 755 tclkit
           sudo mv tclkit /usr/local/bin
       - name: Install InstallBuilder
@@ -48,6 +52,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --show-error --silent -L -o installbuilder.run "https://releases.installbuilder.com/installbuilder/installbuilder-professional-${{ env.IB_VERSION }}-linux-x64-installer.run"
+          echo "${{ env.IB_SHA256 }}  installbuilder.run" | sha256sum -c -
           chmod 755 installbuilder.run
           sudo ./installbuilder.run --mode unattended --prefix /opt/installbuilder
           sudo chown -R "$USER:$USER" /opt/installbuilder
