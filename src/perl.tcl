@@ -12,7 +12,7 @@
         set downloadType wget
         set downloadTarballName $name-$version.tar.gz
         regexp -- {^([0-9]+)\.[0-9]+\.[0-9]+$} $version - majorVersion
-        set downloadUrl http://www.cpan.org/src/$majorVersion.0/$downloadTarballName
+        set downloadUrl https://www.cpan.org/src/$majorVersion.0/$downloadTarballName
     }
 }
 
