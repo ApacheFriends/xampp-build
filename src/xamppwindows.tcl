@@ -93,7 +93,7 @@
         chain $environment
     } {
         set name windowsXamppHtdocs
-        set version 20250916
+        set version 20261027
         set rev 0
         set licenseRelativePath {}
         set tarballName xampp-htdocs-windows-${version}.tar.gz
@@ -179,19 +179,19 @@
         {Define SRVROOT ".*"} {Define SRVROOT "/xampp/apache"} \
         {"\${SRVROOT}/htdocs"} {"/xampp/htdocs"} \
         {"\${SRVROOT}/cgi-bin} {"/xampp/cgi-bin} \
-        {#LoadModule access_compat_module modules/mod_access_compat.so} {LoadModule access_compat_module modules/mod_access_compat.so} \
-	    {#LoadModule dav_lock_module modules/mod_dav_lock.so} {LoadModule dav_lock_module modules/mod_dav_lock.so} \
-	    {#LoadModule headers_module modules/mod_headers.so} {LoadModule headers_module modules/mod_headers.so} \
-	    {#LoadModule info_module modules/mod_info.so} {LoadModule info_module modules/mod_info.so} \
-	    {#LoadModule lua_module modules/mod_lua.so} "\\0\nLoadModule cache_disk_module modules/mod_cache_disk.so" \
-	    {#LoadModule proxy_module modules/mod_proxy.so} {LoadModule proxy_module modules/mod_proxy.so} \
-	    {#LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} {LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} \
-	    {#LoadModule rewrite_module modules/mod_rewrite.so} {LoadModule rewrite_module modules/mod_rewrite.so} \
-	    {#LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} {LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} \
-	    {#LoadModule ssl_module modules/mod_ssl.so} {LoadModule ssl_module modules/mod_ssl.so} \
-	    {#LoadModule status_module modules/mod_status.so} {LoadModule status_module modules/mod_status.so} \
-	    {ServerAdmin admin@example.com} {ServerAdmin postmaster@localhost} \
-	    {#ServerName www.example.com:80} {ServerName localhost:80} \
+        {^#?\s*(LoadModule access_compat_module modules/mod_access_compat.so)} {LoadModule access_compat_module modules/mod_access_compat.so} \
+	    {^#?\s*(LoadModule dav_lock_module modules/mod_dav_lock.so)} {LoadModule dav_lock_module modules/mod_dav_lock.so} \
+	    {^#?\s*(LoadModule headers_module modules/mod_headers.so)} {LoadModule headers_module modules/mod_headers.so} \
+	    {^#?\s*(LoadModule info_module modules/mod_info.so)} {LoadModule info_module modules/mod_info.so} \
+	    {^#?\s*(LoadModule lua_module modules/mod_lua.so)} "\\0\nLoadModule cache_disk_module modules/mod_cache_disk.so" \
+	    {^#?\s*(LoadModule proxy_module modules/mod_proxy.so)} {LoadModule proxy_module modules/mod_proxy.so} \
+	    {^#?\s*(LoadModule proxy_ajp_module modules/mod_proxy_ajp.so)} {LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} \
+	    {^#?\s*(LoadModule rewrite_module modules/mod_rewrite.so)} {LoadModule rewrite_module modules/mod_rewrite.so} \
+	    {^#?\s*(LoadModule socache_shmcb_module modules/mod_socache_shmcb.so)} {LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} \
+	    {^#?\s*(LoadModule ssl_module modules/mod_ssl.so)} {LoadModule ssl_module modules/mod_ssl.so} \
+	    {^#?\s*(LoadModule status_module modules/mod_status.so)} {LoadModule status_module modules/mod_status.so} \
+	    {ServerAdmin .*@example.com} {ServerAdmin postmaster@localhost} \
+	    {^#?\s*(ServerName www.example.com:80)} {ServerName localhost:80} \
 	    {<Directory ".*?/htdocs">} {<Directory "/xampp/htdocs">} \
 	    {    Options Indexes FollowSymLinks} {    Options Indexes FollowSymLinks Includes ExecCGI} \
 	    {    AllowOverride None} {    AllowOverride All} \
@@ -1091,9 +1091,16 @@ mssql.secure_connection=Off"
 
 
 	foreach f [glob -directory [file join $xamppoutputdir htdocs] *.html */*.html */*/*.html */*/*/*.html */*/*/*/*.html */*/*/*/*/*.html] {
-	    xampptcl::util::substituteParametersInFile $f [list \
-		{@@XAMPP_VERSION@@} $version]
-	}
+	    xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_VERSION@@} $version]
+	
+        if {[$be targetPlatform] == "osx-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "OS-X"]
+        } elseif {[$be targetPlatform] == "linux-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Linux"]
+        } elseif {[$be targetPlatform] == "windows-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Windows"]
+        }
+    }
 
 	xampptcl::util::substituteParametersInFileRegex [file join $xamppoutputdir install/.version] [list \
 	    {\$xamppversion.*} "\$xamppversion = \"$version\"" \
@@ -1322,8 +1329,15 @@ mssql.secure_connection=Off"
         close $fh
 
 	foreach f [glob -directory [file join $xamppoutputdir htdocs] *.html */*.html */*/*.html */*/*/*.html */*/*/*/*.html */*/*/*/*/*.html] {
-	    xampptcl::util::substituteParametersInFile $f [list \
-		{@@XAMPP_VERSION@@} $version]
+	    xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_VERSION@@} $version]
+
+        if {[$be targetPlatform] == "osx-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "OS-X"]
+        } elseif {[$be targetPlatform] == "linux-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Linux"]
+        } elseif {[$be targetPlatform] == "windows-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Windows"]
+        }
 	}
 
 	file copy [$be cget -src]/windowsXamppWorkspace/xampp/src/xampp-usb-lite/setup_xampp.bat $xamppoutputdir/setup_xampp.bat
