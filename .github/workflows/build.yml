@@ -20,6 +20,7 @@ jobs:
                 https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/php-8.4.27-Win32-vs17-x64.zip 7902fe891ff4b035d431fd429a2ec1df193ba1f6fedba425d861790465c64e6b
                 https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/php-8.5.12-Win32-vs17-x64.zip 660f3ff6ccbdf60f9607ef54bdba85ee22a58d61fd3633b38a93d57fb7c3d184
                 https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/php-8.3.36-Win32-vs16-x64.zip 0606810ff8fc232406aaab677b760e06af93a63a366d33ff738d4ce90501dfa5
+                https://www.apachelounge.com/download/VS18/binaries/httpd-2.4.69-261002-Win64-VS18.zip 77d715d0d9cee731e2251e7ddc2090a7a8e6d41fedef2e9827cd918593c5a652
 
     runs-on: ubuntu-latest
     steps:
