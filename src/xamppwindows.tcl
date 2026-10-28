@@ -93,7 +93,7 @@
         chain $environment
     } {
         set name windowsXamppHtdocs
-        set version 20250916
+        set version 20261027
         set rev 0
         set licenseRelativePath {}
         set tarballName xampp-htdocs-windows-${version}.tar.gz
@@ -1091,8 +1091,15 @@ mssql.secure_connection=Off"
 
 
 	foreach f [glob -directory [file join $xamppoutputdir htdocs] *.html */*.html */*/*.html */*/*/*.html */*/*/*/*.html */*/*/*/*/*.html] {
-	    xampptcl::util::substituteParametersInFile $f [list \
-		{@@XAMPP_VERSION@@} $version]
+	    xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_VERSION@@} $version]
+
+        if {[$be targetPlatform] == "osx-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "OS-X"]
+        } elseif {[$be targetPlatform] == "linux-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Linux"]
+        } elseif {[$be targetPlatform] == "windows-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Windows"]
+        }
 	}
 
 	xampptcl::util::substituteParametersInFileRegex [file join $xamppoutputdir install/.version] [list \
@@ -1322,8 +1329,15 @@ mssql.secure_connection=Off"
         close $fh
 
 	foreach f [glob -directory [file join $xamppoutputdir htdocs] *.html */*.html */*/*.html */*/*/*.html */*/*/*/*.html */*/*/*/*/*.html] {
-	    xampptcl::util::substituteParametersInFile $f [list \
-		{@@XAMPP_VERSION@@} $version]
+	    xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_VERSION@@} $version]
+
+        if {[$be targetPlatform] == "osx-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "OS-X"]
+        } elseif {[$be targetPlatform] == "linux-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Linux"]
+        } elseif {[$be targetPlatform] == "windows-x64"} {
+            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Windows"]
+        }
 	}
 
 	file copy [$be cget -src]/windowsXamppWorkspace/xampp/src/xampp-usb-lite/setup_xampp.bat $xamppoutputdir/setup_xampp.bat
