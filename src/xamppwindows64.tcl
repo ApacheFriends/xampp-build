@@ -72,7 +72,7 @@
         chain $environment
     } {
         set name windows64XamppApache
-        set tarballName httpd-${version}-win64-VC11.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
 }
 
@@ -81,7 +81,7 @@
     constructor {environment} {
 	chain $environment
     } {
-        set tarballName httpd-${version}-win64-VC14.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
     public method install {} {
         chain
@@ -93,7 +93,7 @@
     constructor {environment} {
 	chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
     public method preparefordist {} {
         chain
@@ -112,7 +112,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VC15.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
     public method preparefordist {} {
         chain
@@ -127,7 +127,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp81 {
@@ -135,7 +135,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp82 {
@@ -143,7 +143,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp83 {
@@ -151,7 +151,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
 }
 ::itcl::class windows64XamppApachePhp84 {
@@ -159,7 +159,7 @@
     constructor {environment} {
 	    chain $environment
     } {
-        set tarballName httpd-${version}-win64-VS17.zip
+        set tarballName httpd-${version}-Win64-VS18.zip
     }
 }
 
