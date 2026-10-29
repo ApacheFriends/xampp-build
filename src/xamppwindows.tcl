@@ -179,19 +179,19 @@
         {Define SRVROOT ".*"} {Define SRVROOT "/xampp/apache"} \
         {"\${SRVROOT}/htdocs"} {"/xampp/htdocs"} \
         {"\${SRVROOT}/cgi-bin} {"/xampp/cgi-bin} \
-        {^#?\s*(LoadModule access_compat_module modules/mod_access_compat.so)} {LoadModule access_compat_module modules/mod_access_compat.so} \
-	    {^#?\s*(LoadModule dav_lock_module modules/mod_dav_lock.so)} {LoadModule dav_lock_module modules/mod_dav_lock.so} \
-	    {^#?\s*(LoadModule headers_module modules/mod_headers.so)} {LoadModule headers_module modules/mod_headers.so} \
-	    {^#?\s*(LoadModule info_module modules/mod_info.so)} {LoadModule info_module modules/mod_info.so} \
-	    {^#?\s*(LoadModule lua_module modules/mod_lua.so)} "\\0\nLoadModule cache_disk_module modules/mod_cache_disk.so" \
-	    {^#?\s*(LoadModule proxy_module modules/mod_proxy.so)} {LoadModule proxy_module modules/mod_proxy.so} \
-	    {^#?\s*(LoadModule proxy_ajp_module modules/mod_proxy_ajp.so)} {LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} \
-	    {^#?\s*(LoadModule rewrite_module modules/mod_rewrite.so)} {LoadModule rewrite_module modules/mod_rewrite.so} \
-	    {^#?\s*(LoadModule socache_shmcb_module modules/mod_socache_shmcb.so)} {LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} \
-	    {^#?\s*(LoadModule ssl_module modules/mod_ssl.so)} {LoadModule ssl_module modules/mod_ssl.so} \
-	    {^#?\s*(LoadModule status_module modules/mod_status.so)} {LoadModule status_module modules/mod_status.so} \
+        {^\s*#*\s*LoadModule access_compat_module modules/mod_access_compat.so} {LoadModule access_compat_module modules/mod_access_compat.so} \
+	    {^\s*#*\s*LoadModule dav_lock_module modules/mod_dav_lock.so} {LoadModule dav_lock_module modules/mod_dav_lock.so} \
+	    {^\s*#*\s*LoadModule headers_module modules/mod_headers.so} {LoadModule headers_module modules/mod_headers.so} \
+	    {^\s*#*\s*LoadModule info_module modules/mod_info.so} {LoadModule info_module modules/mod_info.so} \
+	    {^\s*#*\s*LoadModule lua_module modules/mod_lua.so} "\\0\nLoadModule cache_disk_module modules/mod_cache_disk.so" \
+	    {^\s*#*\s*LoadModule proxy_module modules/mod_proxy.so} {LoadModule proxy_module modules/mod_proxy.so} \
+	    {^\s*#*\s*LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} {LoadModule proxy_ajp_module modules/mod_proxy_ajp.so} \
+	    {^\s*#*\s*LoadModule rewrite_module modules/mod_rewrite.so} {LoadModule rewrite_module modules/mod_rewrite.so} \
+	    {^\s*#*\s*LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} {LoadModule socache_shmcb_module modules/mod_socache_shmcb.so} \
+	    {^\s*#*\s*LoadModule ssl_module modules/mod_ssl.so} {LoadModule ssl_module modules/mod_ssl.so} \
+	    {^\s*#*\s*LoadModule status_module modules/mod_status.so} {LoadModule status_module modules/mod_status.so} \
 	    {ServerAdmin .*@example.com} {ServerAdmin postmaster@localhost} \
-	    {^#?\s*(ServerName www.example.com:80)} {ServerName localhost:80} \
+	    {^\s*#*\s*ServerName www.example.com:80} {ServerName localhost:80} \
 	    {<Directory ".*?/htdocs">} {<Directory "/xampp/htdocs">} \
 	    {    Options Indexes FollowSymLinks} {    Options Indexes FollowSymLinks Includes ExecCGI} \
 	    {    AllowOverride None} {    AllowOverride All} \
