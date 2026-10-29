@@ -624,6 +624,14 @@ return
         }
         foreach f [glob -directory [file join $destDir htdocs] *.html */*.html */*/*.html */*/*/*.html */*/*/*/*.html */*/*/*/*/*.html] {
             xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_VERSION@@} $version]
+
+            if {[$be targetPlatform] == "osx-x64"} {
+	            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "OS-X"]
+            } elseif {[$be targetPlatform] == "linux-x64"} {
+	            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Linux"]
+            } elseif {[$be targetPlatform] == "windows-x64"} {
+	            xampptcl::util::substituteParametersInFile $f [list {@@XAMPP_PLATFORM@@} "Windows"]
+            }
         }
 
         xampptcl::util::substituteParametersInFile $xamppoutputdir/etc/extra/httpd-xampp.conf [list "php5" "php7" "PHP5" "PHP7"]
