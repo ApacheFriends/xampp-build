@@ -950,15 +950,24 @@ proc includeLibGcc {be {destination {}}} {
 }
 
 proc findInstallBuilderVersion {be} {
-    if {[catch {set file [open /opt/installbuilder/ibversion]}]} {
-	if {[catch {set file [open [file join [$be cget -projectDir] src ibversion] r]}]} {
-	    message error "'ibversion' file couldn't be found in [$be cget -projectDir]/src"
-	    exit 1
-	}
+    # Run the InstallBuilder executable to determine its version
+    if {[catch {exec /opt/installbuilder/bin/builder --version} output]} {
+        message error "Error running executable or program returned error output: $output"
+        exit 1
     }
-    set ibversion [gets $file]
-    close $file
-    return $ibversion
+
+    # Split output by whitespace, search for Version, incr it, return result 
+    set words [regexp -all -inline {\S+} $output]
+    set index [lsearch -exact $words "Version"]
+
+    if {$index != -1} {
+        incr index
+        message default "Install Builder Version: [lindex $words $index]"
+        return [lindex $words $index]
+    } else {
+        message error "Could not determine Install Builder version"
+        exit 1
+    }
 }
 proc populateEmptyDirs {directory} {
     # The reason is that when the customers uncompress the files we send to them
