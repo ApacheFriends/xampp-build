@@ -914,36 +914,28 @@ fi
 }
 
 proc includeCplusplus {be {destination {}}} {
-    set libDir "lib"
-    if {[$be cget -target] == "linux-x64"} {
-	set libDir "lib64"
-    }
     if {$destination == ""} {
 	set destination [file join [$be cget -output] common lib]
     }
     if {[$be targetPlatform] == "linux-x64" || [$be targetPlatform] == "linux"} {
 
 	if [file exists [glob -nocomplain [$be cget -builddep]/gcc-*]] {
-	    foreach f [glob [$be cget -builddep]/gcc-*/$libDir/libstdc++.*] {
+	    foreach f [glob [$be cget -builddep]/gcc-*/lib/libstdc++.*] {
 		file copy -force  $f $destination
 	    }
 	} else {
-	    foreach f [glob /usr/$libDir/libstdc++.*] {
+	    foreach f [glob /usr/lib/*-linux-gnu/libstdc++.*] {
 		file copy -force  $f $destination
 	    }
 	}
     }
 }
 proc includeLibGcc {be {destination {}}} {
-    set libDir "lib"
-    if {[$be cget -target] == "linux-x64"} {
-	set libDir "lib64"
-    }
     if {$destination == ""} {
 	set destination [file join [$be cget -output] common lib]
     }
     if {[$be targetPlatform] == "linux-x64" || [$be targetPlatform] == "linux"} {
-        foreach f [glob /$libDir/libgcc_s.*] {
+        foreach f [glob /lib/*-linux-gnu/libgcc_s.*] {
             file copy -force  $f $destination
         }
     }
