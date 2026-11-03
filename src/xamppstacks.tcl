@@ -6,11 +6,12 @@
        } {
            addComponents baseFiles
            addComponents m4 libtool ::xampp::pcre ::xampp::zlib ::xampp::libiconv
-           addComponents ::xampp::gettext ::xampp::cmake
+           addComponents ::xampp::gettext
+	   # addComponents ::xampp::cmake
 
            # ming requires it
            addComponents bison flex
-           addComponents ::xampp::ncurses ::xampp::bzip2 ::xampp::libpng ::xampp::tiff ::xampp::jpeg ::xampp::freetype libwebp libzip gd ::xampp::opensslVersioned ::xampp::openldap libmcrypt ::xampp::curl ::xampp::imap ::xampp::expatLib ::xampp::libxml2 ::xampp::libxslt ::xampp::apr ::xampp::aprutil
+           addComponents ::xampp::ncurses6 ::xampp::bzip2 ::xampp::libpng ::xampp::tiff ::xampp::jpeg ::xampp::freetype libwebp libzip gd ::xampp::opensslVersioned ::xampp::openldap libmcrypt ::xampp::curl ::xampp::imap ::xampp::expatLib ::xampp::libxml2 ::xampp::libxslt ::xampp::apr ::xampp::aprutil
            addComponents chrpath ::xampp::oracleInstantclientLinuxX86Lib ::xampp::oracleInstantclientLinuxX86Sdk
            addComponents ::xampp::nghttp2 ::xampp::apache ::xampp::icu4c  ::xampp::freetds  ::xampp::sqlite  ::xampp::postgresql groff ::xampp::mariadb10 ::xampp::sablotron ::xampp::gdbm  ::xampp::perl libaio ::xampp::php ::xampp::phpPdfClasses ::xampp::fpdf ::xampp::ming ::xampp::pecl_radius ::xampp::pecl_ncurses ::xampp::modperl cpanArchiveZip cpanYAML cpanXSBuilder cpanIoZlib cpanBundleCpan cpanURI cpanIoCompress cpanHTML-Parser cpanHTML-Tagset cpanMakeMaker cpanParseRecDescent cpanDevelCheckLib cpanDBI cpanDBD-mariadb ::xampp::cpanLWP cpanDBDPgPP cpanDBD-SQLite ::xampp::libapreq2 ::xampp::zziplib ::xampp::proftpd ::xampp::mhash ::xampp::webalizer ::xampp::phpmyadmin
 
@@ -105,7 +106,7 @@
         replaceComponent gd {libltdl ::xampp::gd}
         replaceComponent ::xampp::MDB {{::xampp::MDB2}}
         replaceComponent ::xampp::HTML_Form {{::xampp::HTML_QuickForm2}}
-        removeComponents [list ::xampp::pecl_radius ::xampp::XML_HTMLSax ::xampp::xdebug ::xampp::Stream_SHM]
+        removeComponents [list ::xampp::pecl_radius ::xampp::pecl_ncurses ::xampp::XML_HTMLSax ::xampp::xdebug ::xampp::Stream_SHM]
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
@@ -263,6 +264,7 @@
     constructor {environment} {
         chain $environment
     } {
+        set baseTarball xampp85-[$be targetPlatform]
     }
 }
 
@@ -276,11 +278,14 @@
         replaceComponent ::xampp::zziplib {{::xampp::zziplib version 0.13.62}}
         replaceComponent ::xampp::oracleInstantclientLinuxX86Lib ::xampp::oracleInstantclientOsxX64Lib
         replaceComponent ::xampp::oracleInstantclientLinuxX86Sdk ::xampp::oracleInstantclientOsxX64Sdk
-        replaceComponent ::xampp::libiconv libiconvOsxNative
+        # replaceComponent ::xampp::libiconv libiconvOsxNative
         replaceComponent ::xampp::libxml2 libxml2OsxNative
         replaceComponent ::xampp::libxslt libxsltOsxNative
-        replaceComponent ::xampp::cmake {{cmake version 3.9.6}}
+        # replaceComponent ::xampp::cmake {{cmake version 3.9.6}}
         replaceComponent libmcrypt {autoconf pkgconfig libtool2 ::xampp::libmcrypt}
+    }
+    public method archPlatform {} {
+        return x86_64
     }
     public method preparefordist {} {
         foreach f [glob [file join [$be cget -output] "xamppfiles" postgresql lib libpq.*]] {
@@ -299,13 +304,14 @@
     protected method getXamppOutputDir {} {
         return /Applications/XAMPP/xamppfiles
     }
+
     public method setCompilationVariables {output} {
         set ::env(SHARED_LDFLAGS) "-Wl,-rpath -Wl,$output/lib -L$output/lib"
-        set ::env(LDFLAGS) "-Wl,-rpath -Wl,$output/lib -L$output/lib -I$output/include -arch x86_64"
+        set ::env(LDFLAGS) "-Wl,-rpath -Wl,$output/lib -L$output/lib -I$output/include -arch [archPlatform]"
         set ::env(LD_RUN_PATH) $output/lib
-        set ::env(CPPFLAGS) "-O3 -L$output/lib -I$output/include -I$output/include/ncurses -arch x86_64"
-        set ::env(CFLAGS) "-O3  -L$output/lib -I$output/include -I$output/include/ncurses -arch x86_64"
-        set ::env(CXXFLAGS) "-O3 -L$output/lib -I$output/include"
+        set ::env(CPPFLAGS) "-O3  -I$output/include -I$output/include/ncurses -arch [archPlatform] -mmacosx-version-min=10.15"
+        set ::env(CFLAGS) "-O3  -I$output/include -I$output/include/ncurses -arch [archPlatform] -mmacosx-version-min=10.15"
+        set ::env(CXXFLAGS) "-O3  -I$output/include -mmacosx-version-min=10.15"
         if {[info exists ::env(PATH)]} {
             if {![string match $output/bin:* $::env(PATH)]} {
                 set ::env(PATH) "$output/bin:$::env(PATH)"
@@ -352,6 +358,13 @@
         removeComponents ::xampp::gd
         replaceComponent ::xampp::php {oniguruma {::xampp::php80} ::xampp::gd}
         replaceComponent ::xampp::xamppSkeleton ::xampp::xamppSkeletonDev
+
+        removeComponents libtool libmcrypt ::xampp::libmcrypt
+        removeComponents ::xampp::imap
+        replaceComponent ::xampp::pcre ::xampp::pcre2
+        removeComponents pkgconfig libtool
+        replaceComponent  ::xampp::sqlite2  ::xampp::sqlite3
+        replaceComponent ::xampp::pecl_ncurses ::xampp::pecl_ncurses6
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
@@ -377,6 +390,56 @@
         replaceComponent ::xampp::php81 ::xampp::php82
     }
 }
+::itcl::class osx64XamppInstaller85Stack {
+    inherit osx64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php85
+    }
+}
+
+::itcl::class osxArm64XamppInstaller80Stack {
+    inherit osx64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+    }
+    public method archPlatform {} {
+        return arm64
+    }
+}
+
+::itcl::class osxArm64XamppInstaller85Stack {
+    inherit osxArm64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php85
+    }
+}
+
+::itcl::class osxArm64XamppInstaller84Stack {
+    inherit osxArm64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php84
+    }
+}
+
+::itcl::class osxArm64XamppInstaller83Stack {
+    inherit osxArm64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php83
+    }
+}
+
+
+
+
 # XAMPP Installer - standard version
 ::itcl::class xamppinstallerstack {
     inherit product
@@ -614,11 +677,12 @@ return
                 file copy -force $f [file join [$be cget -output] "xamppfiles" lib]
             }
         }
-        if {[$be targetPlatform] == "osx-x64"} {
+        if {[string match osx* [$be targetPlatform]]} {
             set xamppoutputdir [file join [$be cget -output] xamppfiles]
         } else {
             set xamppoutputdir [file join [$be cget -output] lampp]
         }
+        file mkdir [file join $xamppoutputdir htdocs]
         foreach f [glob [file join [$be cget -output] htdocs-xampp *]] {
             file copy -force $f [file join $xamppoutputdir htdocs]
         }
@@ -637,7 +701,7 @@ return
         ] 1
     }
     public method supportedPlatforms {} {
-        return [concat linux-x64 osx-x64]
+        return [concat linux-x64 osx-x64 osx-arm64]
     }
     public method copyProjectFiles {} {
         chain
@@ -657,7 +721,7 @@ return
                 }
             }
         }
-        if {[$be targetPlatform] != "osx-x64"} {
+        if {![string match osx* [$be targetPlatform]]} {
             set saveLdLibraryPath {}
             if {[info exists ::env(LD_LIBRARY_PATH)]} {
                 set saveLdLibraryPath $::env(LD_LIBRARY_PATH)
@@ -685,7 +749,7 @@ return
                 set destDir [$be cget -output]
                 set virginSrc [file join [$be cget -output] "lampp"]
             }
-            osx-x64 {
+            osx-x64 - osx-arm64 {
                 set relativeTopDir "XAMPP"
                 set destDir [file join [$be cget -output] XAMPP]
                 set installPrefix "XAMPP/xamppfiles"
@@ -1051,7 +1115,7 @@ return
         return $res
     }
     public method supportedPlatforms {} {
-        return {osx-x64}
+        return {osx-x64 osx-arm64}
     }
 }
 

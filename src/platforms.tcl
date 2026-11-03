@@ -107,6 +107,16 @@
     }
 }
 
+::itcl::class osx-arm64 {
+    inherit nativeInstaller
+    constructor {environment} {
+        chain $environment
+    } {
+        set name osx-arm64
+        set fullname {macOS arm64}
+    }
+}
+
 ::itcl::class linux-x64 {
     inherit nativeInstaller
     constructor {environment} {

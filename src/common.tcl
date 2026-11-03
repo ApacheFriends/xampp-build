@@ -732,7 +732,7 @@ if {$::tcl_platform(os) == "SunOS"} {
     public variable continueAtComponent {}
     public variable tmpDir "/tmp"
     public variable filesToIgnoreWhenPacking "CVS .svn .DS_Store .git .buildcomplete NOTEMPTY .history"
-    public variable osxPlatforms "osx-intel osx-x86_64"
+    public variable osxPlatforms "osx-arm64 osx-x86_64"
     public variable setvars {project.showFileUnpackingProgress=0}
     public variable enableDebugger 0
     public variable removeDocs 1
@@ -933,7 +933,7 @@ if {$::tcl_platform(os) == "SunOS"} {
             linux - linux-x64 {
                 set outputsuffix run
             }
-            osx-x86 - osx-x64 {
+            osx-x86 - osx-x64 - osx-arm64 {
                 set outputsuffix app
             }
             default {

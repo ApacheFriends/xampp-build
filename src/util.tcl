@@ -75,13 +75,31 @@ proc setGLibRestrictionsCentos7 {be} {
     }
 }
 
+set ::amIRootCached {}
+proc amiroot {} {
+    if {$::amIRootCached == ""} {
+        set id 0
+        catch {exec id -u} id
+        if {$::tcl_platform(user) == "root" || $id == "0" || [file writable /]} {
+            set ::amIRootCached 1
+        } else {
+            set ::amIRootCached 0
+        }
+    }
+    return $::amIRootCached
+}
 proc toolsDir {} {
     return [file join $::opts(srcdir) tools]
 }
 
 proc translator {args} {
     if {$::tcl_platform(os) == "Darwin"} {
-        set translatorTool [file join [toolsDir] translator translator-osx-intel.run]
+        if {$::tcl_platform(machine) == "arm64"} {
+            set arch arm64
+        } else {
+            set arch x86_64
+        }
+        set translatorTool [file join [toolsDir] translator translator-osx-${arch}.run]
     } else {
         set translatorTool [file join [toolsDir] translator translator-linux-x64.run]
     }
@@ -788,7 +806,7 @@ proc buildProject {project be buildType {license {}} {extraSetVars {}} {onlyGene
 
     if {$IBPath == {}} {
         if {$::tcl_platform(os)=="Darwin"} {
-            foreach d [list "/Applications/BitRock InstallBuilder Enterprise $IBversion" ~/installbuilder-$IBversion] {
+            foreach d [list "/Applications/BitRock InstallBuilder Enterprise $IBversion" ~/installbuilder-$IBversion /opt/installbuilder] {
                 if {[file exists $d]} {
                     set IBPath [file normalize $d]
                 }
@@ -836,7 +854,7 @@ proc buildProject {project be buildType {license {}} {extraSetVars {}} {onlyGene
     }
 
     if {$::tcl_platform(os)=="Darwin"} {
-        set ibBuilderBinary [file join $IBPath bin/Builder.app/Contents/MacOS/osx-intel]
+        set ibBuilderBinary [file join $IBPath bin/Builder.app/Contents/MacOS/installbuilder.sh]
     } else {
         set ibBuilderBinary [file join $IBPath bin/builder]
     }
@@ -914,37 +932,58 @@ fi
 }
 
 proc includeCplusplus {be {destination {}}} {
-    set libDir "lib"
+    set libDirs {lib}
     if {[$be cget -target] == "linux-x64"} {
-	set libDir "lib64"
+	set libDirs {lib64 lib/x86_64-linux-gnu}
     }
     if {$destination == ""} {
 	set destination [file join [$be cget -output] common lib]
     }
     if {[$be targetPlatform] == "linux-x64" || [$be targetPlatform] == "linux"} {
-
-	if [file exists [glob -nocomplain [$be cget -builddep]/gcc-*]] {
-	    foreach f [glob [$be cget -builddep]/gcc-*/$libDir/libstdc++.*] {
-		file copy -force  $f $destination
-	    }
-	} else {
-	    foreach f [glob /usr/$libDir/libstdc++.*] {
-		file copy -force  $f $destination
-	    }
-	}
+        set done 0
+        foreach libDir $libDirs {
+            if [file exists [glob -nocomplain [$be cget -builddep]/gcc-*]] {
+                foreach f [glob [$be cget -builddep]/gcc-*/$libDir/libstdc++.*] {
+                    file copy -force  $f $destination
+                    set done 1
+                }
+            } else {
+                foreach f [glob -nocomplain /usr/$libDir/libstdc++.*] {
+                    file copy -force  $f $destination
+                    set done 1
+                }
+            }
+            if {$done} {
+                break
+            }
+        }
+        if {!$done} {
+            error "Cannot include libstdc++" XAMPPERROR
+        }
     }
 }
 proc includeLibGcc {be {destination {}}} {
-    set libDir "lib"
+    set libDirs {lib}
+
     if {[$be cget -target] == "linux-x64"} {
-	set libDir "lib64"
+	set libDirs {lib64 usr/lib/x86_64-linux-gnu}
     }
     if {$destination == ""} {
 	set destination [file join [$be cget -output] common lib]
     }
     if {[$be targetPlatform] == "linux-x64" || [$be targetPlatform] == "linux"} {
-        foreach f [glob /$libDir/libgcc_s.*] {
-            file copy -force  $f $destination
+        set done 0
+        foreach libDir $libDirs {
+            foreach f [glob -nocomplain /$libDir/libgcc_s.*] {
+                file copy -force  $f $destination
+                set done 1
+            }
+            if {$done} {
+                break
+            }
+        }
+        if {!$done} {
+            error "Cannot include libgcc_s" XAMPPERROR
         }
     }
 }

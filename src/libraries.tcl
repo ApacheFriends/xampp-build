@@ -12,7 +12,7 @@ declareClass binutils -parentClass builddependency -version 2.25
 declareClass libuuid -parentClass library -name libuuid -version 1.0.3
 declareClass lcms -parentClass library -version 1.18
 declareClass openexr -parentClass library -version 2.2.0
-declareClass libwebp -parentClass library -version 0.6.0
+declareClass libwebp -parentClass library -version 1.6.0
 declareClass ilmbase -parentClass library -version 2.2.0
 declareClass flex -parentClass library -name flex -version 2.6.4
 declareClass harfbuzz -parentClass library -name harfbuzz -version 1.6.0
@@ -31,10 +31,14 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
         set ::opts(gdbm.prefix) [prefix]
     }
     public method install {} {
-        if { [$be cget -target] == "osx-x64" } {
-            # From Mac Ports
-            xampptcl::util::substituteParametersInFile [file join [srcdir] Makefile] \
-                [list {BINOWN = bin} {BINOWN = root} {BINGRP = bin} {BINGRP = wheel}]
+        if {![amiroot]} {
+            xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in [list {-o $(BINOWN) -g $(BINGRP)} {}]
+        } else {
+            if { [$be cget -target] == "osx-x64" } {
+                # From Mac Ports
+                xampptcl::util::substituteParametersInFile [file join [srcdir] Makefile] \
+                    [list {BINOWN = bin} {BINOWN = root} {BINGRP = bin} {BINGRP = wheel}]
+            }
         }
         chain
     }
@@ -64,7 +68,7 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
 	chain $environment
     } {
         set name pkg-config
-        set version 0.28
+        set version 0.29.2
         set supportsParallelBuild 0
     }
     protected method configureOptions {} {
@@ -104,7 +108,7 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
 	chain $environment
     } {
         set name pkg-config
-        set version 0.28
+        set version 0.29.2
         set supportsParallelBuild 0
     }
     protected method configureOptions {} {
@@ -130,8 +134,8 @@ declareClass libpcap -parentClass library -name libpcap -version 1.9.0 -licenseR
     }
 }
 
-declareClass pkgconfig -parentClass pkg-config -name pkg-config -version 0.28 -licenseRelativePath COPYING
-declareClass pkgconfigBuildDependency -parentClass pkg-configBuildDependency -name pkg-config -version 0.28
+declareClass pkgconfig -parentClass pkg-config -name pkg-config -version 0.29.2 -licenseRelativePath COPYING
+declareClass pkgconfigBuildDependency -parentClass pkg-configBuildDependency -name pkg-config -version 0.29.2
 
 ::itcl::class zip {
     inherit library
@@ -489,7 +493,7 @@ fi
     } {
         set name icu4c
         set version [versions::get "ICU4C" stable]
-        set supportsParallelBuild 0
+        set supportsParallelBuild 1
         set licenseRelativePath ../license.html
         set licenseNotes http://source.icu-project.org/repos/icu/icu/trunk/license.html
     }
@@ -739,7 +743,7 @@ declareClass gcc -parentClass builddependency -name gcc -version 3.3
         set name gcc
         chain ${environment}
     } {
-        set version 8.2.0
+        set version 8.5.0
         set supportsParallelBuild 1
     }
     protected method configureOptions {} {
@@ -865,6 +869,10 @@ includesdir = ${includedir}}] 1
             set ::env(DYLD_LIBRARY_PATH) $oldDYLD
         }
     }
+    public method setEnvironment {} {
+        set ::opts(libzip.prefix) [prefix]
+    }
+
     public method build {} {
         if { [$be cget -target] == "osx-x64"} {
             set oldDYLD $::env(DYLD_LIBRARY_PATH)
@@ -873,7 +881,12 @@ includesdir = ${includedir}}] 1
         cd [srcdir]
         file mkdir [srcdir]/build
         cd [srcdir]/build
-        eval logexec cmake .. -DCMAKE_INSTALL_PREFIX=[prefix] -DCMAKE_INSTALL_LIBDIR=lib
+        set cmakeArgs [list -DCMAKE_INSTALL_PREFIX=[prefix] -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DENABLE_NETTLE=OFF -DENABLE_GNUTLS=OFF -DENABLE_MBEDTLS=OFF -DBUILD_REGRESS=OFF  -DBUILD_EXAMPLES=OFF]
+        if {[string match osx* [$be cget -target]]} {
+            lappend cmakeArgs {-DENABLE_OPENSSL=OFF}
+        }
+
+        eval logexec cmake .. $cmakeArgs
         eval logexec [make]
         if {[$be cget -target] == "osx-x64"} {
             set ::env(DYLD_LIBRARY_PATH) $oldDYLD
@@ -897,7 +910,7 @@ includesdir = ${includedir}}] 1
         chain $environment
     } {
         set name m4
-        set version 1.4.11
+        set version 1.4.21
     }
     public method setEnvironment {} {
         set ::opts(m4.prefix) [prefix]
