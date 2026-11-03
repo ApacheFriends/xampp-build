@@ -48,7 +48,7 @@
         chain $environment
     } {
         set name windowsXamppWorkspace
-        set version 11
+        set version 12
         set licenseRelativePath {}
         set rev 0
         set controlPanelVersion "3.3.0"
