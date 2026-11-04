@@ -271,7 +271,22 @@
         copyFilesFromWorkspace
 	setReadmeVersion PHP "$version (${vcVersion} X86 64bit thread safe)"
 	# SSL is determined by PHP version, so best to set it here
-	setReadmeVersion OPENSSL ${opensslVersion}
+	setReadmeVersion OPENSSL [detectOpensslVersion]
+    }
+
+    # Read the version from the OpenSSL library bundled with PHP, so the readme
+    # does not drift when PHP upgrades it. Falls back to opensslVersion.
+    public method detectOpensslVersion {} {
+        foreach dll [glob -nocomplain -directory [file join $xamppoutputdir php] libcrypto*.dll libeay32.dll] {
+            set fh [open $dll r]
+            fconfigure $fh -translation binary
+            set data [read $fh]
+            close $fh
+            if {[regexp {OpenSSL (\d+\.\d+\.\d+[a-z]?)\s} $data -> detectedVersion]} {
+                return $detectedVersion
+            }
+        }
+        return $opensslVersion
     }
 }
 
@@ -367,7 +382,7 @@
         set version [::xampp::php::getXAMPPVersion 82]
         set rev [::xampp::php::getXAMPPRevision 82]
         set vcVersion VS16
-        set opensslVersion 1.1.1p
+        set opensslVersion 3.0.15
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
@@ -381,7 +396,7 @@
         set version [::xampp::php::getXAMPPVersion 83]
         set rev [::xampp::php::getXAMPPRevision 83]
         set vcVersion vs16
-        set opensslVersion 1.1.1p
+        set opensslVersion 3.0.18
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
@@ -395,7 +410,7 @@
         set version [::xampp::php::getXAMPPVersion 84]
         set rev [::xampp::php::getXAMPPRevision 84]
         set vcVersion vs17
-        set opensslVersion 1.1.1p
+        set opensslVersion 3.0.19
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
@@ -408,7 +423,7 @@
         set version [::xampp::php::getXAMPPVersion 85]
         set rev [::xampp::php::getXAMPPRevision 85]
         set vcVersion vs17
-        set opensslVersion 1.1.1p
+        set opensslVersion 3.5.5
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
 }
