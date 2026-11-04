@@ -302,6 +302,11 @@
         # Fix warning message related to SQLite not being properly loaded
         xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
           "LoadModule\\s+php_module" "LoadFile \"/xampp/php/libsqlite3.dll\"\nLoadModule php_module"] 1
+
+        # Fix php_curl not being properly loaded
+        xampptcl::util::substituteParametersInFileRegex $xamppoutputdir/apache/conf/extra/httpd-xampp.conf [list \
+          "LoadModule\\s+php_module" "LoadFile \"/xampp/php/brotlidec.dll\"\nLoadModule php_module"] 1
+
     }
 }
 

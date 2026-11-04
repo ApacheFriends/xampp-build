@@ -22,30 +22,30 @@ For Unix platforms (Linux and OS X), before creating the installers, the process
 
 You can build the XAMPP base tarballs from the `src` directory. You can get the source code for any of the components from the official website. For simplicity you can get them together from [Sourceforge](https://sourceforge.net/projects/xampp/files/thirdparties/).
 
-Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, your can run the commands below to create the desired installer depending on the platform. You can use the container to compile the binaries for Linux x64 but you will need access to an OS X higher than 10.6 to compile the binaries from OS X there.
+Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, run the commands below to create the desired installer depending on the platform. You can use the container to compile the binaries for Linux x64 but you will need access to an OS X higher than 10.6 to compile the binaries from OS X there.
 
 ```
-tclkit createstack.tcl buildTarball xamppunixinstaller80stack linux-x64
-tclkit createstack.tcl buildTarball xamppunixinstaller80stack osx-x64
+tclsh createstack.tcl buildTarball xamppunixinstaller85stack linux-x64
+tclsh createstack.tcl buildTarball xamppunixinstaller85stack osx-x64
 ```
 
-> NOTE: you can build other PHP versions (7.4.x, 8.0.x, or 8.1.x) replacing `80` with `74` or `81`.
+> NOTE: you can build other PHP versions (8.2.x, 8.3.x, or 8.4.x) replacing `85` with `82`, `83`, or `84`.
 
-Once the tarball is compressed, you can move it to the `/tmp/tarball` mounted directory to use it in the next step.
+The tarball needed for building the installer in the next step will be located in `/bitnami/<stack_name>/output` and it will have the date it was built in the filename. This file must be copied into `/tmp/tarballs` mounted directory to be used.
 
 ## How to build the XAMPP installers
 
 You can build the XAMPP installers from the `src` directory. The Linux and OS X platforms will require a tarball with all the binaries compiled from the previous step.
 
-Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, your can run the commands below to create the desired installer depending on the platform.
+Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, run the commands below to create the desired installer depending on the platform. For the Linux and OS X platforms this will require the tarball generated from `tclsh createstack.tcl buildTarball` for Windows this will require the Windows third party tarballs as it does not perform any compilation but packs the existing softwares and configures them.
 
 ```
-tclkit createstack.tcl pack xamppunixinstaller80stack linux-x64
-tclkit createstack.tcl pack xamppunixinstaller80stack osx-x64
-tclkit createstack.tcl pack xamppinstaller80stack windows-x64
+tclsh createstack.tcl pack xamppunixinstaller85stack linux-x64
+tclsh createstack.tcl pack xamppunixinstaller85stack osx-x64
+tclsh createstack.tcl pack xamppinstaller85stack windows-x64
 ```
 
-> NOTE: you can pack other PHP versions (7.4.x, 8.0.x, or 8.1.x) replacing `80` with `74` or `81`.
+> NOTE: you can pack other PHP versions (8.2.x, 8.3.x, or 8.4.x) replacing `85` with `82`, `83`, or `84`.
 
 The installers will be accessible at `/opt/installbuilder/output/`.
 
