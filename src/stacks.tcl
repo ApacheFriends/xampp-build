@@ -344,6 +344,8 @@
             set platformTarget [$be targetPlatform]
             if {[string match *solaris* $platformTarget]} {
                 set platformTarget [string map {"-" ""} $platformTarget]
+            } elseif {$platformTarget == "osx-arm64"} {
+                set platformTarget osxArm64
             } else {
                 set platformTarget [string map {"-x" ""} $platformTarget]
             }

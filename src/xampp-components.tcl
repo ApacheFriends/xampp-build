@@ -222,7 +222,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name cmake
-            set version 3.6.1
+            set version 3.18.6
         }
         public method configureOptions {} {
             #return [list --system-curl]
@@ -548,6 +548,22 @@ namespace eval xampp {
         }
 
     }
+    ::itcl::class pecl_ncurses6 {
+        inherit xampp_pecl_extension
+        constructor {environment} {
+            chain $environment
+        } {
+            set name ncurses
+            set version 6.6
+            set licenseRelativePath {}
+            set licenseNotes ""
+        }
+        public method configureOptions {} {
+            return [concat [chain] [list  --with-ncurses=$::opts(ncurses.prefix)]]
+        }
+
+    }
+
     ::itcl::class eaccelerator {
         inherit xampp_pecl_extension
         constructor {environment} {
@@ -594,6 +610,22 @@ namespace eval xampp {
             return [list --disable-libtool-lock --disable-cpp --enable-utf8 --enable-unicode-properties]
         }
     }
+    ::itcl::class pcre2 {
+        inherit xamppLibrary
+        constructor {environment} {
+            chain $environment
+        } {
+            set name "pcre2"
+            set version 10.49
+        }
+
+        public method setEnvironment {} {
+            chain
+        }
+        public method configureOptions {} {
+            return [list --disable-libtool-lock --disable-cpp --enable-utf8 --enable-unicode-properties]
+        }
+    }
 
     ::itcl::class zlib {
         inherit xamppLibrary
@@ -601,7 +633,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name "zlib"
-            set version 1.2.11
+            set version 1.3.2
             set licenseRelativePath README
         }
         public method setEnvironment {} {
@@ -681,7 +713,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name "libpng"
-            set version 1.6.37
+            set version 1.6.59
             set licenseRelativePath LICENSE
             set licenseNotes http://www.libpng.org/pub/png/src/libpng-LICENSE.txt
         }
@@ -765,7 +797,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name expat
-            set version 2.0.1
+            set version 2.9.0
             set licenseRelativePath COPYING
             set licenseNotes "MIT http://www.jclark.com/xml/copying.txt"
         }
@@ -855,7 +887,7 @@ namespace eval xampp {
         inherit xamppLibraryCommon opensslUnixVersioned
         constructor {environment} {
             opensslUnixVersioned::constructor $environment
-	    set supportsParallelBuild 0
+	    set supportsParallelBuild 1
         } {
             set version [versions::get "OpenSSL" stable]
         }
@@ -888,9 +920,9 @@ namespace eval xampp {
 	    }
 	    xampptcl::util::substituteParametersInFileRegex Makefile [list {\nSHARED_LDFLAGS=} "\nSHARED_LDFLAGS=-Wl,-rpath -Wl,[prefix]/lib "]
 	    # Necessary because we removed some algorithms
-	    logexec [make] depend
+	    eval logexec [make] depend
 	    setVersionInformation
-	    logexec [make]
+	    eval logexec [make]
 	}
         public method setVersionInformation {} {
             if {[string match linux* [$be cget -target]]} {
@@ -923,11 +955,16 @@ namespace eval xampp {
             chain $environment
         } {
             set name "openldap"
-            set version 2.4.48
+            set version 2.7.2
             set licenseRelativePath LICENSE
         }
         public method configureOptions {} {
             return [concat [chain] [list --disable-slapd --disable-slurpd --enable-static=no --with-tls=auto]]
+        }
+
+        public method build {} {
+            xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in  [list {SUBDIRS= include libraries clients servers tests doc} {SUBDIRS= include libraries clients servers tests}]
+            chain
         }
         public method install {} {
             chain
@@ -1032,7 +1069,7 @@ namespace eval xampp {
         } {
             set name "xampp-skeleton"
             set version 1.8.6
-            set rev 10
+            set rev 12
             set tarballName xampp-skeleton-dev-unix-${version}-${rev}
             set licenseRelativePath ""
             set licenseNotes ""
@@ -1091,6 +1128,7 @@ UseFtpUsers}]
             } else {
                 set destDir [file join [prefix] lampp]
             }
+            file mkdir $destDir
             file delete -force $destDir/etc/openssl.cnf
             file delete -force $destDir/htdocs
             foreach f [glob [srcdir]/*] {
@@ -1112,9 +1150,7 @@ UseFtpUsers}]
                 }
             }
 
-            set id 0
-            catch {exec id -u} id
-            if {$::tcl_platform(user) == "root" || $id == "0" || [file writable /]} {
+            if {[amiroot]} {
                 foreach f {var/mysql htdocs/webalizer} {
                     logexec chown -R nobody [file join $destDir $f]
                 }
@@ -1141,7 +1177,7 @@ UseFtpUsers}]
         } {
             set name "xampp-skeleton"
             set version 1.8.6
-            set rev 11
+            set rev 12
             set tarballName xampp-skeleton-dev-unix-${version}-${rev}
         }
     }
@@ -1155,13 +1191,13 @@ UseFtpUsers}]
         constructor {environment} {
             chain $environment
         } {
-	    if {[$be cget -target] == "osx-x64"} {
+	    if {[string match osx* [$be cget -target]]} {
 		set platform osx
 	    }  else  {
 		set platform linux
 	    }
             set name "xampp-htdocs-$platform"
-            set version 20250916
+            set version 20261104
             set rev 0
             set tarballName $name-$version.tar.gz
             set licenseRelativePath ""
@@ -1188,6 +1224,7 @@ UseFtpUsers}]
             } else {
                 set destDir [file join [prefix] lampp]
             }
+            file mkdir $destDir
             # clean up htdocs
             file delete -force [file join $destDir htdocs [string trim $http_prefix /]]
 	    set directory [lindex [glob -directory [extractDirectory] *] 0]
@@ -1198,9 +1235,8 @@ UseFtpUsers}]
 		file mkdir [file dirname $destination]
 		file copy -force $source $destination
 	    }
-            set id 0
-            catch {exec id -u} id
-            if {$::tcl_platform(user) == "root" || $id == "0" || [file writable /]} {
+
+            if {[amiroot]} {
                 logexec chown -R nobody [file join $destDir htdocs/[string trim $http_prefix /]]
             }
         }
@@ -1246,12 +1282,16 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "curl"
-            set version 7.53.1
+            set version 8.23.0
             set licenseRelativePath COPYING
             set licenseNotes http://curl.haxx.se/legal/licmix.html
         }
         public method configureOptions {} {
-            return [concat [chain] [list --with-ssl=[prefix] --with-ca-bundle=[file join [$be cget -output] share/curl/curl-ca-bundle.crt]]]
+            return [concat [chain] [list --without-libpsl --with-ssl=[prefix] --without-nghttp2 --without-libidn2 --with-ca-bundle=[file join [$be cget -output] share/curl/curl-ca-bundle.crt]]]
+        }
+        public method setEnvironment {} {
+            chain
+            set ::opts(curl.prefix) [prefix]
         }
         public method build {} {
             foreach var {LDFLAGS CPPFLAGS CFLAGS} {
@@ -1301,7 +1341,7 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "libiconv"
-            set version 1.15
+            set version 1.19
             set licenseRelativePath COPYING.LIB
         }
         public method setEnvironment {} {
@@ -1475,7 +1515,7 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "apr"
-            set version 1.5.2
+            set version 1.7.6
             set licenseRelativePath LICENSE
         }
         public method configureOptions {} {
@@ -1497,7 +1537,7 @@ UseFtpUsers}]
             set licenseRelativePath LICENSE
             #lappend patchList update_child_status_internal_segfault.patch
             set patchLevel 1
-            set supportsParallelBuild 0
+            set supportsParallelBuild 1
             set tarballName httpd-$version.tar.gz
         }
         public method srcdir {} {
@@ -1519,6 +1559,8 @@ UseFtpUsers}]
                                          --enable-authnz-ldap --enable-ipv6 --enable-dbd --enable-https --with-nghttp2=[prefix] --with-mysql=[prefix] --with-apr=[prefix]/bin/apr-1-config \
                                          --with-apr-util=[prefix]/bin/apu-1-config --with-pcre=[prefix] --enable-modules=all]]
             lappend list --enable-ssl --with-ssl=$::opts(openssl.prefix)
+
+            lappend list --disable-brotli
             return $list
         }
         public method build {} {
@@ -1531,7 +1573,9 @@ UseFtpUsers}]
         }
         public method install {} {
             chain
-            logexec chown nobody [file join [prefix] htdocs]
+            if {[amiroot]} {
+                logexec chown nobody [file join [prefix] htdocs]
+            }
             if { ![file exists [file join [prefix] modules mod_ssl.so ]] } {
                 error "mod_ssl.so file is not present"
                 exit
@@ -1546,13 +1590,16 @@ UseFtpUsers}]
         } {
             set name "icu4c"
             set version [versions::get "ICU4C" stable]
-            set supportsParallelBuild 0
+            set supportsParallelBuild 1
             set licenseRelativePath ../license.html
             set tVersion [string map {. _} $version]
             set tarballName icu4c-$tVersion-src
             set licenseNotes http://source.icu-project.org/repos/icu/icu/trunk/license.html
-            set supportsParallelBuild 0
+            set supportsParallelBuild 1
 
+        }
+        public method setEnvironment {} {
+            set ::opts(icu.prefix) [prefix]
         }
 
         public method srcdir {} {
@@ -1654,6 +1701,45 @@ UseFtpUsers}]
             set licenseNotes http://www.sqlite.org/copyright.html
 
         }
+        public method setEnvironment {} {
+            set ::opts(sqlite2.prefix) [prefix]
+        }
+
+        public method configureOptions {} {
+            return [list --prefix=[prefix]]
+        }
+        public method build {} {
+            cd [srcdir]
+            file mkdir bld
+            cd bld
+            set cflags $::env(CFLAGS)
+            set ::env(CFLAGS) "$cflags -DSQLITE_ENABLE_COLUMN_METADATA"
+            eval logexec ../configure [configureOptions]
+            eval logexec [make]
+            set ::env(CFLAGS) "$cflags"
+        }
+        public method install {} {
+            cd [srcdir]/bld
+            eval logexec [make] install
+        }
+    }
+
+    ::itcl::class sqlite3 {
+        inherit xamppLibrary
+        constructor {environment} {
+            chain $environment
+        } {
+            set name "sqlite"
+            set version 3.54.01
+            set tarballName sqlite-autoconf-[join [split $version .] {}]00
+            set readmePlaceholder SQLITE
+            set licenseRelativePath {}
+            set licenseNotes http://www.sqlite.org/copyright.html
+        }
+        public method srcdir {} {
+            return [file join [$be cget -src] sqlite-autoconf-[join [split $version .] {}]00]
+        }
+
         public method setEnvironment {} {
             set ::opts(sqlite2.prefix) [prefix]
         }
@@ -1829,9 +1915,6 @@ UseFtpUsers}]
             set name "mariadb"
             set fullname MariaDB
             set version [versions::get "MariaDB" "10"]
-            if {[$be targetPlatform] == "osx-x64"} {
-                set patchList {TokuDB-MacOS.patch mariadb-clock_realtime.patch}
-            }
         }
         public method srcdir {} {
             return [$be cget -src]/mariadb-$version
@@ -1878,7 +1961,7 @@ UseFtpUsers}]
             showEnvironmentVars
 
             # Start building
-            eval logexec cmake . -DCMAKE_INSTALL_PREFIX=[prefix] -DINSTALL_PLUGINDIR=lib/mysql/plugin -DENABLED_LOCAL_INFILE=ON -DMYSQL_UNIX_ADDR=[prefix]/var/mysql/mysql.sock -DINSTALL_SBINDIR=sbin -DSYSCONFDIR=[prefix]/etc  -DDEFAULT_SYSCONFDIR=[prefix]/etc -DMYSQL_DATADIR=[prefix]/var/mysql -DINSTALL_INFODIR=[prefix]/info -DWITH_SSL=system -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_PERFSCHEMA_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1  -DOPENSSL_INCLUDE_DIR=[prefix]/include -DOPENSSL_ROOT_DIR=[prefix]/ -DINSTALL_SCRIPTDIR=[prefix]/bin -DINSTALL_SUPPORTFILESDIR=[prefix]/share/mysql -DCMAKE_PREFIX_PATH=[prefix]/include/ncurses/ -DCURSES_INCLUDE_PATH=[prefix]/include/ncurses/ -DPLUGIN_TOKUDB=NO -DWITHOUT_MROONGA_STORAGE_ENGINE=YES
+            eval logexec cmake . -DCMAKE_INSTALL_PREFIX=[prefix] -DINSTALL_PLUGINDIR=lib/mysql/plugin -DENABLED_LOCAL_INFILE=ON -DMYSQL_UNIX_ADDR=[prefix]/var/mysql/mysql.sock -DINSTALL_SBINDIR=sbin -DSYSCONFDIR=[prefix]/etc  -DDEFAULT_SYSCONFDIR=[prefix]/etc -DMYSQL_DATADIR=[prefix]/var/mysql -DINSTALL_INFODIR=[prefix]/info -DWITH_SSL=system -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_PERFSCHEMA_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1  -DOPENSSL_INCLUDE_DIR=[prefix]/include -DOPENSSL_ROOT_DIR=[prefix]/ -DINSTALL_SCRIPTDIR=[prefix]/bin -DINSTALL_SUPPORTFILESDIR=[prefix]/share/mysql -DCMAKE_PREFIX_PATH=[prefix]/include/ncurses/ -DCURSES_INCLUDE_PATH=[prefix]/include/ncurses/ -DPLUGIN_ROCKSDB=NO -DPLUGIN_TOKUDB=NO -DWITHOUT_MROONGA_STORAGE_ENGINE=YES -DPLUGIN_PROVIDER_LZ4=NO -DPLUGIN_PROVIDER_LZO=NO  -DCLIENT_PLUGIN_ZSTD=OFF -DPLUGIN_PROVIDER_LZMA=NO
 
             # MariaDB is intended to be compiled using the OS-X system "libtool" library which includes the "-static" option.
             # The GNU "libtool" we add as a build dependency, since PHP requires, it does not have that option.
@@ -1888,11 +1971,11 @@ UseFtpUsers}]
             }
             # Fix error "'mutable' and 'const' cannot be mixed"
             if {[string match osx* [$be cget -target]]} {
-                xampptcl::util::substituteParametersInFile /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator [list "mutable _Iter" "/* mutable */ _Iter"]
+                # xampptcl::util::substituteParametersInFile /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator [list "mutable _Iter" "/* mutable */ _Iter"]
             }
             eval logexec [make]
             if {[string match osx* [$be cget -target]]} {
-                xampptcl::util::substituteParametersInFile /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator [list "/* mutable */ _Iter" "mutable _Iter"]
+                #xampptcl::util::substituteParametersInFile /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator [list "/* mutable */ _Iter" "mutable _Iter"]
             }
             set ::env(LDFLAGS) $ldflags
         }
@@ -1919,11 +2002,6 @@ UseFtpUsers}]
             set version 5.9
             set licenseRelativePath ANNOUNCE
             set licenseNotes http://www.gnu.org/software/ncurses/ncurses.html
-           if { [$be cget -target] == "osx-x64" } {
-               # Issue http://lists.gnu.org/archive/html/bug-ncurses/2011-04/msg00002.html
-               set patchStrip 1
-               set patchList {ncurses-clang.patch}
-           }
         }
         public method build {} {
             chain
@@ -1935,6 +2013,7 @@ UseFtpUsers}]
             set ::env(RELEASE_CXXFLAGS) "$releaseCxxFlags -I[prefix]/include/ncurses"
 
         }
+
         public method setEnvironment {} {
 	    set ::opts(ncurses.prefix) [prefix]
             addIncludesDir [prefix]/include/ncurses
@@ -1945,6 +2024,35 @@ UseFtpUsers}]
         }
     }
 
+     ::itcl::class ncurses6 {
+        inherit ncurses
+        constructor {environment} {
+            chain $environment
+        } {
+            set version 6.6
+        }
+        public method install {} {
+            chain
+            set major [lindex [split $version .] 0]
+            if {[string match osx* [$be targetPlatform]]} {
+                set libExt dylib
+            } else {
+                set libExt so
+            }
+
+            foreach lib {form menu ncurses panel} {
+                exec ln -sf lib${lib}w.${libExt}.${major} [file join [$be cget -output] lib lib${lib}.${libExt}]
+                exec ln -sf lib${lib}w.${libExt}.${major} [file join [$be cget -output] lib lib${lib}.${libExt}.${major}]
+                exec ln -sf lib${lib}w.a [file join [$be cget -output] lib lib${lib}.a]
+                exec ln -sf lib${lib}w_g.a [file join [$be cget -output] lib lib${lib}_g.a]
+            }
+            exec ln -sf "ncursesw" [file join [$be cget -output] include ncurses]
+        }
+        public method configureOptions {} {
+            return [concat [chain] [list --enable-widec --enable-symlinks]]
+        }
+    }
+
 
     ::itcl::class perl {
         inherit xamppLibrary
@@ -1952,7 +2060,11 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "perl"
-            set version [versions::get "Perl" "stable"]
+            if {[string match windows* [$be targetPlatform]]} {
+                set version [versions::get "Perl-windows" "stable"]
+            } else {
+                set version [versions::get "Perl" "stable"]
+            }
             set licenseRelativePath Copying
         }
         public method configureOptions {} {
@@ -1983,7 +2095,8 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "freetds"
-            set version 0.91
+            set version 1.5.16
+            set licenseRelativePath COPYING.txt
         }
         public method configureOptions {} {
             return [concat [chain] [list --enable-shared --with-ssl]]
@@ -2025,18 +2138,17 @@ UseFtpUsers}]
         public method configureOptions {} {
             if {[$be targetPlatform] == "linux"} {
                 return [concat [chain] [list --build=i386-lampp-linux --with-gnu-ld]]
-            } elseif {[$be targetPlatform] == "osx-x64"} {
+            } elseif {[string match osx* [$be targetPlatform]]} {
                 return [chain]
             } else {
                 return [concat [chain] [list --with-gnu-ld]]
 	    }
         }
         public method build {} {
-	    if {[$be targetPlatform] == "osx-x64"} {
-		xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in [list {prefix = /usr/local} "prefix = [prefix]" {-o $(BINOWN) -g $(BINGRP)} {}]
-	    } else {
-		xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in [list {prefix = /usr/local} "prefix = [prefix]"]
+	    if {![amiroot]} {
+		xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in [list {-o $(BINOWN) -g $(BINGRP)} {}]
 	    }
+            xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in [list {prefix = /usr/local} "prefix = [prefix]"]
             chain
         }
     }
@@ -2079,6 +2191,11 @@ UseFtpUsers}]
 		chain
 		set ::env(LDFLAGS) $ldflags
 	    } else {
+         if {[string match osx* [$be targetPlatform]]} {
+             xampptcl::util::substituteParametersInFile [srcdir]/src/command/sabcmd.cpp [list \
+                      {char version_txt[] = "\nsabcmd "SAB_VERSION" ("SAB_DATE")\n"} \
+                      {char version_txt[] = "\nsabcmd " SAB_VERSION " (" SAB_DATE ")\n"}]
+         }
                 chain
             }
         }
@@ -2145,6 +2262,7 @@ UseFtpUsers}]
         } {
             set name "zziplib"
             set version 0.13.23
+            set supportsParallelBuild 0
             # this one requires python, not available in the xampp chroot...
             #set version 0.13.62
             set licenseRelativePath COPYING.LIB
@@ -2153,6 +2271,8 @@ UseFtpUsers}]
             return [concat [chain] [list --with-zlib=[prefix]]]
         }
         public method build {} {
+
+            xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in  [list {zzip zzipwrap bins test docs} {zzip zzipwrap bins test}]
             xampptcl::util::substituteParametersInFile [srcdir]/bins/zziptest.c [list {(char *)hdr += hdr->d_reclen;} {hdr = (char *)hdr + hdr->d_reclen;}]
             chain
         }
@@ -2218,36 +2338,25 @@ UseFtpUsers}]
         constructor {environment} {
             ::gd::constructor $environment
         } {
-            set version 2.2.5
+            set name gd
+            set version 2.3.3
+            set tarballName libgd-$version
         }
         public method srcdir {} {
-            return [file join [$be cget -src] "libgd-gd-$version"]
+            return [file join [$be cget -src] "libgd-$version"]
         }
         public method cmakeOptions {} {
             return [list -DCMAKE_INSTALL_PREFIX=[$be cget -output] -DENABLE_FONTCONFIG=0 -DENABLE_XPM=0 \
-                        -DENABLE_PNG=1 -DPNG_LIBRARY=[$be cget -output] -DPNG_PNG_INCLUDE_DIR=[$be cget -output]/include \
-                        -DENABLE_JPEG=1 -DJPEG_LIBRARY=[$be cget -output] -DJPEG_INCLUDE_DIR=[$be cget -output]/include \
-                        -DENABLE_TIFF=1 -DTIFF_LIBRARY=[$be cget -output] -DTIFF_INCLUDE_DIR=[$be cget -output]/include \
-                        -DENABLE_FREETYPE=1 -DFREETYPE_LIBRARY=[$be cget -output] -DFREETYPE_INCLUDE_DIRS=[$be cget -output]/include \
-                        -DENABLE_WEBP=1 -DWEBP_LIBRARY=[$be cget -output]]
+                        -DENABLE_PNG=1  -DPNG_PNG_INCLUDE_DIR=[$be cget -output]/include \
+                        -DENABLE_JPEG=1 -DJPEG_INCLUDE_DIR=[$be cget -output]/include \
+                        -DENABLE_TIFF=1  -DTIFF_INCLUDE_DIR=[$be cget -output]/include \
+                        -DENABLE_FREETYPE=1 -DFREETYPE_INCLUDE_DIRS=[$be cget -output]/include \
+                        -DENABLE_WEBP=1 -DWEBP_INCLUDE_DIR=[$be cget -output]/include/webp]
+        }
+        public method configureOptions {} {
+            return [concat [chain] [list --without-fontconfig --without-xpm --with-png=[prefix] --with-zlib=[prefix] --with-jpeg=[prefix] --with-tiff=[prefix] --with-freetype=[prefix] --with-webp=[prefix]]]
         }
 
-        public method build {} {
-            cd [srcdir]
-
-            # GD needs special flags
-            set oldLdflags "$::env(LDFLAGS)"
-            set ::env(LDFLAGS) "$::env(LDFLAGS) -lpng -ljpeg -lz -ltiff -lfreetype"
-            eval logexec cmake . [cmakeOptions]
-
-            eval logexec [make]
-
-            # Restore LDFLAGS
-            set ::env(LDFLAGS) "$oldLdflags"
-
-            # Mark build as complete
-            ::xampptcl::file::write [file join [srcdir] .buildcomplete] {}
-        }
         public method install {} {
             # Avoid issue setting mkdir command before running make
             xampptcl::util::substituteParametersInFileRegex [srcdir]/Makefile \
@@ -2294,14 +2403,23 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "proftpd"
-            set version 1.3.6
+            set version 1.3.9e
         }
         public method configureOptions {} {
             return [concat [chain] [list --with-modules=mod_sql:mod_sql_mysql:mod_tls --with-includes=[prefix]/include:[prefix]/include/ncurses --with-libraries=[prefix]/lib/]]
         }
         public method install {} {
-            chain
-            if {[$be targetPlatform] == "osx-x64"} {
+            if {![amiroot]} {
+                cd [srcdir]
+                # If we do not do this, it tries to chown as root and it fails when compiling
+                # as non-root
+                set user [exec id -un]
+                set group [exec id -gn]
+                eval logexec [make] INSTALL_USER=$user INSTALL_GROUP=$group install
+            } else {
+                chain
+            }
+            if {[string match osx* [$be targetPlatform]]} {
                 foreach bin {sbin/proftpd bin/ftpdctl} {
                     set bin [file join [prefix] $bin]
                     set out [exec otool -L $bin]
@@ -2347,7 +2465,7 @@ UseFtpUsers}]
             chain $environment
         } {
             set name modperl
-            set version 2.0.12
+            set version 2.0.13
             set licenseRelativePath LICENSE
             set tarballName mod_perl-$version
         }
@@ -2359,8 +2477,8 @@ UseFtpUsers}]
         }
 
         public method configureOptions {} {
-            set opts [concat [chain] [list MP_APXS=[prefix]/bin/apxs MP_APR_CONFIG=[prefix]/bin/apr-1-config -prefix=[prefix]  --prefix=[prefix] --cflags="-L[prefix]/lib"]]
-            if {[$be targetPlatform] == "osx-x64"} {
+            set opts [concat [chain] [list MP_APXS=[prefix]/bin/apxs MP_APR_CONFIG=[prefix]/bin/apr-1-config]]
+            if {[string match osx* [$be targetPlatform]]} {
                 set opts [concat $opts [list MP_CCOPTS=-std=gnu89]]
             }
             return $opts
@@ -2435,7 +2553,7 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "apr-util"
-            set version 1.5.4
+            set version 1.6.5
             set licenseRelativePath LICENSE
         }
         public method configureOptions {} {
@@ -2529,7 +2647,7 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             set fullname PHP
             set version [::xampp::php::getXAMPPVersion 74]
             set licenseRelativePath LICENSE
-            set supportsParallelBuild 0
+            set supportsParallelBuild 1
         }
 
         public proc getXAMPPVersion {id} {
@@ -2559,31 +2677,33 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             # they had this and interbase compiled under /opt/interbase
             # --with-interbase=shared,/opt/interbase
 
-            set opts [list --prefix=[prefix] --with-apxs2=[prefix]/bin/apxs --with-config-file-path=[prefix]/etc --with-mysql=mysqlnd --enable-inline-optimization --disable-debug \
+            set opts [list --prefix=[prefix]  --with-apxs2=[prefix]/bin/apxs --with-config-file-path=[prefix]/etc --with-mysql=mysqlnd --enable-inline-optimization --disable-debug \
                           --enable-bcmath --enable-calendar --enable-ctype --enable-exif --enable-ftp --enable-gd-native-ttf --enable-magic-quotes --enable-shmop \
                           --disable-sigchild --enable-sysvsem --enable-sysvshm --enable-wddx --with-gdbm=[prefix] --with-jpeg-dir=[prefix] --with-png-dir=[prefix] \
                           --with-freetype-dir=[prefix] --with-zlib=yes --with-zlib-dir=[prefix] --with-openssl=[prefix] --with-xsl=[prefix] --with-ldap=[prefix] \
-                          --with-gd  --with-imap=$::opts(imap.src) --with-imap-ssl --with-gettext=[prefix]  --with-mssql=shared,[prefix] --with-pdo-dblib=shared,[prefix] --with-sybase-ct=[prefix] \
+                          --with-gd  --with-imap-ssl --with-gettext=[prefix]  --with-mssql=shared,[prefix] --with-pdo-dblib=shared,[prefix] --with-sybase-ct=[prefix] \
                           --with-mysql-sock=[prefix]/var/mysql/mysql.sock --with-oci8=shared,instantclient,[prefix]/lib/instantclient \
                           --with-mcrypt=[prefix] --with-mhash=[prefix] --enable-sockets --enable-mbstring=all --with-curl=[prefix] --enable-mbregex \
                           --enable-zend-multibyte --enable-exif --with-bz2=[prefix] --with-sqlite=shared,[prefix]  --with-sqlite3=[prefix] --with-libxml-dir=[prefix] \
                           --enable-soap --with-xmlrpc --enable-pcntl --with-mysqli=mysqlnd  --with-pgsql=shared,[prefix]/  --with-iconv=$::opts(libiconv.dir) --with-pdo-mysql=mysqlnd \
                           --with-pdo-pgsql=[prefix]/postgresql --with-pdo_sqlite=[prefix] --with-icu-dir=[prefix] --enable-fileinfo --enable-phar --enable-zip --enable-mbstring --disable-huge-code-pages]
-            if {[$be targetPlatform] != "osx-x64"} {
+            if {![string match osx* [$be targetPlatform]]} {
                 # Fails with:
                 # /usr/include/c++/4.2.1/ctime:64: error: expected constructor, destructor, or type conversion before 'namespace'
                 # make: *** [ext/intl/msgformat/msgformat_helpers.lo] Error 1
                 lappend opts --enable-intl
+		lappend opts --with-imap=$::opts(imap.src)
             } else {
                 # Fix for 5.5.18 (recent version should be fixed) https://bugs.php.net/bug.php?id=68114
                 lappend opts ac_cv_decimal_fp_supported=no
+		
             }
 
             lappend opts --with-libzip
 
             # Specific options for PHP 7.4.x
             if {[xampptcl::util::compareVersions $version "7.4.0"] >= 0} {
-                lappend opts --with-pear --enable-gd --with-jpeg --with-libwebp --with-freetype --with-zip
+                lappend opts --with-pear --enable-gd --with-jpeg --with-libwebp --with-freetype --with-zip=[prefix]
             }
 
             set opts [listFilter $opts [list --with-oci8*]]
@@ -2610,25 +2730,38 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                     [list {wget http://pear.php.net/install-pear-nozlib.phar -nd -P pear/} {ls pear/install-pear-nozlib.phar}]
             }
 
-            showEnvironmentVars
 
-            if {[$be targetPlatform] == "osx-x64"} {
-                file mkdir [srcdir]/configure-libs
+            # foreach {var comp} {LIBXML libxml2 OPENSSL openssl SQLITE sqlite ZLIB zlib CURL curl PNG libpng JPEG jpegsrc FREETYPE2 freetype ICU icu XSL libxslt LIBZIP libzip} {
+            #     set ::env(${var}_CFLAGS) "-I$::opts(${comp}.prefix)/include"
+            #     set ::env(${var}_LIBS) "-L$::opts(${comp}.prefix)/lib"
+            # }
+            showEnvironmentVars
+            if {[string match osx* [$be targetPlatform]]} {
+
+                set ::env(LIBZIP_LIBS) "-L[prefix]/lib -lzip"
+                set ::env(LIBZIP_CFLAGS) "-I[prefix]/include"
+                xampptcl::util::substituteParametersInFile ./configure [list {$BZ2_SHARED_LIBADD} "-Wl,-rpath,[prefix]/lib"]
+                #     file mkdir [srcdir]/configure-libs
                 foreach f [glob [prefix]/lib/libbz2.*] {
-                    file copy -force $f [srcdir]/configure-libs
+                #       file copy -force $f [srcdir]/configure-libs
+                    file copy -force $f [srcdir]/
                 }
-                eval logexecEnv [list [list DYLD_LIBRARY_PATH [srcdir]/configure-libs]] ./configure [configureOptions]
+                #set ::env(DYLD_LIBRARY_PATH) /tmp/src/php-8.5.12/configure-libs
+                #                eval logexecEnv [list [list DYLD_LIBRARY_PATH [srcdir]/configure-libs]] ./configure [configureOptions]
+                eval logexec ./configure [configureOptions]
+                #    unset ::env(DYLD_LIBRARY_PATH)
             } else {
                 eval logexec ./configure [configureOptions]
             }
 
-            xampptcl::util::substituteParametersInFileRegex  [srcdir]/Makefile [list {BZ2_SHARED_LIBADD =[^\n]*} {BZ2_SHARED_LIBADD = -Wl,-rpath,[prefix]/lib}]
 
-            if {[string match *osx* [$be targetPlatform]]} {
-                foreach f [glob $::opts(libtool.prefix)/lib/libltdl*] {
-                    file copy -force $f [prefix]/lib
-                }
-            }
+            xampptcl::util::substituteParametersInFileRegex  [srcdir]/Makefile [list {BZ2_SHARED_LIBADD =[^\n]*} "BZ2_SHARED_LIBADD = -Wl,-rpath,[prefix]/lib"]
+
+            # if {[string match *osx* [$be targetPlatform]]} {
+            #     foreach f [glob $::opts(libtool.prefix)/lib/libltdl*] {
+            #         file copy -force $f [prefix]/lib
+            #     }
+            # }
             xampptcl::util::substituteParametersInFile  [srcdir]/Makefile [list {-lltdl} "[prefix]/lib/libltdl.a"]
             eval logexec [make]
             set ::env(CFLAGS) $oldCflags
@@ -2668,7 +2801,7 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             }
             includeCplusplus $be [prefix]/lib
             includeLibGcc $be [prefix]/lib
-            if {[$be targetPlatform] == "osx-x64"} {
+            if {[string match osx* [$be targetPlatform]]} {
                 regexp -- {^([0-9]*)\..*$} $version - shortVersion
                 if {[xampptcl::util::compareVersions $version "8.0.0"] >= 0} {
                     set shortVersion ""
@@ -2678,12 +2811,13 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                     set out [exec otool -L $bin]
                     foreach l [split $out \n] {
                         set lib [lindex [string trim $l] 0]
-                        if {[string match *libpq.* $lib]} {
-                            if {![string match [file join [prefix] lib/libpq.*] $lib]} {
-                                set targetLib [file normalize [file join [prefix] lib [file tail $lib]]]
-                                exec install_name_tool -change $lib $targetLib $bin
+                        foreach libToFix {libpq libbz2} {
+                            if {[string match *$libToFix.* $lib]} {
+                                if {![string match [file join [prefix] lib/$libToFix.*] $lib]} {
+                                    set targetLib [file normalize [file join [prefix] lib [file tail $lib]]]
+                                    exec install_name_tool -change $lib $targetLib $bin
+                                }
                             }
-                            break
                         }
                     }
                 }
@@ -2776,9 +2910,17 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
         } {
             set vtrackerName XAMPP83
             set version [::xampp::php::getXAMPPVersion 83]
+        }
+        public method build {} {
             if {[string match osx* [$be cget -target]]} {
-                set patchList {fix-opcache-support-php-8.OS-X.patch}
+                # It complains because 10.15 is too old but on newer php versions it just uses __builtin_available
+                cd [srcdir]
+                xampptcl::util::substituteParametersInFile ext/pcre/pcre2lib/sljit/sljitExecAllocator.c {{#error "Must target Big Sur or newer"} {
+                    if (__builtin_available(macos 11, *))
+                    pthread_jit_write_protect_np(enable_exec);
+                }}
             }
+            chain
         }
     }
 
@@ -2789,9 +2931,6 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
         } {
             set vtrackerName XAMPP84
             set version [::xampp::php::getXAMPPVersion 84]
-            if {[string match osx* [$be cget -target]]} {
-                set patchList {fix-opcache-support-php-8.OS-X.patch}
-            }
         }
     }
     ::itcl::class php85 {
@@ -2801,9 +2940,6 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
         } {
             set vtrackerName XAMPP85
             set version [::xampp::php::getXAMPPVersion 85]
-            if {[string match osx* [$be cget -target]]} {
-                set patchList {fix-opcache-support-php-8.OS-X.patch}
-            }
         }
     }
 

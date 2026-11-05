@@ -697,6 +697,7 @@ if {[info exists env(BITNAMI_BUILD_DIRECTORY)]} {
     $be configure -output $env(BITNAMI_BUILD_DIRECTORY)/output
     $be configure -src $env(BITNAMI_BUILD_DIRECTORY)/src
     $be configure -builddep $env(BITNAMI_BUILD_DIRECTORY)/builddep
+    set ::opts(buildroot)  $env(BITNAMI_BUILD_DIRECTORY)/bitnami
 } elseif {[info exists ::env(BITNAMI_AUTOMATIC_BUILD)]} {
     $be configure -output [lindex $argv 4]/output
     $be configure -src [lindex $argv 4]/src

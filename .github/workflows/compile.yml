@@ -1,0 +1,129 @@
+name: compile
+run-name: Build by ${{ github.actor }}
+on:
+  push:
+    tags:
+      - "tarballs/20[0-9]*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile-xampp:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [85, 84, 83]
+        os: [linux-x64, osx-arm64]
+        include:
+          - os: linux-x64
+            runner: ubuntu-22.04
+            base_tarball: "https://sourceforge.net/projects/xampp/files/thirdparties/20261103/tarballs-unix-202611.tgz"
+            base_tarball_sha256: "ff671cf2d42de23b9ad5a940345ce7dcb209e52a9176ca5c4c82f5f638c2e2c8"
+          - os: osx-arm64
+            runner: macos-15
+            base_tarball: "https://sourceforge.net/projects/xampp/files/thirdparties/20261103/tarballs-unix-202611.tgz"
+            base_tarball_sha256: "ff671cf2d42de23b9ad5a940345ce7dcb209e52a9176ca5c4c82f5f638c2e2c8"
+          # Extremelly slow on macos-15-intel and fails. We should investigate crosscompiling on ARM
+          # - os: osx-x64
+          #   runner: macos-15-intel
+          #   base_tarball: "https://sourceforge.net/projects/xampp/files/thirdparties/20261103/tarballs-unix-202611.tgz"
+          #   base_tarball_sha256: "ff671cf2d42de23b9ad5a940345ce7dcb209e52a9176ca5c4c82f5f638c2e2c8"
+
+
+    runs-on: ${{ matrix.runner }}
+    env:
+      BITNAMI_BUILD_DIRECTORY: "/opt/build"
+    steps:
+      - name: Delete huge unnecessary tools folder
+        run: |
+          du -shc "$RUNNER_TOOL_CACHE/"*
+          rm -rf "$RUNNER_TOOL_CACHE"
+      - uses: actions/checkout@v4
+      - name: Cache tarballs
+        id: cache-tarballs
+        uses: actions/cache@v5
+        with:
+          path: /tmp/tarballs
+          key: tarballs-sources-${{ matrix.os }}-${{ hashFiles('.github/workflows/*') }}
+      - name: Install Linux dependencies
+        if: matrix.os == 'linux-x64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libssl-dev
+          sudo apt-get install -y --no-install-recommends \
+             ca-certificates file m4 gcc g++ make perl patch unzip bzip2 curl python3 zip git ninja-build \
+             pkg-config cmake \
+             p7zip-full p7zip-rar tcl tk tcllib itcl3 tcl-vfs tdom
+          curl --fail --show-error --silent -L -o tclkit 'https://tclkits.rkeene.org/fossil/raw/tclkit-8.5.17-rhel5-x86_64?name=76a197fe41359daaf4f90a2001f46675b3667e26'
+          chmod 755 tclkit
+          sudo mv tclkit /usr/local/bin
+      - name: Install macOS dependencies
+        if: matrix.os == 'osx-arm64'
+        run: |
+           echo Nothing to do for macOS
+      - name: Get tarballs
+        id: get-tarballs
+        if: steps.cache-tarballs.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          set -x
+          mkdir /tmp/tarballs
+          cd /tmp/tarballs/
+          echo "Downloading base tarball..."
+          curl --fail --show-error --silent --retry 3 -L \
+            -O '${{ matrix.base_tarball }}'
+          BASE_FILE=$(basename '${{ matrix.base_tarball }}')
+          echo "${{ matrix.base_tarball_sha256 }}  $BASE_FILE" | sha256sum -c -
+          echo "Extracting $BASE_FILE ..."
+          tar -xzf "$BASE_FILE"
+          echo "Downloading extra binaries..."
+          while read -r url sha; do
+            [ -z "$url" ] && continue
+            echo "  -> $url"
+            curl --fail --show-error --silent --retry 3 -L -O "$url"
+            echo "$sha  $(basename "$url")" | sha256sum -c -
+          done <<< "${{ matrix.extra_binaries }}"
+      - name: Build
+        id: build
+        run: |
+          set -euo pipefail
+          set -x
+          cd src
+          export BITNAMI_BUILD_DIRECTORY=${{env.BITNAMI_BUILD_DIRECTORY}}
+          sudo mkdir "$BITNAMI_BUILD_DIRECTORY"
+          sudo chown "$USER" "$BITNAMI_BUILD_DIRECTORY"
+          tclsh createstack.tcl buildTarball xamppunixinstaller${{matrix.version}}stack ${{matrix.os}}
+          mkdir "$BITNAMI_BUILD_DIRECTORY/dist-${{matrix.version}}-${{matrix.os}}"
+          mv $BITNAMI_BUILD_DIRECTORY/output/* "$BITNAMI_BUILD_DIRECTORY/dist-${{matrix.version}}-${{matrix.os}}"
+          shasum -a256 "$BITNAMI_BUILD_DIRECTORY/dist-${{matrix.version}}-${{matrix.os}}"/*gz > "$BITNAMI_BUILD_DIRECTORY/dist-${{matrix.version}}-${{matrix.os}}/sha256"
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: xampp-${{matrix.version}}-${{matrix.os}}
+          if-no-files-found: error
+          path: |
+            ${{env.BITNAMI_BUILD_DIRECTORY}}/dist-${{matrix.version}}-${{matrix.os}}/*
+  publish:
+    needs: compile-xampp
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/**/*.gz
+          token: ${{ github.token }}
+          fail_on_unmatched_files: true
+

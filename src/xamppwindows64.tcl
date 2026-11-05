@@ -232,7 +232,7 @@
         chain $environment
     } {
         set name windows64XamppPerl
-        set version [versions::get "Perl" "portable"]
+        set version [versions::get "Perl-windows" "portable"]
         set tarballName strawberry-perl-${version}-64bit-portable.zip
     }
 

@@ -5,7 +5,7 @@
     } {
         set name gettext
         set version 0.19.8.1
-        set supportsParallelBuild 0
+        set supportsParallelBuild 1
         set licenseRelativePath COPYING
     }
     public method setEnvironment {} {
@@ -149,8 +149,8 @@
     constructor {environment} {
         chain $environment
     } {
-        set supportsParallelBuild 0   ;# Apparently only FreeBSD stuff. But its better to disable it on all platforms
-        set licenseRelativePath LICENSE
+        set supportsParallelBuild 1   ;# Apparently only FreeBSD stuff. But its better to disable it on all platforms
+        set licenseRelativePath LICENSE.txt
         set licenseNotes http://www.openssl.org/source/license.html
     }
     public method getPatchesToApply {} {
@@ -588,7 +588,7 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
          chain $environment
      } {
          set licenseRelativePath LICENSE
-         set supportsParallelBuild 0
+         set supportsParallelBuild 1
      }
      public variable includePear 1
 
@@ -612,7 +612,7 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
          set list [list --with-apxs2=$::opts(apache.apxs) --with-iconv=$::opts(libiconv.dir) \
                        --with-expat-dir=$::opts(expat.prefix)  --with-mysql=$::opts(mysql.prefix) --with-zlib-dir=$::opts(zlib.dir) \
                        --enable-mbstring=all --enable-soap --enable-bcmath --enable-ftp \
-                       --with-xmlrpc --enable-fastcgi --enable-force-cgi-redirect]
+                       --with-xmlrpc --enable-fastcgi --enable-force-cgi-redirect --disable-sha-ni]
          if {[string match osx* [$be cget -target]]} {
              lappend list --with-gettext=$::opts(gettext.prefix)
          } else {

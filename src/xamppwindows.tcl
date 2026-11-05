@@ -1082,6 +1082,7 @@ mssql.secure_connection=Off"
     }
     public method install {} {
 	set xamppoutputdir [file join [$be cget -output] xampp]
+	file mkdir $xamppoutputdir
 	set xamppDoubleSlash [string map [list \\ \\\\] [file nativename [file normalize $xamppoutputdir]]]
 	set outputDoubleSlash [string map [list \\ \\\\] [file nativename [file normalize [$be cget -output]]]]
 
@@ -1342,7 +1343,7 @@ mssql.secure_connection=Off"
 	file mkdir $xamppoutputdir/MercuryMail
 	file mkdir $xamppoutputdir/FileZillaFTP
 	file mkdir $xamppoutputdir/webalizer
-
+	file mkdir $xamppoutputdir/htdocs
 	if {[file exists [file join $xamppoutputdir php/libssh2.dll]]} {
 	    file copy -force [file join $xamppoutputdir php/libssh2.dll] [file join $xamppoutputdir apache/bin/libssh2.dll]
 	}
