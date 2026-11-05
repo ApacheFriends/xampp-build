@@ -2911,6 +2911,17 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             set vtrackerName XAMPP83
             set version [::xampp::php::getXAMPPVersion 83]
         }
+        public method build {} {
+            if {[string match osx* [$be cget -target]]} {
+                # It complains because 10.15 is too old but on newer php versions it just uses __builtin_available
+                cd [srcdir]
+                xampptcl::util::substituteParametersInFile ext/pcre/pcre2lib/sljit/sljitExecAllocator.c {{#error "Must target Big Sur or newer"} {
+                    if (__builtin_available(macos 11, *))
+                    pthread_jit_write_protect_np(enable_exec);
+                }}
+            }
+            chain
+        }
     }
 
     ::itcl::class php84 {
