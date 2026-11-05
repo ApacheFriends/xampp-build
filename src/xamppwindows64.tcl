@@ -288,7 +288,8 @@
 }
 
 ::itcl::class windows64XamppPhp8 {
-  inherit windows64XamppPhp
+    inherit windows64XamppPhp
+    public variable windowsRevision {}
     constructor {environment} {
         chain $environment
     } {
@@ -296,7 +297,20 @@
         set vcVersion VS16
         set opensslVersion [versions::get "OpenSSL" stable]
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
+        set windowsRevision 1
     }
+    public method getTarballName {} {
+        if {$windowsRevision != ""} {
+            if {[regexp -- {(^php-.*)(-Win32.*)$} $tarballName - pre post]} {
+                return $pre-$windowsRevision$post
+            } else {
+                error "cannot parse php tarballName $tarballName"
+            }
+        } else {
+            return $tarballName
+        }
+    }
+
     public method install {} {
         chain
         # Fix warning message related to SQLite not being properly loaded
