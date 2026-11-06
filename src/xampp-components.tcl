@@ -668,7 +668,7 @@ namespace eval xampp {
         public method install {} {
             chain
             cd [prefix]/lib
-            if {[$be targetPlatform] == "osx-x64"} {
+            if {[string match osx* [$be targetPlatform]]} {
                 set compatVersion [join [lrange [split $version .] 0 1] .]
                 exec ln -sf libbz2.$version.dylib libbz2.dylib
                 exec ln -sf libbz2.$version.dylib libbz2.$compatVersion.dylib
@@ -677,7 +677,7 @@ namespace eval xampp {
         public method build {} {
             cd [srcdir]
             set compatVersion [join [lrange [split $version .] 0 1] .]
-            if {[$be targetPlatform] == "osx-x64"} {
+            if {[string match osx* [$be targetPlatform]]} {
                 set dylibTarget [format [join [list {libbz2.dylib: $(OBJS)} \
                                                    {rm -f libbz2.dylib} {$(CC) -dynamiclib $(OBJS) -o libbz2.%s.dylib -install_name $(PREFIX)/lib/libbz2.%s.dylib -compatibility_version %s -current_version %s} \
                                                    {ln -s libbz2.%s.dylib libbz2.%s.dylib} \
@@ -743,6 +743,14 @@ namespace eval xampp {
             set name "freetype"
             set version 2.4.8
         }
+        public method configureOptions {} {
+            set args [chain]
+            if {[string match osx* [$be cget -target]]} {
+                set args [concat $args [list  "ZLIB_LIBS=-L[prefix]/lib -lz -lbz2" "BZIP2_LIBS=-L[prefix]/lib -bz2" --without-harfbuzz]]
+            }
+            return $args
+        }
+
         public method setEnvironment {} {
             chain
             addIncludesDir [prefix]/include/freetype2
@@ -948,6 +956,28 @@ namespace eval xampp {
         }
     }
 
+    ::itcl::class readline {
+        inherit xamppLibrary
+        constructor {environment} {
+            chain $environment
+        } {
+            set name "readline"
+            set version 8.3
+        }
+    }
+
+    ::itcl::class libpsl {
+        inherit xamppLibrary
+        constructor {environment} {
+            chain $environment
+        } {
+            set name "libpsl"
+            set version 0.23.3
+        }
+        public method configureOptions {} {
+            return [concat [chain] [list --enable-runtime=libicu --enable-builtin=libicu]]
+        }
+    }
 
     ::itcl::class openldap {
         inherit xamppLibrary
@@ -1287,7 +1317,7 @@ UseFtpUsers}]
             set licenseNotes http://curl.haxx.se/legal/licmix.html
         }
         public method configureOptions {} {
-            return [concat [chain] [list --without-libpsl --with-ssl=[prefix] --without-nghttp2 --without-libidn2 --with-ca-bundle=[file join [$be cget -output] share/curl/curl-ca-bundle.crt]]]
+            return [concat [chain] [list --with-libpsl=[prefix]/lib --with-ssl=[prefix] --without-nghttp2 --without-libidn2 --with-ca-bundle=[file join [$be cget -output] share/curl/curl-ca-bundle.crt]]]
         }
         public method setEnvironment {} {
             chain
@@ -1560,7 +1590,7 @@ UseFtpUsers}]
                                          --with-apr-util=[prefix]/bin/apu-1-config --with-pcre=[prefix] --enable-modules=all]]
             lappend list --enable-ssl --with-ssl=$::opts(openssl.prefix)
 
-            lappend list --disable-brotli
+            lappend list --with-brotli=[prefix]
             return $list
         }
         public method build {} {
@@ -1629,7 +1659,22 @@ UseFtpUsers}]
         }
     }
 
-
+    ::itcl::class brotli {
+        inherit xamppLibrary
+        constructor {environment} {
+            chain $environment
+        } {
+            set name brotli
+            set version 1.2.1
+            set licenseRelativePath LICENSE
+            set supportsParallelBuild 1
+        }
+        public method build {} {
+            cd [srcdir]
+            eval logexec cmake . -DCMAKE_INSTALL_PREFIX=[prefix] -DCMAKE_BUILD_TYPE=Release
+            eval logexec [make]
+        }
+    }
     ::itcl::class pbxt {
         inherit xamppLibrary
         constructor {environment} {
@@ -1742,10 +1787,11 @@ UseFtpUsers}]
 
         public method setEnvironment {} {
             set ::opts(sqlite2.prefix) [prefix]
+            set ::opts(sqlite.prefix) [prefix]
         }
 
         public method configureOptions {} {
-            return [list --prefix=[prefix]]
+            return [list --prefix=[prefix] --disable-readline]
         }
         public method build {} {
             cd [srcdir]
@@ -2160,12 +2206,12 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "tiff"
-	        set version 4.0.1
+	        set version 4.7.2
 
-            set licenseRelativePath COPYRIGHT
+            set licenseRelativePath LICENSE.md
         }
-        public method callConfigure {} {
-	    chain
+        public method configureOptions {} {
+	    return [concat [chain] [list --with-jpeg-include-dir=[prefix]/include --with-jpeg-lib-dir=[prefix]/include --disable-jbig --disable-libdeflate]]
         }
     }
 
@@ -2261,20 +2307,14 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "zziplib"
-            set version 0.13.23
+            set version 0.13.80
             set supportsParallelBuild 0
-            # this one requires python, not available in the xampp chroot...
-            #set version 0.13.62
             set licenseRelativePath COPYING.LIB
         }
-        public method configureOptions {} {
-            return [concat [chain] [list --with-zlib=[prefix]]]
-        }
         public method build {} {
-
-            xampptcl::util::substituteParametersInFile [srcdir]/Makefile.in  [list {zzip zzipwrap bins test docs} {zzip zzipwrap bins test}]
-            xampptcl::util::substituteParametersInFile [srcdir]/bins/zziptest.c [list {(char *)hdr += hdr->d_reclen;} {hdr = (char *)hdr + hdr->d_reclen;}]
-            chain
+            cd [srcdir]
+            eval logexec cmake . -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=[prefix]
+            eval logexec cmake --build .
         }
     }
 
