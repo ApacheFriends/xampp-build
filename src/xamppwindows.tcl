@@ -93,7 +93,7 @@
         chain $environment
     } {
         set name windowsXamppHtdocs
-        set version 20250916
+        set version 20261107
         set rev 0
         set licenseRelativePath {}
         set tarballName xampp-htdocs-windows-${version}.tar.gz
