@@ -1227,7 +1227,7 @@ UseFtpUsers}]
 		set platform linux
 	    }
             set name "xampp-htdocs-$platform"
-            set version 20261104
+            set version 20261107
             set rev 0
             set tarballName $name-$version.tar.gz
             set licenseRelativePath ""
