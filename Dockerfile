@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Install necessary tools and dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates file m4 gcc g++ make perl patch unzip bzip2 curl python3 zip git ninja-build \
+    ca-certificates file m4 gcc g++ make perl patch unzip bzip2 curl python3 zip git ninja-build xz-utils \
     pkg-config cmake \
     p7zip-full p7zip-rar tcl tk tcllib itcl3 tcl-vfs tdom \
     && rm -rf /var/lib/apt/lists/*
