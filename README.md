@@ -35,7 +35,7 @@ The tarball needed for building the installer in the next step will be located i
 
 ## How to build the XAMPP installers
 
-You can build the XAMPP installers from the `src` directory. The Linux and OS X platforms will require a tarball with all the binaries compiled from the previous step.
+You can build the XAMPP installers from the `src` directory. The Linux and OS X platforms will require a tarball with all the binaries compiled from the previous step. Windows does not need that step, see [How to build the Windows installer](#how-to-build-the-windows-installer).
 
 Once the needed files are located into a `tarballs` directory and mounted into the container at `/tmp/tarballs`, run the commands below to create the desired installer depending on the platform. For the Linux and OS X platforms this will require the tarball generated from `tclsh createstack.tcl buildTarball` for Windows this will require the Windows third party tarballs as it does not perform any compilation but packs the existing softwares and configures them.
 
@@ -48,6 +48,30 @@ tclsh createstack.tcl pack xamppinstaller85stack windows-x64
 > NOTE: you can pack other PHP versions (8.2.x, 8.3.x, or 8.4.x) replacing `85` with `82`, `83`, or `84`.
 
 The installers will be accessible at `/opt/installbuilder/output/`.
+
+## How to build the Windows installer
+
+The Windows installer does not compile anything: it packs the official Windows binaries (PHP, Apache, MariaDB, Perl...), so you can skip the `buildTarball` step and run everything from the Linux container.
+
+1. Download the Windows thirdparties into the `tarballs` directory. The `.github/workflows/build.yml` workflow lists the exact files and their SHA-256 (the `base_tarball` and `extra_binaries` of the `windows-x64` entry):
+
+    ```
+    $ mkdir -p tarballs && cd tarballs
+    $ curl -LO https://downloads.sourceforge.net/project/xampp/thirdparties/20260415/tarballs-windows-202206.tgz
+    $ tar -xzf tarballs-windows-202206.tgz
+    ```
+
+    The PHP version must match the one in `metadata/versions/versions.ini`. If it is not included in the tarball, download it from [windows.php.net](https://windows.php.net/downloads/releases/archives/) (thread safe build, for example `php-8.4.27-1-Win32-vs17-x64.zip`) into the same directory. The `-1` suffix comes from `windowsRevision` in `src/xamppwindows64.tcl`.
+
+2. Register an [InstallBuilder](https://installbuilder.com) license (the packing step requires the Professional edition) by copying it to `/opt/installbuilder/license.xml` inside the container.
+
+3. Pack the installer:
+
+    ```
+    tclkit createstack.tcl pack xamppinstaller84stack windows-x64
+    ```
+
+The installer will be accessible at `/opt/installbuilder/output/`. The same steps run in the `build` GitHub workflow, which can be triggered manually (`workflow_dispatch`) from the Actions tab.
 
 ## License
 
