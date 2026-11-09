@@ -28,6 +28,7 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/windows/httpd-2.4.69-Win64-VS18.zip 77d715d0d9cee731e2251e7ddc2090a7a8e6d41fedef2e9827cd918593c5a652
                 https://sourceforge.net/projects/xampp/files/thirdparties/windows/mariadb-10.11.19-winx64.zip 398ea30e5036010bbebe01d2b1804280424dcc2626e36d8e95155c04d25a0490
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-windows-workspace-13-0.zip b8421a8cb3b3f5d17801b6b49241126476a97f20087c69eaa37d5fa6946caf1c
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-windows-20261107.tar.gz e3b8fb3815eb2817944f419a80c2ac7ccbad1abd428b2e1017cd65e64b6bc7b2
           - os: osx-arm64
             version: 85
@@ -35,54 +36,60 @@ jobs:
             base_tarball_sha256: "18711a2d3dd8d069c3ea7d3f307a7b4250555fc0f95d455b4b493d6789ff2f57"
             extra_binaries: |
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-workspace-unix-1.8.8-0.tar.gz e5a23e1379e1196039446ead9646d0c2f55e6032fa2873707354359cf9909e9b
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-mariadbdata-unix-10.11-0.tar.gz d6a2cc659a5dd03fb887923e9c448471e5c0b9ccd0e4c7ea1af4e5932a650802
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-osx-20261107.tar.gz cc13e2e9c903d3be4b94566bf7e6ac15e94ea02b715720d2a1c7f72edb1beddd
                 https://sourceforge.net/projects/xampp/files/thirdparties/phpMyAdmin-5.2.3-all-languages.zip 2d2e13c735366d318425c78e4ee2cc8fc648d77faba3ddea2cd516e43885733f
-                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-skeleton-dev-unix-1.8.6-12.tar.gz 0e0f4a4da3bacfcf2539a62cd23c056e3851d3b375c44b22ff4182db67ad1819
           - os: osx-arm64
             version: 84
             base_tarball: "https://github.com/ApacheFriends/xampp-build/releases/download/tarballs%2F20261111/xampp84-osx-arm64-20261110.tar.gz"
             base_tarball_sha256: "95e345e1fe7fe58a10a4f393db2860de3d4ca5176f317d980c0d605bb3d0fde5"
             extra_binaries: |
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-workspace-unix-1.8.8-0.tar.gz e5a23e1379e1196039446ead9646d0c2f55e6032fa2873707354359cf9909e9b
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-mariadbdata-unix-10.11-0.tar.gz d6a2cc659a5dd03fb887923e9c448471e5c0b9ccd0e4c7ea1af4e5932a650802
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-osx-20261107.tar.gz cc13e2e9c903d3be4b94566bf7e6ac15e94ea02b715720d2a1c7f72edb1beddd
                 https://sourceforge.net/projects/xampp/files/thirdparties/phpMyAdmin-5.2.3-all-languages.zip 2d2e13c735366d318425c78e4ee2cc8fc648d77faba3ddea2cd516e43885733f
-                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-skeleton-dev-unix-1.8.6-12.tar.gz 0e0f4a4da3bacfcf2539a62cd23c056e3851d3b375c44b22ff4182db67ad1819
           - os: osx-arm64
             version: 83
             base_tarball: "https://github.com/ApacheFriends/xampp-build/releases/download/tarballs%2F20261111/xampp83-osx-arm64-20261110.tar.gz"
             base_tarball_sha256: "f9ddc107d31f7184abfa3c88812fdefece55965cd5033e5be029da6858eef926"
             extra_binaries: |
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-mariadbdata-unix-10.11-0.tar.gz d6a2cc659a5dd03fb887923e9c448471e5c0b9ccd0e4c7ea1af4e5932a650802
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-workspace-unix-1.8.8-0.tar.gz e5a23e1379e1196039446ead9646d0c2f55e6032fa2873707354359cf9909e9b
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-osx-20261107.tar.gz cc13e2e9c903d3be4b94566bf7e6ac15e94ea02b715720d2a1c7f72edb1beddd
                 https://sourceforge.net/projects/xampp/files/thirdparties/phpMyAdmin-5.2.3-all-languages.zip 2d2e13c735366d318425c78e4ee2cc8fc648d77faba3ddea2cd516e43885733f
-                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-skeleton-dev-unix-1.8.6-12.tar.gz 0e0f4a4da3bacfcf2539a62cd23c056e3851d3b375c44b22ff4182db67ad1819
           - os: linux-x64
             version: 85
             base_tarball: "https://github.com/ApacheFriends/xampp-build/releases/download/tarballs%2F20261111/xampp85-linux-x64-20261110.tar.gz"
             base_tarball_sha256: "8e92b1354b251031723a862b8227cf6e790b9d9f901b97d2d7d6e3a03a821108"
             extra_binaries: |
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-mariadbdata-unix-10.11-0.tar.gz d6a2cc659a5dd03fb887923e9c448471e5c0b9ccd0e4c7ea1af4e5932a650802
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-workspace-unix-1.8.8-0.tar.gz e5a23e1379e1196039446ead9646d0c2f55e6032fa2873707354359cf9909e9b
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-linux-20261107.tar.gz 8722dce4e7aa57cb7e07ac20f2a0e8cdea3800549bf37457750261b9756b6d9b
                 https://sourceforge.net/projects/xampp/files/thirdparties/phpMyAdmin-5.2.3-all-languages.zip 2d2e13c735366d318425c78e4ee2cc8fc648d77faba3ddea2cd516e43885733f
-                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-skeleton-dev-unix-1.8.6-12.tar.gz 0e0f4a4da3bacfcf2539a62cd23c056e3851d3b375c44b22ff4182db67ad1819
           - os: linux-x64
             version: 84
             base_tarball: "https://github.com/ApacheFriends/xampp-build/releases/download/tarballs%2F20261111/xampp84-linux-x64-20261110.tar.gz"
             base_tarball_sha256: "732b951affb7f8c7ab13c3f046d6eb700889d3bc5f47228896ace099b27e67eb"
             extra_binaries: |
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-mariadbdata-unix-10.11-0.tar.gz d6a2cc659a5dd03fb887923e9c448471e5c0b9ccd0e4c7ea1af4e5932a650802
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-workspace-unix-1.8.8-0.tar.gz e5a23e1379e1196039446ead9646d0c2f55e6032fa2873707354359cf9909e9b
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-linux-20261107.tar.gz 8722dce4e7aa57cb7e07ac20f2a0e8cdea3800549bf37457750261b9756b6d9b
                 https://sourceforge.net/projects/xampp/files/thirdparties/phpMyAdmin-5.2.3-all-languages.zip 2d2e13c735366d318425c78e4ee2cc8fc648d77faba3ddea2cd516e43885733f
-                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-skeleton-dev-unix-1.8.6-12.tar.gz 0e0f4a4da3bacfcf2539a62cd23c056e3851d3b375c44b22ff4182db67ad1819
           - os: linux-x64
             version: 83
             base_tarball: "https://github.com/ApacheFriends/xampp-build/releases/download/tarballs%2F20261111/xampp83-linux-x64-20261110.tar.gz"
             base_tarball_sha256: "6067546d020231e95c1b00dc8d0b2ef9a24bc6b28398d15e3069c9ea434239a6"
             extra_binaries: |
                 https://sourceforge.net/projects/xampp/files/thirdparties/20261103/curl-ca-bundle-2026-11-05.crt 427c064216761a1e72a8b30f0d954d08cb6e4435a82091fb865afd20c8497285
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-mariadbdata-unix-10.11-0.tar.gz d6a2cc659a5dd03fb887923e9c448471e5c0b9ccd0e4c7ea1af4e5932a650802
+                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-workspace-unix-1.8.8-0.tar.gz e5a23e1379e1196039446ead9646d0c2f55e6032fa2873707354359cf9909e9b
                 https://github.com/ApacheFriends/web/releases/download/20261107/xampp-htdocs-linux-20261107.tar.gz 8722dce4e7aa57cb7e07ac20f2a0e8cdea3800549bf37457750261b9756b6d9b
                 https://sourceforge.net/projects/xampp/files/thirdparties/phpMyAdmin-5.2.3-all-languages.zip 2d2e13c735366d318425c78e4ee2cc8fc648d77faba3ddea2cd516e43885733f
-                https://sourceforge.net/projects/xampp/files/xampp-skeleton/xampp-skeleton-dev-unix-1.8.6-12.tar.gz 0e0f4a4da3bacfcf2539a62cd23c056e3851d3b375c44b22ff4182db67ad1819
 
     runs-on: ubuntu-latest
     steps:

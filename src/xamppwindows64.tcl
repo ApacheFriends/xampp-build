@@ -91,7 +91,8 @@
 ::itcl::class windows64XamppApachePhp8 {
     inherit windows64XamppApache
     constructor {environment} {
-	chain $environment
+        set dirName php
+        chain $environment
     } {
         set tarballName httpd-${version}-Win64-VS18.zip
     }
@@ -203,6 +204,7 @@
     } {
         set name windows64XamppMariaDb
         set fullname MariaDB
+        set dirName mysql
         set version [versions::get "MariaDB" "10"]
         set tarballName mariadb-${version}-winx64.zip
         set pathName mariadb-${version}-winx64
@@ -295,6 +297,7 @@
     } {
         set name windows64XamppPhp8
         set vcVersion VS16
+        set dirName php
         set opensslVersion [versions::get "OpenSSL" stable]
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
         set windowsRevision 1
@@ -553,6 +556,7 @@
         set name windows64XamppTomcat
         set version [versions::get "Tomcat" "85"]
         set licenseRelativePath {}
+        set dirName tomcat
         set tarballName apache-tomcat-${version}-windows-x64.zip
         set mainComponentXMLName xampp-tomcat
     }
@@ -564,7 +568,13 @@
     }
     public method copyFilesFromWorkspace {} {
         copyFromWorkspace catalina_service.bat catalina_start.bat catalina_stop.bat
-        copyFromWorkspace tomcat/catalina_start.bat tomcat/catalina_stop.bat tomcat/tomcat_service_install.bat tomcat/tomcat_service_uninstall.bat
+        # TODO: Do we need catalina_start.bat and catalina_stop.bat in two places?
+        # We were using two different scripts, lets use one and patch the working dir calculation
+        copyFromWorkspaceToPrefix tomcat catalina_start.bat catalina_stop.bat tomcat_service_install.bat tomcat_service_uninstall.bat
+        foreach f {catalina_stop.bat catalina_start.bat} {
+            xampptcl::util::substituteParametersInFile [file join $xamppoutputdir tomcat $f] {{"CATALINA_HOME=%CURRENT_DIR%\tomcat"} {"CATALINA_HOME=%CURRENT_DIR%"} {tomcat\logs\catalina.pid} {logs\catalina.pid}} 0 {} binary
+        }
+
     }
 }
 
@@ -573,7 +583,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist \
 	    windows64XamppApache \
@@ -606,7 +616,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2017 \
 	    windows64XamppApachePhp74 \
@@ -639,7 +649,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2019 \
 	    windows64XamppApachePhp80 \
@@ -671,7 +681,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2019 \
 	    windows64XamppApachePhp82 \
@@ -703,7 +713,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2019 \
 	    windows64XamppApachePhp81 \
@@ -735,7 +745,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2022 \
 	    windows64XamppApachePhp83 \
@@ -767,7 +777,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2022 \
 	    windows64XamppApachePhp84 \
@@ -811,7 +821,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist \
 	    windows64XamppApache \
@@ -838,7 +848,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2017 \
 	    windows64XamppApachePhp74 \
@@ -865,7 +875,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2019 \
 	    windows64XamppApachePhp80 \
@@ -892,7 +902,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2019 \
 	    windows64XamppApachePhp81 \
@@ -917,7 +927,7 @@
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windows64XamppVcredist2019 \
 	    windows64XamppApachePhp82 \

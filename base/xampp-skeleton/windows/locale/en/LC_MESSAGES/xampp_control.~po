@@ -1,0 +1,2363 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: UDP Manager\n"
+"POT-Creation-Date: 2011-11-13 14:57\n"
+"PO-Revision-Date: 2011-11-13 15:01-0500\n"
+"Last-Translator: Mark <noone@email.com>\n"
+"Language-Team: Strueber-IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: dxgettext 1.2.1\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
+"X-Poedit-Basepath: C:\\Delphi\\xampp_control3\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#. fConfig..Caption
+#: uConfig.dfm:4
+msgid "Configuration of Control Panel"
+msgstr "Configuration of Control Panel"
+
+#. fConfig..Label1..Caption
+#: uConfig.dfm:33
+msgid "Editor:"
+msgstr "Editor:"
+
+#. fConfig..Label2..Caption
+#: uConfig.dfm:44
+msgid "Browser (empty = system default)"
+msgstr "Browser (empty = system default)"
+
+#. fConfig..bSave..Caption
+#. fConfigUserDefined..bSave..Caption
+#. fLogOptions..bSave..Caption
+#. fServiceSettings..bSave..Caption
+#: uConfig.dfm:124
+#: uServiceSettings.dfm:452
+msgid "Save"
+msgstr "Save"
+
+#. fConfig..bAbort..Caption
+#: uConfig.dfm:157
+msgid "Abort"
+msgstr "Abort"
+
+#. fConfig..cbDebug..Caption
+#: uConfig.dfm:257
+msgid "Show debug stuff"
+msgstr "Show debug stuff"
+
+#. fConfig..cbDebugDetails....Items.Strings
+#: uConfig.dfm:273
+msgid "Details"
+msgstr "Details"
+
+#. fConfig..cbDebugDetails....Items.Strings
+#: uConfig.dfm:274
+msgid "Very many details"
+msgstr "Very many details"
+
+#. fConfig..GroupBox1..Caption
+#: uConfig.dfm:286
+msgid " Autostart of modules "
+msgstr " Autostart of modules "
+
+#. fConfig..GroupBox1..Label3....Caption
+#: uConfig.dfm:304
+msgid "Selected modules will be started on next launch of the Control Panel."
+msgstr "Selected modules will be started on next launch of the Control Panel."
+
+#. fConfig..GroupBox1..cbASApache..Caption
+#. fConfigUserDefined..gbApache..Caption
+#. fMain..gbModules..pApacheStatus..Caption
+#: uConfig.dfm:324
+msgid "Apache"
+msgstr "Apache"
+
+#. fConfig..GroupBox1..cbASMySQL..Caption
+#. fConfigUserDefined..gbMySQL..Caption
+#. fMain..gbModules..pMySQLStatus..Caption
+#: uConfig.dfm:336
+msgid "MySQL"
+msgstr "MySQL"
+
+#. fConfig..GroupBox1..cbASFileZilla..Caption
+#. fConfigUserDefined..gbFileZilla..Caption
+#. fMain..gbModules..pFileZillaStatus..Caption
+#: uConfig.dfm:348
+msgid "FileZilla"
+msgstr "FileZilla"
+
+#. fConfig..GroupBox1..cbASMercury..Caption
+#. fConfigUserDefined..gbMercury..Caption
+#. fConfigUserDefined..gbTomcat..Caption
+#. fMain..gbModules..pMercuryStatus..Caption
+#: uConfig.dfm:360
+#: uMain.dfm:1550
+msgid "Mercury"
+msgstr "Mercury"
+
+#. fConfig..GroupBox1..cbASTomcat..Caption
+#. fMain..gbModules..pTomcatStatus..Caption
+#: uConfig.dfm:368
+msgid "Tomcat"
+msgstr "Tomcat"
+
+#. fConfig..cbCheckDefaultPorts..Caption
+#: uConfig.dfm:381
+msgid "Check default ports on startup"
+msgstr "Check default ports on startup"
+
+#. fConfig..BitBtn1..Caption
+#: uConfig.dfm:394
+msgid "Change Language"
+msgstr "Change Language"
+
+#. fConfig..bConfigUserdefined..Caption
+#: uConfig.dfm:408
+msgid "User Defined Files"
+msgstr "User Defined Files"
+
+#. fConfig..cbTomcatVisible..Caption
+#: uConfig.dfm:423
+msgid "Tomcat output window visible"
+msgstr "Tomcat output window visible"
+
+#. fConfig..bLogSettings..Caption
+#. fLogOptions..Caption
+#: uConfig.dfm:432
+msgid "Log Options"
+msgstr "Log Options"
+
+#. fConfig..bServiceSettings..Caption
+#: uConfig.dfm:441
+msgid "Service and Port Settings"
+msgstr "Service and Port Settings"
+
+#. fConfig..OpenDialog1..DefaultExt
+#: uConfig.dfm:446
+msgid "exe"
+msgstr "exe"
+
+#. fConfig..OpenDialog1..Filter
+#: uConfig.dfm:447
+msgid "Executables (*.exe)|*.exe|All files (*.*)|*.*"
+msgstr "Executables (*.exe)|*.exe|All files (*.*)|*.*"
+
+#. fConfigUserDefined..Caption
+#: uConfigUserDefined.dfm:4
+msgid "User-defined log/config-files"
+msgstr "User-defined log/config-files"
+
+#. fConfigUserDefined..lHeader1....Caption
+#: uConfigUserDefined.dfm:34
+msgid "Enter user defined files. Files must be relative to xampp-basedir!"
+msgstr "Enter user defined files. Files must be relative to xampp-basedir!"
+
+#. fConfigUserDefined..lHeader2..Caption
+#: uConfigUserDefined.dfm:45
+msgid "Example: \"apache\\conf\\extra\\httpd-info.conf\""
+msgstr "Example: \"apache\\conf\\extra\\httpd-info.conf\""
+
+#. fConfigUserDefined..lConfig..Caption
+#. fMain..bConfig..Caption
+#. fMain..gbModules..bApacheConfig..Caption
+#. fMain..gbModules..bMySQLConfig..Caption
+#. fMain..gbModules..bFileZillaConfig..Caption
+#. fMain..gbModules..bMercuryConfig..Caption
+#. fMain..gbModules..bTomcatConfig..Caption
+#: uConfigUserDefined.dfm:56
+#: uMain.dfm:1482
+#: uMain.dfm:1508
+#: uMain.dfm:1638
+msgid "Config"
+msgstr "Config"
+
+#. fConfigUserDefined..lLogs..Caption
+#. fMain..gbModules..bApacheLogs..Caption
+#. fMain..gbModules..bMySQLLogs..Caption
+#. fMain..gbModules..bFileZillaLogs..Caption
+#. fMain..gbModules..bMercurylogs..Caption
+#. fMain..gbModules..bTomcatLogs..Caption
+#: uConfigUserDefined.dfm:73
+#: uMain.dfm:1599
+#: uMain.dfm:1665
+msgid "Logs"
+msgstr "Logs"
+
+#. fHelp..Caption
+#. fMain..bHelp..Caption
+#: uHelp.dfm:4
+msgid "Help"
+msgstr "Help"
+
+#. fHelp..lAbout..Caption
+#: uHelp.dfm:30
+msgid "Programmed by Steffen Strueber"
+msgstr "Programmed by Steffen Strueber"
+
+#. fHelp..Label1..Caption
+#: uHelp.dfm:47
+msgid "Enhanced by hackattack142"
+msgstr "Enhanced by hackattack142"
+
+#. fHelp..Label2..Caption
+#: uHelp.dfm:64
+msgid "Need Help? Visit the XAMPP forums (English):"
+msgstr "Need Help? Visit the XAMPP forums (English):"
+
+#. fHelp..Label4..Caption
+#: uHelp.dfm:81
+msgid "Need Help? Visit the XAMPP forums (German):"
+msgstr "Need Help? Visit the XAMPP forums (German):"
+
+#. fHelp..BitBtn1..Caption
+#: uHelp.dfm:127
+msgid "Close"
+msgstr "Close"
+
+#. fLanguage..Caption
+#: uLanguage.dfm:5
+msgid "Language"
+msgstr "Language"
+
+#. fLanguage..bOkay..Caption
+#: uLanguage.dfm:191
+msgid "OK"
+msgstr "OK"
+
+#. fLogOptions..lLogFont..Caption
+#: uLogOptions.dfm:23
+msgid "Log Font"
+msgstr "Log Font"
+
+#. fLogOptions..lLogFontSize..Caption
+#: uLogOptions.dfm:30
+msgid "Log Font Size"
+msgstr "Log Font Size"
+
+#. fLogOptions..bCancel..Caption
+#. fServiceSettings..bCancel..Caption
+#: uLogOptions.dfm:37
+msgid "Cancel"
+msgstr "Cancel"
+
+#. fLogOptions..bSelect..Caption
+#: uLogOptions.dfm:69
+msgid "Select Font"
+msgstr "Select Font"
+
+#. fMain..Caption
+#. fMain..lHeader..Caption
+#: uMain.dfm:4
+msgid "XAMPP Control Panel v"
+msgstr "XAMPP Control Panel v"
+
+#. fMain..bSCM..Caption
+#: uMain.dfm:1062
+msgid "Win-Services"
+msgstr "Win-Services"
+
+#. fMain..gbModules..Caption
+#: uMain.dfm:1075
+msgid " Modules "
+msgstr " Modules "
+
+#. fMain..gbModules..lPIDs..Caption
+#: uMain.dfm:1087
+msgid "PID(s)"
+msgstr "PID(s)"
+
+#. fMain..gbModules..lPorts..Caption
+#: uMain.dfm:1105
+msgid "Port(s)"
+msgstr "Port(s)"
+
+#. fMain..gbModules..Label1..Caption
+#: uMain.dfm:1231
+msgid "Service"
+msgstr "Service"
+
+#. fMain..gbModules..Label2..Caption
+#: uMain.dfm:1250
+msgid "Module"
+msgstr "Module"
+
+#. fMain..gbModules..Label3..Caption
+#: uMain.dfm:1268
+msgid "Actions"
+msgstr "Actions"
+
+#. fMain..gbModules..bApacheAction..Caption
+#. fMain..gbModules..bMySQLAction..Caption
+#. fMain..gbModules..bFileZillaAction..Caption
+#. fMain..gbModules..bMercuryAction..Caption
+#. fMain..gbModules..bTomcatAction..Caption
+#: uMain.dfm:1312
+#: uMain.dfm:1612
+#: uApache.pas:378
+#: uFileZilla.pas:310
+#: uMercury.pas:271
+#: uMySQL.pas:309
+#: uTomcat.pas:272
+msgid "Start"
+msgstr "Start"
+
+#. fMain..gbModules..bApacheAdmin..Caption
+#. fMain..gbModules..bMySQLAdmin..Caption
+#. fMain..gbModules..bFileZillaAdmin..Caption
+#. fMain..gbModules..bMercuryAdmin..Caption
+#. fMain..gbModules..bTomcatAdmin..Caption
+#: uMain.dfm:1325
+#: uMain.dfm:1625
+msgid "Admin"
+msgstr "Admin"
+
+#. fMain..bQuit..Caption
+#. fMain..puSystray..miTerminate..Caption
+#: uMain.dfm:1716
+msgid "Quit"
+msgstr "Quit"
+
+#. fMain..bExplorer..Caption
+#: uMain.dfm:1760
+msgid "Explorer"
+msgstr "Explorer"
+
+#. fMain..bNetstat..Caption
+#: uMain.dfm:1773
+msgid "Netstat"
+msgstr "Netstat"
+
+#. fMain..bXamppShell..Caption
+#: uMain.dfm:1786
+msgid "XAMPP-Shell"
+msgstr "XAMPP-Shell"
+
+#. fMain..puSystray..miShowHide..Caption
+#: uMain.dfm:2775
+msgid "Show / Hide"
+msgstr "Show / Hide"
+
+#. fMain..puLog..Copy1..Caption
+#: uMain.dfm:2944
+msgid "Copy"
+msgstr "Copy"
+
+#. fMain..puLog..SelectAll1..Caption
+#: uMain.dfm:2948
+msgid "Select All"
+msgstr "Select All"
+
+#. fNetstat..Caption
+#: uNetstat.dfm:5
+msgid "Netstat - TCP Listening sockets"
+msgstr "Netstat - TCP Listening sockets"
+
+#. fNetstat..ListView1......Caption
+#: uNetstat.dfm:37
+msgid "Address"
+msgstr "Address"
+
+#. fNetstat..ListView1......Caption
+#: uNetstat.dfm:42
+msgid "Port"
+msgstr "Port"
+
+#. fNetstat..ListView1......Caption
+#: uNetstat.dfm:47
+msgid "PID"
+msgstr "PID"
+
+#. fNetstat..ListView1......Caption
+#: uNetstat.dfm:51
+msgid "Name"
+msgstr "Name"
+
+#. fNetstat..BitBtn1..Caption
+#: uNetstat.dfm:75
+msgid "Refresh"
+msgstr "Refresh"
+
+#. fNetstat..Panel1..Caption
+#: uNetstat.dfm:103
+msgid "Active socket"
+msgstr "Active socket"
+
+#. fNetstat..Panel2..Caption
+#: uNetstat.dfm:123
+msgid "Old socket"
+msgstr "Old socket"
+
+#. fNetstat..Panel3..Caption
+#: uNetstat.dfm:143
+msgid "New socket"
+msgstr "New socket"
+
+#. fServiceSettings..Caption
+#: uServiceSettings.dfm:4
+msgid "Service Settings"
+msgstr "Service Settings"
+
+#. fServiceSettings..lMain....Caption
+#: uServiceSettings.dfm:29
+msgid "Use this form to set service-specific and default port settings.  You can set the name and default ports the XAMPP Control Panel will check.  Do not include spaces or quotes in names.  This does NOT change the ports that the services and programs use.  You still need to change those in the services' configuration files."
+msgstr "Use this form to set service-specific and default port settings.  You can set the name and default ports the XAMPP Control Panel will check.  Do not include spaces or quotes in names.  This does NOT change the ports that the services and programs use.  You still need to change those in the services' configuration files."
+
+#. fServiceSettings..gApache..Caption
+#: uServiceSettings.dfm:43
+msgid "Apache Settings"
+msgstr "Apache Settings"
+
+#. fServiceSettings..gApache..lApacheName..Caption
+#. fServiceSettings..gMySQL..lMySQLName..Caption
+#. fServiceSettings..gFileZilla..lFileZillaName..Caption
+#: uServiceSettings.dfm:50
+msgid "Service Name"
+msgstr "Service Name"
+
+#. fServiceSettings..gApache..lApacheMain..Caption
+#. fServiceSettings..gMySQL..lMySQLMain..Caption
+#. fServiceSettings..gFileZilla..lFileZillaMain..Caption
+#. fServiceSettings..gTomcat..lTomcatMain..Caption
+#: uServiceSettings.dfm:57
+#: uServiceSettings.dfm:382
+msgid "Main Port"
+msgstr "Main Port"
+
+#. fServiceSettings..gApache..lApacheSSL..Caption
+#: uServiceSettings.dfm:64
+msgid "SSL Port"
+msgstr "SSL Port"
+
+#. fServiceSettings..gMySQL..Caption
+#: uServiceSettings.dfm:111
+msgid "MySQL Settings"
+msgstr "MySQL Settings"
+
+#. fServiceSettings..gFileZilla..Caption
+#: uServiceSettings.dfm:159
+msgid "FileZilla Settings"
+msgstr "FileZilla Settings"
+
+#. fServiceSettings..gFileZilla..lFileZillaAdmin..Caption
+#: uServiceSettings.dfm:180
+msgid "Admin Port"
+msgstr "Admin Port"
+
+#. fServiceSettings..gMercury..Caption
+#: uServiceSettings.dfm:227
+msgid "Mercury Settings"
+msgstr "Mercury Settings"
+
+#. fServiceSettings..gMercury..lMercuryP1..Caption
+#: uServiceSettings.dfm:234
+msgid "Port 1"
+msgstr "Port 1"
+
+#. fServiceSettings..gMercury..lMercuryP2..Caption
+#: uServiceSettings.dfm:241
+msgid "Port 2"
+msgstr "Port 2"
+
+#. fServiceSettings..gMercury..lMercuryP3..Caption
+#: uServiceSettings.dfm:248
+msgid "Port 3"
+msgstr "Port 3"
+
+#. fServiceSettings..gMercury..lMercuryP4..Caption
+#: uServiceSettings.dfm:255
+msgid "Port 4"
+msgstr "Port 4"
+
+#. fServiceSettings..gMercury..lMercuryP5..Caption
+#: uServiceSettings.dfm:262
+msgid "Port 5"
+msgstr "Port 5"
+
+#. fServiceSettings..gMercury..lMercuryP6..Caption
+#: uServiceSettings.dfm:269
+msgid "Port 6"
+msgstr "Port 6"
+
+#. fServiceSettings..gMercury..lMercuryP7..Caption
+#: uServiceSettings.dfm:276
+msgid "Port 7"
+msgstr "Port 7"
+
+#. fServiceSettings..gTomcat..Caption
+#: uServiceSettings.dfm:375
+msgid "Tomcat Settings"
+msgstr "Tomcat Settings"
+
+#. fServiceSettings..gTomcat..lTomcatHTTP..Caption
+#: uServiceSettings.dfm:389
+msgid "HTTP Port"
+msgstr "HTTP Port"
+
+#. fServiceSettings..gTomcat..lTomcatAJP..Caption
+#: uServiceSettings.dfm:396
+msgid "AJP Port"
+msgstr "AJP Port"
+
+#. 64 bit? dann DIESE shell starten!
+#. 64 bit? dann DIESE shell starten!
+#: uApache.pas:52
+#: uTomcat.pas:136
+#: uTomcat.pas:159
+msgid "Executing \"%s\" \"%s\""
+msgstr "Executing \"%s\" \"%s\""
+
+#. AddLog(Format(_('Executing "%s" "%s"'), [App, Param]), ltDebug);
+#. AddLog(Format(_('Executing "%s" "%s"'), [App, Param]), ltDebug);
+#: uApache.pas:57
+#: uApache.pas:281
+#: uFileZilla.pas:39
+#: uFileZilla.pas:179
+#: uFileZilla.pas:193
+#: uFileZilla.pas:212
+#: uFileZilla.pas:226
+#: uMain.pas:211
+#: uMain.pas:369
+#: uMain.pas:634
+#: uMercury.pas:167
+#: uMercury.pas:184
+#: uMySQL.pas:51
+#: uMySQL.pas:174
+#: uMySQL.pas:185
+#: uMySQL.pas:204
+#: uMySQL.pas:220
+#: uTomcat.pas:51
+msgid "Executing \"%s\""
+msgstr "Executing \"%s\""
+
+#: uApache.pas:69
+msgid "Service installed"
+msgstr "Service installed"
+
+#: uApache.pas:73
+msgid "Service not installed"
+msgstr "Service not installed"
+
+#: uApache.pas:74
+msgid "Checking for service (name=\"%s\"): %s"
+msgstr "Checking for service (name=\"%s\"): %s"
+
+#: uApache.pas:78
+msgid "Service Path: %s"
+msgstr "Service Path: %s"
+
+#: uApache.pas:81
+msgid "Apache Service Detected With Wrong Path"
+msgstr "Apache Service Detected With Wrong Path"
+
+#: uApache.pas:82
+msgid "Uninstall the service manually first"
+msgstr "Uninstall the service manually first"
+
+#: uApache.pas:86
+msgid "Service Path: Service Not Installed"
+msgstr "Service Path: Service Not Installed"
+
+#. =(Config.ServicePorts.Apache,Config.ServicePorts.ApacheSSL);
+#. DidShowRunningWarn:=false;
+#. PID:=-1;
+#: uApache.pas:102
+#: uTomcat.pas:74
+msgid "Initializing module..."
+msgstr "Initializing module..."
+
+#: uApache.pas:106
+msgid "Possible problem detected: Apache Not Found!"
+msgstr "Possible problem detected: Apache Not Found!"
+
+#: uApache.pas:107
+#: uTomcat.pas:79
+msgid "Run this program from your XAMPP root directory!"
+msgstr "Run this program from your XAMPP root directory!"
+
+#: uApache.pas:115
+#: uTomcat.pas:86
+msgid "Checking default ports..."
+msgstr "Checking default ports..."
+
+#. AddLog(Format(_('"%s" seems to be running on port %d?'),[ServerApp,Ports[p]]),ltError);
+#: uApache.pas:126
+msgid "XAMPP Apache is already running on port %d"
+msgstr "XAMPP Apache is already running on port %d"
+
+#: uApache.pas:130
+msgid "XAMPP Apache Service is already running on port %d"
+msgstr "XAMPP Apache Service is already running on port %d"
+
+#: uApache.pas:134
+msgid "Possible problem detected! "
+msgstr "Possible problem detected! "
+
+#: uApache.pas:135
+#: uTomcat.pas:103
+msgid "Port %d in use by \"%s\"!"
+msgstr "Port %d in use by \"%s\"!"
+
+#: uApache.pas:153
+msgid "Executing %s %s"
+msgstr "Executing %s %s"
+
+#. RunAsAdmin(App, Param3, SW_HIDE);
+#: uApache.pas:164
+msgid "Installing service..."
+msgstr "Installing service..."
+
+#: uApache.pas:165
+#: uFileZilla.pas:142
+#: uFileZilla.pas:146
+msgid "Executing \"%s %s\""
+msgstr "Executing \"%s %s\""
+
+#. RC := RunAsAdmin(App, Param, SW_HIDE);
+#. RC := RunAsAdmin(App, Param, SW_HIDE);
+#: uApache.pas:168
+#: uApache.pas:260
+#: uApache.pas:284
+#: uFileZilla.pas:149
+#: uFileZilla.pas:165
+#: uFileZilla.pas:182
+#: uFileZilla.pas:197
+#: uFileZilla.pas:215
+#: uFileZilla.pas:230
+#: uMercury.pas:170
+#: uMercury.pas:187
+#: uMySQL.pas:144
+#: uMySQL.pas:160
+#: uMySQL.pas:177
+#: uMySQL.pas:188
+#: uMySQL.pas:207
+#: uMySQL.pas:223
+#: uTomcat.pas:141
+msgid "Return code: %d"
+msgstr "Return code: %d"
+
+#: uApache.pas:170
+#: uApache.pas:263
+#: uApache.pas:287
+#: uFileZilla.pas:151
+#: uFileZilla.pas:167
+#: uFileZilla.pas:184
+#: uFileZilla.pas:199
+#: uFileZilla.pas:217
+#: uFileZilla.pas:232
+#: uMercury.pas:172
+#: uMercury.pas:189
+#: uMySQL.pas:146
+#: uMySQL.pas:162
+#: uMySQL.pas:179
+#: uMySQL.pas:190
+#: uMySQL.pas:209
+#: uMySQL.pas:225
+msgid "There may be an error, return code: %d - %s"
+msgstr "There may be an error, return code: %d - %s"
+
+#: uApache.pas:180
+msgid "Uninstalling service..."
+msgstr "Uninstalling service..."
+
+#. , Param: string;
+#: uApache.pas:209
+msgid "Starting %s service..."
+msgstr "Starting %s service..."
+
+#: uApache.pas:220
+msgid "You appear to be missing the VC9 Runtime Files"
+msgstr "You appear to be missing the VC9 Runtime Files"
+
+#: uApache.pas:221
+msgid "You need to download and install the Microsoft Visual C++ 2008 SP1 (x86) Runtimes"
+msgstr "You need to download and install the Microsoft Visual C++ 2008 SP1 (x86) Runtimes"
+
+#. Param := '-compat -start';
+#: uApache.pas:228
+#: uTomcat.pas:130
+msgid "Starting %s app..."
+msgstr "Starting %s app..."
+
+#. , Param: string;
+#: uApache.pas:255
+msgid "Stopping %s service..."
+msgstr "Stopping %s service..."
+
+#: uApache.pas:279
+msgid "Stopping"
+msgstr "Stopping"
+
+#: uApache.pas:299
+msgid "No PIDs found?!"
+msgstr "No PIDs found?!"
+
+#. Change Status
+#: uApache.pas:362
+#: uTomcat.pas:256
+msgid "running"
+msgstr "running"
+
+#: uApache.pas:364
+#: uTomcat.pas:258
+msgid "stopped"
+msgstr "stopped"
+
+#: uApache.pas:365
+#: uTomcat.pas:259
+msgid "Status change detected:"
+msgstr "Status change detected:"
+
+#: uApache.pas:372
+#: uTomcat.pas:266
+msgid "Stop"
+msgstr "Stop"
+
+#: uApache.pas:388
+#: uTomcat.pas:283
+msgid "Autostart active: module is already running - aborted"
+msgstr "Autostart active: module is already running - aborted"
+
+#: uApache.pas:392
+#: uTomcat.pas:287
+msgid "Autostart active: starting..."
+msgstr "Autostart active: starting..."
+
+#: uFileZilla.pas:63
+msgid "FileZilla Service Detected With Wrong Path"
+msgstr "FileZilla Service Detected With Wrong Path"
+
+#: uFileZilla.pas:88
+msgid "Possible problem detected: FileZilla Not Found!"
+msgstr "Possible problem detected: FileZilla Not Found!"
+
+#. if (LowerCase(PortBlocker) = LowerCase(ServerApp)) then
+#: uFileZilla.pas:107
+msgid "XAMPP FileZilla FTP Server is already running on port %d"
+msgstr "XAMPP FileZilla FTP Server is already running on port %d"
+
+#: uFileZilla.pas:111
+msgid "XAMPP FileZilla FTP Server Service is already running on port %d"
+msgstr "XAMPP FileZilla FTP Server Service is already running on port %d"
+
+#. AddLog('Possible problem detected: Port ' + InttoStr(Ports[p]) + ' in use by "' + PortBlocker + '"!', ltError);
+#: uFileZilla.pas:115
+msgid "Possible problem detected!"
+msgstr "Possible problem detected!"
+
+#: uFileZilla.pas:137
+msgid "Setting Service Name..."
+msgstr "Setting Service Name..."
+
+#. RunAsAdmin(App, Param2, SW_HIDE);
+#: uFileZilla.pas:141
+msgid "Setting Service Display Name..."
+msgstr "Setting Service Display Name..."
+
+#. Param := '-compat -stop';
+#: uFileZilla.pas:224
+msgid "Stopping %s app..."
+msgstr "Stopping %s app..."
+
+#: uLanguage.pas:55
+msgid "Restart application to apply changes!"
+msgstr "Restart application to apply changes!"
+
+#: uMain.pas:391
+#: uMain.pas:571
+#: uMain.pas:659
+#: uMain.pas:668
+#: uMain.pas:801
+#: uMain.pas:802
+#: uMain.pas:803
+#: uMain.pas:814
+msgid "<Browse>"
+msgstr "<Browse>"
+
+#: uMain.pas:412
+msgid "Services cannot be installed or uninstalled while the service is running!"
+msgstr "Services cannot be installed or uninstalled while the service is running!"
+
+#: uMain.pas:417
+msgid "Click Yes to uninstall the %s service"
+msgstr "Click Yes to uninstall the %s service"
+
+#: uMain.pas:428
+msgid "Click Yes to install the %s service"
+msgstr "Click Yes to install the %s service"
+
+#: uMain.pas:440
+msgid "Service was NOT (un)installed!"
+msgstr "Service was NOT (un)installed!"
+
+#. WinXP
+#. WinXP
+#. WinXP
+#: uMain.pas:443
+msgid "One possible reason for failure: On windows security box you !!!MUST UNCHECK!!! the \"Protect my computer and data from unauthorized program activity\" checkbox!!!"
+msgstr "One possible reason for failure: On windows security box you !!!MUST UNCHECK!!! the \"Protect my computer and data from unauthorized program activity\" checkbox!!!"
+
+#: uMain.pas:448
+msgid "Successful!"
+msgstr "Successful!"
+
+#: uMain.pas:539
+msgid "Mercury cannot be run as service!"
+msgstr "Mercury cannot be run as service!"
+
+#: uMain.pas:691
+msgid "File \"%s\" not found. Should it be created now?"
+msgstr "File \"%s\" not found. Should it be created now?"
+
+#: uMain.pas:700
+msgid "Error"
+msgstr "Error"
+
+#: uMain.pas:737
+msgid "User defined"
+msgstr "User defined"
+
+#: uMain.pas:858
+msgid "Initializing Control Panel"
+msgstr "Initializing Control Panel"
+
+#: uMain.pas:876
+msgid "Windows Version: %s %s %s"
+msgstr "Windows Version: %s %s %s"
+
+#: uMain.pas:883
+msgid "WARNING: Your Operating System is too old and is not supported"
+msgstr "WARNING: Your Operating System is too old and is not supported"
+
+#. else
+#: uMain.pas:907
+msgid "Running with Administrator rights - good!"
+msgstr "Running with Administrator rights - good!"
+
+#: uMain.pas:911
+msgid "You are not running with administrator rights! This will work for"
+msgstr "You are not running with administrator rights! This will work for"
+
+#: uMain.pas:912
+msgid "most application stuff but whenever you do something with services"
+msgstr "most application stuff but whenever you do something with services"
+
+#: uMain.pas:913
+msgid "there will be a security dialogue or things will break! So think "
+msgstr "there will be a security dialogue or things will break! So think "
+
+#: uMain.pas:914
+msgid "about running this application with administrator rights!"
+msgstr "about running this application with administrator rights!"
+
+#: uMain.pas:917
+msgid "XAMPP Installation Directory: \"%s\""
+msgstr "XAMPP Installation Directory: \"%s\""
+
+#: uMain.pas:920
+msgid "ERROR: Your install directory contains spaces.  This will break programs"
+msgstr "ERROR: Your install directory contains spaces.  This will break programs"
+
+#: uMain.pas:945
+msgid "ERROR: Your install directory contains special characters.  This will break programs"
+msgstr "ERROR: Your install directory contains special characters.  This will break programs"
+
+#: uMain.pas:953
+msgid "Initializing Modules"
+msgstr "Initializing Modules"
+
+#: uMain.pas:963
+msgid "Enabling autostart for module \"%s\""
+msgstr "Enabling autostart for module \"%s\""
+
+#: uMain.pas:986
+msgid "Starting"
+msgstr "Starting"
+
+#. TimerUpdateStatus.Enabled := True;
+#: uMain.pas:989
+msgid "Control Panel Ready"
+msgstr "Control Panel Ready"
+
+#: uMain.pas:995
+msgid "Deinitializing Modules"
+msgstr "Deinitializing Modules"
+
+#: uMain.pas:1000
+msgid "Deinitializing Control Panel"
+msgstr "Deinitializing Control Panel"
+
+#: uMercury.pas:105
+msgid "Possible problem detected: Mercury Not Found!"
+msgstr "Possible problem detected: Mercury Not Found!"
+
+#: uMercury.pas:139
+msgid "XAMPP Mercury is already running"
+msgstr "XAMPP Mercury is already running"
+
+#: uMercury.pas:140
+msgid "Ports in use: %s"
+msgstr "Ports in use: %s"
+
+#: uMySQL.pas:75
+msgid "MySQL Service Detected With Wrong Path"
+msgstr "MySQL Service Detected With Wrong Path"
+
+#: uMySQL.pas:96
+msgid "Possible problem detected: MySQL Not Found!"
+msgstr "Possible problem detected: MySQL Not Found!"
+
+#. if (LowerCase(PortBlocker) = LowerCase(ServerApp)) then
+#: uMySQL.pas:113
+msgid "XAMPP MySQL is already running on port %d"
+msgstr "XAMPP MySQL is already running on port %d"
+
+#: uMySQL.pas:117
+msgid "XAMPP MySQL Service is already running on port %d"
+msgstr "XAMPP MySQL Service is already running on port %d"
+
+#: uNetstat.pas:261
+msgid "New listening socket: %s:%d"
+msgstr "New listening socket: %s:%d"
+
+#: uNetstat.pas:283
+msgid "Listening socket closed: %s:%d"
+msgstr "Listening socket closed: %s:%d"
+
+#: uNetstatTable.pas:129
+msgid "unknown program"
+msgstr "unknown program"
+
+#. hModuleSnap := INVALID_HANDLE_VALUE;
+#: uProcesses.pas:135
+msgid "Creating PID-entry %d: %s"
+msgstr "Creating PID-entry %d: %s"
+
+#: uProcesses.pas:148
+msgid "Deleting PID-entry %d: %s"
+msgstr "Deleting PID-entry %d: %s"
+
+#: uTomcat.pas:78
+msgid "Possible problem detected: Tomcat Not Found!"
+msgstr "Possible problem detected: Tomcat Not Found!"
+
+#. if (LowerCase(PortBlocker) = LowerCase('java.exe')) or (LowerCase(PortBlocker) = LowerCase('javaw.exe')) then
+#: uTomcat.pas:97
+msgid "Java is already running on port %d!"
+msgstr "Java is already running on port %d!"
+
+#: uTomcat.pas:98
+msgid "Is Tomcat already running?"
+msgstr "Is Tomcat already running?"
+
+#: uTomcat.pas:144
+msgid "Tomcat Started/Stopped with errors, return code: %d"
+msgstr "Tomcat Started/Stopped with errors, return code: %d"
+
+#: uTomcat.pas:145
+msgid "Make sure you have Java JDK or JRE installed and the required ports are free"
+msgstr "Make sure you have Java JDK or JRE installed and the required ports are free"
+
+#: uTools.pas:361
+msgid "Application"
+msgstr "Application"
+
+#~ msgid "Tahoma"
+#~ msgstr "Tahoma"
+
+#~ msgid "Arial"
+#~ msgstr "Arial"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Konfiguration"
+#~ msgstr "Configuration"
+
+#, fuzzy
+#~ msgid "Anzeigen"
+#~ msgstr "Display"
+
+#, fuzzy
+#~ msgid "Beenden"
+#~ msgstr "Terminating..."
+
+#, fuzzy
+#~ msgid "More"
+#~ msgstr "Store"
+
+#~ msgid "Graupner GmbH && Co. KG"
+#~ msgstr "Graupner GmbH && Co. KG"
+
+#~ msgid "Henriettenstraße 94-96"
+#~ msgstr "Henriettenstraße 94-96"
+
+#~ msgid "73230 Kirchheim/Teck"
+#~ msgstr "73230 Kirchheim/Teck"
+
+#~ msgid "Vertretungsberechtigte Geschäftsführer"
+#~ msgstr "Authorised Representative Managing Directors"
+
+#~ msgid "Hans Graupner, Stefan Graupner"
+#~ msgstr "Hans Graupner, Stefan Graupner"
+
+#~ msgid "Telefon/Fax/E-Mail-Adresse"
+#~ msgstr "Phone/Fax/E-mail address"
+
+#~ msgid "Telefon: 07021 722-0"
+#~ msgstr "Phone: +49 7021 722-0"
+
+#~ msgid "Fax: 07021 722-200"
+#~ msgstr "Fax: +49 7021 722-200"
+
+#~ msgid "Email: info@graupner.de"
+#~ msgstr "Email: info@graupner.de"
+
+#~ msgid "Registergericht:"
+#~ msgstr "Court of registration:"
+
+#~ msgid "Amtsgericht Stuttgart HRA 230523"
+#~ msgstr "Stuttgart District Court, Trade Register No. 230523"
+
+#~ msgid "Umsatzsteueridentifikationsnummer"
+#~ msgstr "VAT identification number"
+
+#~ msgid "DE 145929079"
+#~ msgstr "DE 145929079"
+
+#~ msgid "Akku Zellen (x %.1f V)"
+#~ msgstr "Battery cells (x %.1f V)"
+
+#~ msgid "neu"
+#~ msgstr "new"
+
+#~ msgid "==> %.1f V"
+#~ msgstr "==> %.1f V"
+
+#~ msgid "Standardwert (fÃ¼r Akku-Typ=%s)"
+#~ msgstr "Default (for Battery type=%s)"
+
+#~ msgid "Serieller Port konnte nicht geöffnet werden."
+#~ msgstr "Serial port could not be opened"
+
+#~ msgid "Leerlauf"
+#~ msgstr "Idle"
+
+#~ msgid "Laden"
+#~ msgstr "Charge"
+
+#~ msgid "Entladen"
+#~ msgstr "Discharge"
+
+#~ msgid "Wartezeit"
+#~ msgstr "Delay"
+
+#~ msgid "Hitze-Schutz"
+#~ msgstr "Pause time (Charger too hot)"
+
+#~ msgid "Vorgang abgeschlossen"
+#~ msgstr "Operation completed"
+
+#~ msgid "Fehler"
+#~ msgstr "Error"
+
+#~ msgid "Balancen"
+#~ msgstr "Balance"
+
+#~ msgid "Heizung/Netzteil"
+#~ msgstr "Tyre Heater"
+
+#~ msgid "DC-Motor"
+#~ msgstr "Motor mode"
+
+#~ msgid "Lagermodus: Laden"
+#~ msgstr "Storemode: Charge"
+
+#~ msgid "Lagermodus: Entladen"
+#~ msgstr "Storemode: Discharge"
+
+#~ msgid "Schreibe"
+#~ msgstr "Writing"
+
+#~ msgid "Lese"
+#~ msgstr "Reading"
+
+#~ msgid ""
+#~ "Achtung, die Firmware Ihres Ladergeräts ist in Bezug auf die PC-"
+#~ "kommunikation fehlerhaft!"
+#~ msgstr ""
+#~ "Attention, the firmware of your charger has some errors related to "
+#~ "communication to the PC!"
+
+#~ msgid ""
+#~ "Um dieses Programm mit Ihrem Ladegrät nutzen zu können, müssen Sie die "
+#~ "Firmware updaten."
+#~ msgstr ""
+#~ "To use this program with your charger, you have to upgrade the chargers "
+#~ "firmware ."
+
+#~ msgid ""
+#~ "Besuchen Sie dazu die Homepage von Graupner bzw. klicken Sie im Programm "
+#~ "auf das Ladegerät UDP 40, um automatisch die entsprechende Seite zu laden."
+#~ msgstr ""
+#~ "Visit the homepage of Graupner or click on the icon of UDP 40 in this "
+#~ "program."
+
+#~ msgid ""
+#~ "Das Programm zum Updaten der Firmware finden Sie evtl. nur auf der Seite "
+#~ "des UDP 50!"
+#~ msgstr ""
+#~ "The program to update the firmware can be found on the page of the UDP 50."
+
+#~ msgid "K"
+#~ msgstr "Ch"
+
+#~ msgid " Linke Seite "
+#~ msgstr " Left side "
+
+#~ msgid "Das Programm muss neu gestartet werden. Weiter?"
+#~ msgstr "The program has to be restarted. Proceed?"
+
+#~ msgid "--- Automatisch erkannte COM-Ports ---"
+#~ msgstr "--- Automatic detected COM-Ports ---"
+
+#~ msgid "--- Manuelle Eingabe des COM-Ports ---"
+#~ msgstr "--- Manual selection of COM-Ports ---"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Fullscreen"
+
+#~ msgid "links"
+#~ msgstr "left"
+
+#~ msgid "Spannung"
+#~ msgstr "Voltage"
+
+#~ msgid "rechts"
+#~ msgstr "right"
+
+#~ msgid "Strom"
+#~ msgstr "Current"
+
+#~ msgid "Temperatur"
+#~ msgstr "Temperature"
+
+#~ msgid "Werte Daten aus..."
+#~ msgstr "Interpreting data..."
+
+#~ msgid "Keine Daten geladen!"
+#~ msgstr "No data loaded!"
+
+#~ msgid "Exportiert am %s"
+#~ msgstr "Exported on %s"
+
+#~ msgid "Messpunkte - Intervall = %d Sekunden"
+#~ msgstr "measuring interval = %d seconds"
+
+#~ msgid "Spannung [V]"
+#~ msgstr "Voltage [V]"
+
+#~ msgid "Strom [mA]"
+#~ msgstr "Current [mA]"
+
+#~ msgid "Temperatur [C°]"
+#~ msgstr "Temperature [°C]"
+
+#~ msgid "Links"
+#~ msgstr "Left"
+
+#~ msgid "Rechts"
+#~ msgstr "Right"
+
+#~ msgid "Intervall"
+#~ msgstr "Interval"
+
+#~ msgid "Sek"
+#~ msgstr "Sec"
+
+#~ msgid "Vollbild"
+#~ msgstr "Fullscreen"
+
+#~ msgid "Schließen"
+#~ msgstr "Close"
+
+#~ msgid "Das Dateiformat ist nicht mit dieser Version kompatibel!"
+#~ msgstr "The file format is not compatible with this version!"
+
+#~ msgid "Lade Daten..."
+#~ msgstr "Loading data..."
+
+#~ msgid "Schreibe Daten..."
+#~ msgstr "Writing data..."
+
+#~ msgid "Daten gespeichert!"
+#~ msgstr "Data saved!"
+
+#~ msgid "Aktuell"
+#~ msgstr "Current"
+
+#~ msgid "Zellenspannung"
+#~ msgstr "Cell voltage"
+
+#~ msgid "Gesamtspannung"
+#~ msgstr "Total voltage"
+
+#~ msgid "Ladung"
+#~ msgstr "Kapazität"
+
+#~ msgid "K%d: "
+#~ msgstr "Ch%d:"
+
+#~ msgid "Zelle %d"
+#~ msgstr "Cell %d"
+
+#~ msgid "Zyklus"
+#~ msgstr "Cycle"
+
+#~ msgid "Uhrzeit"
+#~ msgstr "Time"
+
+#~ msgid "Kanal"
+#~ msgstr "Channel"
+
+#~ msgid "Zelle"
+#~ msgstr "Cell"
+
+#~ msgid "UDP Manager v%s - Copyright by Graupner GmbH 2009-2010"
+#~ msgstr "UDP Manager v%s - Copyright by Graupner GmbH 2009-2010"
+
+#~ msgid "UDP Manager v%s"
+#~ msgstr "UDP Manager v%s"
+
+#~ msgid "Einzel-Speicher"
+#~ msgstr "Single-Memory"
+
+#~ msgid "Multi-Speicher"
+#~ msgstr "Multi-Memory"
+
+#~ msgid "Live-Daten"
+#~ msgstr "Live-Data"
+
+#~ msgid "Alle Dateien"
+#~ msgstr "All files"
+
+#~ msgid "Sie müssen eine gültige Zahl als Speichernummer angeben!"
+#~ msgstr "You must enter a valid memory number!"
+
+#~ msgid "Erlaubte Speichernummer: 1 bis %d"
+#~ msgstr "Allowed memory number: 1 to %d"
+
+#~ msgid "Lade Speicher..."
+#~ msgstr "Loading memory..."
+
+#~ msgid "Starte PC-Mode"
+#~ msgstr "Starting PC-Mode"
+
+#~ msgid "Verlasse PC-Mode"
+#~ msgstr "Leaving PC-Mode"
+
+#~ msgid "Keine vollständigen Daten geladen!"
+#~ msgstr "No complete data loaded!"
+
+#~ msgid ""
+#~ "Quellspeicher-Nummer und Zielspeicher-Nummer sind unterschiedlich. Weiter?"
+#~ msgstr "Source-number and destination-number are not equal. Proceed?"
+
+#~ msgid "%d/%d (%.0f %%)"
+#~ msgstr "%d/%d (%.0f %%)"
+
+#~ msgid "Fehler!"
+#~ msgstr "Error!"
+
+#~ msgid "Sie müssen alle Daten eingeben!"
+#~ msgstr "You have to fill out all data fields!"
+
+#~ msgid "Gerät konnte nicht erkannt werden!"
+#~ msgstr "Charger could not be detected!"
+
+#~ msgid "Gerät nicht bereit. Beenden Sie alle Ladevorgänge etc.!"
+#~ msgstr "Charger not ready. Finish all operations like charging etc!"
+
+#~ msgid "Fehler: %s"
+#~ msgstr "Error: %s"
+
+#~ msgid "unbekannt"
+#~ msgstr "unknown"
+
+#~ msgid "COM-Port geöffnet"
+#~ msgstr "COM-Port opened"
+
+#~ msgid "COM-Port geschlossen"
+#~ msgstr "COM-Port closed"
+
+#~ msgid "Unbekanntes Gerät"
+#~ msgstr "Unknown device"
+
+#~ msgid "Wähle Sheet aus"
+#~ msgstr "Selecting sheet"
+
+#~ msgid "Bereite Format vor"
+#~ msgstr "Preparing format"
+
+#~ msgid "%d / %d, %d%% fertig"
+#~ msgstr "%d / %d, %d%% done"
+
+#~ msgid "Excel konnte nicht gestartet werden!"
+#~ msgstr "Excel could not be started!"
+
+#~ msgid "Eventuell ist kein Excel installiert?"
+#~ msgstr "Maybe there is no MS-Excel installed?"
+
+#~ msgid "Starte Excel"
+#~ msgstr "Starting Excel"
+
+#~ msgid "fAbout"
+#~ msgstr "fAbout"
+
+#~ msgid "UDP Manager"
+#~ msgstr "UDP Manager"
+
+#~ msgid "lLegalStuff"
+#~ msgstr "lLegalStuff"
+
+#~ msgid "Entwickelt von"
+#~ msgstr "Developed by"
+
+#~ msgid "Dipl.-Wirt.-Inf Steffen Strüber"
+#~ msgstr "Dipl.-Wirt.-Inf Steffen Strüber"
+
+#~ msgid " Akkuinformation "
+#~ msgstr " Battery information "
+
+#~ msgid "Akku Typ"
+#~ msgstr "Battery type"
+
+#~ msgid "Akku Zellen"
+#~ msgstr "Battery cells"
+
+#~ msgid "Akku Kapazität"
+#~ msgstr "Battery capacity"
+
+#~ msgid "Inbetriebnahme"
+#~ msgstr "Beginning of operation"
+
+#~ msgid "Akkuname (16 Zeichen)"
+#~ msgstr "Battery name (16 charachters)"
+
+#~ msgid "Speicherplatz: 0"
+#~ msgstr "Memory: 0"
+
+#~ msgid "mAh"
+#~ msgstr "mAh"
+
+#~ msgid "=> 00.0V"
+#~ msgstr "=> 00.0V"
+
+#~ msgid "Info: Anzahl Zyklen"
+#~ msgstr "Info: Number of cycles"
+
+#~ msgid "NiCd"
+#~ msgstr "NiCd"
+
+#~ msgid "NiMH"
+#~ msgstr "NiMH"
+
+#~ msgid "LiIo"
+#~ msgstr "LiIo"
+
+#~ msgid "LiPo"
+#~ msgstr "LiPo"
+
+#~ msgid "LiFe"
+#~ msgstr "LiFe"
+
+#~ msgid "Pb"
+#~ msgstr "Pb"
+
+#~ msgid "eAkkuName"
+#~ msgstr "eAkkuName"
+
+#~ msgid " Laden "
+#~ msgstr " Load "
+
+#~ msgid "Ladestrom"
+#~ msgstr "Charge current"
+
+#~ msgid "Peak Empfindlichkeit"
+#~ msgstr "Peak sensibility"
+
+#~ msgid "Peak Verzögerung"
+#~ msgstr "Peak delay"
+
+#~ msgid "Abschalttemperatur"
+#~ msgstr "Cut-off temperature"
+
+#~ msgid "Erhaltungsstrom"
+#~ msgstr "Trickle current"
+
+#~ msgid "Max Kapazität"
+#~ msgstr "Max capacity"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "Keine Spannnungsänderung"
+#~ msgstr "No voltage change"
+
+#~ msgid "RePeak Pause"
+#~ msgstr "RePeak pause"
+
+#~ msgid "RePeak Zyklen"
+#~ msgstr "RePeak cylces"
+
+#~ msgid "Sicherheitstimer"
+#~ msgstr "Security timer"
+
+#~ msgid "Ladespannung"
+#~ msgstr "Charge voltage"
+
+#~ msgid "mA"
+#~ msgstr "mA"
+
+#~ msgid "mV / Zelle"
+#~ msgstr "mV / Zelle"
+
+#~ msgid "°C"
+#~ msgstr "°C"
+
+#~ msgid "V / Zelle"
+#~ msgstr "V / Zelle"
+
+#~ msgid "Lagerspannung"
+#~ msgstr "Store voltage"
+
+#~ msgid "550 = AUS, 0=AUTO"
+#~ msgstr "550 = OFF, 0=AUTO"
+
+#~ msgid "Aus"
+#~ msgstr "Out"
+
+#~ msgid "An"
+#~ msgstr "On"
+
+#~ msgid "905 = AUS"
+#~ msgstr "905 = OFF"
+
+#~ msgid "155 = AUS"
+#~ msgstr "155 = OFF"
+
+#~ msgid "Wert"
+#~ msgstr "Value"
+
+#~ msgid "AUS"
+#~ msgstr "OFF"
+
+#~ msgid "AUTO"
+#~ msgstr "AUTO"
+
+#~ msgid " Zyklus "
+#~ msgstr "Cycle"
+
+#~ msgid "Pause nach Entladen"
+#~ msgstr "Pause after discharge"
+
+#~ msgid "Pause nach Laden"
+#~ msgstr "Pause after charge"
+
+#~ msgid "Anzahl Zyklen"
+#~ msgstr "Number of cycles"
+
+#~ msgid "Zyklus Reihenfolge"
+#~ msgstr "Cycle order"
+
+#~ msgid "E:L->E"
+#~ msgstr "D:C->D"
+
+#~ msgid "L->E"
+#~ msgstr "C->D"
+
+#~ msgid "E->L"
+#~ msgstr "D->C"
+
+#~ msgid " Entladen "
+#~ msgstr "  Discharge "
+
+#~ msgid "Entladestrom"
+#~ msgstr "Disch. current"
+
+#~ msgid "Abschaltspannung"
+#~ msgstr "Cut-off voltage"
+
+#~ msgid "Aschalttemperatur [°C]"
+#~ msgstr "Cut-off temperature"
+
+#~ msgid "Max. Kapazität"
+#~ msgstr "Max. capacity"
+
+#~ msgid "Balancerspannnung"
+#~ msgstr "Balancer voltage"
+
+#~ msgid "V"
+#~ msgstr "V"
+
+#~ msgid "105 = AUS"
+#~ msgstr "105 = OFF"
+
+#~ msgid "Fertig-Melodie"
+#~ msgstr "Finish melody"
+
+#~ msgid "LCD Kontrast"
+#~ msgstr "LCD contrast"
+
+#~ msgid "Fertig-Melodie Dauer"
+#~ msgstr "Finish melody duration"
+
+#~ msgid "Rollen"
+#~ msgstr "Roll"
+
+#~ msgid "Letzte"
+#~ msgstr "Last"
+
+#~ msgid "5 Sek"
+#~ msgstr "5 Sec"
+
+#~ msgid "15 Sek"
+#~ msgstr "15 Sec"
+
+#~ msgid "1 Min"
+#~ msgstr "1 Min"
+
+#~ msgid " Allgemein "
+#~ msgstr " Common "
+
+#~ msgid "Temperaturanzeige"
+#~ msgstr "Temperature view"
+
+#~ msgid "Tastenton"
+#~ msgstr "Key sound"
+
+#~ msgid "Netzteil / Batterie"
+#~ msgstr "Powersupply / battery"
+
+#~ msgid "Zeitdarstellung"
+#~ msgstr "Timeformat"
+
+#~ msgid "Aktuelles Datum"
+#~ msgstr "Current date"
+
+#~ msgid "Aktuelle Zeit"
+#~ msgstr "Current time"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "Name Ladegerät (16 Zeichen)"
+#~ msgstr "Name charging device"
+
+#~ msgid "°F"
+#~ msgstr "°F"
+
+#~ msgid "Englisch"
+#~ msgstr "English"
+
+#~ msgid "Deutsch"
+#~ msgstr "German"
+
+#~ msgid "Französisch"
+#~ msgstr "French"
+
+#~ msgid "Italienisch"
+#~ msgstr "Italian"
+
+#~ msgid "12 H"
+#~ msgstr "12 H"
+
+#~ msgid "24 H"
+#~ msgstr "24 H"
+
+#~ msgid "eLoaderName"
+#~ msgstr "eLoaderName"
+
+#~ msgid "PC-Zeit beim Schreiben benutzen"
+#~ msgstr "Use Computer-time on write"
+
+#~ msgid "Netzteil2 / Batterie"
+#~ msgstr "Powersupply2 / battery"
+
+#~ msgid "Lastverteilung"
+#~ msgstr "Lload distribution"
+
+#~ msgid " Rechte Seite "
+#~ msgstr " Right side "
+
+#~ msgid "COM-Port"
+#~ msgstr "COM-Port"
+
+#~ msgid "Abbruch"
+#~ msgstr "Cancel"
+
+#~ msgid "USB-Treiber"
+#~ msgstr "USB-driver"
+
+#~ msgid "Debug Daten serielle Schnittstelle"
+#~ msgstr "Debug data serial device"
+
+#~ msgid "Courier New"
+#~ msgstr "Courier New"
+
+#~ msgid "mDebug"
+#~ msgstr "mDebug"
+
+#~ msgid "In Zwischenspeicher kopieren"
+#~ msgstr "Copy to clipboard"
+
+#~ msgid "Protokollierung pausieren"
+#~ msgstr "Suspend logging"
+
+#~ msgid "Gerät neu starten"
+#~ msgstr "Restart Device"
+
+#~ msgid "COM1"
+#~ msgstr "COM1"
+
+#~ msgid "Restdauer"
+#~ msgstr "Remaining time"
+
+#~ msgid "Berechne"
+#~ msgstr "Calculating"
+
+#~ msgid "Restdauer: %d Sekunden"
+#~ msgstr "Remaining time: %d seconds"
+
+#~ msgid "Buffer: %s/%d Bytes"
+#~ msgstr "Buffer: %s/%d Bytes"
+
+#~ msgid "Dateiendung muss .BMP oder .JPG sein!"
+#~ msgstr "Extension must be .BMP or .JPG!"
+
+#~ msgid "\"%s\" erfolgreich gespeichert!"
+#~ msgstr "\"%s\" saves successfully!"
+
+#~ msgid "Daten"
+#~ msgstr "Data"
+
+#~ msgid "Speicher %d/%d (%.0f %%)"
+#~ msgstr "Memory %d/%d (%.0f %%)"
+
+#~ msgid "Schreibe Speicher..."
+#~ msgstr "Writing memory..."
+
+#~ msgid "Fehler: "
+#~ msgstr "Error: "
+
+#~ msgid "Länge der gelesenen Daten ungültig!"
+#~ msgstr "Length mismatch of read data!"
+
+#~ msgid ""
+#~ "Überprüfen Sie die COM-Port Einstellung und stellen Sie sicher, dass das "
+#~ "Ladegerät zur Zeit nicht lädt!"
+#~ msgstr ""
+#~ "Recheck your COM-Port settings and ensure, that the charger is not busy!"
+
+#~ msgid "Interner Fehler: Noch zu parsende Daten vorhanden!"
+#~ msgstr "Internal error: More data remaining!"
+
+#~ msgid "Namen"
+#~ msgstr "Names"
+
+#~ msgid "Daten 1"
+#~ msgstr "Daten 1"
+
+#~ msgid "Daten 2"
+#~ msgstr "Daten 2"
+
+#~ msgid "Kein Treiber gefundenn!"
+#~ msgstr "No driver found!"
+
+#~ msgid "Speicherplatz: %s (%d)"
+#~ msgstr "Battery number: %s (%d)"
+
+#~ msgid "Speicherplatz"
+#~ msgstr "Memory"
+
+#~ msgid "fFullscreen"
+#~ msgstr "fFullscreen"
+
+#~ msgid "Temperatur [°C]"
+#~ msgstr "Temperature [°C]"
+
+#~ msgid "Tabelle"
+#~ msgstr "Table"
+
+#~ msgid "TChart"
+#~ msgstr "TChart"
+
+#~ msgid "SeriesVoltageLeft"
+#~ msgstr "SeriesVoltageLeft"
+
+#~ msgid "X"
+#~ msgstr "X"
+
+#~ msgid "Y"
+#~ msgstr "Y"
+
+#~ msgid "SeriesVoltageRight"
+#~ msgstr "SeriesVoltageRight"
+
+#~ msgid "SeriesCurrentLeft"
+#~ msgstr "SeriesCurrentLeft"
+
+#~ msgid "SeriesCurrentRight"
+#~ msgstr "SeriesCurrentRight"
+
+#~ msgid "SeriesTempLeft"
+#~ msgstr "SeriesTempLeft"
+
+#~ msgid "SeriesTempRight"
+#~ msgstr "SeriesTempRight"
+
+#~ msgid "Excel-Export"
+#~ msgstr "Excel-Export"
+
+#~ msgid "lDataPoints"
+#~ msgstr "lDataPoints"
+
+#~ msgid "lFrom"
+#~ msgstr "lFrom"
+
+#~ msgid "lTo"
+#~ msgstr "lTo"
+
+#~ msgid "Legende"
+#~ msgstr "Legend"
+
+#~ msgid "Datenpunkte"
+#~ msgstr "Datapoints"
+
+#~ msgid "Alle Kanäle"
+#~ msgstr "All channels"
+
+#~ msgid "Grafik speichern"
+#~ msgstr "Save graphic"
+
+#~ msgid "Von:"
+#~ msgstr "From:"
+
+#~ msgid "Bis:"
+#~ msgstr "To:"
+
+#~ msgid "Status:"
+#~ msgstr "Status:"
+
+#~ msgid "Modus:"
+#~ msgstr "Mode:"
+
+#~ msgid "Punkte:"
+#~ msgstr "Points:"
+
+#~ msgid "Neu"
+#~ msgstr "New"
+
+#~ msgid "Daten laden"
+#~ msgstr "Load data"
+
+#~ msgid "Daten speichern"
+#~ msgstr "Save data"
+
+#~ msgid "Linienstärke"
+#~ msgstr "Line width"
+
+#~ msgid "Diagramm-Titel"
+#~ msgstr "Diagram title"
+
+#~ msgid "Durchschnitt"
+#~ msgstr "Average"
+
+#~ msgid "Ladung [mAh]"
+#~ msgstr "Capacity [mAh]"
+
+#~ msgid "Alle Graphen"
+#~ msgstr "All Graphs"
+
+#~ msgid "Übersicht"
+#~ msgstr "Overview"
+
+#~ msgid "PanelPCMain"
+#~ msgstr "PanelPCMain"
+
+#~ msgid "Warte auf Daten..."
+#~ msgstr "Waiting for data..."
+
+#~ msgid "#,##0.00"
+#~ msgstr "#,##0.00"
+
+#~ msgid "#,##0.000"
+#~ msgstr "#,##0.000"
+
+#~ msgid "Strom [mA] / Temperatur [°C]"
+#~ msgstr "Current [mA] / Temperature [°C]"
+
+#~ msgid "#,##0.0"
+#~ msgstr "#,##0.0"
+
+#~ msgid "Spannungen"
+#~ msgstr "Voltages"
+
+#~ msgid "Strom/Temp"
+#~ msgstr "Current/Temp"
+
+#~ msgid "jpg"
+#~ msgstr "jpg"
+
+#~ msgid ""
+#~ "Alle (*.bmp;*.jpg)|*.jpg;*.bmp|JPEG-Grafikdatei (*.jpg)|*.jpg|Bitmaps (*."
+#~ "bmp)|*.bmp"
+#~ msgstr ""
+#~ "All (*.bmp;*.jpg)|*.jpg;*.bmp|JPEG-file (*.jpg)|*.jpg|Bitmaps (*.bmp)|*."
+#~ "bmp"
+
+#~ msgid "Aktuell: 10 x 10"
+#~ msgstr "Current: 10 x 10"
+
+#~ msgid "Größe: 800 x 600"
+#~ msgstr "Size: 800 x 600"
+
+#~ msgid "Größe: 1024 x 768"
+#~ msgstr "Size: 1024 x 768"
+
+#~ msgid "Größe: 1920 x 1200"
+#~ msgstr "Size: 1920 x 1200"
+
+#~ msgid "Größe: 4000 x 2000"
+#~ msgstr "Size: 4000 x 2000"
+
+#~ msgid "GroupBox1"
+#~ msgstr "GroupBox1"
+
+#~ msgid "[<Max> ±0.15V]"
+#~ msgstr "[<Max> ±0.15V]"
+
+#~ msgid "[3,2 - 4,4V]"
+#~ msgstr "[3,2 - 4,4V]"
+
+#~ msgid "[0 - <Max>V]"
+#~ msgstr "[0 - <Max>V]"
+
+#~ msgid "Bar"
+#~ msgstr "Bar"
+
+#~ msgid "Ausgangsspannung:"
+#~ msgstr "Voltag out:"
+
+#~ msgid "Strom:"
+#~ msgstr "Current:"
+
+#~ msgid "Temperatur:"
+#~ msgstr "Temperature:"
+
+#~ msgid "Stand:"
+#~ msgstr "Time:"
+
+#~ msgid "Kanal:"
+#~ msgstr "Channel:"
+
+#~ msgid "Ladung:"
+#~ msgstr "Charge:"
+
+#~ msgid "Eingangsspannung:"
+#~ msgstr "Voltage in:"
+
+#~ msgid "Zyklus:"
+#~ msgstr "Cycle:"
+
+#~ msgid "Max. Zellendifferenz:"
+#~ msgstr "Max. Cell difference:"
+
+#~ msgid "Ultramat Duo Plus 50"
+#~ msgstr "Ultramat Duo Plus 50"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6444"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6444"
+
+#~ msgid "Ultramat Duo Plus 45"
+#~ msgstr "Ultramat Duo Plus 45"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6475"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6475"
+
+#~ msgid "Ultramat Duo Plus 40"
+#~ msgstr "Ultramat Duo Plus 40"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6443"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6443"
+
+#~ msgid "Programmierbar"
+#~ msgstr "Programmable"
+
+#~ msgid "Live-Anzeige"
+#~ msgstr "Live-Display"
+
+#~ msgid "Ultra Trio Plus 14"
+#~ msgstr "Ultra Trio Plus 14"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6466"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6466"
+
+#~ msgid "Ultramat 16S"
+#~ msgstr "Ultramat 16S"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6468"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6468"
+
+#~ msgid "Ultramat 18"
+#~ msgstr "Ultramat 18"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6470"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6470"
+
+#~ msgid "http://www.graupner.de"
+#~ msgstr "http://www.graupner.com"
+
+#~ msgid "Ultramat Duo Plus 60"
+#~ msgstr "Ultramat Duo Plus 60"
+
+#~ msgid "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6478"
+#~ msgstr "http://shop.graupner.de/webuerp/servlet/AI?ARTN=6478"
+
+#~ msgid "Live"
+#~ msgstr "Live"
+
+#~ msgid "Einzel-Akku"
+#~ msgstr "Single battery"
+
+#~ msgid "Über"
+#~ msgstr "About"
+
+#~ msgid "Akkuhistorie"
+#~ msgstr "Battery history"
+
+#~ msgid "Graphen"
+#~ msgstr "Graphs"
+
+#~ msgid "Komplett"
+#~ msgstr "All batterys"
+
+#~ msgid "Ladegerät"
+#~ msgstr "Charger"
+
+#~ msgid "COM-Port: COM1"
+#~ msgstr "COM-Port: COM1"
+
+#~ msgid "XXX"
+#~ msgstr "XXX"
+
+#~ msgid "SingleAkku"
+#~ msgstr "SingleAkku"
+
+#~ msgid "Akku Lesen"
+#~ msgstr "Read battery"
+
+#~ msgid "Datei"
+#~ msgstr "File"
+
+#~ msgid "Akku Schreiben"
+#~ msgstr "Write battery"
+
+#~ msgid "Akku Laden"
+#~ msgstr "Load battery"
+
+#~ msgid "Akku Speichern"
+#~ msgstr "Save battery"
+
+#~ msgid "Neuer Akku"
+#~ msgstr "New battery"
+
+#~ msgid "TSAkkuList"
+#~ msgstr "TSAkkuList"
+
+#~ msgid "Liste Laden"
+#~ msgstr "Load list"
+
+#~ msgid "Liste Speichern"
+#~ msgstr "Save list"
+
+#~ msgid "#"
+#~ msgstr "#"
+
+#~ msgid "Org #"
+#~ msgstr "Org #"
+
+#~ msgid "Typ"
+#~ msgstr "Type"
+
+#~ msgid "Zellen"
+#~ msgstr "Cells"
+
+#~ msgid "Kapazität"
+#~ msgstr "Capacity"
+
+#~ msgid "Daten Laden"
+#~ msgstr "Load data"
+
+#~ msgid "Daten Speichern"
+#~ msgstr "Save data"
+
+#~ msgid "tsViewData"
+#~ msgstr "tsViewData"
+
+#~ msgid "TSGraphs"
+#~ msgstr "TSGraphs"
+
+#~ msgid "Graphen lesen"
+#~ msgstr "Read graphs"
+
+#~ msgid "tsLiveData"
+#~ msgstr "tsLiveData"
+
+#~ msgid "name (*)|fil.*|a|b"
+#~ msgstr "name (*)|fil.*|a|b"
+
+#~ msgid "Bearbeiten"
+#~ msgstr "Edit"
+
+#~ msgid "Kopieren nach"
+#~ msgstr "Copy to"
+
+#~ msgid "fProgress"
+#~ msgstr "fProgress"
+
+#~ msgid "lProgress"
+#~ msgstr "lProgress"
+
+#~ msgid "lRemaining"
+#~ msgstr "lRemaining"
+
+#~ msgid "lBytes"
+#~ msgstr "lBytes"
+
+#~ msgid "Speicher bearbeiten"
+#~ msgstr "Edit memory"
+
+#~ msgid "Abbrechen"
+#~ msgstr "Cancel"
+
+#~ msgid "Übernehmen"
+#~ msgstr "Use"
+
+#~ msgid "Treiber Warnung"
+#~ msgstr "Driver warning"
+
+#~ msgid "Sie haben keinen Treiber oder eine veraltete Version installiert!"
+#~ msgstr "You have either no driver or an old driver installed!"
+
+#~ msgid "cURLUSBDrivers"
+#~ msgstr "cURLUSBDrivers"
+
+#~ msgid "Einige ältere Treiber verursachen Abstürze (\"BlueScreens\"). "
+#~ msgstr "Some older drivers are unstable and may produce \"bluescreens\"."
+
+#~ msgid "5.4.20.9"
+#~ msgstr "5.4.20.9"
+
+#~ msgid "Internet-Adresse des Treiber vom Hersteller (anklicken):"
+#~ msgstr "Internet-address of new driver from manufacturer (cllick):"
+
+#~ msgid ""
+#~ "Die Treiber finden Sie in jedem Fall auf der Homepage zum Ladegerät von "
+#~ "Graupner"
+#~ msgstr "Die You can find that drivers on at the homepage of Graupner."
+
+#~ msgid "Neuste Version des Treibers (Stand: 19. Nov. 2010):"
+#~ msgstr "Newest known driver version (Date:19. nov. 2010)"
+
+#~ msgid "Ihre Treiberversion:"
+#~ msgstr "Your driver version:"
+
+#~ msgid "6.1"
+#~ msgstr "6.1"
+
+#~ msgid "Nicht mehr überprüfen"
+#~ msgstr "Do not check again"
+
+#~ msgid "Akku- und Zyklusdaten"
+#~ msgstr "Battery- and cycledata"
+
+#~ msgid "Kapazität [mA]"
+#~ msgstr "Capacity [mA]"
+
+#~ msgid "Widerstand [mOhm]"
+#~ msgstr "Resistance [mOhm]"
+
+#~ msgid "Letzte Lade-Kapazität"
+#~ msgstr "Last charge capacity"
+
+#~ msgid "Letzte Entlade-Kapazität"
+#~ msgstr "Last discharge capacity"
+
+#~ msgid "Maximale Lade-Kapazität "
+#~ msgstr "Max charge capacity"
+
+#~ msgid "Maximale Entlade-Kapazität "
+#~ msgstr "Max discharge capacity"
+
+#~ msgid "Anzahl Ladungen"
+#~ msgstr "Number of charges"
+
+#~ msgid "Miminaler Widerstand"
+#~ msgstr "Min resistance"
+
+#~ msgid "Label1"
+#~ msgstr "Label1"
+
+#~ msgid "Nr"
+#~ msgstr "No"
+
+#~ msgid "Endzeit"
+#~ msgstr "Finish time"
+
+#~ msgid "Ladekap."
+#~ msgstr "Charge cap."
+
+#~ msgid "Entladekap."
+#~ msgstr "Discharge cap."
+
+#~ msgid "Ladesp."
+#~ msgstr "Charge volt."
+
+#~ msgid "Entladesp."
+#~ msgstr "Disch. volt."
+
+#~ msgid "Ladewid."
+#~ msgstr "Charge res."
+
+#~ msgid "Entladewid."
+#~ msgstr "Disch. res."
+
+#~ msgid "Der benötigte Treiber konnte nicht gefunden werden."
+#~ msgstr "The needed driver could not be found."
+
+#~ msgid ""
+#~ "Wollen Sie direkt die Internetadresse öffnen, um den Treiber zu "
+#~ "downloaden?"
+#~ msgstr "Do you want to open the internet address, to download the driver?"
+
+#~ msgid "  "
+#~ msgstr "  "
+
+#~ msgid "Kapazität:"
+#~ msgstr "Capacity:"
+
+#~ msgid "K2"
+#~ msgstr "Ch2"
+
+#~ msgid "Auswahl"
+#~ msgstr "Select"
+
+#~ msgid ""
+#~ "Dieses Programm dient einzig der DEMONSTRATION und ist NICHT für jegliche "
+#~ "Veröffentlichung oder Weitergabe bestimmt!"
+#~ msgstr ""
+#~ "This program is intended ONLY for DEMONSTRATION and NOT for any "
+#~ "distribution!"
+
+#~ msgid "Speicherplatz: %d"
+#~ msgstr "Memory: %d"
+
+#~ msgid "Speichern"
+#~ msgstr "Save"
+
+#~ msgid "Live-Speicher"
+#~ msgstr "Live data"
+
+#~ msgid "Daten Lesen"
+#~ msgstr "Read data"
+
+#~ msgid "Daten Schreiben"
+#~ msgstr "Write data"
+
+#~ msgid "ComPort Library example"
+#~ msgstr "ComPort Library example"
+
+#~ msgid "MS Sans Serif"
+#~ msgstr "MS Sans Serif"
+
+#~ msgid "Open"
+#~ msgstr "Open"
+
+#~ msgid "Send"
+#~ msgstr "Send"
+
+#~ msgid "Send new line"
+#~ msgstr "Send new line"
+
+#~ msgid "CTS"
+#~ msgstr "CTS"
+
+#~ msgid "DSR"
+#~ msgstr "DSR"
+
+#~ msgid "RLSD"
+#~ msgstr "RLSD"
+
+#~ msgid "Ring"
+#~ msgstr "Ring"
+
+#~ msgid "Tx"
+#~ msgstr "Tx"
+
+#~ msgid "Rx"
+#~ msgstr "Rx"
+
+#~ msgid "Load"
+#~ msgstr "Load"
+
+#~ msgid "Nach MS-Excel exportieren"
+#~ msgstr "Export to MS-Excel"
+
+#~ msgid "Mini Terminal"
+#~ msgstr "Mini Terminal"
+
+#~ msgid "Terminal ready"
+#~ msgstr "Terminal ready"
+
+#~ msgid "Carrier detected"
+#~ msgstr "Carrier detected"
+
+#~ msgid "Connect"
+#~ msgstr "Connect"
+
+#~ msgid "Serial Port"
+#~ msgstr "Serial Port"
+
+#~ msgid "Terminal"
+#~ msgstr "Terminal"
+
+#~ msgid "System"
+#~ msgstr "System"
+
+#~ msgid "Non-Overlapped API Test"
+#~ msgstr "Non-Overlapped API Test"
+
+#~ msgid "COM3"
+#~ msgstr "COM3"
+
+#~ msgid "Paste"
+#~ msgstr "Paste"
+
+#~ msgid "TComPort"
+#~ msgstr "TComPort"
+
+#~ msgid "MS Serif"
+#~ msgstr "MS Serif"
+
+#~ msgid "version"
+#~ msgstr "version"
+
+#~ msgid "by Dejan Crnila, Lars Dybdahl, and Warren Postma"
+#~ msgstr "by Dejan Crnila, Lars Dybdahl, and Warren Postma"
+
+#~ msgid "See http://comport.sf.net/ for more info"
+#~ msgstr "See http://comport.sf.net/ for more info"
+
+#~ msgid "Baud rate"
+#~ msgstr "Baud rate"
+
+#~ msgid "Data bits"
+#~ msgstr "Data bits"
+
+#~ msgid "Stop bits"
+#~ msgstr "Stop bits"
+
+#~ msgid "Parity"
+#~ msgstr "Parity"
+
+#~ msgid "Flow control"
+#~ msgstr "Flow control"
+
+#~ msgid "Custom"
+#~ msgstr "Custom"
+
+#~ msgid "None"
+#~ msgstr "None"
+
+#~ msgid "Hardware"
+#~ msgstr "Hardware"
+
+#~ msgid "COM11"
+#~ msgstr "COM11"
+
+#~ msgid " ASCII Settings "
+#~ msgstr " ASCII Settings "
+
+#~ msgid "Echo typed charachters locally"
+#~ msgstr "Echo typed charachters locally"
+
+#~ msgid "Send line feeds with carriage return"
+#~ msgstr "Send line feeds with carriage return"
+
+#~ msgid "Wrap lines that exceed terminal width"
+#~ msgstr "Wrap lines that exceed terminal width"
+
+#~ msgid "Force incoming data to 7 bit ASCII"
+#~ msgstr "Force incoming data to 7 bit ASCII"
+
+#~ msgid "Append line feeds to incoming carriage return"
+#~ msgstr "Append line feeds to incoming carriage return"
+
+#~ msgid "Caret"
+#~ msgstr "Caret"
+
+#~ msgid "Columns"
+#~ msgstr "Columns"
+
+#~ msgid "Rows"
+#~ msgstr "Rows"
+
+#~ msgid "Cursor keys"
+#~ msgstr "Cursor keys"
+
+#~ msgid "Block"
+#~ msgstr "Block"
+
+#~ msgid "Underline"
+#~ msgstr "Underline"
+
+#~ msgid "ANSI/VT100"
+#~ msgstr "ANSI/VT100"
+
+#~ msgid "VT52"
+#~ msgstr "VT52"
+
+#~ msgid "Act as terminal keys"
+#~ msgstr "Act as terminal keys"
+
+#~ msgid "Act as windows keys"
+#~ msgstr "Act as windows keys"
+
+#~ msgid ""
+#~ "Unit Test for TComPort Component and CPORTU modifications (W. Postma)"
+#~ msgstr ""
+#~ "Unit Test for TComPort Component and CPORTU modifications (W. Postma)"
+
+#~ msgid "Insert loopback plug into your serial port,"
+#~ msgstr "Insert loopback plug into your serial port,"
+
+#~ msgid "select the serial port from the combo-box,"
+#~ msgstr "select the serial port from the combo-box,"
+
+#~ msgid "and then click Run Test."
+#~ msgstr "and then click Run Test."
+
+#~ msgid "Result: Not Run Yet."
+#~ msgstr "Result: Not Run Yet."
+
+#~ msgid "Run Test"
+#~ msgstr "Run Test"

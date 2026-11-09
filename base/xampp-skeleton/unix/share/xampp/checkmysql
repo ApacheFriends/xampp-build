@@ -1,0 +1,125 @@
+#!/bin/bash
+# Copyright 2002-2003 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+	macosx)
+		XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles/"
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+if test "$1" = "check"
+then
+	check="true"
+else
+	check="false"
+fi
+
+bon="[1m"
+boff="[m"
+
+ma=$XAMPP_ROOT/bin/mysqladmin
+mm=$XAMPP_ROOT/bin/mysql
+
+if ! testrun "$XAMPP_ROOT/var/mysql/$(hostname).pid" mysqld
+then
+	$check && exit 2
+	echo "XAMPP: " $($GETTEXT 'MySQL has to run before I can check the security.')
+fi
+
+if $ma -u root reload >/dev/null 2>&1
+then	
+	$check && exit 1
+
+    echo "XAMPP: ${bon}" $($GETTEXT 'MySQL has no root passwort set!!!') "${boff}"
+
+
+	if asky $($GETTEXT 'Do you want to set a password?')
+	then
+		echo "XAMPP: ${bon}" $($GETTEXT "Write the password somewhere down to make sure you won't forget it!!!") "${boff}"
+
+		word=$(askp "$($GETTEXT 'Password:')" "$($GETTEXT 'Password (again):')" nocrypt)
+
+		echo "XAMPP: " $($GETTEXT 'Setting new MySQL root password.')
+		echo "update user set Password=password('$word') where User = 'root';" | $mm -uroot mysql
+		$ma reload
+
+		echo "XAMPP: " $($GETTEXT "Change phpMyAdmin's authentication method.")
+
+		f="$XAMPP_ROOT/phpmyadmin/config.inc.php"
+		$awk '
+f==0 && $1 == "$cfg[\047Servers\047][$i][\047auth_type\047]" {
+				if($3=="\047cookie\047;")
+				{
+					# is already set to cookie? dont change it twice
+					print
+					f=1
+					next
+				}
+				print "# commented out by xampp security"
+				print "#"$0
+				print "$cfg[\047Servers\047][$i][\047auth_type\047] = \047cookie\047;";
+				f=1
+				next
+			}
+			{
+				print
+			}
+		' $f > /tmp/xampp$$
+		cp /tmp/xampp$$ $f
+		rm /tmp/xampp$$ 
+		chown daemon $f
+		chmod 600 $f
+	fi
+else
+	$check && exit 0
+
+    echo "XAMPP: " $($GETTEXT 'MySQL has a root passwort set. Fine! :)')
+fi
+	

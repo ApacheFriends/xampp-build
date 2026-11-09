@@ -28,7 +28,13 @@ namespace eval xampp {
             file rename -force $origin $dest
         }
     }
-
+    ::itcl::class xamppProgram {
+        inherit program workspaceComponent
+        constructor {environment} {
+            chain $environment
+        } {
+        }
+    }
     ::itcl::class xamppControlOsx {
         inherit program
 
@@ -461,12 +467,11 @@ namespace eval xampp {
 
 
     ::itcl::class xamppLibrary {
-        inherit xamppLibraryCommon library
+        inherit xamppLibraryCommon library workspaceComponent
         constructor {environment} {
             library::constructor $environment
         } {
         }
-
     }
 
 
@@ -1090,24 +1095,43 @@ namespace eval xampp {
         }
     }
 
+    ::itcl::class unixXamppMysqlData {
+        inherit xamppProgram
+        constructor {environment} {
+            chain $environment
+        } {
+            set name xampp-mariadbdata-unix
+            set version 10.11-0
+            set licenseRelativePath {}
+            set tarballName xampp-mariadbdata-unix-${version}
+        }
+        public method srcdir {} {
+            return [$be cget -src]/xampp-mariadbdata-unix-${version}
+        }
+        public method build {} {}
+        public method install {} {
+            puts  [file join [$be cget -src] mysqldata]
+            file delete -force [file join [xamppDestDir] var mysql]
+            file mkdir [file join [xamppDestDir] var]
+            file copy -force [file join [srcdir] mysqldata] [file join [xamppDestDir] var mysql]
+        }
+    }
 
-    ::itcl::class xamppSkeleton {
+     ::itcl::class xamppUnixWorkspace {
         inherit program
 
         constructor {environment} {
             chain $environment
         } {
-            set name "xampp-skeleton"
-            set version 1.8.6
-            set rev 12
-            set tarballName xampp-skeleton-dev-unix-${version}-${rev}
+            set name "xampp-workspace"
+            set version 1.8.8
+            set rev 0
+            set tarballName xampp-workspace-unix-${version}-${rev}
             set licenseRelativePath ""
             set licenseNotes ""
-            set cacertificatesVersion [getVtrackerField cacertificates version frameworks]
-            lappend additionalFileList curl-ca-bundle-${cacertificatesVersion}.crt
         }
         public method srcdir {} {
-            return [$be cget -src]/xampp-skeleton-dev-unix-${version}-${rev}
+            return [$be cget -src]/xampp-workspace-unix-${version}-${rev}
         }
 
         public method prefix {} {
@@ -1115,7 +1139,51 @@ namespace eval xampp {
         }
 
         public method configureOptions {} {}
-        public method build {} {
+        public method build {} {}
+
+        public method install {} {
+            if {[string match osx* [$be cget -target]]} {
+                set destDir [file join [prefix] xamppfiles]
+            } else {
+                set destDir [file join [prefix] lampp]
+            }
+            file mkdir $destDir
+
+            foreach f [glob [srcdir]/*] {
+                if {[string match [srcdir]/licenses $f]} {
+                    continue
+                }
+                if {[file isfile $f]} {
+                    file delete -force [file join $destDir [file tail $f]]
+                }
+                xampptcl::util::copyDirectory $f $destDir/
+            }
+        }
+    }
+
+    ::itcl::class xamppSkeleton {
+        inherit program workspaceComponent
+
+        constructor {environment} {
+            chain $environment
+        } {
+            set name "xampp-skeleton"
+            set version 1.8.8
+            set rev 0
+            set licenseRelativePath ""
+            set licenseNotes ""
+            set cacertificatesVersion [getVtrackerField cacertificates version frameworks]
+            lappend additionalFileList curl-ca-bundle-${cacertificatesVersion}.crt
+        }
+        public method needsToBeBuilt {} {
+            return 0
+        }
+        public method prefix {} {
+            return [$be cget -output]
+        }
+
+        public method configureOptions {} {}
+         public method build {} {            
             # fix server status with empty pids
             xampptcl::util::substituteParametersInFile [file join [srcdir] share xampp xampplib] [list {if $ps ax} {if [ "x$pid" != "x" ] && $ps ax}]
             if {[$be targetPlatform] == "osx-x64"} {
@@ -1128,48 +1196,33 @@ AuthPAMConfig ftpd
 UseFtpUsers}]
                 xampptcl::util::substituteParametersInFileRegex  [file join [srcdir] etc/proftpd.conf] [list {#Group\s+[^\n]*} {Group      admin}]
             }
-
-            return
-	    foreach p {
-		share/xampp-control-panel/*
-		share/lampp/*
-		share/xampp/*
-		etc/*
-                etc/extra/*
-		htdocs/xampp/*
-		htdocs/xampp/contrib/*
-		htdocs/xampp/lang/*
-		xampp
-	    } {
-		foreach f [glob -nocomplain [file join [srcdir] $p]] {
-		    if {![file isfile $f]} {
-			continue
-		    }
-		    xampptcl::util::substituteParametersInFile $f [list @@BITNAMI_XAMPP_ROOT@@ [prefix]]
-		}
-	    }
-	}
-
-        public method install {} {
-            if {[string match osx* [$be cget -target]]} {
-                set destDir [file join [prefix] xamppfiles]
-                xampptcl::util::substituteParametersInFile [file join $destDir etc extra httpd-userdir.conf] \
-                    [list {/home/} {/Users/}]
-            } else {
-                set destDir [file join [prefix] lampp]
+        }
+        public method copyCommonProjectFile {stack} {
+            set srcCommon [file join [$be cget -projectDir] base $name]
+            set dst [xamppDestDir]
+            file mkdir [file join $dst htdocs]
+            foreach f [glob [file join $srcCommon htdocs *]] {
+                file copy -force $f [file join [file join $dst htdocs] [file tail $f]]
             }
+        }
+        public method copyProjectFilesUnix {stack} {
+            set srcCommon [file join [$be cget -projectDir] base $name]
+            set src [file join [$be cget -projectDir] base $name unix]
+            set destDir [xamppDestDir]
             file mkdir $destDir
             file delete -force $destDir/etc/openssl.cnf
-            file delete -force $destDir/htdocs
-            foreach f [glob [srcdir]/*] {
-                if {[string match [srcdir]/licenses $f]} {
-                    continue
-                }
+            file mkdir $destDir/htdocs
+            file delete -force $destDir/htdocs/index.html
+            foreach dir {temp htdocs/webalizer share/curl var/run var/perl/cpan var/perl/cpanplus} {
+                file mkdir [file join $destDir $dir]
+            }            
+            foreach f [glob $src/*] {
                 if {[file isfile $f]} {
                     file delete -force [file join $destDir [file tail $f]]
                 }
                 xampptcl::util::copyDirectory $f $destDir/
             }
+            file copy -force $destDir/etc/httpd.conf $destDir/etc/httpd.conf.bak
             set instantclientDir [file tail [lindex [glob -nocomplain $destDir/lib/instantclient-*] 0]]
             if {$instantclientDir != ""} {
                 foreach f {share/lampp/oci8install share/xampp/oci8install} {
@@ -1189,14 +1242,39 @@ UseFtpUsers}]
             file copy -force [findFile curl-ca-bundle-${cacertificatesVersion}.crt] [file join $destDir share curl curl-ca-bundle.crt]
             xampptcl::file::addTextToFile [file join $destDir etc php.ini] {
                 openssl.cafile=@@BITNAMI_XAMPP_ROOT@@/share/curl/curl-ca-bundle.crt}
-
-            if {[string match osx* [$be cget -target]]} {
-                set destDir [file join [prefix] xamppfiles]
-            } else {
-                set destDir [file join [prefix] lampp]
-            }
+            
             file delete -force $destDir/temp/eaccelerator
 
+            file mkdir [file join $destDir lib]
+            close [open [file join $destDir lib VERSION] w+]
+            set destLogsDir [file join $destDir logs]
+            file mkdir $destLogsDir
+            foreach log {access_log error_log php_error_log ssl_request_log} {
+                set logFile [file join $destLogsDir $log]
+                file delete -force $logFile
+                close [open $logFile w+]
+            }
+
+            # TODO: these were empty files in the xampp-skeleton
+            file mkdir [file join $destDir etc xampp]
+            foreach tail {selinux startftp startssl} {
+                set file [file join $destDir etc xampp $tail]
+                close [open $file w+]
+                file attributes $file -permissions 0755 
+            }
+        }
+        public method copyProjectFilesWindows {stack} {}
+
+        public method copyProjectFiles {stack} {
+            chain $stack
+            copyCommonProjectFile $stack
+            if {[string match windows* [$be targetPlatform]]} {
+                copyProjectFilesWindows $stack
+            } else {
+                copyProjectFilesUnix $stack
+            }
+        }
+        public method install {} {
         }
     }
 
@@ -1206,26 +1284,88 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "xampp-skeleton"
-            set version 1.8.6
-            set rev 12
-            set tarballName xampp-skeleton-dev-unix-${version}-${rev}
+            set version 1.8.8
+            # set rev 12
+            #set tarballName xampp-skeleton-dev-unix-${version}-${rev}
         }
     }
+    ::itcl::class windowsXamppSkeleton {
+        inherit xamppSkeletonDev
+        public variable controlPanelVersion
+        constructor {environment} {
+            chain $environment
+        } {
+            set name "xampp-skeleton"
+            set version 1.8.8
+            set controlPanelVersion "3.3.0"
+        }
 
+        public method setReadmeVersion {component version} {
+            foreach file {readme_de.txt readme_en.txt} {
+                xampptcl::util::substituteParametersInFile [file join [xamppDestDir] $file] \
+                    [list "@@XAMPP_${component}_VERSION@@" $version]
+            }
+        }
+        protected method commonSrcDir {} {
+            return [file join [$be cget -projectDir] base $name]
+        }
+
+        protected method createDestTempDir {} {
+            set d [file join [xamppDestDir] tmp]
+            file mkdir $d
+            # to preserve the legacy contents
+            ::xampptcl::file::write [file join $d why.tmp] "Warum dieses tmp-Verzeichnis?\nDas braucht beispielsweise PHP\nf\u00fcr seine Sessions-Verwaltung.\nAlso bitte nicht l\u00f6schen!\n\nWhy this tmp-Folder?\nPHP needs it for saving\nthe Sessions.\nSo please do not delete it!"
+        }
+        public method install {} {
+            copyFromPrefixWorkspace windows readme_de.txt readme_en.txt
+            foreach dir {htdocs/webalizer htdocs/xampp} {
+                file mkdir [file join [xamppDestDir] $dir]
+            }
+            copyFromPrefixWorkspace windows cgi-bin/cgi.cgi cgi-bin/perltest.cgi cgi-bin/printenv.pl
+            copyFromPrefixWorkspace windows contrib
+            copyFromPrefixWorkspace windows install
+            copyFromPrefixWorkspace windows locale
+
+            createDestTempDir
+            copyFromPrefixWorkspace windows webdav/index.html webdav/webdav.txt
+
+            # TODO: This would be good to include in unix too
+            # copyFromWorkspace readme_de.txt readme_en.txt
+
+            copyFromPrefixWorkspace windows setup_xampp.bat
+            copyFromPrefixWorkspace windows passwords.txt
+
+            setReadmeVersion CONTROL_PANEL ${controlPanelVersion}
+            # The version was picked from the current xampp-windows-workspace
+            foreach {f data} {.modell XAMPP .modell-usb XAMPP-PORTABLE .version 1.8.1} {
+                ::xampptcl::file::write [file join [xamppDestDir] htdocs xampp $f] $data
+            }
+        }
+        public method copyProjectFiles {stack} {
+            chain $stack
+            copyCommonProjectFile $stack
+            if {[string match windows* [$be targetPlatform]]} {
+                copyProjectFilesWindows $stack
+            } else {
+                copyProjectFilesUnix $stack
+            }
+        }
+
+    }
     ::itcl::class xamppHtdocsUnix {
         inherit program
 
-	protected variable platform
-	protected variable http_prefix
+        protected variable platform
+        protected variable http_prefix
 
         constructor {environment} {
             chain $environment
         } {
-	    if {[string match osx* [$be cget -target]]} {
-		set platform osx
-	    }  else  {
-		set platform linux
-	    }
+            if {[string match osx* [$be cget -target]]} {
+                set platform osx
+            }  else  {
+                set platform linux
+            }
             set name "xampp-htdocs-$platform"
             set version 20261107
             set rev 0
@@ -1233,21 +1373,21 @@ UseFtpUsers}]
             set licenseRelativePath ""
             set licenseNotes ""
 
-	    set http_prefix /dashboard
+            set http_prefix /dashboard
         }
-	public method extractDirectory {} {
-	    return [file join [$be cget -src] xampp-htdocs-$platform]
-	}
-	public method srcdir {} {
-	    return [extractDirectory]
-	}
-	public method prefix {} {
-	    return [$be cget -output]
-	}
+        public method extractDirectory {} {
+            return [file join [$be cget -src] xampp-htdocs-$platform]
+        }
+        public method srcdir {} {
+            return [extractDirectory]
+        }
+        public method prefix {} {
+            return [$be cget -output]
+        }
 
         public method configureOptions {} {}
 
-	public method build {} {}
+        public method build {} {}
         public method install {} {
             if {[string match osx* [$be cget -target]]} {
                 set destDir [file join [prefix] xamppfiles]
@@ -1569,6 +1709,7 @@ UseFtpUsers}]
             set patchLevel 1
             set supportsParallelBuild 1
             set tarballName httpd-$version.tar.gz
+            set dirName apache
         }
         public method srcdir {} {
             return [file join [$be cget -src] httpd-$version]
@@ -1576,7 +1717,21 @@ UseFtpUsers}]
         public method setEnvironment {} {
             set ::opts(apache.prefix) [prefix]
         }
+        public method copyProjectFiles {stack} {
+            copyFromPrefixWorkspaceToPrefix unix etc httpd.conf extra/httpd-default.conf extra/httpd-mpm.conf extra/httpd-ssl.conf extra/httpd-xampp.conf
 
+            # TODO: check if this is really needed or we can use the default
+            copyFromPrefixWorkspaceToPrefix unix etc mime.types
+            if {[string match osx* [$be cget -target]]} {
+                xampptcl::util::substituteParametersInFile \
+                    [file join [xamppDestDir] etc extra httpd-userdir.conf] [list {/home/} {/Users/}]
+            }
+            copyFromWorkspaceToPrefix {} error/XAMPP_FORBIDDEN.html.var
+
+            copyFromPrefixWorkspaceToPrefix conf etc ssl.crt/server.crt
+            copyFromPrefixWorkspaceToPrefix conf etc ssl.key/server.key
+            
+        }
         public method configureOptions {} {
             set list  [concat [chain] [list --prefix=[prefix] --enable-nonportable-atomics --enable-so --enable-cgid --sysconfdir=[prefix]/etc --enable-auth-anon \
                                          --enable-auth-dbm --enable-auth-digest --enable-file-cache --enable-echo --enable-charset-lite --enable-cache \
@@ -1871,11 +2026,16 @@ UseFtpUsers}]
             set name "mysql"
             #set version 5.6.10
             set version 5.6.26
+            set dirName mysql
             set supportsParallelBuild 1
         }
         public method needsToBeBuilt {} {
             return 1
         }
+        public method copyProjectFiles {stack} {
+            copyFromPrefixWorkspaceToPrefix unix etc my.cnf
+        }
+
         public method setEnvironment {} {
             set ::opts(mysql.prefix) [prefix]
             set ::opts(mysql.srcdir) [srcdir]
@@ -2452,6 +2612,17 @@ UseFtpUsers}]
         public method configureOptions {} {
             return [concat [chain] [list --with-modules=mod_sql:mod_sql_mysql:mod_tls --with-includes=[prefix]/include:[prefix]/include/ncurses --with-libraries=[prefix]/lib/]]
         }
+        public method copyProjectFiles {stack} {
+            copyFromWorkspaceToPrefix etc proftpd.conf
+            if {[string match osx* [$be targetPlatform]]} {
+                xampptcl::util::substituteParametersInFile [file join [xamppDestDir] etc/proftpd.conf] [list UseFtpUsers {#to login with "OSX Users"
+AuthPAM on
+AuthPAMConfig ftpd
+UseFtpUsers}]
+                xampptcl::util::substituteParametersInFileRegex  [file join [xamppDestDir] etc/proftpd.conf] [list {#Group\s+[^\n]*} {Group      admin}]
+            }
+        }
+
         public method install {} {
             if {![amiroot]} {
                 cd [srcdir]
@@ -2588,6 +2759,11 @@ UseFtpUsers}]
         public method configureOptions {} {
             return [concat [chain] [list --with-gdlib=[prefix]/lib --with-gd=[prefix]/include --with-zlib=[prefix] --with-etcdir=[prefix]/etc --enable-dns --with-geodb=/opt/xampp/share/GeoDB]]
         }
+
+        # TODO: unify windows and unix
+        public method copyProjectFiles {stack} {
+            copyFromPrefixWorkspaceToPrefix unix etc webalizer.conf
+        }
     }
 
 
@@ -2625,7 +2801,7 @@ UseFtpUsers}]
     }
 
     ::itcl::class phpmyadmin {
-        inherit phpBitnamiProgram
+        inherit phpBitnamiProgram workspaceComponent
         constructor {environment} {
             set name phpmyadmin
             chain $environment
@@ -2634,13 +2810,16 @@ UseFtpUsers}]
             set version [getVtrackerField $name version frameworks]
             set tarballName phpMyAdmin-$version-all-languages
             set licenseRelativePath LICENSE
+            set dirName phpmyadmin
             set createHtaccessFile 1
         }
         public method srcdir {} {
             return [file join [$be cget -src] phpMyAdmin-$version-all-languages]
         }
         public method copyStackLogoImage {} {}
-        public method copyProjectFiles {args} {}
+        public method copyProjectFiles {args} {
+            copyFromPrefixWorkspaceToPrefix unix phpmyadmin config.inc.php
+        }
 	public method prefix {} {
 	    return [$be cget -output]
 	}
@@ -2693,7 +2872,9 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             set licenseRelativePath LICENSE
             set supportsParallelBuild 1
         }
-
+        public method copyProjectFiles {stack} {
+            copyFromPrefixWorkspaceToPrefix unix etc php.ini php.ini-pre1.7.2
+        }
         public proc getXAMPPVersion {id} {
             switch -glob -- $id {
                 7.4 - 74 { return [versions::get "PHP" 74] }

@@ -1,0 +1,66 @@
+#!/bin/bash
+# Copyright 2003 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+# Don't call diagnose more than 3 time
+if test -z "$DIAGNOSE"
+then
+	export DIAGNOSE=0
+fi
+
+if test "$DIAGNOSE" -gt 3
+then
+	exit
+else
+	export DIAGNOSE=`expr $DIAGNOSE + 1`
+fi
+
+if test "$1" = "check"
+then    
+        check="true"
+else    
+        check="false"
+fi
+
+bon="[1m"
+boff="[m"
+
+echo "XAMPP: ${bon}" $($GETTEXT 'Starting diagnose...') "${boff}"
+
+reason=$(tail -n 3 $XAMPP_ROOT/logs/error_log | $awk '/Configuration Failed/{print "hosts"}/nable to create scoreboard/{print "scoreboard"}/check User and/||/bad group/{print "group"}')
+case $reason in
+	"hosts") 
+		echo "XAMPP: ${bon}$($GETTEXT 'Your /etc/hosts is not okay. I will fix it.')${boff}"
+		#$de || echo "XAMPP: ${bon}See also http://www.apachefriends.org/faq-lampp-en.html#failed${boff}"
+		echo "127.0.0.1 `hostname` # added by Apache Friends XAMPP" >> /etc/hosts
+		;;
+	"scoreboard") 
+		echo "XAMPP: ${bon}" $($GETTEXT 'Make the httpd.conf fit your system.') "${boff}"
+		$XAMPP_ROOT/share/xampp/fixscoreboard
+		;;
+	"group") 
+		rm $XAMPP_ROOT/etc/xampp/nogroupchecked 2> /dev/null
+		echo "XAMPP: ${bon}" $($GETTEXT 'Make the httpd.conf fit your system.') "${boff}"
+		$XAMPP_ROOT/share/xampp/nogroupcheck
+		;;
+	*)	 
+		echo "XAMPP: ${bon}" $($GETTEXT "Sorry, I've no idea what's going wrong.") "${boff}"
+		echo "XAMPP: ${bon}" $($GETTEXT 'Please contact our forum http://www.apachefriends.org/f/') "${boff}"
+		
+		printf "$($GETTEXT -s 'Last 10 lines of \"%s\":')\n" "$XAMPP_ROOT/logs/error_log"
+				
+		tail -n 10 "$XAMPP_ROOT/logs/error.log"
+		
+		exit
+		;;
+esac
+
+echo "XAMPP: " $($GETTEXT 'Next try...')
+$XAMPP_ROOT/xampp startapache

@@ -45,7 +45,7 @@
 
                addComponents ::xampp::$pearModule
            }
-           addComponents ::xampp::xamppSkeleton
+           addComponents ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton
            addComponents ::xampp::xamppHtdocsUnix
            addComponents ::xampp::manager
            addComponents nativeadapter
@@ -88,9 +88,9 @@
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
+            return [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
         } else {
-            return [lremove [chain] [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
+            return [lremove [chain] [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
         }
     }
     public method preparefordist {} {
@@ -111,9 +111,9 @@
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
+            return [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
         } else {
-            return [lremove [chain] [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix]]
+            return [lremove [chain] [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix]]
         }
     }
 }
@@ -138,9 +138,9 @@
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
+            return [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
         } else {
-            return [lremove [chain] [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
+            return [lremove [chain] [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
         }
     }
 }
@@ -295,9 +295,9 @@
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
+            return [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
         } else {
-            return [lremove [chain] [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
+            return [lremove [chain] [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
         }
     }
     protected method getXamppOutputDir {} {
@@ -335,9 +335,9 @@
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
+            return [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
         } else {
-            return [lremove [chain] [list ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix]]
+            return [lremove [chain] [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeleton ::xampp::xamppHtdocsUnix]]
         }
     }
 }
@@ -365,9 +365,9 @@
     }
     public method componentsToBuild {} {
         if {[$be cget -buildType]=="fromTarball"} {
-            return [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
+            return [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]
         } else {
-            return [lremove [chain] [list ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
+            return [lremove [chain] [list ::xampp::xamppUnixWorkspace ::xampp::unixXamppMysqlData ::xampp::xamppSkeletonDev ::xampp::xamppHtdocsUnix nativeadapter ::xampp::manager ::xampp::phpmyadmin]]
         }
     }
 }

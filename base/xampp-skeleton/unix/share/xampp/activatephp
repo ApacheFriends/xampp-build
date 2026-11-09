@@ -1,0 +1,87 @@
+#!/bin/bash
+# Copyright 2004-2008 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+
+VERSION=$1
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+        macosx)
+                XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles"
+                ;;
+	*)
+                XAMPP_OS="Unknown"
+                XAMPP_ROOT="/opt/lampp"
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+checkRoot
+
+if test -f $XAMPP_ROOT/bin/php-$VERSION
+then	
+	:
+else
+	$de && echo "XAMPP: Sorry, aber ich kann nicht PHP $VERSION aktivieren."
+	$de || echo "XAMPP: Sorry, but I'm unable to activate PHP $VERSION."
+	exit
+fi
+
+if test "$VERSION" = "`$XAMPP_ROOT/xampp phpstatus`"
+then
+	$de && echo "XAMPP: PHP $VERSION bereits aktiv."
+	$de || echo "XAMPP: PHP $VERSION already active."
+	exit
+fi
+
+$de && echo "XAMPP: Aktiviere PHP $VERSION..."
+$de || echo "XAMPP: Activate PHP $VERSION..."
+
+cd $XAMPP_ROOT/bin || exit;
+
+rm php phpize phpextdist php-config 2> /dev/null
+ln -s php{-$VERSION,}
+ln -s phpize{-$VERSION,}
+ln -s phpextdist{-$VERSION,}
+ln -s php-config{-$VERSION,}
+
+$XAMPP_ROOT/xampp restartapache

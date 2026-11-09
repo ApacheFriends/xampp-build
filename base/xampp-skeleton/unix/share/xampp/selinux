@@ -1,0 +1,41 @@
+#!/bin/bash
+# i hope this way of handling selinux is okay
+# - oswald, 24oct5, 27nov5
+# written for XAMPP 1.5
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+# where to find the selinuxenabled command?
+for i in /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin
+do
+	if test -e $i/selinuxenabled
+	then
+		selinuxenabled=$i/selinuxenabled
+	fi
+done
+
+# is there any selinuxenabled anyway?
+if test -z "$selinuxenabled"
+then
+	exit
+fi
+
+# is selinux enabled?
+if $selinuxenabled 2> /dev/null
+then
+	if test -f $XAMPP_ROOT/etc/xampp/selinux
+	then
+		echo "XAMPP: " $($GETTEXT 'SELinux is activated. Making XAMPP fit SELinux...')
+		for i in $XAMPP_ROOT/lib/mysql/*.so $XAMPP_ROOT/lib/*.so $XAMPP_ROOT/lib/php/extensions/*/*.so $XAMPP_ROOT/modules/*.so
+		do
+			chcon -t texrel_shlib_t $i
+		done
+		rm $XAMPP_ROOT/etc/xampp/selinux	
+	fi
+fi

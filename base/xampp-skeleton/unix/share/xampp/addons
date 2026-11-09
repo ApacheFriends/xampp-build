@@ -1,0 +1,94 @@
+#!/bin/bash
+# Copyright 2005 by Kai 'Oswald' Seidler, oswald@apachefriends.org
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+	macosx)
+		XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles/"
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+action=""
+
+case $1 in
+	start*)
+		addon=${1#start}
+		action="start"
+		;;
+	stop*)
+		addon=${1#stop}
+		action="stop"
+		;;
+	reload*)
+		addon=${1#reload}
+		action="reload"
+		;;
+	status*)
+		addon=${1#status}
+		action="status"
+		;;
+	restart*)
+		addon=${1#restart}
+		action="restart"
+		;;
+esac
+
+#echo "Action: $action"
+#echo "Addon: $addon"
+
+if test -x $XAMPP_ROOT/share/addons/$addon
+then
+	checkRoot
+	
+	case $action in
+		start)
+			touch $XAMPP_ROOT/etc/xampp/start$addon
+			;;
+		stop)
+			rm $XAMPP_ROOT/etc/xampp/start$addon 2> /dev/null
+			;;
+	esac
+	$XAMPP_ROOT/share/addons/$addon $action
+else
+	$GETTEXT -s "Unknown command or add-on!"
+fi

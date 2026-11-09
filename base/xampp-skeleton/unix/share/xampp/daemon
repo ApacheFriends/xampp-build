@@ -1,0 +1,83 @@
+#!/bin/bash
+# Copyright 2005 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+	*)
+		$GETTEXT -s "This script is currently not supported on your platform."
+		exit 1
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+
+if test $1 != "onboot" -a $1 != "manual"
+then
+	echo $($GETTEXT 'Usage:') " $0 <onboot|manual>" 
+	exit 1
+fi
+
+checkRoot
+
+runlevel=`egrep '^[^#].*:initdefault:' /etc/inittab | $awk -F: '{print $2}'`
+
+f=""
+
+for i in /etc/rc.d /etc/init.d /etc
+do
+	d="$i/rc$runlevel.d"
+	if test -d $d
+	then
+		if test "$1" == "onboot"
+		then
+			printf "$($GETTEXT 'Setting up symlinks in %s...')" "$d"
+			ln -s $XAMPPR_ROOT/xampp $d/S99xampp
+			ln -s $XAMPPR_ROOT/xampp $d/K01xampp
+		else
+			printf "$($GETTEXT 'Removing symlinks in %s...')" "$d"
+			rm $d/S99xampp
+			rm $d/K01xampp
+		fi
+		f=1
+	fi
+done
+
+if test -z "$f"
+then
+	$GETTEXT -s "Sorry. Could not find your runlevel directory..."
+	exit 1
+fi

@@ -1,0 +1,205 @@
+#!/bin/bash
+# Copyright 2003-2004 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+skip=203
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+	macosx)
+		XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles/"
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+if test "$(osguess)" = "macosx"; then
+    md5sum=md5
+else
+    md5sum=md5sum
+fi
+
+# check the md5sum of a singe file
+function checksum
+{
+	origsum=`egrep " $1$" md5sums`
+	mysum=`$md5sum $1`
+
+	if test -z "$origsum"
+	then	
+		return
+	fi
+
+	if test "$origsum" = "$mysum"
+	then
+		:
+	else
+		echo "$i: FAILED."
+		echo "Sorry, your backup file is corrupt."
+		echo "Please email to oswald@apachefriends.org for help."
+		exit
+	fi
+}
+
+backupdir="$XAMPP_ROOT/backup"
+
+if test "`whoami`" != "root"
+then
+	echo "Please run me as root."
+	exit 
+fi
+
+case $0 in
+	/*) this=$0;;
+	*) this=`pwd`/$0;;
+esac
+
+if test -e "$this"
+then
+	:
+else
+	echo "Something went wrong."
+	echo "Can you call me in a different way?"
+	exit
+fi
+
+
+if test -d $backupdir
+then    
+        :
+else    
+	(
+        mkdir $backupdir
+        if test "$(osguess)" = "macosx"; then
+            chown root:wheel $backupdir
+        else
+            chown root.root $backupdir
+        fi
+        chmod 700 $backupdir
+	) 2> /dev/null
+fi
+
+restoredir="$XAMPP_ROOT/backup/$$"
+
+mkdir $restoredir 2> /dev/null
+
+cd $restoredir 2> /dev/null || (echo "Please install a vanilla XAMPP first"; exit)
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+if test "$1" != ""
+then    
+        passwd="-p$1"
+else    
+        passwd=""
+fi
+
+if $XAMPP_ROOT/bin/mysqladmin -uroot reload $passwd 2>/dev/null
+then
+	:
+else
+	echo "Can't access your MySQL database."
+	echo "a) Did you start it?"
+	echo "b) Add the MySQL root password to end of command line"
+	exit
+fi
+
+tail -n +$skip "$this" | gzip -dc - 2>/dev/null | tar xf -
+
+echo "Checking integrity of files..."
+
+for i in *
+do
+	checksum $i
+done
+
+echo "Restoring configuration, log and htdocs files..."
+
+tar xfz data.tar.gz -C /
+
+echo "Checking versions..."
+
+iam=`cat VERSION`
+installed=`cat $XAMPP_ROOT/lib/VERSION`
+
+echo "Installed:   XAMPP $installed"
+echo "Backup from: XAMPP $iam"
+
+if test "$installed" != "$iam"
+then
+	echo "The backup sofware is not able to handle different XAMPP versions."
+	echo "Your backuped configuration from $iam may not work with $installed and may need manually corrections."
+	if askn "Do you want to continue"
+	then
+		echo "Let's try..."
+	else
+		echo "Good choice."
+		exit
+	fi
+fi
+
+echo "Restoring MySQL databases..."
+
+for i in *.sql
+do
+	if test "$i" = "mysql.sql"
+	then
+		continue
+	fi
+	$XAMPP_ROOT/bin/mysql -uroot $passwd < $i 2> output
+	if test $? != 0
+	then
+		echo -n "`basename $i .sql` FAILED: "
+		cat output
+	fi
+done
+
+echo "Restoring MySQL user databases..."
+$XAMPP_ROOT/bin/mysql -uroot $passwd < mysql.sql 2> output
+if test $? != 0
+then
+	echo -n "MySQL user FAILED: "
+	cat output
+fi
+
+echo "Backup complete. Have fun!"
+echo "You may need to restart XAMPP to complete the restore." 
+
+rm -rf $restoredir
+exit
+##BACKUPDATA##
