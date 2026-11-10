@@ -28,6 +28,8 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/libzip-1.12.1.tar.gz 3b66fe92cbc768d8d4d16e1427bfb7399e15d9c2795c2fc482e7b30a6332a422
                 https://sourceforge.net/projects/xampp/files/thirdparties/zziplib-0.13.80.tar.gz 21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
                 https://sourceforge.net/projects/xampp/files/thirdparties/readline-8.3.tar.gz fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
+                https://sourceforge.net/projects/xampp/files/thirdparties/zlib-1.4.tar.gz 02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584
+
           - os: osx-arm64
             runner: macos-15
             base_tarball: "https://sourceforge.net/projects/xampp/files/thirdparties/20261103/tarballs-unix-202611.tgz"
@@ -39,6 +41,8 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/libzip-1.12.1.tar.gz 3b66fe92cbc768d8d4d16e1427bfb7399e15d9c2795c2fc482e7b30a6332a422
                 https://sourceforge.net/projects/xampp/files/thirdparties/zziplib-0.13.80.tar.gz 21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
                 https://sourceforge.net/projects/xampp/files/thirdparties/readline-8.3.tar.gz fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
+                https://sourceforge.net/projects/xampp/files/thirdparties/zlib-1.4.tar.gz 02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584
+
           # Extremelly slow on macos-15-intel and fails. We should investigate crosscompiling on ARM
           # - os: osx-x64
           #   runner: macos-15-intel
