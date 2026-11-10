@@ -2082,13 +2082,17 @@ UseFtpUsers}]
             set major [lindex [split $version .] 0]
             if {[string match osx* [$be targetPlatform]]} {
                 set libExt dylib
+                set versionedSuffix "${major}.${libExt}"
+                set unversionedSuffix "${libExt}"
             } else {
                 set libExt so
+                set versionedSuffix "${libExt}.${major}"
+                set unversionedSuffix "${libExt}"
             }
 
             foreach lib {form menu ncurses panel} {
-                exec ln -sf lib${lib}w.${libExt}.${major} [file join [$be cget -output] lib lib${lib}.${libExt}]
-                exec ln -sf lib${lib}w.${libExt}.${major} [file join [$be cget -output] lib lib${lib}.${libExt}.${major}]
+                exec ln -sf lib${lib}w.${versionedSuffix} [file join [$be cget -output] lib lib${lib}.${unversionedSuffix}]
+                exec ln -sf lib${lib}w.${versionedSuffix} [file join [$be cget -output] lib lib${lib}.${versionedSuffix}]
                 exec ln -sf lib${lib}w.a [file join [$be cget -output] lib lib${lib}.a]
                 exec ln -sf lib${lib}w_g.a [file join [$be cget -output] lib lib${lib}_g.a]
             }
