@@ -49,6 +49,18 @@ tclsh createstack.tcl pack xamppinstaller85stack windows-x64
 
 The installers will be accessible at `/opt/installbuilder/output/`.
 
+## Optional Components
+
+Only supports OpenJDK for Windows XAMPP installer. Planning to add Python, Ruby, MongoDB, Git client and supporting all XAMPP architectures. 
+
+```
+tclsh createstack.tcl pack xamppinstaller85stack windows-x64 addComponents java
+```
+
+After the `addComponents` flag add a comma separated list of optional components to include. `Example: addComponents "java, python"`.
+
+These are popular components which have been requested to be bundled with XAMPP, but it significantly increases the size of the XAMPP installer. Optional components fix this by adding new components to XAMPP installers while keeping the original installer the same. Users of XAMPP can opt-in to downloading larger XAMPP installers with specific additional components. The first component `openjdk` is included to have Tomcat work out of the box as it depends on JDK.
+
 ## License
 
 

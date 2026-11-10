@@ -725,6 +725,7 @@ if {$::tcl_platform(os) == "SunOS"} {
     public variable licensesDirectory
     public variable poDirectory "/bitnami/bitnami-locales"
     public variable target
+    public variable optionalComponents
     public variable platformID
     public variable product
     public variable buildType fromTarball
