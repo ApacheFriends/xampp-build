@@ -1,0 +1,135 @@
+#!/bin/bash
+# Copyright 2003,2005 by Kai 'Oswald' Seidler, oswald@apachefriends.org
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+        macosx)
+                XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles"
+                ;;
+	*)
+		$GETTEXT -s "The OCI8 add-on is currently not supported on your platform."
+		exit 1
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+checkRoot
+
+d=`dirname $0`
+cd $d
+
+$GETTEXT -s "Please enter the path to your Oracle or Instant Client installation:"
+
+ora_home="/opt/oracle"
+
+while true
+do
+	echo -n "[$ora_home] "
+	read a
+
+	if test "$a"
+	then
+		ora_home="$a"	
+	fi
+	if test ! -e "$ora_home"
+	then
+		$GETTEXT -s "No such directory."
+	else
+		break
+	fi
+done
+
+# where is the oracle libary?
+if test "$(osguess)" = "macosx"; then
+    libsuffix="dylib"
+else
+    libsuffix="so"
+fi
+
+libclntsh=`find $ora_home -name "libclntsh.$libsuffix.1[01]*" | head -1`
+
+libdir="`dirname $libclntsh 2> /dev/null`"
+echo $libdir > $XAMPP_ROOT/etc/xampp/oraclelib
+
+if test -z "$libclntsh"
+then
+	$de && echo "Finde die libclntsh.$libsuffix nicht. Sorry."
+	$de || echo "Can't find libclntsh.$libsuffix. Sorry."
+	exit
+fi
+echo "installing symlink..."
+
+# remove symlink
+
+rm $XAMPP_ROOT/lib/instantclient 2> /dev/null
+
+# install symlinks
+
+ln -s $libdir $XAMPP_ROOT/lib/instantclient
+
+# patching php.ini
+
+echo "patching php.ini..."
+
+f="$XAMPP_ROOT/etc/php.ini"
+$awk -v pw="$word" '
+f==0 && $0 == ";oci8mark" {
+		print "; patched by oci8 add-on"
+		print ";"$0                              
+		print "extension=oci8.so"
+		f=1                                                                    
+		next
+	}
+	{
+		print
+	}
+' $f > /tmp/lampp$$
+cp /tmp/lampp$$ $f
+rm /tmp/lampp$$
+
+$GETTEXT -s "OCI8 add-on activation likely successful."
+
+if testrun "$XAMPP_ROOT/logs/httpd.pid" httpd
+then
+	$XAMPP_ROOT/xampp restartapache
+fi
+

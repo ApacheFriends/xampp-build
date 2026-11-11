@@ -1,0 +1,71 @@
+#!/bin/bash
+# Copyright 2005 by Kai 'Oswald' Seidler, oswald@apachefriends.org
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+	macosx)
+		XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles/"
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+if test "$1" = "start" -o "$1" = "stop"  -o "$1" = "reload"
+then
+	action=$1
+else
+	echo "Use start, stop or reload as parameter."
+	exit 1
+fi
+
+checkRoot
+
+	
+for i in $XAMPP_ROOT/etc/xampp/start*
+do
+	f=`basename $i`
+	a=`echo $f | sed 's/^start//'`
+	if test "$a" = "ssl" -o "$a" = "ftp"
+	then
+		continue
+	fi
+	$XAMPP_ROOT/share/addons/$a $action
+done

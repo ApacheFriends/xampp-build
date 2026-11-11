@@ -1731,8 +1731,8 @@ namespace eval xampptcl::util {
         }
     }
 
-    proc substituteParametersInFile {filename substitutionParams {raiseErrorIfNotMatch 0} {encoding {}}} {
-        set text [xampptcl::file::read $filename $encoding]
+    proc substituteParametersInFile {filename substitutionParams {raiseErrorIfNotMatch 0} {encoding {}} {translation {}}} {
+        set text [xampptcl::file::read $filename $encoding $translation]
 	set found 0
 	foreach {pattern value} $substitutionParams {
 	    if {[string first $pattern $text] != "-1"} {
@@ -1744,7 +1744,7 @@ namespace eval xampptcl::util {
 	    }
 	}
 	if { $found == "1" } {
-	    xampptcl::file::write $filename $text $encoding
+	    xampptcl::file::write $filename $text $encoding $translation
 	}
     }
 
@@ -2296,20 +2296,27 @@ namespace eval ::xampptcl::file {
         set prevText [xampptcl::file::read $dest $encoding]
         xampptcl::file::write $dest $prevText$text $encoding
     }
-    proc write {dest text {encoding {}}} {
+    proc write {dest text {encoding {}} {translation {}}} {
         set f [open $dest w]
-	if {$encoding != ""} {
-	    fconfigure $f -encoding $encoding
-	}
+        if {$encoding != ""} {
+            fconfigure $f -encoding $encoding
+        }
+        if {$translation != ""} {
+            fconfigure $f -translation $translation
+        }
+
         puts -nonewline $f $text
         close $f
     }
 
-    proc read {dest {encoding {}}} {
+    proc read {dest {encoding {}} {translation {}}} {
         set f [open $dest r]
-	if {$encoding != ""} {
-	    fconfigure $f -encoding $encoding
-	}
+        if {$encoding != ""} {
+            fconfigure $f -encoding $encoding
+        }
+        if {$translation != ""} {
+            fconfigure $f -translation $translation
+        }
 
         set r [::read $f]
         close $f

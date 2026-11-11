@@ -1,0 +1,143 @@
+
+export GETTEXT=$XAMPP_ROOT/bin/gettext
+export TEXTDOMAIN=xampp
+
+bon="[1m"
+boff="[m"
+
+function checkRoot() {
+	description="$1"
+	
+	if test $(id -u) -ne 0; then
+		if test -z "$description"; then
+			description=$($GETTEXT 'perform this action')
+		fi
+		
+		printf "$($GETTEXT 'You need to be root to %s.')\n" "$description"
+		exit 2
+	fi
+}
+
+function testport() {
+	if netstat -an | egrep "[.:]$1 .*LISTEN" > /dev/null
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function testrun() {
+	# if Solaris use BSD's ps
+	if test -f /usr/ucb/ps
+	then
+		ps=/usr/ucb/ps
+	else
+		ps=ps
+	fi
+
+	if test -f $1
+	then
+		pid=`cat $1`
+        if [ "x$pid" != "x" ] && $ps ax 2>/dev/null | egrep "^ *$pid.*$2" > /dev/null
+		then
+			return 0
+		else
+			rm $1
+			return 1
+		fi
+	else
+		return 1
+	fi
+}
+
+for i in gawk mawk nawk awk
+do
+	for j in /usr/bin /bin /usr/local/bin
+	do
+		if test -f $j/$i
+		then
+			awk="$j/$i"
+			break
+		fi
+	done
+
+	if test "$awk" != ""
+	then	
+		break
+	fi
+done
+
+if test "$awk" = ""
+then
+	echo "XAMPP: " $($GETTEXT 'Please install gawk or mawk. I need this to continue...') >&2
+	exit 1
+fi
+
+function askn
+{
+	while true
+	do
+		$de && echo -n "XAMPP: $@ [nein] "
+		$de || echo -n "XAMPP: $@ [no] "
+		read a
+		if test -z "$a"
+		then
+			a="n"
+		fi
+		case $a in
+			y|j|ja|yes) return 0;;
+			n|no|nein) return 1;;
+		esac
+	done
+}
+
+function asky
+{
+	while true
+	do
+		$de && echo -n "XAMPP: $@ [ja] "
+		$de || echo -n "XAMPP: $@ [yes] "
+		read a
+		if test -z "$a"
+		then
+			a="y"
+		fi
+		case $a in
+			y|j|ja|yes) return 0;;
+			n|no|nein) return 1;;
+		esac
+	done
+}
+
+function askp
+{
+	while true
+	do
+		echo -n "XAMPP: $1 " >&2
+		stty -echo
+		read a
+		stty echo
+		echo "" >&2
+
+		echo -n "XAMPP: $2 " >&2
+		stty -echo
+		read b
+		stty echo
+		echo "" >&2
+
+		if test "$a" = "$b"
+		then
+			if test "$3" = "nocrypt"
+			then
+				echo "$a"
+				return 0;
+			else
+				$XAMPP_ROOT/bin/php $XAMPP_ROOT/share/xampp/crypt "$a"
+				return 0;
+			fi
+		fi
+
+        echo "XAMPP: " $($GETTEXT "Passwords doen't match. Please try again.") >&2
+	done
+}

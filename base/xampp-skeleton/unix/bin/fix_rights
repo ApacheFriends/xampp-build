@@ -1,0 +1,28 @@
+#!/bin/sh
+
+BASE=/Applications/XAMPP
+BASEX=/Applications/XAMPP/xamppfiles
+
+chown -R root:admin ${BASE}
+chmod -R ug+rwX,a+X ${BASE}
+chmod -R og-w ${BASEX}/bin
+chmod -R og-w ${BASEX}/lib
+chmod -R og-w ${BASEX}/share
+chmod -R og-w ${BASEX}/sbin
+chown -R daemon:daemon ${BASEX}/htdocs/xampp/sqlite
+chown -R daemon:daemon ${BASEX}/htdocs/webalizer
+chown daemon:daemon ${BASEX}/htdocs/index.php
+chown daemon:daemon ${BASEX}/phpmyadmin/config.inc.php
+chown daemon:daemon ${BASEX}/htdocs/xampp/lang.tmp
+chmod a+rx ${BASEX}/htdocs/xampp/guestbook-*.pl
+chmod a+rx ${BASEX}/htdocs/xampp/cgi.cgi
+chmod a+rx ${BASEX}/htdocs/xampp/perl.pl
+chown -R mysql:mysql ${BASEX}/var/mysql
+chmod -R 660 ${BASEX}/var/mysql
+chmod 770 ${BASEX}/var/mysql/*
+chown daemon:daemon ${BASEX}/htdocs/xampp/guestbook.dat
+chmod 664 ${BASEX}/htdocs/xampp/guestbook.dat
+chown -R daemon:daemon ${BASEX}/temp
+chmod 775 ${BASEX}/var/mysql
+
+touch /Applications/XAMPP/xamppfiles/etc/xampp/rights_fixed

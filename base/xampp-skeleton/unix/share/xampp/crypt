@@ -1,0 +1,14 @@
+#!@@BITNAMI_XAMPP_ROOT@@/bin/php -q
+<?
+	function make_seed() {
+	    list($usec, $sec) = explode(' ', microtime());
+	    return (float) $sec + ((float) $usec * 100000);
+	}
+	srand(make_seed());
+	$random=rand();
+	$chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz./";
+	$salt=substr($chars,$random % 64,1).substr($chars,($random/64)%64,1);
+	$pass=$argv[1];
+	$crypted = crypt($pass,$salt);
+	echo $crypted."\n";
+?>

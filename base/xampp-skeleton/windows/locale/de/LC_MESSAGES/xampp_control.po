@@ -1,0 +1,1169 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: UDP Manager\n"
+"POT-Creation-Date: 2013-03-24 19:21\n"
+"PO-Revision-Date: 2013-04-02 19:44-0500\n"
+"Last-Translator: Mark <noone@email.com>\n"
+"Language-Team: Strueber-IT\n"
+"Language: en_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SourceCharset: iso-8859-1\n"
+"X-Poedit-Basepath: C:\\Delphi\\xampp_control3\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#. fConfig..Caption
+#: uConfig.dfm:4
+msgid "Configuration of Control Panel"
+msgstr "Konfiguration des Control Panels"
+
+#. fConfig..lblEditor..Caption
+#: uConfig.dfm:33
+msgid "Editor:"
+msgstr "Editor:"
+
+#. fConfig..lblBrowser..Caption
+#: uConfig.dfm:44
+msgid "Browser (empty = system default)"
+msgstr "Browser (leer = Systemvorgabe)"
+
+#. fConfig..bSave..Caption
+#. fConfigUserDefined..bSave..Caption
+#. fLanguage..bOkay..Caption
+#. fLogOptions..bSave..Caption
+#. fServiceSettings..bSave..Caption
+#: uConfig.dfm:110 uConfigUserDefined.dfm:69 uLanguage.dfm:191
+#: uLogOptions.dfm:92 uServiceSettings.dfm:43
+msgid "Save"
+msgstr "Speichern"
+
+#. fConfig..bAbort..Caption
+#. fConfigUserDefined..bAbort..Caption
+#. fLanguage..bAbort..Caption
+#. fLogOptions..bCancel..Caption
+#. fServiceSettings..bCancel..Caption
+#: uConfig.dfm:154 uConfigUserDefined.dfm:112 uLanguage.dfm:233
+#: uLogOptions.dfm:134 uServiceSettings.dfm:79
+msgid "Abort"
+msgstr "Abbruch"
+
+#. fConfig..cbDebug..Caption
+#: uConfig.dfm:251
+msgid "Show debug information"
+msgstr "zeige Debug-Informationen"
+
+#. fConfig..cbDebugDetails....Items.Strings
+#: uConfig.dfm:267
+msgid "Details"
+msgstr "Details"
+
+#. fConfig..cbDebugDetails....Items.Strings
+#: uConfig.dfm:268
+msgid "More Details"
+msgstr "mehr Details"
+
+#. fConfig..grpAutostart..Caption
+#: uConfig.dfm:280
+msgid " Autostart of modules "
+msgstr " Module automatisch starten "
+
+#. fConfig..grpAutostart..lblAutostart....Caption
+#: uConfig.dfm:299
+msgid "Selected modules will be started on next launch of the Control Panel."
+msgstr ""
+"ausgewählte Module werden beim nächsten Start des Control Panels automatisch "
+"gestartet."
+
+#. fConfig..grpAutostart..cbASApache..Caption
+#. fConfigUserDefined..pcUserDefConf..pApache..Caption
+#. fMain..gbModules..pApacheStatus..Caption
+#. fMain..puSystray..ApacheTray..Caption
+#. fServiceSettings..pcSettings..pApache..Caption
+#: uConfig.dfm:320 uConfigUserDefined.dfm:153 uMain.dfm:1487 uMain.dfm:3012
+#: uServiceSettings.dfm:118
+msgid "Apache"
+msgstr "Apache"
+
+#. fConfig..grpAutostart..cbASMySQL..Caption
+#. fConfigUserDefined..pcUserDefConf..pMySQL..Caption
+#. fMain..gbModules..pMySQLStatus..Caption
+#. fMain..puSystray..MySQLTray..Caption
+#. fServiceSettings..pcSettings..pMySQL..Caption
+#: uConfig.dfm:332 uConfigUserDefined.dfm:223 uMain.dfm:1592 uMain.dfm:3020
+#: uServiceSettings.dfm:193
+msgid "MySQL"
+msgstr "MySQL"
+
+#. fConfig..grpAutostart..cbASFileZilla..Caption
+#. fConfigUserDefined..pcUserDefConf..pFileZilla..Caption
+#. fMain..gbModules..pFileZillaStatus..Caption
+#. fMain..puSystray..FileZillaTray..Caption
+#. fServiceSettings..pcSettings..pFileZilla..Caption
+#: uConfig.dfm:344 uConfigUserDefined.dfm:294 uMain.dfm:1606 uMain.dfm:3028
+#: uServiceSettings.dfm:250
+msgid "FileZilla"
+msgstr "FileZilla"
+
+#. fConfig..grpAutostart..cbASMercury..Caption
+#. fConfigUserDefined..pcUserDefConf..pMercury..Caption
+#. fMain..gbModules..pMercuryStatus..Caption
+#. fMain..puSystray..MercuryTray..Caption
+#. fServiceSettings..pcSettings..pMercury..Caption
+#: uConfig.dfm:356 uConfigUserDefined.dfm:365 uMain.dfm:1620 uMain.dfm:3036
+#: uServiceSettings.dfm:327
+msgid "Mercury"
+msgstr "Mercury"
+
+#. fConfig..grpAutostart..cbASTomcat..Caption
+#. fConfigUserDefined..pcUserDefConf..TabSheet5..Caption
+#. fMain..gbModules..pTomcatStatus..Caption
+#. fMain..puSystray..TomcatTray..Caption
+#. fServiceSettings..pcSettings..pTomcat..Caption
+#: uConfig.dfm:364 uConfigUserDefined.dfm:436 uMain.dfm:1731 uMain.dfm:3044
+#: uServiceSettings.dfm:484
+msgid "Tomcat"
+msgstr "Tomcat"
+
+#. fConfig..cbCheckDefaultPorts..Caption
+#: uConfig.dfm:377
+msgid "Check default ports on startup"
+msgstr "Überprüfe Standardports beim Start"
+
+#. fConfig..bLanguage..Caption
+#: uConfig.dfm:390
+msgid "Change Language"
+msgstr "Sprachauswahl"
+
+#. fConfig..bConfigUserdefined..Caption
+#: uConfig.dfm:404
+msgid "User Defined Files"
+msgstr "Benutzerdefinierte Dateien"
+
+#. fConfig..cbTomcatVisible..Caption
+#: uConfig.dfm:419
+msgid "Enable Tomcat output window"
+msgstr "Aktiviere Tomcat Ausgabefenster"
+
+#. fConfig..bLogSettings..Caption
+#. fLogOptions..Caption
+#: uConfig.dfm:428 uLogOptions.dfm:4
+msgid "Log Options"
+msgstr "Log-Optionen"
+
+#. fConfig..bServiceSettings..Caption
+#: uConfig.dfm:437
+msgid "Service and Port Settings"
+msgstr "Dienste und Ports einstellen"
+
+#. fConfig..cbMinimized..Caption
+#: uConfig.dfm:446
+msgid "Start Control Panel Minimized"
+msgstr "Control Panel minimiert starten"
+
+#. fConfig..OpenDialog..DefaultExt
+#: uConfig.dfm:450
+msgid "exe"
+msgstr "exe"
+
+#. fConfig..OpenDialog..Filter
+#: uConfig.dfm:451
+msgid "Executables (*.exe)|*.exe|All files (*.*)|*.*"
+msgstr "Programme (*.exe)|*.exe|Alle Dateien (*.*)|*.*"
+
+#. fConfigUserDefined..Caption
+#: uConfigUserDefined.dfm:4
+msgid "User-defined log/config-files"
+msgstr "Benutzerdefinierte Log- und Konfiguirationsdateien"
+
+#. fConfigUserDefined..lblDescription1....Caption
+#: uConfigUserDefined.dfm:34
+msgid "Enter user defined files. Files must be relative to xampp-basedir!"
+msgstr ""
+"Gib benutzerdefinierte Dateinamen relativ zum XAMPP-Basisverzeichnis ein!"
+
+#. fConfigUserDefined..lblDescription2..Caption
+#: uConfigUserDefined.dfm:51
+msgid "Example: \"apache\\conf\\extra\\httpd-info.conf\""
+msgstr "Beispiel: \"apache\\conf\\extra\\httpd-info.conf\""
+
+#. fConfigUserDefined..pcUserDefConf..pApache..pnlApache..lblApacheConf..Caption
+#. fConfigUserDefined..pcUserDefConf..pMySQL..pnlMySQL..lblMySQLConf..Caption
+#. fConfigUserDefined..pcUserDefConf..pFileZilla..pnlFileZilla..lblFileZillaConf..Caption
+#. fConfigUserDefined..pcUserDefConf..pMercury..pnlMercury..lblMercuryConf..Caption
+#. fConfigUserDefined..pcUserDefConf..TabSheet5..pnlTomcat..lblTomcatConf..Caption
+#. fMain..bConfig..Caption
+#. fMain..gbModules..bApacheConfig..Caption
+#. fMain..gbModules..bMySQLConfig..Caption
+#. fMain..gbModules..bFileZillaConfig..Caption
+#. fMain..gbModules..bMercuryConfig..Caption
+#. fMain..gbModules..bTomcatConfig..Caption
+#: uConfigUserDefined.dfm:171 uConfigUserDefined.dfm:242
+#: uConfigUserDefined.dfm:313 uConfigUserDefined.dfm:384
+#: uConfigUserDefined.dfm:455 uMain.dfm:1049 uMain.dfm:1500 uMain.dfm:1526
+#: uMain.dfm:1552 uMain.dfm:1578 uMain.dfm:1717
+msgid "Config"
+msgstr "Konfig"
+
+#. fConfigUserDefined..pcUserDefConf..pApache..pnlApache..lblApacheLogs..Caption
+#. fConfigUserDefined..pcUserDefConf..pMySQL..pnlMySQL..lblMySQLLogs..Caption
+#. fConfigUserDefined..pcUserDefConf..pFileZilla..pnlFileZilla..lblFileZillaLogs..Caption
+#. fConfigUserDefined..pcUserDefConf..pMercury..pnlMercury..lblMercuryLogs..Caption
+#. fConfigUserDefined..pcUserDefConf..TabSheet5..pnlTomcat..lblTomcatLogs..Caption
+#. fMain..gbModules..bApacheLogs..Caption
+#. fMain..gbModules..bMySQLLogs..Caption
+#. fMain..gbModules..bFileZillaLogs..Caption
+#. fMain..gbModules..bMercurylogs..Caption
+#. fMain..gbModules..bTomcatLogs..Caption
+#: uConfigUserDefined.dfm:188 uConfigUserDefined.dfm:259
+#: uConfigUserDefined.dfm:330 uConfigUserDefined.dfm:401
+#: uConfigUserDefined.dfm:472 uMain.dfm:1513 uMain.dfm:1539 uMain.dfm:1565
+#: uMain.dfm:1678 uMain.dfm:1744
+msgid "Logs"
+msgstr "Logs"
+
+#. fHelp..Caption
+#. fMain..bHelp..Caption
+#: uHelp.dfm:4 uMain.dfm:1843
+msgid "Help"
+msgstr "Hilfe"
+
+#. fHelp..lblMainProg..Caption
+#: uHelp.dfm:30
+msgid "Programmed by Steffen Strueber"
+msgstr "Programmiert von Steffen Strueber"
+
+#. fHelp..lblSecondProg..Caption
+#: uHelp.dfm:47
+msgid "Enhanced by hackattack142"
+msgstr "Erweitert von hackattack142"
+
+#. fHelp..lblHelpEng..Caption
+#: uHelp.dfm:64
+msgid "Need Help? Visit the XAMPP forums (English):"
+msgstr "Brauchst du Hilfe? Besuche die XAMPP Foren (englisch):"
+
+#. fHelp..lblHelpGer..Caption
+#: uHelp.dfm:81
+msgid "Need Help? Visit the XAMPP forums (German):"
+msgstr "Brauchst du Hilfe? Besuche die XAMPP Foren (deutsch):"
+
+#. fHelp..bHelpClose..Caption
+#: uHelp.dfm:127
+msgid "Close"
+msgstr "Schließen"
+
+#. fHelp..bReadMe..Caption
+#: uHelp.dfm:136
+msgid "View ReadMe"
+msgstr "zeige ReadMe"
+
+#. fLanguage..Caption
+#: uLanguage.dfm:5
+msgid "Language"
+msgstr "Sprache"
+
+#. fLogOptions..lblLogFont..Caption
+#: uLogOptions.dfm:23
+msgid "Log Font"
+msgstr "Schriftart"
+
+#. fLogOptions..lblLogFontSize..Caption
+#: uLogOptions.dfm:36
+msgid "Log Font Size"
+msgstr "Schriftgröße"
+
+#. fLogOptions..bSelect..Caption
+#: uLogOptions.dfm:63
+msgid "Select Font"
+msgstr "Schrift auswählen"
+
+#. fMain..Caption
+#. fMain..lHeader..Caption
+#: uMain.dfm:4 uMain.dfm:1011
+msgid "XAMPP Control Panel v"
+msgstr "XAMPP Control Panel v"
+
+#. fMain..bSCM..Caption
+#: uMain.dfm:1095
+msgid "Services"
+msgstr "Dienste"
+
+#. fMain..gbModules..Caption
+#: uMain.dfm:1141
+msgid " Modules "
+msgstr " Module "
+
+#. fMain..gbModules..lPIDs..Caption
+#: uMain.dfm:1159
+msgid "PID(s)"
+msgstr "PID(s)"
+
+#. fMain..gbModules..lPorts..Caption
+#: uMain.dfm:1177
+msgid "Port(s)"
+msgstr "Port(s)"
+
+#. fMain..gbModules..lServices..Caption
+#: uMain.dfm:1303
+msgid "Service"
+msgstr "Dienst"
+
+#. fMain..gbModules..lModules..Caption
+#: uMain.dfm:1321
+msgid "Module"
+msgstr "Modul"
+
+#. fMain..gbModules..lActions..Caption
+#: uMain.dfm:1338
+msgid "Actions"
+msgstr "Aktionen"
+
+#. fMain..gbModules..bApacheAction..Caption
+#. fMain..gbModules..bMySQLAction..Caption
+#. fMain..gbModules..bFileZillaAction..Caption
+#. fMain..gbModules..bMercuryAction..Caption
+#. fMain..gbModules..bTomcatAction..Caption
+#. fMain..puSystray..ApacheTray..ApacheTrayControl..Caption
+#. fMain..puSystray..MySQLTray..MySQLTrayControl..Caption
+#. fMain..puSystray..FileZillaTray..FileZillaTrayControl..Caption
+#. fMain..puSystray..MercuryTray..MercuryTrayControl..Caption
+#. fMain..puSystray..TomcatTray..TomcatTrayControl..Caption
+#: uMain.dfm:1382 uMain.dfm:1408 uMain.dfm:1434 uMain.dfm:1460 uMain.dfm:1691
+#: uMain.dfm:3015 uMain.dfm:3023 uMain.dfm:3031 uMain.dfm:3039 uMain.dfm:3047
+#: uApache.pas:451 uApache.pas:454 uFileZilla.pas:417 uFileZilla.pas:420
+#: uMercury.pas:339 uMercury.pas:342 uMySQL.pas:422 uMySQL.pas:425
+#: uTomcat.pas:444 uTomcat.pas:447
+msgid "Start"
+msgstr "Starten"
+
+#. fMain..gbModules..bApacheAdmin..Caption
+#. fMain..gbModules..bMySQLAdmin..Caption
+#. fMain..gbModules..bFileZillaAdmin..Caption
+#. fMain..gbModules..bMercuryAdmin..Caption
+#. fMain..gbModules..bTomcatAdmin..Caption
+#: uMain.dfm:1395 uMain.dfm:1421 uMain.dfm:1447 uMain.dfm:1473 uMain.dfm:1704
+msgid "Admin"
+msgstr "Admin"
+
+#. fMain..gbModules..bMySQLService..Hint
+#. fMain..gbModules..bFileZillaService..Hint
+#. fMain..gbModules..bApacheService..Hint
+#. fMain..gbModules..bTomcatService..Hint
+#: uMain.dfm:1629 uMain.dfm:1644 uMain.dfm:1659 uMain.dfm:1753
+msgid "Is installed as a Windows Service?"
+msgstr "Status \"als Windows Dienst installiert\": X = Nein - ✔ = Ja"
+
+#. fMain..bQuit..Caption
+#. fMain..puSystray..miTerminate..Caption
+#: uMain.dfm:1797 uMain.dfm:3055
+msgid "Quit"
+msgstr "Beenden"
+
+#. fMain..bExplorer..Caption
+#: uMain.dfm:1889
+msgid "Explorer"
+msgstr "Explorer"
+
+#. fMain..bNetstat..Caption
+#: uMain.dfm:1935
+msgid "Netstat"
+msgstr "Netstat"
+
+#. fMain..bXamppShell..Caption
+#: uMain.dfm:1981
+msgid "Shell"
+msgstr "Shell"
+
+#. fMain..puSystray..miShowHide..Caption
+#: uMain.dfm:3004
+msgid "Show / Hide"
+msgstr "Anzeigen / Verstecken"
+
+#. fMain..puLog..LogCopy..Caption
+#: uMain.dfm:3744
+msgid "Copy"
+msgstr "Kopieren"
+
+#. fMain..puLog..LogSelectAll..Caption
+#: uMain.dfm:3748
+msgid "Select All"
+msgstr "Alle auswählen"
+
+#. fNetstat..Caption
+#: uNetstat.dfm:5
+msgid "Netstat - TCP Listening sockets"
+msgstr "Netstat - Offene TCP Sockets"
+
+#. fNetstat..lvSockets......Caption
+#: uNetstat.dfm:37
+msgid "Address"
+msgstr "Adresse"
+
+#. fNetstat..lvSockets......Caption
+#: uNetstat.dfm:42
+msgid "Port"
+msgstr "Port"
+
+#. fNetstat..lvSockets......Caption
+#: uNetstat.dfm:47
+msgid "PID"
+msgstr "PID"
+
+#. fNetstat..lvSockets......Caption
+#: uNetstat.dfm:51
+msgid "Name"
+msgstr "Name"
+
+#. fNetstat..bRefresh..Caption
+#: uNetstat.dfm:81
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#. fNetstat..pnlActiveExample..Caption
+#: uNetstat.dfm:107
+msgid "Active socket"
+msgstr "Offener Socket"
+
+#. fNetstat..pnlOldExample..Caption
+#: uNetstat.dfm:127
+msgid "Old socket"
+msgstr "Alter Socket"
+
+#. fNetstat..pnlNewExample..Caption
+#: uNetstat.dfm:147
+msgid "New socket"
+msgstr "Neuer Socket"
+
+#. fServiceSettings..Caption
+#: uServiceSettings.dfm:4
+msgid "Service Settings"
+msgstr "Diensteinstellungen"
+
+#. fServiceSettings..lMain....Caption
+#: uServiceSettings.dfm:29
+msgid ""
+"Use this form to set service-specific and default port settings.  You can "
+"set the name and default ports the XAMPP Control Panel will check.  Do not "
+"include spaces or quotes in names.  This does NOT change the ports that the "
+"services and programs use.  You still need to change those in the services' "
+"configuration files."
+msgstr ""
+"Hier kannst du den Namen und die Standardports einstellen, die das Control "
+"Panel überprüft. Diese Einstellungen ändern NICHT die Ports, den die Dienste "
+"und Programme verwenden (Diese Einstellung musst du weiterhin in den "
+"jeweiligen Konfigurationsdaten ändern). Leer- oder Anführungszeichen in den "
+"Namenseinstellungen sind nicht erlaubt. "
+
+#. fServiceSettings..pcSettings..pApache..gApache..Caption
+#: uServiceSettings.dfm:125
+msgid "Apache Settings"
+msgstr "Apache Einstellungen"
+
+#. fServiceSettings..pcSettings..pApache..gApache..lApacheName..Caption
+#. fServiceSettings..pcSettings..pMySQL..gMySQL..lMySQLName..Caption
+#. fServiceSettings..pcSettings..pFileZilla..gFileZilla..lFileZillaName..Caption
+#. fServiceSettings..pcSettings..pTomcat..gTomcat..lTomcatName..Caption
+#: uServiceSettings.dfm:135 uServiceSettings.dfm:219 uServiceSettings.dfm:276
+#: uServiceSettings.dfm:524
+msgid "Service Name"
+msgstr "Dienstname"
+
+#. fServiceSettings..pcSettings..pApache..gApache..lApacheMain..Caption
+#. fServiceSettings..pcSettings..pMySQL..gMySQL..lMySQLMain..Caption
+#. fServiceSettings..pcSettings..pFileZilla..gFileZilla..lFileZillaMain..Caption
+#. fServiceSettings..pcSettings..pTomcat..gTomcat..lTomcatMain..Caption
+#: uServiceSettings.dfm:142 uServiceSettings.dfm:212 uServiceSettings.dfm:269
+#: uServiceSettings.dfm:503
+msgid "Main Port"
+msgstr "Hauptport"
+
+#. fServiceSettings..pcSettings..pApache..gApache..lApacheSSL..Caption
+#: uServiceSettings.dfm:149
+msgid "SSL Port"
+msgstr "SSL Port"
+
+#. fServiceSettings..pcSettings..pMySQL..gMySQL..Caption
+#: uServiceSettings.dfm:202
+msgid "MySQL Settings"
+msgstr "MySQL Einstellungen"
+
+#. fServiceSettings..pcSettings..pFileZilla..gFileZilla..Caption
+#: uServiceSettings.dfm:259
+msgid "FileZilla Settings"
+msgstr "FileZilla Einstellungen"
+
+#. fServiceSettings..pcSettings..pFileZilla..gFileZilla..lFileZillaAdmin..Caption
+#: uServiceSettings.dfm:283
+msgid "Admin Port"
+msgstr "Admin Port"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..Caption
+#: uServiceSettings.dfm:336
+msgid "Mercury Settings"
+msgstr "Mercury Einstellungen"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP1..Caption
+#: uServiceSettings.dfm:346
+msgid "Port 1"
+msgstr "Port 1"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP2..Caption
+#: uServiceSettings.dfm:353
+msgid "Port 2"
+msgstr "Port 2"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP3..Caption
+#: uServiceSettings.dfm:360
+msgid "Port 3"
+msgstr "Port 3"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP4..Caption
+#: uServiceSettings.dfm:367
+msgid "Port 4"
+msgstr "Port 4"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP5..Caption
+#: uServiceSettings.dfm:374
+msgid "Port 5"
+msgstr "Port 5"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP6..Caption
+#: uServiceSettings.dfm:381
+msgid "Port 6"
+msgstr "Port 6"
+
+#. fServiceSettings..pcSettings..pMercury..gMercury..lMercuryP7..Caption
+#: uServiceSettings.dfm:388
+msgid "Port 7"
+msgstr "Port 7"
+
+#. fServiceSettings..pcSettings..pTomcat..gTomcat..Caption
+#: uServiceSettings.dfm:493
+msgid "Tomcat Settings"
+msgstr "Tomcat Einstellungen"
+
+#. fServiceSettings..pcSettings..pTomcat..gTomcat..lTomcatHTTP..Caption
+#: uServiceSettings.dfm:510
+msgid "HTTP Port"
+msgstr "HTTP Port"
+
+#. fServiceSettings..pcSettings..pTomcat..gTomcat..lTomcatAJP..Caption
+#: uServiceSettings.dfm:517
+msgid "AJP Port"
+msgstr "AJP Port"
+
+#. 64 bit? dann DIESE shell starten!
+#: uApache.pas:54 uFileZilla.pas:220 uMySQL.pas:50 uTomcat.pas:46
+#: uTomcat.pas:224 uTomcat.pas:247 uTomcat.pas:287 uTomcat.pas:329
+msgid "Executing \"%s\" \"%s\""
+msgstr "Führe aus: \"%s\" \"%s\""
+
+#: uApache.pas:59 uApache.pas:240 uApache.pas:255 uApache.pas:279
+#: uFileZilla.pas:43 uFileZilla.pas:239 uFileZilla.pas:250 uFileZilla.pas:269
+#: uFileZilla.pas:280 uMain.pas:678 uMain.pas:687 uMain.pas:865
+#: uMercury.pas:183 uMySQL.pas:55 uMySQL.pas:231 uMySQL.pas:244 uMySQL.pas:266
+#: uTomcat.pas:51 uTomcat.pas:270 uTomcat.pas:312
+msgid "Executing \"%s\""
+msgstr "Führe aus: \"%s\""
+
+#: uApache.pas:71 uFileZilla.pas:55 uMySQL.pas:67 uTomcat.pas:63
+msgid "Service installed"
+msgstr "Dienst installiert"
+
+#: uApache.pas:75 uFileZilla.pas:59 uMySQL.pas:71 uTomcat.pas:67
+msgid "Service not installed"
+msgstr "Dienst nicht installiert"
+
+#: uApache.pas:76 uFileZilla.pas:60 uMySQL.pas:72 uTomcat.pas:68
+msgid "Checking for service (name=\"%s\"): %s"
+msgstr "Überprüfe Dienst (name=\"%s\"): %s"
+
+#: uApache.pas:80 uFileZilla.pas:64 uMySQL.pas:76 uTomcat.pas:72
+msgid "Service Path: %s"
+msgstr "Dienst-Pfad: %s"
+
+#: uApache.pas:84 uFileZilla.pas:68 uMySQL.pas:80 uTomcat.pas:76
+msgid "%s Service detected with wrong path"
+msgstr "%s Dienst mit falschem Pfad erkannt"
+
+#: uApache.pas:85 uFileZilla.pas:69 uMySQL.pas:81 uTomcat.pas:77
+msgid "Change XAMPP %s and Control Panel settings or"
+msgstr "Ändere XAMPP %s und Control Panel Einstellungen oder"
+
+#: uApache.pas:86 uFileZilla.pas:70 uMySQL.pas:82 uTomcat.pas:78
+msgid "Uninstall/disable the other service manually first"
+msgstr "Entferne/Deaktiviere den anderen Windows Dienst vorher"
+
+#: uApache.pas:87 uFileZilla.pas:71 uMySQL.pas:83 uTomcat.pas:79
+msgid "Found Path: %s"
+msgstr "Pfad gefunden: %s"
+
+#: uApache.pas:88
+msgid "Expected Path: \"%sapache\\bin\\%s\" -k runservice"
+msgstr "Erwarteter Pfad: \"%sapache\\bin\\%s\" -k runservice"
+
+#: uApache.pas:92 uFileZilla.pas:76 uMySQL.pas:89 uTomcat.pas:84
+msgid "Service Path: Service Not Installed"
+msgstr "Dienst-Pfad: Dienst nicht installiert"
+
+#: uApache.pas:103 uFileZilla.pas:87 uMercury.pas:83 uMySQL.pas:99
+#: uTomcat.pas:95
+msgid "Initializing module..."
+msgstr "Initialisiere Modul..."
+
+#: uApache.pas:105 uFileZilla.pas:90 uMercury.pas:85 uMySQL.pas:101
+#: uTomcat.pas:100
+msgid "Checking for module existence..."
+msgstr "Prüfe ob Modul existiert..."
+
+#: uApache.pas:109 uFileZilla.pas:97 uMercury.pas:89 uMySQL.pas:105
+#: uTomcat.pas:104
+msgid "Problem detected: %s Not Found!"
+msgstr "Problem festgestellt: %s nicht gefunden!"
+
+#: uApache.pas:110 uFileZilla.pas:98 uMercury.pas:90 uMySQL.pas:106
+#: uTomcat.pas:105
+msgid "Disabling %s buttons"
+msgstr "Deaktiviere %s Buttons"
+
+#: uApache.pas:111 uFileZilla.pas:99 uMercury.pas:91 uMySQL.pas:107
+#: uTomcat.pas:106
+msgid "Run this program from your XAMPP root directory!"
+msgstr "Starte das Programm aus deinem XAMPP Basisverzeichnis!"
+
+#: uApache.pas:119 uFileZilla.pas:110 uMySQL.pas:115 uTomcat.pas:114
+msgid "%s Service is disabled."
+msgstr "%s Dienst ist deaktiviert."
+
+#: uApache.pas:123 uFileZilla.pas:114 uMercury.pas:97 uMySQL.pas:119
+#: uTomcat.pas:118
+msgid "Checking for required tools..."
+msgstr "Prüfe benötigte Tools..."
+
+#: uApache.pas:153 uFileZilla.pas:144 uMercury.pas:128 uMySQL.pas:147
+#: uTomcat.pas:164
+msgid "Checking default ports..."
+msgstr "Überprüfe Standardports..."
+
+#: uApache.pas:160 uFileZilla.pas:151 uMercury.pas:135 uMySQL.pas:152
+#: uTomcat.pas:171
+msgid "Portblocker Detected: %s"
+msgstr "Port-blockierende Anwendung gefunden: %s"
+
+#: uApache.pas:161 uFileZilla.pas:152 uMercury.pas:136 uMySQL.pas:153
+#: uTomcat.pas:172
+msgid "Checking for App: %s"
+msgstr "Prüfe Anwendung: %s"
+
+#: uApache.pas:163 uFileZilla.pas:154 uMySQL.pas:155 uTomcat.pas:174
+msgid "Checking for Service: %s"
+msgstr "Prüfe Windows Dienst von: %s"
+
+#. if (Pos(LowerCase(ServerApp), LowerCase(PortBlocker)) <> 0) then
+#. if (Pos(LowerCase(ServerApp), LowerCase(PortBlocker)) <> 0) then
+#. if (Pos(LowerCase(ServerApp), LowerCase(PortBlocker)) <> 0) then
+#. if (Pos(LowerCase(ServerApp), LowerCase(PortBlocker)) <> 0) then
+#. if (Pos(LowerCase(ServerApp), LowerCase(PortBlocker)) <> 0) then
+#: uApache.pas:167 uFileZilla.pas:158 uMercury.pas:140 uMySQL.pas:159
+#: uTomcat.pas:178
+msgid "Portblocker Path: %s"
+msgstr "Pfad der Port-blockierenden Anwendung: %s"
+
+#: uApache.pas:168 uFileZilla.pas:159 uMercury.pas:141 uMySQL.pas:160
+#: uTomcat.pas:179
+msgid "Portblocker Service Path: %s"
+msgstr "Pfad des Port-blockierenden Dienstes: %s"
+
+#: uApache.pas:171 uFileZilla.pas:162 uMercury.pas:144 uMySQL.pas:163
+#: uTomcat.pas:187
+msgid "XAMPP %s is already running on port %d"
+msgstr "XAMPP %s ist bereits gestartet auf Port %d"
+
+#. else if (Pos(LowerCase(PortBlocker), LowerCase(path)) <> 0) and (isService = True) then
+#. else if (Pos(LowerCase(PortBlocker), LowerCase(path)) <> 0) and (isService = True) then
+#. else if (Pos(LowerCase(PortBlocker), LowerCase(path)) <> 0) and (isService = True) then
+#. else if (Pos(LowerCase(PortBlocker), LowerCase(path)) <> 0) and (isService = True) then
+#: uApache.pas:176 uFileZilla.pas:167 uMySQL.pas:168 uTomcat.pas:192
+msgid "XAMPP %s Service is already running on port %d"
+msgstr "XAMPP %s Dienst ist bereits gestartet auf Port %d"
+
+#. AddLog(Format(_('Service Path: %s'), [GetServiceWithPid(PortBlockerPID)]), ltDebug);
+#. AddLog(Format(_('Service Path: %s'), [GetServiceWithPid(PortBlockerPID)]), ltDebug);
+#. AddLog(Format(_('Service Path: %s'), [GetServiceWithPid(PortBlockerPID)]), ltDebug);
+#. AddLog(Format(_('Service Path: %s'), [GetServiceWithPid(PortBlockerPID)]), ltDebug);
+#: uApache.pas:186 uFileZilla.pas:177 uMercury.pas:153 uMySQL.pas:178
+#: uTomcat.pas:202
+msgid "Problem detected!"
+msgstr "Problem festgestellt!"
+
+#: uApache.pas:187 uMercury.pas:154
+msgid "Port %d in use by \"%s\" with PID %d!"
+msgstr "Port %d in Benutzung von \"%s\" (PID %d)!"
+
+#: uApache.pas:188 uFileZilla.pas:179 uMercury.pas:155 uMySQL.pas:180
+#: uTomcat.pas:204
+msgid "%s WILL NOT start without the configured ports free!"
+msgstr "%s wird NICHT starten, wenn die konfigurierten Ports nicht frei sind!"
+
+#: uApache.pas:189 uFileZilla.pas:180 uMercury.pas:156 uMySQL.pas:181
+#: uTomcat.pas:205
+msgid "You need to uninstall/disable/reconfigure the blocking application"
+msgstr ""
+"Die blockierende Anwendung muss deinstalliert/deaktiviert/rekonfiguriert "
+"werden oder"
+
+#: uApache.pas:190 uFileZilla.pas:181 uMercury.pas:157 uMySQL.pas:182
+#: uTomcat.pas:206
+msgid "or reconfigure %s and the Control Panel to listen on a different port"
+msgstr "%s und das Control Panel müssen auf einen anderen Port zu lauschen"
+
+#: uApache.pas:204 uFileZilla.pas:203 uMySQL.pas:195 uTomcat.pas:223
+msgid "Installing service..."
+msgstr "Installiere Dienst..."
+
+#: uApache.pas:205 uApache.pas:221 uFileZilla.pas:198 uFileZilla.pas:201
+#: uFileZilla.pas:204
+msgid "Executing \"%s %s\""
+msgstr "Führe aus: \"%s %s\""
+
+#. RC := StartService(RemoveWhiteSpace(Config.ServiceNames.Apache));
+#. RC := StopService(RemoveWhiteSpace(Config.ServiceNames.Apache));
+#. RC:=ShellExecute_AndWait('open', App, Param, '', SW_HIDE, true);
+#. RC:=ShellExecute_AndWait('open', App, Param, '', SW_HIDE, true);
+#: uApache.pas:208 uApache.pas:224 uApache.pas:244 uApache.pas:258
+#: uApache.pas:283 uFileZilla.pas:207 uFileZilla.pas:223 uFileZilla.pas:242
+#: uFileZilla.pas:253 uFileZilla.pas:272 uFileZilla.pas:283 uMercury.pas:186
+#: uMySQL.pas:199 uMySQL.pas:215 uMySQL.pas:234 uMySQL.pas:247 uMySQL.pas:269
+#: uTomcat.pas:227 uTomcat.pas:250 uTomcat.pas:273 uTomcat.pas:292
+#: uTomcat.pas:315
+msgid "Return code: %d"
+msgstr "Rückgabecode: %d"
+
+#: uApache.pas:210 uApache.pas:226 uApache.pas:248 uApache.pas:262
+#: uApache.pas:287 uFileZilla.pas:209 uFileZilla.pas:225 uFileZilla.pas:244
+#: uFileZilla.pas:255 uFileZilla.pas:274 uFileZilla.pas:285 uMercury.pas:188
+#: uMySQL.pas:201 uMySQL.pas:217 uMySQL.pas:237 uMySQL.pas:250 uMySQL.pas:272
+#: uTomcat.pas:276 uTomcat.pas:318
+msgid "There may be an error, return code: %d - %s"
+msgstr "Es könnte ein Fehler aufgetreten sein, Rückgabecode: %d - %s"
+
+#: uApache.pas:220 uTomcat.pas:246
+msgid "Uninstalling service..."
+msgstr "Deinstalliere Dienst..."
+
+#: uApache.pas:238 uFileZilla.pas:237 uMySQL.pas:229 uTomcat.pas:268
+msgid "Attempting to start %s service..."
+msgstr "Versuche %s Windows Dienst zu starten..."
+
+#: uApache.pas:253 uFileZilla.pas:249 uMercury.pas:182 uMySQL.pas:242
+#: uTomcat.pas:281
+msgid "Attempting to start %s app..."
+msgstr "Versuche %s zu starten..."
+
+#: uApache.pas:277 uFileZilla.pas:267 uMySQL.pas:264 uTomcat.pas:310
+msgid "Attempting to stop %s service..."
+msgstr "Versuche %s Windows Dienst zu stoppen..."
+
+#: uApache.pas:297 uMercury.pas:201 uMySQL.pas:282
+msgid "Attempting to stop"
+msgstr "stoppe Modul"
+
+#. RC := RunProcess(App, SW_HIDE, false);
+#: uApache.pas:303 uMercury.pas:204 uMySQL.pas:285
+msgid "Problem killing PID %d"
+msgstr "Problem beim beenden von PID %d"
+
+#: uApache.pas:304 uMercury.pas:205 uMySQL.pas:286
+msgid "Check that you have the proper privileges"
+msgstr "Prüfe ob ausreichende Rechte vorhanden sind"
+
+#: uApache.pas:310 uMercury.pas:211 uMySQL.pas:292
+msgid "No PIDs found?!"
+msgstr "Keine PIDs gefunden?!"
+
+#. Change Status
+#: uApache.pas:409 uFileZilla.pas:384 uMercury.pas:306 uMySQL.pas:389
+#: uTomcat.pas:411
+msgid "running"
+msgstr "gestartet"
+
+#: uApache.pas:412 uFileZilla.pas:387 uMercury.pas:309 uMySQL.pas:392
+#: uTomcat.pas:414
+msgid "stopped"
+msgstr "gestoppt"
+
+#: uApache.pas:416 uFileZilla.pas:391 uMercury.pas:313 uMySQL.pas:396
+#: uTomcat.pas:418
+msgid "Status change detected:"
+msgstr "Statusänderung erkannt:"
+
+#: uApache.pas:420 uFileZilla.pas:395 uMercury.pas:317 uMySQL.pas:400
+#: uTomcat.pas:422
+msgid "Error: %s shutdown unexpectedly."
+msgstr "Fehler: %s wurde unerwartet beendet"
+
+#: uApache.pas:421 uFileZilla.pas:396 uMercury.pas:318 uMySQL.pas:401
+#: uTomcat.pas:423
+msgid "This may be due to a blocked port, missing dependencies, "
+msgstr "Ursache könnte ein geblockter Port, fehlende Abhängigkeiten,"
+
+#: uApache.pas:422 uFileZilla.pas:397 uMercury.pas:319 uMySQL.pas:402
+#: uTomcat.pas:424
+msgid "improper privileges, a crash, or a shutdown by another method."
+msgstr ""
+"fehlende Berechtigungen, ein Absturz oder ein Abbruch einer anderen Methode "
+"sein."
+
+#: uApache.pas:423 uFileZilla.pas:398 uMercury.pas:320 uMySQL.pas:403
+#: uTomcat.pas:425
+msgid "Press the Logs button to view error logs and check"
+msgstr "Drücke den Logs Button um error logs zu sehen und prüfe"
+
+#: uApache.pas:424 uFileZilla.pas:399 uMercury.pas:321 uMySQL.pas:404
+#: uTomcat.pas:426
+msgid "the Windows Event Viewer for more clues"
+msgstr "im Windows Event Viewer für weitere Hinweise"
+
+#: uApache.pas:425 uFileZilla.pas:400 uMercury.pas:322 uMySQL.pas:405
+#: uTomcat.pas:427
+msgid "If you need more help, copy and post this"
+msgstr ""
+"Wenn du weitere Hilfe benötigst, kopiere den kompletten Inhalt des Log "
+"Fensters"
+
+#: uApache.pas:426 uFileZilla.pas:401 uMercury.pas:323 uMySQL.pas:406
+#: uTomcat.pas:428
+msgid "entire log window on the forums"
+msgstr "und füge ihn als Ergänzung in einem neuen Forum Eintrag hinzu."
+
+#: uApache.pas:436 uApache.pas:439 uApache.pas:444 uFileZilla.pas:409
+#: uFileZilla.pas:412 uMercury.pas:331 uMercury.pas:334 uMySQL.pas:414
+#: uMySQL.pas:417 uTomcat.pas:436 uTomcat.pas:439
+msgid "Stop"
+msgstr "Stoppen"
+
+#: uApache.pas:465 uFileZilla.pas:429 uMercury.pas:351 uMySQL.pas:434
+#: uTomcat.pas:456
+msgid "Autostart aborted: %s is already running"
+msgstr "Autostart abgebrochen: %s ist bereits gestartet"
+
+#: uApache.pas:469 uFileZilla.pas:433 uMercury.pas:355 uMySQL.pas:438
+#: uTomcat.pas:460
+msgid "Autostart active: starting..."
+msgstr "Autostart aktiv: Starte..."
+
+#: uFileZilla.pas:72
+msgid "Expected Path: \"%sFileZillaFTP\\%s\""
+msgstr "Erwarteter Pfad: \"%sFileZillaFTP\\%s\""
+
+#: uFileZilla.pas:93
+msgid "Checking for alternate module existence..."
+msgstr "Prüfe auf Vorhandensein alternativer Module..."
+
+#: uFileZilla.pas:178 uMySQL.pas:179 uTomcat.pas:203
+msgid "Port %d in use by \"%s\"!"
+msgstr "Port %d in Benutzung von \"%s\"!"
+
+#: uFileZilla.pas:197
+msgid "Setting Service Name..."
+msgstr "Dienstname einstellen..."
+
+#: uFileZilla.pas:200
+msgid "Setting Service Display Name..."
+msgstr "Dienst-Anzeigename einstellen..."
+
+#: uFileZilla.pas:279
+msgid "Attempting to stop %s app..."
+msgstr "Versuche %s zu beenden..."
+
+#: uLanguage.pas:55
+msgid "Restart application to apply changes!"
+msgstr "Die Sprachänderung wird erst nach Neustart des Control Panel aktiv!"
+
+#: uMain.pas:199 uMain.pas:302 uMain.pas:395 uMain.pas:535
+msgid ""
+"Services cannot be installed or uninstalled while the service is running!"
+msgstr ""
+"Dienste können nicht (de-)installiert werden, solange diese ausgeführt "
+"werden!"
+
+#: uMain.pas:205 uMain.pas:307 uMain.pas:400 uMain.pas:540
+msgid "Click Yes to uninstall the %s service"
+msgstr "Möchtest du %s wirklich als Dienst deinstallieren?"
+
+#: uMain.pas:216 uMain.pas:318 uMain.pas:411 uMain.pas:551
+msgid "Click Yes to install the %s service"
+msgstr "Möchtest du %s wirklich als Dienst installieren?"
+
+#: uMain.pas:228 uMain.pas:330 uMain.pas:423 uMain.pas:563
+msgid "Service was NOT (un)installed!"
+msgstr "Dienst wurde NICHT (de-)installiert"
+
+#. WinXP
+#. WinXP
+#. WinXP
+#. WinXP
+#: uMain.pas:231 uMain.pas:333 uMain.pas:426 uMain.pas:566
+msgid ""
+"One possible reason for failure: On windows security box you !!!MUST "
+"UNCHECK!!! the \"Protect my computer and data from unauthorized program "
+"activity\" checkbox!!!"
+msgstr ""
+"Mögliche Fehlerursache entdeckt: In der Windows-Sicherheitsabfrage MUSS das "
+"Häkchen bei \"Computer und Daten vor nicht autorisierter Programmaktivität "
+"schützen\" ABGEWÄHLT werden!"
+
+#: uMain.pas:236 uMain.pas:338 uMain.pas:431 uMain.pas:571
+msgid "Successful!"
+msgstr "Erfolgreich!"
+
+#: uMain.pas:263 uMain.pas:264 uMain.pas:265 uMain.pas:277 uMain.pas:278
+#: uMain.pas:361 uMain.pas:371 uMain.pas:454 uMain.pas:463 uMain.pas:503
+#: uMain.pas:511 uMain.pas:598 uMain.pas:607
+msgid "<Browse>"
+msgstr "<Durchsuchen>"
+
+#: uMain.pas:481
+msgid "Mercury cannot be run as service!"
+msgstr "Mercury kann nicht als Dienst ausgeführt werden!"
+
+#: uMain.pas:655
+msgid "File \"%s\" not found. Should it be created now?"
+msgstr "Datei \"%s\" nicht gefunden. Soll die Datei jetzt erstellt werden?"
+
+#: uMain.pas:664 uTools.pas:243 uTools.pas:337
+msgid "Error"
+msgstr "Fehler"
+
+#: uMain.pas:818
+msgid "User defined"
+msgstr "Benutzerdefiniert"
+
+#: uMain.pas:875 uMySQL.pas:196 uMySQL.pas:212
+msgid "Executing %s %s"
+msgstr "Führe aus: %s %s"
+
+#: uMain.pas:978
+msgid "Initializing Control Panel"
+msgstr "Initialisere Control Panel"
+
+#: uMain.pas:995
+msgid "Windows Version: %s %s %s"
+msgstr "Windows Version: %s %s %s"
+
+#: uMain.pas:1001
+msgid "WARNING: Your Operating System is too old and is not supported"
+msgstr ""
+"WARNUNG: Dein Betriebssystem ist zu alt und wird nicht mehr unterstützt"
+
+#: uMain.pas:1018
+msgid "Running with Administrator rights - good!"
+msgstr "Mit Administratorrechten gestartet - gut!"
+
+#: uMain.pas:1022
+msgid "You are not running with administrator rights! This will work for"
+msgstr ""
+"Dein Benutzerprofil besitzt keine Administratorenrechte! Das reicht aus für "
+"die meisten"
+
+#: uMain.pas:1023
+msgid "most application stuff but whenever you do something with services"
+msgstr ""
+"Anwendungsfunktionen, aber wann immer du etwas mit Windows-Diensten tun "
+"möchtest,"
+
+#: uMain.pas:1024
+msgid "there will be a security dialogue or things will break! So think "
+msgstr ""
+"wird eine Sicherheitsabfrage erscheinen oder etwas wird garnicht erst "
+"funktionieren!"
+
+#: uMain.pas:1025
+msgid "about running this application with administrator rights!"
+msgstr "Also denke daran diese Anwendung mit Administratorrechten zu starten!"
+
+#: uMain.pas:1032
+msgid "XAMPP Installation Directory: \"%s\""
+msgstr "XAMPP Installationsverzeichnis: \"%s\""
+
+#: uMain.pas:1035
+msgid ""
+"WARNING: Your install directory contains spaces.  This may break programs/"
+"scripts"
+msgstr ""
+"ACHTUNG: Der XAMPP Installationspfad enthält Leerzeichen. Dies könnte die "
+"Funktionalität von Programmen/Scripten beeinflussen"
+
+#: uMain.pas:1060
+msgid ""
+"WARNING: Your install directory contains special characters.  This may break "
+"programs/scripts"
+msgstr ""
+"ACHTUNG: Der XAMPP Installationspfad enthält Sonderzeichen. Dies könnte die "
+"Funktionalität von Programmen/Scripten beeinflussen"
+
+#: uMain.pas:1069
+msgid "Checking for prerequisites"
+msgstr "Voraussetzungen werden geprüft"
+
+#: uMain.pas:1078
+msgid "Required XAMPP prerequisite not found!"
+msgstr "Benötigte XAMPP Voraussetzungen nicht gefunden!"
+
+#: uMain.pas:1079
+msgid ""
+"You do not appear to have the Microsoft Visual C++ 2008 Runtimes installed"
+msgstr ""
+"Die Microsoft Visual C++ 2008 Runtimes scheinen nicht installiert zu sein"
+
+#: uMain.pas:1080
+msgid "This is required for XAMPP to fully function"
+msgstr "Dies ist eine Voraussetzung für die volle Funktionalität von XAMPP"
+
+#: uMain.pas:1084
+msgid "All prerequisites found"
+msgstr "Alle Voraussetzungen sind erfüllt"
+
+#: uMain.pas:1091
+msgid "VC++ checking is disabled"
+msgstr "VC++ Prüfung deaktiviert"
+
+#: uMain.pas:1094
+msgid "Initializing Modules"
+msgstr "Initialisiere Module"
+
+#: uMain.pas:1101 uMain.pas:1115 uMain.pas:1129 uMain.pas:1143 uMain.pas:1156
+msgid "The %s module is disabled"
+msgstr "Das %s Modul ist deaktiviert"
+
+#: uMain.pas:1170 uMain.pas:1178 uMain.pas:1186 uMain.pas:1194 uMain.pas:1202
+msgid "Enabling autostart for module \"%s\""
+msgstr "Aktiviere Autostart für Modul \"%s\""
+
+#: uMain.pas:1206
+msgid "Starting"
+msgstr "Starte"
+
+#: uMain.pas:1208
+msgid "Control Panel Ready"
+msgstr "Control Panel bereit"
+
+#: uMain.pas:1213
+msgid "Deinitializing Modules"
+msgstr "Deinitialisiere Module"
+
+#: uMain.pas:1234
+msgid "Deinitializing Control Panel"
+msgstr "Deinitialisiere Control Panel"
+
+#: uMySQL.pas:84
+msgid "Expected Path: %smysql\\bin\\%s --defaults-file=%smysql\\bin\\my.ini %s"
+msgstr ""
+"Erwarteter Pfad: %smysql\\bin\\%s --defaults-file=%smysql\\bin\\my.ini %s"
+
+#: uNetstat.pas:260
+msgid "New listening socket: %s:%d"
+msgstr "Neuer offener Socket: %s:%d"
+
+#: uNetstat.pas:282
+msgid "Listening socket closed: %s:%d"
+msgstr "Offener Socket geschlossen: %s:%d"
+
+#: uNetstatTable.pas:130
+msgid "unknown program"
+msgstr "unbekanntes Programm"
+
+#: uProcesses.pas:140 uProcesses.pas:230
+msgid "Deleting PID-entry %d: %s"
+msgstr "Lösche PID-Eintrag: %d: %s"
+
+#. ProcInfo.ExePath := LowerCase(GetProcessPath(TProcessEntry.th32ProcessID));
+#: uProcesses.pas:217
+msgid "Creating PID-entry %d: %s"
+msgstr "Erzeuge PID-Eintrag: %d: %s"
+
+#: uServices.pas:32 uServices.pas:52
+msgid "Searching for service %s"
+msgstr "Suche Windows Dienst %s"
+
+#: uServices.pas:37
+msgid "Found service, attempting to start"
+msgstr "Windows Dienst gefunden, wird versucht zu starten..."
+
+#: uServices.pas:43 uServices.pas:63
+msgid "Return Code %d"
+msgstr "Rückgabecode %d"
+
+#: uServices.pas:57
+msgid "Found service, attempting to stop"
+msgstr "Windows Dienst gefunden, wird versucht zu stoppen..."
+
+#: uTomcat.pas:80
+msgid "Expected Path: %stomcat\\bin\\%s //RS//%s"
+msgstr "Erwarteter Pfad: %stomcat\\bin\\%s //RS//%s"
+
+#: uTomcat.pas:122
+msgid "Problem detected: Required Tool catalina_start.bat Not Found!"
+msgstr ""
+"Problem festgestellt: Benötigtes Script catalina_start.bat wurde nicht "
+"gefunden!"
+
+#: uTomcat.pas:127
+msgid "Problem detected: Required Tool catalina_stop.bat Not Found!"
+msgstr ""
+"Problem festgestellt: Benötigtes Script catalina_stop.bat wurde nicht "
+"gefunden!"
+
+#: uTomcat.pas:132
+msgid "Problem detected: Required Tool catalina_service.bat Not Found!"
+msgstr ""
+"Problem festgestellt: Benötigtes Script catalina_service.bat wurde nicht "
+"gefunden!"
+
+#: uTomcat.pas:182
+msgid "Java is already running on port %d!"
+msgstr "Java ist bereits gestartet auf Port %d"
+
+#: uTomcat.pas:183
+msgid "Is %s already running?"
+msgstr "Ist %s bereits gestartet?"
+
+#: uTomcat.pas:230
+msgid "%s Service Install stopped with errors, return code: %d"
+msgstr "%s dienst mit Fehler gestoppt installieren, Rückgabecode: %d"
+
+#: uTomcat.pas:231 uTomcat.pas:254 uTomcat.pas:296
+msgid ""
+"Make sure you have Java JDK or JRE installed and the required ports are free"
+msgstr ""
+"Stelle sicher, dass du Java JDK oder JRE installiert hast und die benötigten "
+"Ports frei sind"
+
+#: uTomcat.pas:232 uTomcat.pas:255 uTomcat.pas:297
+msgid "Check the \"/xampp/tomcat/logs\" folder for more information"
+msgstr "Überprüfe den Ordner \"/xampp/tomcat/logs\" für weitere Informationen"
+
+#: uTomcat.pas:253
+msgid "%s Service Uninstall stopped with errors, return code: %d"
+msgstr "%s dienst mit Fehler gestoppt deinstallieren, Rückgabecode: %d"
+
+#: uTomcat.pas:295
+msgid "%s Started/Stopped with errors, return code: %d"
+msgstr "%s gestartet/gestoppt mit Fehlern, Rückgabecode: %d"
+
+#: uTomcat.pas:323
+msgid "Attempting to stop %s"
+msgstr "%s wird versucht zu beenden"
+
+#~ msgid "XAMPP %s is already running"
+#~ msgstr "XAMPP %s ist bereits gestartet"
+
+#~ msgid "Ports in use: %s"
+#~ msgstr "Ports in Benutzung: %s"

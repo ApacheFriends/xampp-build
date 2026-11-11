@@ -46,6 +46,71 @@ if {$::tcl_platform(os) == "SunOS"} {
     set ::env(CXX) g++
 }
 
+::itcl::class workspaceComponent {
+    protected variable xamppoutputdir
+    protected variable xamppworkspacedir
+    protected variable externalWorkspaceDir
+    protected variable dirName {}
+
+    public method xamppworkspacedir {} {
+        if {$dirName != ""} {
+            set d $dirName
+        } else {
+            set d [$this cget -name]
+        }
+        return [file join [[$this cget -be] cget -projectDir] base $d]
+    }
+    protected method xamppDestDir {} {
+        if {[string match osx* [[$this cget -be] cget -target]]} {
+            set destDir [file join [[$this cget -be] cget -output] xamppfiles]
+        } elseif {[string match windows* [[$this cget -be] targetPlatform]]} {
+            set destDir [file join [[$this cget -be] cget -output] xampp]
+        } else {
+            set destDir [file join [[$this cget -be] cget -output] lampp]
+        }
+        return $destDir
+    }
+    public method copyFromExternalWorkspace {args} {
+        set externalWorkspaceDir [file join [[$this cget -be] cget -src] windowsXamppWorkspace xampp]
+        foreach file $args {
+            set src [file join $externalWorkspaceDir $file]
+            set dest [file join [xamppDestDir] $file]
+            if {![file exists [file dirname $dest]]} {
+                file mkdir [file dirname $dest]
+            }
+            file copy -force $src $dest
+        }
+    }
+
+    public method copyFromPrefixWorkspaceToPrefix {srcPrefix destPrefix args} {
+        set outDir [xamppDestDir]
+        if {$destPrefix != ""} {
+            set outDir [file join $outDir $destPrefix]
+        }
+        set wsDir [xamppworkspacedir]
+        if {$srcPrefix != ""} {
+            set wsDir [file join $wsDir $srcPrefix]
+        }
+        foreach file $args {
+            set src [file join $wsDir $file]
+            set dest [file join $outDir $file]
+            if {![file exists [file dirname $dest]]} {
+                file mkdir [file dirname $dest]
+            }
+            file copy -force $src $dest
+        }
+    }
+    public method copyFromPrefixWorkspace {srcPrefix args} {
+        eval [list copyFromPrefixWorkspaceToPrefix $srcPrefix {}] $args
+    }
+    public method copyFromWorkspace {args} {
+        eval [list copyFromPrefixWorkspaceToPrefix {} {}] $args
+    }
+    public method copyFromWorkspaceToPrefix {prefix args} {
+        eval [list copyFromPrefixWorkspaceToPrefix {} $prefix] $args
+    }
+}
+
 ::itcl::class apachePhpSettingsNormalizer {
     public variable ifmodulesStack {}
     public variable rewrote 0

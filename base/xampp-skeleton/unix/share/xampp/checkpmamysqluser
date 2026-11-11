@@ -1,0 +1,72 @@
+#!/bin/bash
+# Copyright 2002-2003 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+if test "$1" = "check"
+then    
+        check="true"
+else    
+        check="false"
+fi
+
+bon="[1m"
+boff="[m"
+
+ma=$XAMPP_ROOT/bin/mysqladmin
+mm=$XAMPP_ROOT/bin/mysql
+
+if ! testrun "$XAMPP_ROOT/var/mysql/$(hostname).pid" mysqld
+then
+	$check && exit 2
+	echo "XAMPP: " $($GETTEXT 'MySQL has to run before I can check the security.')
+fi
+
+if $ma -u root reload >/dev/null 2>&1
+then	
+	p=`echo "select Password from user where User='pma'" | $XAMPP_ROOT/bin/mysql -uroot -s mysql`
+	if test -z "$p"
+	then
+		$check && exit 1
+
+		echo "XAMPP: ${bon}" $($GETTEXT 'The MySQL/phpMyAdmin user pma has no password set!!!') "${boff}"
+		if asky $($GETTEXT 'Do you want to set a password?')
+		then
+			word=$(askp "$($GETTEXT 'Password:')" "$($GETTEXT 'Password (again):')" nocrypt)
+
+			echo "XAMPP: " $($GETTEXT 'Setting new MySQL pma password.')
+
+			echo "update user set Password=password('$word') where User = 'pma';" | $mm -uroot mysql
+			$ma -uroot reload
+
+			echo "XAMPP: " $($GETTEXT "Setting phpMyAdmin's pma password to the new one.")
+
+			f="$XAMPP_ROOT/phpmyadmin/config.inc.php"
+		        $awk -v pw="$word" '
+f==0 && $1 == "$cfg[\047Servers\047][$i][\047controlpass\047]" {
+					print "# commented out by xampp security"
+					print "#"$0
+					print "$cfg[\047Servers\047][$i][\047controlpass\047] = \047"pw"\047;";
+					f=1
+					next
+				}
+				{
+					print
+				}
+			' $f > /tmp/xampp$$
+			cp /tmp/xampp$$ $f
+			rm /tmp/xampp$$ 
+		fi
+	else
+		$check && exit 0
+
+		echo "XAMPP: " $($GETTEXT 'The MySQL/phpMyAdmin user pma has a passwort set. Fine! :)')
+	fi
+fi
+	

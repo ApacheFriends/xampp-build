@@ -1,0 +1,61 @@
+#!/bin/bash
+# Copyright 2003 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+if test -f $XAMPP_ROOT/etc/xampp/nogroupchecked
+then
+	exit 0
+fi
+
+if test "$1" = "check"
+then    
+        check="true"
+else    
+        check="false"
+fi
+
+touch $XAMPP_ROOT/etc/xampp/nogroupchecked
+
+if egrep '^daemon:' /etc/group > /dev/null
+then
+	exit 0
+else
+	f="$XAMPP_ROOT/etc/httpd.conf"
+	if egrep '^nogroup:' /etc/group > /dev/null
+	then
+		$awk '
+f==0 && $0 == "Group daemon" {
+		print "# commented out by lampp compatibility check"
+		print "#"$0
+		print "Group nogroup"
+		f=1
+		next
+	}
+	{
+		print
+	}
+	' $f > /tmp/xampp$$
+	else
+		$awk '
+f==0 && $0 == "Group daemon" {
+		print "# commented out by lampp compatibility check"
+		print "#"$0
+		print "Group #-1"
+		f=1
+		next
+	}
+	{
+		print
+	}
+	' $f > /tmp/xampp$$
+	fi
+	cp /tmp/xampp$$ $f
+	rm /tmp/xampp$$ 
+fi

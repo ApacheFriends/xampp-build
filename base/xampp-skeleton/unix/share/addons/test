@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case $1 in
+	start) echo "XAMPP: Starting TEST-Plugin..."
+		;;
+	stop) echo "XAMPP: Stopping TEST-Plugin..."
+		;;
+esac

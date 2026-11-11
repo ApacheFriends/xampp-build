@@ -1,0 +1,43 @@
+#!/bin/bash
+# copyright 2005 kai oswald seidler, licence: gpl
+
+# VERSION 1.4.16
+# APACHE RUNNING
+# MYSQL NOTRUNNING
+# PROFTPD DEACTIVATED
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+lc="$XAMPP_ROOT/etc/xampp"
+
+echo "VERSION $(cat $XAMPP_ROOT/lib/VERSION)"
+if testrun $XAMPP_ROOT/logs/httpd.pid httpd
+then
+	echo "APACHE RUNNING"
+else
+	echo "APACHE NOTRUNNING"
+fi
+
+if testrun $XAMPP_ROOT/var/mysql/`/bin/hostname`.pid mysqld
+then
+	echo "MYSQL RUNNING"
+else
+	echo "MYSQL NOTRUNNING"
+fi
+
+if testrun $XAMPP_ROOT/var/proftpd.pid proftpd
+then
+    echo "PROFTPD RUNNING"
+else
+    if test -f $lc/startftp
+    then
+            echo "PROFTPD NOTRUNNING"
+    else
+        echo "PROFTPD DEACTIVATED"
+    fi
+fi

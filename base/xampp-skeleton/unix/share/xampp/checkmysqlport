@@ -1,0 +1,77 @@
+#!/bin/bash
+# Copyright 2002-2003 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+if test "x$XAMPP_ROOT" = "x"
+then
+	echo "Dont call this script directly!"
+	exit 1
+fi
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+if test "$1" = "check"
+then    
+        check="true"
+else    
+        check="false"
+fi
+
+bon="[1m"
+boff="[m"
+
+
+f="$XAMPP_ROOT/etc/my.cnf"
+
+p=`awk '
+BEGIN {sn=1}
+/^\[mysqld\]/,/^\[mysqldump\]/ { 
+		if($1=="skip-networking")
+		{
+			sn=0
+		}
+	}
+END {
+	print sn
+	}
+' $f`
+
+if test "$p" -gt 0
+then
+    $check && exit 1
+
+	echo "XAMPP: ${bon}" $($GETTEXT 'MySQL is accessable via network.') "${boff}"
+
+    if asky $($GETTEXT "Normaly that's not recommended. Do you want me to turn it off?")
+	then
+		$awk '
+		/^\[mysqld\]/,/^\[mysqldump\]/ { 
+                                if($1=="#skip-networking")
+                                {
+                                        print "# commented in by xampp security"
+                                        print $0
+                                        print "skip-networking"
+                                        next
+                                }
+			}
+			{
+				print
+			}
+		' $f > /tmp/xampp$$
+		cp /tmp/xampp$$ $f
+		rm /tmp/xampp$$ 
+
+		echo "XAMPP: " $($GETTEXT 'Turned off.')
+		if testrun "$XAMPP_ROOT/var/mysql/$(hostname).pid" mysqld
+		then
+			$XAMPP_ROOT/xampp stopmysql
+			sleep 2
+			$XAMPP_ROOT/xampp startmysql
+			sleep 3
+		fi
+	fi
+else
+    $check && exit 0
+
+	echo "XAMPP: " $($GETTEXT 'MySQL is not accessable via network. Good.')
+fi
+

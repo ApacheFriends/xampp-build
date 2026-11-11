@@ -1,0 +1,8 @@
+WEB-DAV für den gemeinsamen REMOTE-Zugriff
+auf WWW-Dokumente über den Apache2.
+
+Die Module mod_dav.so und mod_dav_fs.so auskommentieren
+URL: http://localhost/webdav/
+User: wampp Password: xampp
+E-Mail-Adresse bei Dreamweaver angeben. 
+Lokales Directory: /xampp/webdav/

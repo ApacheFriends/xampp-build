@@ -1,0 +1,132 @@
+#!/bin/bash
+# BITUP v0.1
+# Copyright 2003 by Kai 'Oswald' Seidler, oswald@apachefriends.org, GPL-licensed
+
+osguess() {
+	if test -f /etc/redhat-release
+	then
+		if egrep "9 " /etc/redhat-release > /dev/null
+		then
+			echo "rh9"
+			return 0
+		else
+		        echo "linux"
+			return 0
+		fi
+	elif test "$(uname)" = "Darwin"
+	then
+		echo "macosx"
+		return 0
+	else
+		if test -f /etc/vfstab
+		then
+			echo "solaris"
+			return 0
+		else
+			echo "linux"
+			return 0
+		fi
+	fi
+}
+
+case $(osguess) in
+	solaris)
+		XAMPP_OS="Solaris"
+		XAMPP_ROOT="/opt/xampp"
+		;;
+	linux|rh9)
+		XAMPP_OS="Linux"
+		XAMPP_ROOT="/opt/lampp"
+		;;
+	macosx)
+		XAMPP_OS="Mac OS X"
+		XAMPP_ROOT="/Applications/XAMPP/xamppfiles/"
+		;;
+esac
+
+export XAMPP_OS
+export XAMPP_ROOT
+
+. $XAMPP_ROOT/share/xampp/xampplib
+
+checkRoot
+
+if test "$(osguess)" = "macosx"; then
+    md5sum=md5
+else
+    md5sum=md5sum
+fi
+
+backupdir="$XAMPP_ROOT/backup"
+
+if test -d $backupdir
+then
+	:
+else
+	mkdir $backupdir
+        if test "$(osguess)" = "macosx"; then
+            chown root:wheel $backupdir
+        else
+            chown root.root $backupdir 
+        fi
+	chmod 700 $backupdir
+fi
+
+cd $backupdir || (echo "Is XAMPP installed?"; exit)
+
+if test "$1" != ""
+then
+	passwd="-p$1"
+else
+	passwd=""
+fi
+
+d=`echo "show databases" | $XAMPP_ROOT/bin/mysql -uroot $passwd 2>/dev/null`
+if test -z "$d"
+then
+	echo "Can't access database. Is MySQL running? Added the MySQL root password to end of command line?"
+	exit
+fi
+
+echo "Backing up databases..."
+for i in $d
+do
+	if test "$i" = "Database"
+	then
+		continue
+	fi	
+	if test "$i" = "information_schema"
+	then
+		continue
+	fi	
+	if test "$i" = "performance_schema"
+	then
+		continue
+	fi	
+
+	$XAMPP_ROOT/bin/mysqldump -a -Q -B -e --add-drop-table -uroot $passwd $i > $i.sql 2> output
+	if test $? -eq 0
+	then
+		:
+	else
+		echo "$i: FAILED"
+		exit
+	fi
+done
+
+cp $XAMPP_ROOT/lib/VERSION VERSION
+echo "Backing up configuration, log and htdocs files..."
+tar cfz data.tar.gz $XAMPP_ROOT/etc $XAMPP_ROOT/htdocs $XAMPP_ROOT/logs $XAMPP_ROOT/phpmyadmin/config.inc.php 2>> output
+
+echo "Calculating checksums..."
+
+$md5sum data.tar.gz VERSION *.sql > md5sums
+
+echo "Building final backup file..."
+tar cfz backup.tar.gz data.tar.gz VERSION *.sql md5sums
+backup_file=$backupdir/xampp-backup-`date +%d-%m-%y`.sh
+cat $XAMPP_ROOT/share/xampp/backup.head $XAMPP_ROOT/backup/backup.tar.gz > "$backup_file"
+chmod u+x "$backup_file"
+rm VERSION data.tar.gz *.sql backup.tar.gz md5sums output
+echo "Backup finished."
+echo "Take care of $backup_file"

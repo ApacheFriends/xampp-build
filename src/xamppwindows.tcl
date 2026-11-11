@@ -3,7 +3,7 @@
 # FileZillaFTP source code
 
 ::itcl::class windowsXamppComponent {
-    inherit baseBitnamiProgram
+    inherit baseBitnamiProgram workspaceComponent
     protected variable xamppoutputdir
     protected variable xamppworkspacedir
     constructor {environment} {
@@ -15,28 +15,19 @@
     }
     public method copyStackLogoImage {} {}
     public method build {} {}
+
     public method install {} {
-        set xamppoutputdir [file join [$be cget -output] xampp]
-        set xamppworkspacedir [file join [$be cget -src] windowsXamppWorkspace xampp]
+        set xamppoutputdir [xamppDestDir]
+        set xamppworkspacedir [xamppworkspacedir]
+        set externalWorkspaceDir [file join [$be cget -src] windowsXamppWorkspace xampp]
         extract
         file mkdir $xamppoutputdir
-    }
-
-    public method copyFromWorkspace {args} {
-        foreach file $args {
-            set src [file join $xamppworkspacedir $file]
-            set dest [file join $xamppoutputdir $file]
-            if {![file exists [file dirname $dest]]} {
-                file mkdir [file dirname $dest]
-            }
-            file copy -force $src $dest
-        }
     }
 
     public method setReadmeVersion {component version} {
         foreach file {readme_de.txt readme_en.txt} {
             xampptcl::util::substituteParametersInFile [file join $xamppoutputdir $file] \
-                [list "@@BITROCK_${component}_VERSION@@" $version]
+                [list "@@BITROCK_${component}_VERSION@@" $version "@@XAMPP_${component}_VERSION@@" $version]
         }
     }
 }
@@ -48,7 +39,7 @@
         chain $environment
     } {
         set name windowsXamppWorkspace
-        set version 11
+        set version 13
         set licenseRelativePath {}
         set rev 0
         set controlPanelVersion "3.3.0"
@@ -60,29 +51,15 @@
     public method install {} {
         chain
         copyFilesFromWorkspace
-        setReadmeVersion CONTROL_PANEL ${controlPanelVersion}
     }
+
     public method copyFilesFromWorkspace {} {
-        copyFromWorkspace cgi-bin/cgi.cgi cgi-bin/perltest.cgi cgi-bin/printenv.pl
-        copyFromWorkspace contrib
-        copyFromWorkspace htdocs
-        copyFromWorkspace install
-        copyFromWorkspace licenses
-        copyFromWorkspace locale
-        copyFromWorkspace src/xampp-control-panel
-        copyFromWorkspace src/xampp-mailToDisk
-        copyFromWorkspace src/xampp-nsi-installer
-        copyFromWorkspace src/xampp-start-stop
-        copyFromWorkspace src/xampp-usb-lite
+        copyFromExternalWorkspace licenses
 
-        copyFromWorkspace tmp/why.tmp
-        copyFromWorkspace webdav/index.html webdav/webdav.txt
-
-        copyFromWorkspace xampp-control.exe xampp_start.exe xampp_stop.exe
-        copyFromWorkspace service.exe
-        copyFromWorkspace readme_de.txt readme_en.txt
-        copyFromWorkspace setup_xampp.bat
-        copyFromWorkspace passwords.txt
+        copyFromExternalWorkspace xampp-control.exe xampp_start.exe xampp_stop.exe
+        copyFromExternalWorkspace service.exe
+        copyFromExternalWorkspace install/awk.exe
+        copyFromExternalWorkspace src
     }
 }
 
@@ -157,6 +134,7 @@
     } {
         set name windowsXamppApache
         set fullname Apache
+        set dirName apache
         set version [versions::get "Apache" windows]
         set rev 1
         set licenseRelativePath {}
@@ -303,15 +281,15 @@
     }
     public method copyFilesFromWorkspace {} {
         copyFromWorkspace apache_start.bat apache_stop.bat
-        copyFromWorkspace apache/apache_installservice.bat apache/apache_uninstallservice.bat apache/makecert.bat
-        copyFromWorkspace apache/conf/extra/httpd-ajp.conf
-        copyFromWorkspace apache/conf/extra/httpd-proxy.conf
-        copyFromWorkspace apache/conf/extra/httpd-xampp.conf
-        copyFromWorkspace apache/conf/extra/httpd-info.conf
-        copyFromWorkspace apache/conf/ssl.crt/server.crt
-        copyFromWorkspace apache/conf/ssl.csr/server.csr
-        copyFromWorkspace apache/conf/ssl.key/server.key
-        copyFromWorkspace apache/error/XAMPP_FORBIDDEN.html.var
+        copyFromWorkspaceToPrefix apache apache_installservice.bat apache_uninstallservice.bat makecert.bat
+        copyFromPrefixWorkspaceToPrefix windows apache conf/extra/httpd-ajp.conf
+        copyFromPrefixWorkspaceToPrefix windows apache conf/extra/httpd-proxy.conf
+        copyFromPrefixWorkspaceToPrefix windows apache conf/extra/httpd-xampp.conf
+        copyFromPrefixWorkspaceToPrefix windows apache conf/extra/httpd-info.conf
+        copyFromWorkspaceToPrefix apache conf/ssl.crt/server.crt
+        copyFromWorkspaceToPrefix apache conf/ssl.csr/server.csr
+        copyFromWorkspaceToPrefix apache conf/ssl.key/server.key
+        copyFromWorkspaceToPrefix apache error/XAMPP_FORBIDDEN.html.var
 
         xampptcl::util::substituteParametersInFile [file join $xamppoutputdir apache/makecert.bat] [list bin/openssl.cnf conf/openssl.cnf]
     }
@@ -358,6 +336,7 @@
     } {
         set name windowsXamppFileZillaFTP
         set version 0.9.41
+        set dirName filezilla
         set licenseRelativePath {}
         set tarballName FileZillaFTP-${version}-win32.zip
         set mainComponentXMLName xampp-filezilla
@@ -386,6 +365,7 @@
         set name windowsXamppFileZillaFTPSource
         set version 0.9.41
         set licenseRelativePath {}
+        set dirName filezilla
         set tarballName FileZillaFTP-${version}-win32-sourcecode.zip
         set mainComponentXMLName xampp-filezilla
     }
@@ -409,6 +389,7 @@
     } {
         set name windowsXamppMercuryMail
         set version 4.63
+        set dirName mercury
         set licenseRelativePath {}
         set tarballName MercuryMail-${version}-win32.zip
         set mainComponentXMLName xampp-mercury
@@ -426,7 +407,7 @@
     }
     public method copyFilesFromWorkspace {} {
         copyFromWorkspace mercury_start.bat mercury_stop.bat
-        copyFromWorkspace mailtodisk/bz2.pyd mailtodisk/mailtodisk.exe mailtodisk/mailtodisk.exe.manifest mailtodisk/mfc90.dll mailtodisk/mfc90u.dll mailtodisk/mfcm90.dll mailtodisk/mfcm90u.dll mailtodisk/Microsoft.VC90.CRT.manifest mailtodisk/Microsoft.VC90.MFC.manifest mailtodisk/msvcm90.dll mailtodisk/msvcp90.dll mailtodisk/msvcr90.dll mailtodisk/python27.dll mailtodisk/pythoncom27.dll mailtodisk/PyWinTypes27.dll mailtodisk/README.txt mailtodisk/select.pyd mailtodisk/unicodedata.pyd mailtodisk/win32api.pyd mailtodisk/win32trace.pyd mailtodisk/win32ui.pyd mailtodisk/_hashlib.pyd mailtodisk/_win32sysloader.pyd
+        copyFromExternalWorkspace mailtodisk/bz2.pyd mailtodisk/mailtodisk.exe mailtodisk/mailtodisk.exe.manifest mailtodisk/mfc90.dll mailtodisk/mfc90u.dll mailtodisk/mfcm90.dll mailtodisk/mfcm90u.dll mailtodisk/Microsoft.VC90.CRT.manifest mailtodisk/Microsoft.VC90.MFC.manifest mailtodisk/msvcm90.dll mailtodisk/msvcp90.dll mailtodisk/msvcr90.dll mailtodisk/python27.dll mailtodisk/pythoncom27.dll mailtodisk/PyWinTypes27.dll mailtodisk/README.txt mailtodisk/select.pyd mailtodisk/unicodedata.pyd mailtodisk/win32api.pyd mailtodisk/win32trace.pyd mailtodisk/win32ui.pyd mailtodisk/_hashlib.pyd mailtodisk/_win32sysloader.pyd
     }
 }
 
@@ -499,10 +480,11 @@
         copyFilesFromWorkspace
     }
     public method copyFilesFromWorkspace {} {
-        copyFromWorkspace mysql_start.bat mysql_stop.bat mysql/bin/my.ini
-        copyFromWorkspace mysql/mysql_installservice.bat
-        copyFromWorkspace mysql/mysql_uninstallservice.bat
-        copyFromWorkspace mysql/resetroot.bat
+        copyFromWorkspace mysql_start.bat mysql_stop.bat
+        copyFromPrefixWorkspaceToPrefix windows mysql/bin my.ini
+        copyFromWorkspaceToPrefix mysql mysql_installservice.bat
+        copyFromWorkspaceToPrefix mysql mysql_uninstallservice.bat
+        copyFromWorkspaceToPrefix mysql resetroot.bat
     }
 }
 
@@ -682,8 +664,8 @@
         copyFilesFromWorkspace
     }
     public method copyFilesFromWorkspace {} {
-        copyFromWorkspace php/webdriver-test-example.php
-        copyFromWorkspace php/phpunit php/phpunit.bat
+        copyFromWorkspaceToPrefix php webdriver-test-example.php
+        copyFromWorkspaceToPrefix php phpunit phpunit.bat
     }
     public method phpiniSubstitutions {} {
         if { [file exists $xamppoutputdir/php/ext/php_ftp.dll] } {
@@ -973,6 +955,7 @@ mssql.secure_connection=Off"
     } {
         set name windowsXamppPhpMyAdmin
         set fullname phpMyAdmin
+        set dirName phpmyadmin
         set version [getVtrackerField phpMyAdmin version frameworks]
         set licenseRelativePath {}
         set tarballName phpMyAdmin-${version}-all-languages
@@ -985,7 +968,8 @@ mssql.secure_connection=Off"
         setReadmeVersion PHPMYADMIN ${version}
     }
     public method copyFilesFromWorkspace {} {
-        copyFromWorkspace phpMyAdmin/config.inc.php
+        # TODO: check if we can unify
+        copyFromPrefixWorkspaceToPrefix windows phpMyAdmin config.inc.php
     }
 }
 
@@ -1008,7 +992,12 @@ mssql.secure_connection=Off"
     }
     public method copyFilesFromWorkspace {} {
         copyFromWorkspace catalina_service.bat catalina_start.bat catalina_stop.bat
-        copyFromWorkspace tomcat/catalina_start.bat tomcat/catalina_stop.bat tomcat/tomcat_service_install.bat tomcat/tomcat_service_uninstall.bat
+        # TODO: Do we need catalina_start.bat and catalina_stop.bat in two places?
+        # We were using two different scripts, lets use one and patch the working dir calculation
+        copyFromWorkspaceToPrefix tomcat catalina_start.bat catalina_stop.bat tomcat_service_install.bat tomcat_service_uninstall.bat
+        foreach f {catalina_stop.bat catalina_start.bat} {
+            xampptcl::util::substituteParametersInFile [file join $xamppoutputdir tomcat $f] {{"CATALINA_HOME=%CURRENT_DIR%\tomcat"} {"CATALINA_HOME=%CURRENT_DIR%"} {tomcat\logs\catalina.pid} {logs\catalina.pid}} 0 {} binary
+        }
     }
 }
 
@@ -1019,6 +1008,7 @@ mssql.secure_connection=Off"
     } {
         set name windowsXamppWebalizer
         set version 2.23-04
+        set dirName webalizer
         set licenseRelativePath {}
         set tarballName webalizer-${version}-cygwin.zip
         set mainComponentXMLName xampp-webalizer
@@ -1028,8 +1018,9 @@ mssql.secure_connection=Off"
         file copy -force [file join [$be cget -src] webalizer-${version}-cygwin] [file join $xamppoutputdir webalizer]
         copyFilesFromWorkspace
     }
+    # TODO: unify windows and unix
     public method copyFilesFromWorkspace {} {
-        copyFromWorkspace webalizer/webalizer.conf
+        copyFromPrefixWorkspaceToPrefix windows webalizer webalizer.conf
     }
 }
 
@@ -1443,7 +1434,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist \
 	    windowsXamppApache \
@@ -1477,7 +1468,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist2015 \
 	    windowsXamppApachePhp74 \
@@ -1509,7 +1500,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist2015 \
 	    windowsXamppApachePhp80 \
@@ -1541,7 +1532,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist2015 \
 	    windowsXamppApachePhp81 \
@@ -1573,7 +1564,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist \
 	    windowsXamppApache \
@@ -1600,7 +1591,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist2015 \
 	    windowsXamppApachePhp74 \
@@ -1626,7 +1617,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist2015 \
 	    windowsXamppApachePhp80 \
@@ -1652,7 +1643,7 @@ mssql.secure_connection=Off"
        constructor {environment} {
         chain $environment
     } {
-	addComponents bitnamiFiles nativeadapter windowsXamppWorkspace \
+	addComponents bitnamiFiles nativeadapter ::xampp::windowsXamppSkeleton windowsXamppWorkspace \
 	    windowsXamppHtdocs \
 	    windowsXamppVcredist2015 \
 	    windowsXamppApachePhp81 \
