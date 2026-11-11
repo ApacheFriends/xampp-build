@@ -9,6 +9,7 @@ on:
 env:
   IB_VERSION: 26.8.0
   IB_SHA256: "95581d5d5f1104a85133724f17cdf05e83130982cda193e9efd98feaa6e145d4"
+  TCLKIT_SHA256: 79c1df37ad470ceb96c14a7730eeaccf5e7c5e18f239689842c13cd85ed25c8c
 jobs:
   build-xampp:
     strategy:
@@ -124,6 +125,7 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --show-error --silent -L -o tclkit 'https://tclkits.rkeene.org/fossil/raw/tclkit-8.5.17-rhel5-x86_64?name=76a197fe41359daaf4f90a2001f46675b3667e26'
+          echo "${{ env.TCLKIT_SHA256 }}  tclkit" | sha256sum -c -
           chmod 755 tclkit
           sudo mv tclkit /usr/local/bin
       - name: Cache InstallBuilder
