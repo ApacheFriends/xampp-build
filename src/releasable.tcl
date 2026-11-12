@@ -902,8 +902,6 @@
                 set shortComponentList [lappend shortComponentList "Sablotron ${sablotronVersion}, "]
                 regexp {^.*, libxml ([^,]*),.*} $bundled_component_list_yml match libxmlVersion
                 set shortComponentList [lappend shortComponentList "libxml ${expatVersion}, "]
-                regexp {^.*, ming ([^,]*),.*} $bundled_component_list_yml match mingVersion
-                set shortComponentList [lappend shortComponentList "Ming ${mingVersion}, "]
                 regexp {^.*, webalizer ([^,]*),.*} $bundled_component_list_yml match webalizerVersion
                 set shortComponentList [lappend shortComponentList "Webalizer ${webalizerVersion}, "]
                 regexp {^.*, pdf-class ([^,]*),.*} $bundled_component_list_yml match pdfclassVersion
@@ -1022,8 +1020,10 @@
                     append linkFileName "-VC15"
                 } elseif {[::xampptcl::util::compareVersions $version 8.4.0] < 0} {
                     append linkFileName "-VC16"
-                } else {
+                } elseif {[::xampptcl::util::compareVersions $version 8.6.0] < 0} {
                     append linkFileName "-VS17"
+                } else {
+                    append linkFileName "-VS18"
                 }
             } else {
                 set linkFileName "xampp-[$be cget -target]-${version}-${revSuffix}"

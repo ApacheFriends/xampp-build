@@ -29,7 +29,7 @@ tclsh createstack.tcl buildTarball xamppunixinstaller85stack linux-x64
 tclsh createstack.tcl buildTarball xamppunixinstaller85stack osx-x64
 ```
 
-> NOTE: you can build other PHP versions (8.2.x, 8.3.x, or 8.4.x) replacing `85` with `82`, `83`, or `84`.
+> NOTE: you can build other PHP versions (8.2.x, 8.3.x, 8.4.x, or 8.6.x) replacing `85` with `82`, `83`, `84`, or `86`.
 
 The tarball needed for building the installer in the next step will be located in `/bitnami/<stack_name>/output` and it will have the date it was built in the filename. This file must be copied into `/tmp/tarballs` mounted directory to be used.
 
@@ -45,7 +45,7 @@ tclsh createstack.tcl pack xamppunixinstaller85stack osx-x64
 tclsh createstack.tcl pack xamppinstaller85stack windows-x64
 ```
 
-> NOTE: you can pack other PHP versions (8.2.x, 8.3.x, or 8.4.x) replacing `85` with `82`, `83`, or `84`.
+> NOTE: you can pack other PHP versions (8.2.x, 8.3.x, 8.4.x, or 8.6.x) replacing `85` with `82`, `83`, `84`, or `86`.
 
 The installers will be accessible at `/opt/installbuilder/output/`.
 

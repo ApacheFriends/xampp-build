@@ -746,7 +746,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name "freetype"
-            set version 2.4.8
+            set version 2.15.0
         }
         public method configureOptions {} {
             set args [chain]
@@ -2884,6 +2884,7 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 8.3 - 83 { return [versions::get "PHP" 83] }
                 8.4 - 84 { return [versions::get "PHP" 84] }
                 8.5 - 85 { return [versions::get "PHP" 85] }
+                8.6 - 86 { return [versions::get "PHP" 86] }
             }
         }
 
@@ -2896,6 +2897,7 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 8.3 - 83 { return [revisions::get "xamppstack" 83] }
                 8.4 - 84 { return [revisions::get "xamppstack" 84] }
                 8.5 - 85 { return [revisions::get "xamppstack" 85] }
+                8.6 - 86 { return [revisions::get "xamppstack" 86] }
             }
         }
         public method configureOptions {} {
@@ -3168,4 +3170,17 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
         }
     }
 
+    ::itcl::class php86 {
+        inherit php
+        constructor {environment} {
+            chain $environment
+        } {
+            set vtrackerName XAMPP86
+            set version [::xampp::php::getXAMPPVersion 86]
+        }
+        # remove when stable PHP 8.6 released
+        public method srcdir {} {
+            return [file join [$be cget -src] "php-${version}RC5"]
+        }
+    }
 }

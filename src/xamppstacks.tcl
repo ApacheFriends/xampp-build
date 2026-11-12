@@ -16,7 +16,7 @@
            # We may need to remove some of the included libraries
            # addComponents ::xampp::readline
            addComponents chrpath ::xampp::oracleInstantclientLinuxX86Lib ::xampp::oracleInstantclientLinuxX86Sdk
-           addComponents ::xampp::nghttp2 ::xampp::apache ::xampp::freetds  ::xampp::sqlite3  ::xampp::postgresql groff ::xampp::mariadb10 ::xampp::sablotron ::xampp::gdbm  ::xampp::perl libaio ::xampp::php ::xampp::phpPdfClasses ::xampp::fpdf ::xampp::ming ::xampp::pecl_radius ::xampp::pecl_ncurses ::xampp::modperl cpanArchiveZip cpanYAML cpanXSBuilder cpanIoZlib cpanBundleCpan cpanURI cpanIoCompress cpanHTML-Parser cpanHTML-Tagset cpanMakeMaker cpanParseRecDescent cpanDevelCheckLib cpanDBI cpanDBD-mariadb ::xampp::cpanLWP cpanDBDPgPP cpanDBD-SQLite ::xampp::libapreq2 ::xampp::zziplib ::xampp::proftpd ::xampp::mhash ::xampp::webalizer ::xampp::phpmyadmin
+           addComponents ::xampp::nghttp2 ::xampp::apache ::xampp::freetds  ::xampp::sqlite3  ::xampp::postgresql groff ::xampp::mariadb10 ::xampp::sablotron ::xampp::gdbm  ::xampp::perl libaio ::xampp::php ::xampp::phpPdfClasses ::xampp::fpdf ::xampp::pecl_radius ::xampp::pecl_ncurses ::xampp::modperl cpanArchiveZip cpanYAML cpanXSBuilder cpanIoZlib cpanBundleCpan cpanURI cpanIoCompress cpanHTML-Parser cpanHTML-Tagset cpanMakeMaker cpanParseRecDescent cpanDevelCheckLib cpanDBI cpanDBD-mariadb ::xampp::cpanLWP cpanDBDPgPP cpanDBD-SQLite ::xampp::libapreq2 ::xampp::zziplib ::xampp::proftpd ::xampp::mhash ::xampp::webalizer ::xampp::phpmyadmin
 
            # I changed order of XML_Parser and XML_NITF for OS X
            set pearModulesList {Archive_Tar File File_Find File_HtAccess File_SearchReplace Auth Auth_HTTP DB Auth_SASL Benchmark Cache XML_CSSML XML_fo2pdf XML_HTMLSax XML_image2svg  XML_Parser XML_NITF XML_RSS XML_SVG XML_Transformer XML_Tree XML_Util  XML_RPC XML_Serializer Cache_Lite Console_Getopt Console_Table System_Command Contact_Vcard_Build Contact_Vcard_Parse MP3_Id Crypt_CBC Crypt_RC4 Crypt_Xtea DBA DB_ado DB_DataObject DB_ldap DB_NestedSet DB_Pager DB_QueryTool MDB Log MDB_QueryTool FSM Tree HTML_BBCodeParser HTML_BBCodeParser2 HTML_Common HTML_Common2 HTML_Crypt HTML_CSS HTML_Form HTML_Menu HTML_Javascript HTML_Progress HTML_QuickForm I18N HTML_Select_Common HTML_Table HTML_Template_IT HTML_Template_PHPLIB HTML_Template_Sigma HTML_Template_Xipe HTML_TreeMenu Pager HTTP Image_Color Image_GIS Image_GraphViz Image_IPTC Mail Mail_Mime Mail_mimeDecode Mail_Queue Math_Integer Math_Basex Math_Fibonacci Math_Vector Math_Matrix Math_RPN Math_Stats Math_TrigOp Net_CheckIP Net_Curl Net_Dig Net_DNS Net_FTP Net_Geo Net_Ident Net_IPv4 Net_SmartIRC Net_Socket Net_SMTP Net_Sieve Net_NNTP Net_Ping Net_POP3 Net_Portscan Net_Finger Net_Dict Net_URL HTTP_Request HTTP_Upload Net_UserAgent_Detect Net_Whois Numbers_Roman Payment_Clieop Console_Getargs PEAR PEAR_Info PEAR_PackageFileManager_Plugins PEAR_PackageFileManager2 PhpDocumentor YAML File_Iterator Text_Template PHP_TokenStream PHP_CodeCoverage PHP_Timer PHPUnit_MockObject PHPUnit Var_Dump xdebug Science_Chemistry Stream_Var Text_Password Text_Statistics Translation}
@@ -179,13 +179,21 @@
     }
 }
 
-
 ::itcl::class linuxXamppInstaller85Stack {
     inherit linuxXamppInstaller83Stack
     constructor {environment} {
         chain $environment
     } {
         replaceComponent ::xampp::php83 ::xampp::php85
+    }
+}
+
+::itcl::class linuxXamppInstaller86Stack {
+    inherit linuxXamppInstaller83Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php83 ::xampp::php86
     }
 }
 
@@ -265,6 +273,15 @@
         chain $environment
     } {
         set baseTarball xampp85-[$be targetPlatform]
+    }
+}
+
+::itcl::class linux64XamppInstaller86Stack {
+    inherit linuxXamppInstaller86Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        set baseTarball xampp86-[$be targetPlatform]
     }
 }
 
@@ -625,6 +642,21 @@ return
     }
 }
 
+::itcl::class xamppinstaller86stack {
+    inherit xamppinstallerstack
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 86]
+        set rev [::xampp::php::getXAMPPRevision 86]
+        set application ::xampp::php86
+        set xampp_vcredist_name VS18
+    } {
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstallerPhp86Stack
+    }
+}
+
 # XAMPP Unix Installer
 # Windows and Unix platforms are too different. It is better to have a different class
 ::itcl::class xamppunixinstallerXstack {
@@ -929,6 +961,23 @@ return
     }
     public method confFileName {} {
         return xamppinstallerphp85
+    }
+}
+
+::itcl::class xamppunixinstaller86stack {
+    inherit xamppunixinstallerXstack
+    constructor {environment} {
+        chain $environment
+    } {
+        set version [::xampp::php::getXAMPPVersion 86]
+        set rev [::xampp::php::getXAMPPRevision 86]
+        set application ::xampp::php86
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstaller86Stack
+    }
+    public method confFileName {} {
+        return xamppinstallerphp86
     }
 }
 
