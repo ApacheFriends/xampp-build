@@ -369,9 +369,10 @@
         set name windows64XamppPhp81
         set version [::xampp::php::getXAMPPVersion 81]
         set rev [::xampp::php::getXAMPPRevision 81]
-        set vcVersion VS16
+        set vcVersion vs16
         set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
+        set windowsRevision {}
     }
 }
 
