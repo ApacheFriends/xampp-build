@@ -902,8 +902,6 @@
                 set shortComponentList [lappend shortComponentList "Sablotron ${sablotronVersion}, "]
                 regexp {^.*, libxml ([^,]*),.*} $bundled_component_list_yml match libxmlVersion
                 set shortComponentList [lappend shortComponentList "libxml ${expatVersion}, "]
-                regexp {^.*, ming ([^,]*),.*} $bundled_component_list_yml match mingVersion
-                set shortComponentList [lappend shortComponentList "Ming ${mingVersion}, "]
                 regexp {^.*, webalizer ([^,]*),.*} $bundled_component_list_yml match webalizerVersion
                 set shortComponentList [lappend shortComponentList "Webalizer ${webalizerVersion}, "]
                 regexp {^.*, pdf-class ([^,]*),.*} $bundled_component_list_yml match pdfclassVersion

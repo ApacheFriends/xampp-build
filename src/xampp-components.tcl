@@ -746,7 +746,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name "freetype"
-            set version 2.4.8
+            set version 2.15.0
         }
         public method configureOptions {} {
             set args [chain]
@@ -2312,30 +2312,6 @@ UseFtpUsers}]
             return [concat [chain] [list --enable-shared --with-ssl]]
         }
     }
-
-
-    ::itcl::class ming {
-        inherit xamppLibrary
-        constructor {environment} {
-            chain $environment
-        } {
-            set name "ming"
-            set version 0.4.5
-            set supportsParallelBuild 0
-        }
-        public method configureOptions {} {
-            # ::xampp::ming fails with http://stackoverflow.com/questions/15745753/ming-compilation-fails
-            #return [concat [chain] [list --enable-php --with-freetype-config=[prefix]/bin/freetype-config]]
-            return [concat [chain] [list --with-freetype-config=[prefix]/bin/freetype-config]]
-        }
-        public method build {} {
-            set ::env(PHPIZE) [prefix]/bin/phpize
-            set ::env(PHP) [prefix]/bin/php
-            chain
-        }
-
-    }
-
 
     ::itcl::class gdbm {
         inherit xamppLibrary

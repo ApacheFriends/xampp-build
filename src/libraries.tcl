@@ -945,9 +945,9 @@ includesdir = ${includedir}}] 1
         chain $environment
     } {
         set name freetype
-        set version 2.4.8
+        set version 2.15.0
         set supportsParallelBuild 0
-        set licenseRelativePath docs/LICENSE.TXT
+        set licenseRelativePath LICENSE.TXT
     }
     public method setEnvironment {} {
         set ::opts(freetype.prefix) [prefix]
