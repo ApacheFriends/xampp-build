@@ -412,6 +412,14 @@
         replaceComponent ::xampp::php80 ::xampp::php85
     }
 }
+::itcl::class osx64XamppInstaller86Stack {
+    inherit osx64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php86
+    }
+}
 
 ::itcl::class osxArm64XamppInstaller80Stack {
     inherit osx64XamppInstaller80Stack
@@ -421,6 +429,15 @@
     }
     public method archPlatform {} {
         return arm64
+    }
+}
+
+::itcl::class osxArm64XamppInstaller86Stack {
+    inherit osxArm64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php86
     }
 }
 

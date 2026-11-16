@@ -308,8 +308,7 @@
         set dirName php
         set opensslVersion [versions::get "OpenSSL" stable]
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
-        # default "" if a version needs a different revision set there
-        set windowsRevision ""
+        set windowsRevision 1
     }
     public method getTarballName {} {
         if {$windowsRevision != ""} {
@@ -431,8 +430,6 @@
         chain $environment
     } {
         set name windows64XamppPhp85
-        # PHP 85 needs revision 1
-        set windowsRevision 1
         set version [::xampp::php::getXAMPPVersion 85]
         set rev [::xampp::php::getXAMPPRevision 85]
         set vcVersion vs17
