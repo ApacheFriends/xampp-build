@@ -108,7 +108,7 @@ proc pearProgram {name args} {
             file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2015.exe [prefix]
         } elseif {[string match *Win32-VC15-x64* $tarballName]} {
             file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2017.exe [prefix]
-        } elseif {[string match *Win32-VS16-x64* $tarballName]} {
+        } elseif {[string match -nocase  *Win32-VS16-x64* $tarballName]} {
             file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2019.exe [prefix]
         } elseif {[string match -nocase *Win32-VS17-x64* $tarballName]} {
             file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2022.exe [prefix]
