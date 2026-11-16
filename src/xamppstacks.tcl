@@ -179,13 +179,21 @@
     }
 }
 
-
 ::itcl::class linuxXamppInstaller85Stack {
     inherit linuxXamppInstaller83Stack
     constructor {environment} {
         chain $environment
     } {
         replaceComponent ::xampp::php83 ::xampp::php85
+    }
+}
+
+::itcl::class linuxXamppInstaller86Stack {
+    inherit linuxXamppInstaller83Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php83 ::xampp::php86
     }
 }
 
@@ -265,6 +273,15 @@
         chain $environment
     } {
         set baseTarball xampp85-[$be targetPlatform]
+    }
+}
+
+::itcl::class linux64XamppInstaller86Stack {
+    inherit linuxXamppInstaller86Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        set baseTarball xampp86-[$be targetPlatform]
     }
 }
 
@@ -395,6 +412,14 @@
         replaceComponent ::xampp::php80 ::xampp::php85
     }
 }
+::itcl::class osx64XamppInstaller86Stack {
+    inherit osx64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php86
+    }
+}
 
 ::itcl::class osxArm64XamppInstaller80Stack {
     inherit osx64XamppInstaller80Stack
@@ -404,6 +429,15 @@
     }
     public method archPlatform {} {
         return arm64
+    }
+}
+
+::itcl::class osxArm64XamppInstaller86Stack {
+    inherit osxArm64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php86
     }
 }
 
@@ -631,6 +665,21 @@ return
     }
     public method getBaseNameForPlatform {} {
         return XamppInstallerPhp85Stack
+    }
+}
+
+::itcl::class xamppinstaller86stack {
+    inherit xamppinstallerstack
+    constructor {environment} {
+        chain $environment
+        set version [::xampp::php::getXAMPPVersion 86]
+        set rev [::xampp::php::getXAMPPRevision 86]
+        set application ::xampp::php86
+        set xampp_vcredist_name VS18
+    } {
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstallerPhp86Stack
     }
 }
 
@@ -938,6 +987,23 @@ return
     }
     public method confFileName {} {
         return xamppinstallerphp85
+    }
+}
+
+::itcl::class xamppunixinstaller86stack {
+    inherit xamppunixinstallerXstack
+    constructor {environment} {
+        chain $environment
+    } {
+        set version [::xampp::php::getXAMPPVersion 86]
+        set rev [::xampp::php::getXAMPPRevision 86]
+        set application ::xampp::php86
+    }
+    public method getBaseNameForPlatform {} {
+        return XamppInstaller86Stack
+    }
+    public method confFileName {} {
+        return xamppinstallerphp86
     }
 }
 

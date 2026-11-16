@@ -172,6 +172,14 @@
     }
 }
 
+::itcl::class windows64XamppApachePhp86 {
+    inherit windows64XamppApachePhp84
+    constructor {environment} {
+	    chain $environment
+    } {
+    }
+}
+
 ::itcl::class windows64XamppPhpAddons {
     inherit windowsXamppPhpAddons
     constructor {environment} {
@@ -425,6 +433,20 @@
         set version [::xampp::php::getXAMPPVersion 85]
         set rev [::xampp::php::getXAMPPRevision 85]
         set vcVersion vs17
+        set opensslVersion 1.1.1p
+        set tarballName php-${version}-Win32-${vcVersion}-x64.zip
+    }
+}
+
+::itcl::class windows64XamppPhp86 {
+  inherit windows64XamppPhp8
+    constructor {environment} {
+        chain $environment
+    } {
+        set name windows64XamppPhp86
+        set version [::xampp::php::getXAMPPVersion 86]
+        set rev [::xampp::php::getXAMPPRevision 86]
+        set vcVersion vs18
         set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
@@ -812,6 +834,17 @@
            replaceComponent windows64XamppApachePhp84 windows64XamppApachePhp85
            replaceComponent windows64XamppPhp84 windows64XamppPhp85
            replaceComponent windowsXamppStandardPhp84 windowsXamppStandardPhp85
+    }
+}
+
+::itcl::class windows64XamppInstallerPhp86Stack {
+    inherit windows64XamppInstallerPhp85Stack
+       constructor {environment} {
+        chain $environment
+       } {
+           replaceComponent windows64XamppApachePhp85 windows64XamppApachePhp86
+           replaceComponent windows64XamppPhp85 windows64XamppPhp86
+           replaceComponent windowsXamppStandardPhp85 windowsXamppStandardPhp86
     }
 }
 
