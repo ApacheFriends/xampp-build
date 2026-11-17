@@ -383,7 +383,7 @@
         set name windows64XamppPhp82
         set version [::xampp::php::getXAMPPVersion 82]
         set rev [::xampp::php::getXAMPPRevision 82]
-        set vcVersion VS16
+        set vcVersion vs16
         set opensslVersion 1.1.1p
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
     }
