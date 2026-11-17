@@ -30,6 +30,7 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/zziplib-0.13.80.tar.gz 21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
                 https://sourceforge.net/projects/xampp/files/thirdparties/readline-8.3.tar.gz fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
                 https://sourceforge.net/projects/xampp/files/thirdparties/zlib-1.4.tar.gz 02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584
+                https://sourceforge.net/projects/xampp/files/thirdparties/freetype-2.15.0.tar.gz 9186627467a616d9a9e3e574748ac0c45fa77398e6364edef3041a8ba8d92f64
 
           - os: osx-arm64
             runner: macos-15
@@ -44,6 +45,7 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/zziplib-0.13.80.tar.gz 21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
                 https://sourceforge.net/projects/xampp/files/thirdparties/readline-8.3.tar.gz fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
                 https://sourceforge.net/projects/xampp/files/thirdparties/zlib-1.4.tar.gz 02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584
+                https://sourceforge.net/projects/xampp/files/thirdparties/freetype-2.15.0.tar.gz 9186627467a616d9a9e3e574748ac0c45fa77398e6364edef3041a8ba8d92f64
 
           # Extremelly slow on macos-15-intel and fails. We should investigate crosscompiling on ARM
           # - os: osx-x64
