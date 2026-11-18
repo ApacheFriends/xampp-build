@@ -2166,32 +2166,7 @@ UseFtpUsers}]
             # Show environment
             showEnvironmentVars
 
-            # Start building - see which of these can be removed AI
-            eval logexec cmake -S . -B build -G Ninja 
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=[prefix] \
-            -DCMAKE_PREFIX_PATH=[prefix] \
-            -DINSTALL_PLUGINDIR=lib/mysql/plugin \
-            -DENABLED_LOCAL_INFILE=ON \
-            -DMYSQL_UNIX_ADDR=[prefix]/var/mysql/mysql.sock \
-            -DINSTALL_SBINDIR=sbin \
-            -DSYSCONFDIR=[prefix]/etc \
-            -DDEFAULT_SYSCONFDIR=[prefix]/etc \
-            -DMYSQL_DATADIR=[prefix]/var/mysql \
-            -DINSTALL_INFODIR=[prefix]/info \
-            -DWITH_SSL=system \
-            -DINSTALL_SCRIPTDIR=[prefix]/bin \
-            -DINSTALL_SUPPORTFILESDIR=[prefix]/share/mysql \
-            -DCURSES_LIBRARY=[prefix]/lib/libncursesw.so \
-            -DCURSES_INCLUDE_PATH=[prefix]/include/ncursesw \
-            -DPLUGIN_MROONGA=NO \
-            -DPLUGIN_ROCKSDB=NO \
-            -DPLUGIN_TOKUDB=NO \
-            -DPLUGIN_PROVIDER_LZ4=NO \
-            -DPLUGIN_PROVIDER_LZO=NO \
-            -DCLIENT_PLUGIN_ZSTD=OFF \
-            -DPLUGIN_PROVIDER_LZMA=NO \
-            -DINSTALL_MYSQLSHAREDIR=share/mysql
+            eval logexec cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=[prefix] -DINSTALL_PLUGINDIR=lib/mysql/plugin -DENABLED_LOCAL_INFILE=ON -DMYSQL_UNIX_ADDR=[prefix]/var/mysql/mysql.sock -DINSTALL_SBINDIR=sbin -DSYSCONFDIR=[prefix]/etc -DDEFAULT_SYSCONFDIR=[prefix]/etc -DMYSQL_DATADIR=[prefix]/var/mysql -DINSTALL_INFODIR=[prefix]/info -DWITH_SSL=system -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_PERFSCHEMA_STORAGE_ENGINE=1 -DWITH_FEDERATED_STORAGE_ENGINE=1 -DWITH_PARTITION_STORAGE_ENGINE=1 -DOPENSSL_INCLUDE_DIR=[prefix]/include -DOPENSSL_ROOT_DIR=[prefix]/ -DINSTALL_SCRIPTDIR=[prefix]/bin -DINSTALL_SUPPORTFILESDIR=[prefix]/share/mysql -DCMAKE_PREFIX_PATH=[prefix]/include/ncurses/ -DCURSES_INCLUDE_PATH=[prefix]/include/ncurses/ -DPLUGIN_ROCKSDB=NO -DPLUGIN_TOKUDB=NO -DWITHOUT_MROONGA_STORAGE_ENGINE=YES -DPLUGIN_PROVIDER_LZ4=NO -DPLUGIN_PROVIDER_LZO=NO  -DCLIENT_PLUGIN_ZSTD=OFF -DPLUGIN_PROVIDER_LZMA=NO -DINSTALL_MYSQLSHAREDIR=share/mysql
 
             # MariaDB is intended to be compiled using the OS-X system "libtool" library which includes the "-static" option.
             # The GNU "libtool" we add as a build dependency, since PHP requires, it does not have that option.
@@ -2199,14 +2174,7 @@ UseFtpUsers}]
             if {[$be targetPlatform] == "osx-x64"} {
                 xampptcl::util::substituteParametersInFile  [srcdir]/cmake/libutils.cmake [list {libtool -static} "/usr/bin/libtool -static"]
             }
-            # Fix error "'mutable' and 'const' cannot be mixed"
-            if {[string match osx* [$be cget -target]]} {
-                # xampptcl::util::substituteParametersInFile /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator [list "mutable _Iter" "/* mutable */ _Iter"]
-            }
             eval logexec cmake --build build
-            if {[string match osx* [$be cget -target]]} {
-                #xampptcl::util::substituteParametersInFile /Library/Developer/CommandLineTools/usr/include/c++/v1/iterator [list "/* mutable */ _Iter" "mutable _Iter"]
-            }
             set ::env(LDFLAGS) $ldflags
         }
         public method install {} {
