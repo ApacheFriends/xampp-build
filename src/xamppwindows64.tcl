@@ -300,7 +300,7 @@
         set dirName php
         set opensslVersion [versions::get "OpenSSL" stable]
         set tarballName php-${version}-Win32-${vcVersion}-x64.zip
-        set windowsRevision 1
+        set windowsRevision ""
     }
     public method getTarballName {} {
         if {$windowsRevision != ""} {
