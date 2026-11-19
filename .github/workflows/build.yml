@@ -9,7 +9,6 @@ on:
 env:
   IB_VERSION: 26.8.0
   IB_SHA256: "95581d5d5f1104a85133724f17cdf05e83130982cda193e9efd98feaa6e145d4"
-  TCLKIT_SHA256: 79c1df37ad470ceb96c14a7730eeaccf5e7c5e18f239689842c13cd85ed25c8c
 jobs:
   build-xampp:
     strategy:
@@ -119,15 +118,11 @@ jobs:
         with:
           path: /tmp/tarballs
           key: tarballs-${{ matrix.os }}-${{ hashFiles('.github/workflows/*') }}
-
-      - name: Install tclkit
-        id: install-tclkit
+      - name: Install Linux dependencies
         run: |
-          set -euo pipefail
-          curl --fail --show-error --silent -L -o tclkit 'https://tclkits.rkeene.org/fossil/raw/tclkit-8.5.17-rhel5-x86_64?name=76a197fe41359daaf4f90a2001f46675b3667e26'
-          echo "${{ env.TCLKIT_SHA256 }}  tclkit" | sha256sum -c -
-          chmod 755 tclkit
-          sudo mv tclkit /usr/local/bin
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+              tcl tk tcllib itcl3 tcl-vfs tdom
       - name: Cache InstallBuilder
         id: cache-installbuilder
         uses: actions/cache@v5
@@ -190,16 +185,20 @@ jobs:
           done <<< "${{ matrix.extra_binaries }}"
       - name: Build
         id: build
+        env:
+          DIST_DIR: /bitnami/dist-${{matrix.version}}-${{matrix.os}}
         run: |
           set -euo pipefail
           cd src
           if [[ "${{matrix.os}}" == "windows-x64" ]]; then
-             tclkit createstack.tcl pack xamppinstaller${{matrix.version}}stack ${{matrix.os}}
+             product=xamppinstaller${{matrix.version}}stack
           else
-             tclkit createstack.tcl pack xamppunixinstaller${{matrix.version}}stack ${{matrix.os}}
+             product=xamppunixinstaller${{matrix.version}}stack
           fi
-          mkdir /bitnami/dist-${{matrix.version}}-${{matrix.os}}
-          mv /opt/installbuilder/output/* /bitnami/dist-${{matrix.version}}-${{matrix.os}}
+          tclsh createstack.tcl pack $product ${{matrix.os}}
+          mkdir "$DIST_DIR"
+          mv /opt/installbuilder/output/* "$DIST_DIR"
+          tclsh createstack.tcl generateReleaseData $product ${{matrix.os}} --re-release 1 --output "$DIST_DIR" --files-path "$DIST_DIR" --merge-files 1
       - name: Archive production artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -218,11 +217,19 @@ jobs:
         with:
           path: dist
           merge-multiple: true
-
+      - name: Generate metadata for ApacheFriends
+        id: generate-downloads-yaml
+        run: |
+          set -euo pipefail
+          set -x
+          find dist/
+          yq eval-all '. as $item ireduce ({}; . *+ $item)' dist/*.yml | tee dist/downloads.yml
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
-          files: dist/**/xampp-*
+          files: |
+            dist/**/xampp-*
+            dist/downloads.yml
           token: ${{ github.token }}
           fail_on_unmatched_files: true
