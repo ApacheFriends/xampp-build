@@ -21,6 +21,8 @@
     public variable targetInstance
     public variable applicationInstance
 
+    #public variable bundled_component_list_yml {}
+    
     # This is equivalent to the key in bitnami.com, most of the release data depend on it (installer names, images directory, images name)
     public variable shortname
     public variable application {}
@@ -133,7 +135,7 @@
         return [xampptcl::util::isBooleanYes [$this cget -isTrial]]
     }
     public method isModule {} {
-        return [expr {[$this isa module] || [$targetInstance cget -kind] == "module"}]
+        return 0
     }
     public method getXMLFilesIncludedInProject {} {
         set projectFilePath [getProjectFile]
@@ -698,6 +700,7 @@
         set partialRelease 0
         set readFileProperties 1
         set readChangelog 1
+        set mergeFiles 0
         foreach {n v} $args {
             switch -- $n {
                 "--kind" {
@@ -708,11 +711,17 @@
                 "--fromCommandLineData" {
                     puts [parseCommandLineData $v]
                 }
+                "--merge-files" {
+                    set mergeFiles $v
+                }
                 "--stdout" {
                     set writeToStd $v
                 }
                 "--s3filepath" {
                     set s3filepath $v
+                }
+                "--files-path" {
+                    set filesPath $v
                 }
                 "--output" {
                     set releasesPath $v
@@ -735,12 +744,8 @@
             }
         }
 
-        if {![$this isa xamppProduct]} {
-          message info "Platform [$be cget -platformID] not supported by ${shortname}"
-          return {}
-        }
-
         setupComponents
+
         if {$readFileProperties} {
             set linkFileName                [readFileProperties]
         } else {
@@ -749,6 +754,11 @@
         set bundled_component_list      [getBundledComponentsXML]
         validateMetadata
 
+        set bundled_component_list {}
+        foreach c [$this getBundledComponents] {
+            lappend bundled_component_list "[$c cget -name] [$c cget -version]"
+        }
+        set bundled_component_list_yml [join $bundled_component_list ", "]
         set targetProperties {}
         array set p [$targetInstance propertyList]
         foreach {name value} [array get p] {
@@ -829,6 +839,7 @@
             set sourceForgeBaseUrl "http://downloads.sourceforge.net/project/xampp/XAMPP%20"
             set shortComponentList {}
             if {[string match *windows* [$targetInstance cget -name]]} {
+
                 regexp {^(?:.*, )?windows(?:64)?XamppApache ([^,]*),.*} $bundled_component_list_yml match apacheVersion
                 set shortComponentList [lappend shortComponentList "Apache ${apacheVersion}, "]
                 regexp {^.*, windows(?:64)?XamppMysql (\d*\.\d*\.\d*),.*} $bundled_component_list_yml match mysqlVersion
@@ -840,14 +851,14 @@
                 }
                 regexp {^.*, windows(?:64)?XamppPhp74 ([^,]*),.*} $bundled_component_list_yml match phpVersion
                 regexp {^.*, windows(?:64)?XamppPhp80 ([^,]*),.*} $bundled_component_list_yml match phpVersion
-                regexp {^.*, windows(?:64)?XamppPhp81 ([^,]*),.*} $bundled_component_list_yml match phpVersion
+                regexp {^.*, windows(?:64)?XamppPhp8\d ([^,]*),.*} $bundled_component_list_yml match phpVersion
                 set shortComponentList [lappend shortComponentList "PHP ${phpVersion}, "]
                 regexp {^.*, windows(?:64)?XamppPhpMyAdmin ([^,]*),.*} $bundled_component_list_yml match phpmyadminVersion
                 set shortComponentList [lappend shortComponentList "phpMyAdmin ${phpmyadminVersion}, "]
                 if {[::xampptcl::util::compareVersions $phpVersion 7.2] < 0} {
                     set shortComponentList [lappend shortComponentList "OpenSSL 1.0.2, "]
                 } else {
-                    set shortComponentList [lappend shortComponentList "OpenSSL 1.1.1, "]
+                    set shortComponentList [lappend shortComponentList "OpenSSL [versions::get OpenSSL stable], "]
                 }
                 set shortComponentList [lappend shortComponentList "XAMPP Control Panel 3.2.4, "]
                 regexp {^.*, windows(?:64)?XamppWebalizer ([^,]*),.*} $bundled_component_list_yml match webalizerVersion
@@ -871,13 +882,17 @@
                     set shortComponentList [lappend shortComponentList "MariaDB ${mariadbVersion}, "]
                 }
                 regexp {^.*, php ([^,]*),.*} $bundled_component_list_yml match phpVersion
-                regexp {^.*, sqlite (2[^,]*),.*} $bundled_component_list_yml match sqlite2Version
-                regexp {^.*, sqlite (3[^,]*),.*} $bundled_component_list_yml match sqlite3Version
-                if {[string match 7* $phpVersion]} {
-                    set shortComponentList [lappend shortComponentList "PHP ${phpVersion} + SQLite ${sqlite2Version}/${sqlite3Version} + multibyte (mbstring) support, "]
-                } else {
-                    set shortComponentList [lappend shortComponentList "PHP ${phpVersion} & PEAR + SQLite ${sqlite2Version}/${sqlite3Version} + multibyte (mbstring) support, "]
+                if {[regexp {^.*, sqlite (2[^,]*),.*} $bundled_component_list_yml match v]} {
+                    set sqliteVersion $v
+                } elseif {[regexp {^.*, sqlite (3[^,]*),.*} $bundled_component_list_yml match v]} {
+                    set sqliteVersion $v
                 }
+                if {[string match 7* $phpVersion]} {
+                    set shortComponentList [lappend shortComponentList "PHP ${phpVersion} + SQLite ${sqliteVersion}/ + multibyte (mbstring) support, "]
+                } else {
+                    set shortComponentList [lappend shortComponentList "PHP ${phpVersion} & PEAR + SQLite ${sqliteVersion} + multibyte (mbstring) support, "]
+                }
+
                 regexp {^.*, perl ([^,]*),.*} $bundled_component_list_yml match perlVersion
                 set shortComponentList [lappend shortComponentList "Perl ${perlVersion}, "]
                 regexp {^.*, proftpd ([^,]*),.*} $bundled_component_list_yml match proftpdVersion
@@ -902,6 +917,9 @@
                 set shortComponentList [lappend shortComponentList "Sablotron ${sablotronVersion}, "]
                 regexp {^.*, libxml ([^,]*),.*} $bundled_component_list_yml match libxmlVersion
                 set shortComponentList [lappend shortComponentList "libxml ${expatVersion}, "]
+                if {[regexp {^.*, ming ([^,]*),.*} $bundled_component_list_yml match mingVersion]} {
+                    lappend shortComponentList "Ming ${mingVersion}, "
+                }
                 regexp {^.*, webalizer ([^,]*),.*} $bundled_component_list_yml match webalizerVersion
                 set shortComponentList [lappend shortComponentList "Webalizer ${webalizerVersion}, "]
                 regexp {^.*, pdf-class ([^,]*),.*} $bundled_component_list_yml match pdfclassVersion
@@ -916,12 +934,14 @@
                 set shortComponentList [lappend shortComponentList "FreeTDS ${freetdsVersion}, "]
                 regexp {^.*, gettext ([^,]*),.*} $bundled_component_list_yml match gettextVersion
                 set shortComponentList [lappend shortComponentList "gettext ${gettextVersion}, "]
-                regexp {^.*, imap ([^,]*),.*} $bundled_component_list_yml match imapVersion
-                set shortComponentList [lappend shortComponentList "IMAP C-Client ${imapVersion}, "]
+                if {[regexp {^.*, imap ([^,]*),.*} $bundled_component_list_yml match imapVersion]} {
+                    lappend shortComponentList "IMAP C-Client ${imapVersion}, "
+                }
                 regexp {^.*, openldap ([^,]*),.*} $bundled_component_list_yml match openldapVersion
                 set shortComponentList [lappend shortComponentList "OpenLDAP (client) ${openldapVersion}, "]
-                regexp {^.*, libmcrypt ([^,]*),.*} $bundled_component_list_yml match libmcryptVersion
-                set shortComponentList [lappend shortComponentList "mcrypt ${libmcryptVersion}, "]
+                if {[regexp {^.*, libmcrypt ([^,]*),.*} $bundled_component_list_yml match libmcryptVersion]} {
+                    lappend shortComponentList "mcrypt ${libmcryptVersion}, "
+                }
                 regexp {^.*, mhash ([^,]*),.*} $bundled_component_list_yml match mhashVersion
                 set shortComponentList [lappend shortComponentList "mhash ${mhashVersion}, "]
                 regexp {^.*, curl ([^,]*),.*} $bundled_component_list_yml match curlVersion
@@ -951,43 +971,37 @@
                     set requirements "Mac OS X 10.6 or later."
                 }
                 set platformUrl "Mac%20OS%20X"
-                set osTag "64"
+                set osTag "arm64"
             } elseif {[string match *linux* [$targetInstance cget -name]]} {
                 set firstLevel "linux-x64"
                 set requirements "Most all distributions of Linux are supported, including Debian, RedHat, CentOS, Ubuntu, Fedora, Gentoo, Arch, SUSE."
                 set platformUrl "Linux"
-                set osTag "64"
+                set osTag "x64"
             } elseif {[string match *windows* [$targetInstance cget -name]]} {
                 set firstLevel "windows"
                 set platformUrl "Windows"
-                set requirements "Windows 2008, 2012, Vista, 7, 8 (Important: XP or 2003 not supported)"
-                set osTag "64"
+                set requirements "Windows 2008, 2012, Vista, 7, 8, 10, 11 (Important: XP or 2003 not supported)"
+                set osTag "x64"
             }
-            if {$firstLevel == "linux" && $osTag == "64"} {
-                xampptcl::file::write $releasesPath/[bitnamiPortalKey]/${version}-${rev}/$linkFileName.yml "      x${osTag}:
-        checksum_md5: $targetMD5
-        checksum_sha1: $targetSha1
-        checksum_sha256: $targetSha256
-        size: \"[expr $targetSize/(1024*1024)] Mb\"
-        url: \"${baseUrl}/${version}/$linkFileName\"
-        alternative_url: \"${sourceForgeBaseUrl}${platformUrl}/${version}/$linkFileName\"
-"
+            if {$mergeFiles == 1} {
+                set destYamlFile [file join $releasesPath $linkFileName.yml]
             } else {
-                xampptcl::file::write $releasesPath/[bitnamiPortalKey]/${version}-${rev}/$linkFileName.yml "  -
-    version: $version
+                set destYamlFile [file join $releasesPath [bitnamiPortalKey] ${version}-${rev} $linkFileName.yml]
+            }
+                xampptcl::file::write $destYamlFile "
+$firstLevel:
+  - version: $version
     php_version: $phpVersion
     whats_included: \"$shortComponentListText\"
     requirements: \"$requirements\"
     downloads:
-      x${osTag}:
+      ${osTag}:
         checksum_md5: $targetMD5
         checksum_sha1: $targetSha1
         checksum_sha256: $targetSha256
         size: \"[expr $targetSize/(1024*1024)] Mb\"
-        url: \"${baseUrl}/${version}/$linkFileName\"
-        alternative_url: \"${sourceForgeBaseUrl}${platformUrl}/${version}/$linkFileName\"
+        url: \"${sourceForgeBaseUrl}${platformUrl}/${version}/$linkFileName\"
 "
-            }
         }
         if {$writeToStd == 1} {
             puts -nonewline $outputText
@@ -1124,17 +1138,6 @@
             if {[$c isWtfpl]} {
                 set componentLicense WTFPL
             }
-            if {[$c isNotGoogleWhitelisted] != 0} {
-                if {[$c isNotGoogleWhitelisted] == 1} {
-                    if {[catch {set componentSourcesTarballPath [$c getS3SourcesTarballLocation]} kk]} {
-                        message warning "S3 TarballLocation for [$c cget -name] not found."
-                    }
-                } elseif {$shortname != "xampp"} {
-                    message error "Can't obtain license for $componentName"
-                    exit 1
-                }
-
-            }
             set componentFullName [$c cget -fullname]
             set mainComponent "false"
             if {[isMainComponentBundled $c $standaloneFileContent]} {
@@ -1202,13 +1205,7 @@
             if { [$targetInstance cget -kind] == {nojdk}} {
                 lappend components_to_ignore java
             }
-            if {[$this isa xamppProduct] } {
-                lappend components_to_ignore postgresql sqlite ruby
-            } elseif { [$this isa xappProduct]} {
-                lappend components_to_ignore mysql phpmyadmin sqlite ruby
-            } elseif { [$this isa rubyProduct] && ![$this isa rubystackbase]} {
-                lappend components_to_ignore phpmyadmin php mod_fastcgi perl {ruby 1.9.1-p129}
-            }
+            lappend components_to_ignore postgresql sqlite ruby
             foreach c [$this getBundledComponents] {
                 set component [$c info class]
                 if {[lsearch $components_to_ignore component] == -1 \
