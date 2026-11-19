@@ -522,7 +522,7 @@
         chain $environment
     } {
         set version 3.1.2-8.0
-        set libraryName php_xdebug-${version}-vs16-x64.dll
+        set libraryName php_xdebug-${version}-vs16-x86_64.dll
         set tarballName ${libraryName}
         lappend additionalFileList ${libraryName}
     }
@@ -537,8 +537,8 @@
     constructor {environment} {
         chain $environment
     } {
-        set version 3.1.2-8.q
-        set libraryName php_xdebug-${version}-vs16-x64.dll
+        set version 3.1.2-8.1
+        set libraryName php_xdebug-${version}-vs16-x86_64.dll
         set tarballName ${libraryName}
         lappend additionalFileList ${libraryName}
     }
