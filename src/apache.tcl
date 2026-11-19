@@ -82,12 +82,12 @@
         set dependencies {openssl {openssl-functions.xml openssl.xml openssl-without-apache.xml}}
         set readmePlaceholder OPENSSL
         set downloadType wget
-        set downloadUrl http://www.openssl.org/source/openssl-$version.tar.gz
+        set downloadUrl https://www.openssl.org/source/openssl-$version.tar.gz
     }
     public method download {} {
         set version  [getVersionFromVtracker]
         set downloadType wget
-        set downloadUrl http://www.openssl.org/source/openssl-$version.tar.gz
+        set downloadUrl https://www.openssl.org/source/openssl-$version.tar.gz
         chain
     }
     public method prefix {} {
@@ -474,7 +474,7 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
         set version [getVersionFromVtracker]
         set downloadType wget
         set downloadTarballName httpd-$version.tar.gz
-        set downloadUrl http://apache.uvigo.es/httpd/$downloadTarballName
+        set downloadUrl https://archive.apache.org/dist/httpd/$downloadTarballName
         chain
         # 32 bits is necessary for zlib1 in drupal
         foreach winVersion [list win32 win64] {
@@ -562,7 +562,7 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
     public method download {} {
         foreach version [list [getVtrackerField PHP74 version infrastructure] [getVtrackerField PHP80 version infrastructure] [getVtrackerField PHP81 version infrastructure]] {
             set downloadTarballName $name-$version.tar.gz
-            set downloadUrl http://php.net/get/php-$version.tar.gz/from/this/mirror
+            set downloadUrl https://www.php.net/distributions/php-$version.tar.gz
             chain
             if { [::xampptcl::util::compareVersions $version 7.0.0] < 0 } {
                 set vcVersion VC11
@@ -574,7 +574,7 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
                 set vcVersion VS16
             }
             set downloadTarballName $name-$version-Win32-$vcVersion-x64.zip
-            set downloadUrl http://windows.php.net/downloads/releases/php-$version-Win32-$vcVersion-x64.zip
+            set downloadUrl https://windows.php.net/downloads/releases/php-$version-Win32-$vcVersion-x64.zip
             chain
         }
     }
