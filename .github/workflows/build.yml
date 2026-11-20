@@ -30,6 +30,8 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/windows/php-8.3.37-Win32-vs16-x64.zip 07984bdcfd4391888954c2e73b1cf2c0d403cfa5fd8cb32ad60ddcd854c6b7de
                 https://sourceforge.net/projects/xampp/files/thirdparties/windows/php-8.4.28-Win32-vs17-x64.zip 59ccaa095d0f0c3fbb9f7e2bfd86713ebac032d5783cc22bc8934e2285629999
                 https://sourceforge.net/projects/xampp/files/thirdparties/windows/php-8.5.13-Win32-vs17-x64.zip 792fe1553895ee98f9bc3c9d50c539910f7d0066676a6523207ca91429d4d475
+                https://sourceforge.net/projects/xampp/files/thirdparties/windows/php-8.6.0-Win32-vs18-x64.zip daf3639addc12197bfea7aff8797edc78939f5d8809e0cced49d899347c337b0
+                https://sourceforge.net/projects/xampp/files/thirdparties/windows/vcredist_x64_2026.exe/download 9c02c9ed120f671b900e6b9471d890e3b2414117a7e53f4ae2e855466fa2b7c9
           - os: osx-arm64
             version: 85
             base_tarball: "https://github.com/ApacheFriends/xampp-build/releases/download/tarballs%2F20261119/xampp85-osx-arm64-20261119.tar.gz"

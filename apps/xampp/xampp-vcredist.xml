@@ -30,7 +30,7 @@
     <postInstallationActionList>
 	<runProgram>
 	    <program>./vcredist_x64.exe</program>
-	    <programArguments>/q</programArguments>
+	    <programArguments>/q /norestart</programArguments>
 	    <showMessageOnError>0</showMessageOnError>
 	    <abortOnError>0</abortOnError>
 	    <workingDirectory>${installdir}/vcredist</workingDirectory>

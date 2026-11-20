@@ -79,7 +79,7 @@ proc pearProgram {name args} {
         set ::opts(php.version) $version
         set licenseRelativePath license.txt
         set includePear 1
-        lappend additionalFileList vcredist_x64_2008.exe vcredist_x64_2012.exe vcredist_x64_2015.exe vcredist_x64_2017.exe vcredist_x64_2019.exe vcredist_x64_2022.exe lamp56.tar.gz php/php5apache2_4.dll composer-$composerVersion.phar composer-license.txt windowstools/vcredist/msvcr110.dll windowstools/vcredist/msvcp110.dll
+        lappend additionalFileList vcredist_x64_2008.exe vcredist_x64_2012.exe vcredist_x64_2015.exe vcredist_x64_2017.exe vcredist_x64_2019.exe vcredist_x64_2022.exe vcredist_x64_2026.exe lamp56.tar.gz php/php5apache2_4.dll composer-$composerVersion.phar composer-license.txt windowstools/vcredist/msvcr110.dll windowstools/vcredist/msvcp110.dll
     }
     public method extractDirectory {} {
         if { [string match *Win32-VC6-x* $tarballName] || [string match *Win32-VC9-x* $tarballName] || [string match *Win32-VC1\[145\]-x* $tarballName] || [string match *Win32-VS1\[6\]-x* $tarballName]} {
@@ -112,6 +112,8 @@ proc pearProgram {name args} {
             file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2019.exe [prefix]
         } elseif {[string match -nocase *Win32-VS17-x64* $tarballName]} {
             file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2022.exe [prefix]
+        } elseif {[string match -nocase *Win32-VS18-x64* $tarballName]} {
+            file copy -force [$be cget -tarballs]/windowstools/vcredist/vcredist_x64_2026.exe [prefix]
         } else {
             error "Unknown vcredist version required for $tarballName"
         }
@@ -302,6 +304,17 @@ proc pearProgram {name args} {
     } {
         set version [versions::get "PHP" 85]
         set tarballName php-${version}-Win32-VS17-x64
+        set includePear 1
+    }
+}
+
+::itcl::class php86WindowsX64 {
+    inherit phpWindowsX64
+    constructor {environment} {
+        chain $environment
+    } {
+        set version [versions::get "PHP" 86]
+        set tarballName php-${version}-Win32-VS18-x64
         set includePear 1
     }
 }
