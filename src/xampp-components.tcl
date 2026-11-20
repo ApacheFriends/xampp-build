@@ -3102,16 +3102,6 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 set patchList {fix-opcache-support-php-8.OS-X.patch}
             }
         }
-    }
-
-    ::itcl::class php83 {
-        inherit php
-        constructor {environment} {
-            chain $environment
-        } {
-            set vtrackerName XAMPP83
-            set version [::xampp::php::getXAMPPVersion 83]
-        }
         public method build {} {
             if {[string match osx* [$be cget -target]]} {
                 # It complains because 10.15 is too old but on newer php versions it just uses __builtin_available
@@ -3122,6 +3112,17 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 }}
             }
             chain
+        }
+    }
+
+    ::itcl::class php83 {
+        inherit php82
+        constructor {environment} {
+            chain $environment
+        } {
+            set vtrackerName XAMPP83
+            set version [::xampp::php::getXAMPPVersion 83]
+            set patchList {}
         }
     }
 

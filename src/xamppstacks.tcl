@@ -434,6 +434,15 @@
     }
 }
 
+::itcl::class osxArm64XamppInstaller82Stack {
+    inherit osxArm64XamppInstaller80Stack
+    constructor {environment} {
+        chain $environment
+    } {
+        replaceComponent ::xampp::php80 ::xampp::php82
+    }
+}
+
 
 
 
