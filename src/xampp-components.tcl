@@ -1419,13 +1419,13 @@ UseFtpUsers}]
             chain $environment
         } {
             set name "fpdf"
-            set version 1.7
-            set tarballName fpdf17
+            set version 1.9
+            set tarballName fpdf19
             set licenseRelativePath ""
             set licenseNotes ""
         }
         public method srcdir {} {
-            return [$be cget -src]/fpdf17
+            return [$be cget -src]/fpdf19
         }
 	public method prefix {} {
 	    return [$be cget -output]
