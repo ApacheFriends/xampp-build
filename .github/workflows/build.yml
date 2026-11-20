@@ -205,8 +205,45 @@ jobs:
           name: xampp-${{matrix.version}}-${{matrix.os}}
           path: |
             /bitnami/dist-${{matrix.version}}-${{matrix.os}}/*
-  publish:
+
+  sign-assets:
     needs: build-xampp
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - name: upload unsigned artifact
+        id: upload-unsigned-artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: dist/**/*.exe
+      - name: submit signing request
+        uses: signpath/github-action-submit-signing-request@v3
+        id: sign-request
+        with:
+          api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+          organization-id: '${{ secrets.SIGNPATH_ORGANIZATION_ID }}'
+          project-slug: '${{ secrets.SIGNPATH_PROJECT_SLUG }}'
+          signing-policy-slug: 'testing-policy'
+          github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
+          wait-for-completion: true
+      - name: download signed files
+        env:
+           ARTIFACTS_URL: ${{ steps.sign-request.outputs.signed-artifact-download-url }}
+        id: download-signed-files
+        run: |
+          set -euo pipefail
+          echo "$ARTIFACTS_URL"
+          curl -L -o signed-artifacts.zip "$ARTIFACTS_URL"
+          mkdir signed-files
+          unzip signed-artifacts.zip -d signed-files/
+          find signed-files/
+          sha256sum signed-files/* || true
+  publish:
+    needs: sign-assets
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     permissions:
