@@ -448,7 +448,7 @@ System variables provided by this component:
     <postInstallationActionList>
         <actionGroup>
             <actionList>
-                <foreach variables="vcredist_version" values="2015 2017 2019 2022">
+                <foreach variables="vcredist_version" values="2015 2017 2019 2022 2026">
                     <actionList>
                         <runProgram>
                             <program>${installdir}/apache2/vcredist_x64_${vcredist_version}.exe</program>

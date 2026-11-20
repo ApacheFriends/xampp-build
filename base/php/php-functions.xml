@@ -774,7 +774,7 @@ zend_extension=${extensionName}.${fileExtension}</value>
                             </substitutionList>
                         </substitute>
                         <!-- Currently we only support PHP 5.3.6 or later -->
-                        <foreach variables="vcredist_version" values="2008 2012 2013 2015 2017 2019 2022">
+                        <foreach variables="vcredist_version" values="2008 2012 2013 2015 2017 2019 2022 2026">
                             <actionList>
                                 <runProgram>
                                     <program>${installdir}/php/vcredist_${windows_arch}_${vcredist_version}.exe</program>

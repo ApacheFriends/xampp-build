@@ -3154,10 +3154,6 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
             set vtrackerName XAMPP86
             set version [::xampp::php::getXAMPPVersion 86]
         }
-        # remove when stable PHP 8.6 released
-        public method srcdir {} {
-            return [file join [$be cget -src] "php-${version}RC5"]
-        }
     }
 
 }

@@ -66,6 +66,17 @@
     }
 }
 
+::itcl::class windows64XamppVcredist2026 {
+    inherit windows64XamppVcredist
+    constructor {environment} {
+        chain $environment
+    } {
+        set version 2026
+        set vcVersion VS18
+        set tarballName vcredist_x64_${version}.exe
+    }
+}
+
 ::itcl::class windows64XamppApache {
     inherit windowsXamppApache
     constructor {environment} {
@@ -444,6 +455,7 @@
         chain $environment
     } {
         set name windows64XamppPhp86
+        set windowsRevision ""
         set version [::xampp::php::getXAMPPVersion 86]
         set rev [::xampp::php::getXAMPPRevision 86]
         set vcVersion vs18
@@ -845,6 +857,7 @@
            replaceComponent windows64XamppApachePhp85 windows64XamppApachePhp86
            replaceComponent windows64XamppPhp85 windows64XamppPhp86
            replaceComponent windowsXamppStandardPhp85 windowsXamppStandardPhp86
+           replaceComponent windows64XamppVcredist2022 windows64XamppVcredist2026
     }
 }
 
