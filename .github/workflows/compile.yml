@@ -30,7 +30,7 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/zziplib-0.13.80.tar.gz 21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
                 https://sourceforge.net/projects/xampp/files/thirdparties/readline-8.3.tar.gz fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
                 https://sourceforge.net/projects/xampp/files/thirdparties/zlib-1.4.tar.gz 02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584
-                https://sourceforge.net/projects/xampp/files/thirdparties/fpdf19.zip 7d1ff963a434e05796db4bdbab7f542908fe20c57b225a55173191aea6444f16
+                https://sourceforge.net/projects/xampp/files/thirdparties/fpdf19.tgz a9e309cc61743fcdabe6385236d3a328aea046add5d7937a70e6a58311737099
                 https://sourceforge.net/projects/xampp/files/thirdparties/freetype-2.15.0.tar.gz 9186627467a616d9a9e3e574748ac0c45fa77398e6364edef3041a8ba8d92f64
                 https://sourceforge.net/projects/xampp/files/thirdparties/php-8.3.37.tar.gz cdd2ed867cb104ececff7c0292142c807c68a6b6da1b114ead4d586fba628a4f
                 https://sourceforge.net/projects/xampp/files/thirdparties/php-8.4.28.tar.gz deffc88c60fcfb99f683a9f6689e9c91cf41b7cba50bd5f01a232a98c27f2cd4
@@ -51,7 +51,7 @@ jobs:
                 https://sourceforge.net/projects/xampp/files/thirdparties/zziplib-0.13.80.tar.gz 21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
                 https://sourceforge.net/projects/xampp/files/thirdparties/readline-8.3.tar.gz fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
                 https://sourceforge.net/projects/xampp/files/thirdparties/zlib-1.4.tar.gz 02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584
-                https://sourceforge.net/projects/xampp/files/thirdparties/fpdf19.zip 7d1ff963a434e05796db4bdbab7f542908fe20c57b225a55173191aea6444f16
+                https://sourceforge.net/projects/xampp/files/thirdparties/fpdf19.tgz a9e309cc61743fcdabe6385236d3a328aea046add5d7937a70e6a58311737099
                 https://sourceforge.net/projects/xampp/files/thirdparties/freetype-2.15.0.tar.gz 9186627467a616d9a9e3e574748ac0c45fa77398e6364edef3041a8ba8d92f64
                 https://sourceforge.net/projects/xampp/files/thirdparties/php-8.3.37.tar.gz cdd2ed867cb104ececff7c0292142c807c68a6b6da1b114ead4d586fba628a4f
                 https://sourceforge.net/projects/xampp/files/thirdparties/php-8.4.28.tar.gz deffc88c60fcfb99f683a9f6689e9c91cf41b7cba50bd5f01a232a98c27f2cd4
