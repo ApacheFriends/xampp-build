@@ -2860,6 +2860,7 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 8.3 - 83 { return [versions::get "PHP" 83] }
                 8.4 - 84 { return [versions::get "PHP" 84] }
                 8.5 - 85 { return [versions::get "PHP" 85] }
+                8.6 - 86 { return [versions::get "PHP" 86] }
             }
         }
 
@@ -2872,6 +2873,7 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
                 8.3 - 83 { return [revisions::get "xamppstack" 83] }
                 8.4 - 84 { return [revisions::get "xamppstack" 84] }
                 8.5 - 85 { return [revisions::get "xamppstack" 85] }
+                8.6 - 86 { return [revisions::get "xamppstack" 86] }
             }
         }
         public method configureOptions {} {
@@ -3142,6 +3144,16 @@ $cfg['Servers'][$i]['favorite'] = 'pma__favorite';} \
         } {
             set vtrackerName XAMPP85
             set version [::xampp::php::getXAMPPVersion 85]
+        }
+    }
+
+    ::itcl::class php86 {
+        inherit php
+        constructor {environment} {
+            chain $environment
+        } {
+            set vtrackerName XAMPP86
+            set version [::xampp::php::getXAMPPVersion 86]
         }
     }
 
