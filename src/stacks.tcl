@@ -159,7 +159,7 @@
     }
     protected method tarballPath {} {
         # Values are set in the buildEnvironment class
-        set rc [concat [$be cget -betaTarballs] [recursiveGlobDir [$be cget -tarballs]] [recursiveGlobDir [$be cget -clientFilesDir]] [recursiveGlobDir [$be cget -compiledTarballs]]]
+        set rc [concat [list [$be cget -betaTarballs]] [recursiveGlobDir [$be cget -tarballs]] [recursiveGlobDir [$be cget -clientFilesDir]] [recursiveGlobDir [$be cget -compiledTarballs]] [recursiveGlobDir [$be cget -baseTarballs]]]
         if { [info exists ::env(TEMP_TARBALLS_DIR)]} {
             lappend rc $::env(TEMP_TARBALLS_DIR)
         }

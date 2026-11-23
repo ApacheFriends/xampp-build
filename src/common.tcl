@@ -775,6 +775,7 @@ if {$::tcl_platform(os) == "SunOS"} {
     public variable root
     public variable tarballs
     public variable betaTarballs
+    public variable baseTarballs
     public variable src
     public variable output
     public variable builddep
@@ -822,6 +823,7 @@ if {$::tcl_platform(os) == "SunOS"} {
         set tarballs /tmp/tarballs
         set compiledTarballs /tmp/compiled-tarballs
         set betaTarballs /tmp
+        set baseTarballs /tmp/base-tarballs
         set libprefix common
         set thirdpartyPath "/tmp/tarballs"
         set thirdpartyS3Path "apachefriends/opt/thirdparty/tarballs"
