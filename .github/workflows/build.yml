@@ -111,15 +111,17 @@ jobs:
         id: cache
         uses: actions/cache@v4
         with:
-          path: /tmp/tarballs/${{ steps.base_tarball.outputs.filename }}
+          path: /tmp/base-tarballs/${{ steps.base_tarball.outputs.filename }}
           key: base-tarball-${{ matrix.base_tarball_sha256 }}
-
       - name: Cache tarballs
         id: cache-tarballs
         uses: actions/cache@v5
         with:
           path: /tmp/tarballs
-          key: tarballs-${{ matrix.os }}-${{ hashFiles('.github/workflows/*') }}
+          key: tarballs-${{ matrix.os }}-${{ matrix.version }}
+          restore-keys: |
+            tarballs-${{ matrix.os }}-
+            tarballs-
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
@@ -159,7 +161,6 @@ jobs:
           /opt/installbuilder/bin/builder check-license
       - name: Get tarballs
         id: get-tarballs
-        if: steps.cache-tarballs.outputs.cache-hit != 'true'
         run: |
           set -euo pipefail
           mkdir -p /tmp/tarballs
@@ -181,9 +182,14 @@ jobs:
           echo "Downloading extra binaries..."
           while read -r url sha; do
             [ -z "$url" ] && continue
-            echo "  -> $url"
-            curl --fail --show-error --silent --retry 3 -L -O "$url"
-            echo "$sha  $(basename "$url")" | sha256sum -c -
+            local_file=$(basename "$url")
+            if [[ ! -f "$local_file" ]]; then
+              echo "Downloading  $local_file from -> $url"
+              curl --fail --show-error --silent --retry 3 -L -o "$local_file" "$url"
+            else
+              echo "Using local file $local_file"
+            fi
+            echo "$sha  $local_file" | sha256sum -c -
           done <<< "${{ matrix.extra_binaries }}"
       - name: Build
         id: build
