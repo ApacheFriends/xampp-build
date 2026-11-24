@@ -232,18 +232,31 @@ jobs:
         id: build
         env:
           DIST_DIR: /bitnami/dist-${{matrix.version}}-${{matrix.os}}
+          BITNAMI_BUILD_DIRECTORY: /bitnami/build
         run: |
           set -euo pipefail
+          mkdir -p "$BITNAMI_BUILD_DIRECTORY"
           cd src
           if [[ "${{matrix.os}}" == "windows-x64" ]]; then
              product=xamppinstaller${{matrix.version}}stack
+             portable_product=xamppportableinstaller${{matrix.version}}stack
           else
              product=xamppunixinstaller${{matrix.version}}stack
+             portable_product=""
           fi
           tclsh createstack.tcl pack $product ${{matrix.os}}
+          if [[ -n "$portable_product" ]]; then
+            tclsh createstack.tcl pack $portable_product ${{matrix.os}}
+          fi
           mkdir "$DIST_DIR"
           mv /opt/installbuilder/output/* "$DIST_DIR"
           tclsh createstack.tcl generateReleaseData $product ${{matrix.os}} --re-release 1 --output "$DIST_DIR" --files-path "$DIST_DIR" --merge-files 1
+          if [[ -n "$portable_product" ]]; then
+            tclsh createstack.tcl generateReleaseData $portable_product ${{matrix.os}} --re-release 1 --output "$DIST_DIR" --files-path "$DIST_DIR" --merge-files 1
+          fi
+          if [[ "${{matrix.os}}" == "windows-x64" ]]; then
+             cp -rp "$BITNAMI_BUILD_DIRECTORY"/output/xampp*.7z "$BITNAMI_BUILD_DIRECTORY"/output/xampp*.zip "$DIST_DIR"
+          fi
       - name: Archive production artifacts
         uses: actions/upload-artifact@v7
         with:

@@ -1123,12 +1123,11 @@ mssql.secure_connection=Off"
 	    cd [$be cget -output]
 	    # logexec 7z a -tzip -mx9 -md=32k -mfb=128 -mpass=10 -mem=AES256 $xamppName.zip xampp
 	    # logexec 7z a -t7z -mx=9 -mfb=64 -md=64m -ms=on $xamppName.7z xampp
-	    logexec 7z a -tzip $xamppName.zip xampp
-	    logexec 7z a -t7z  $xamppName.7z xampp
+        logexec 7z a -tzip $xamppName.zip xampp
+        logexec 7z a -t7z  $xamppName.7z xampp
 
 	    puts "RESULT FILE: \"[file join [pwd] $xamppName.zip]\""
 	    puts "RESULT FILE: \"[file join [pwd] $xamppName.7z]\""
-
 	    cd $wd
 	}
     }
@@ -1359,12 +1358,11 @@ mssql.secure_connection=Off"
 
     public method packXampp {} {
 	set xamppName "xampp-portable-windows-x64-${version}-${rev}-${xampp_vcredist_name}"
-
 	set wd [pwd]
 	cd [$be cget -output]
 
 	# logexec 7z a -tzip -mx9 -md=32k -mfb=128 -mpass=10 -mem=AES256 $xamppName.zip xampp
-	# logexec 7z a -t7z -mx=9 -mfb=64 -md=64m -ms=on $xamppName.7z xampp
+        # logexec 7z a -t7z -mx=9 -mfb=64 -md=64m -ms=on $xamppName.7z xampp
 	logexec 7z a -tzip $xamppName.zip xampp
 	logexec 7z a -t7z $xamppName.7z xampp
 
@@ -1401,7 +1399,6 @@ mssql.secure_connection=Off"
     inherit windowsXamppPortable
     constructor {environment} {
         chain $environment
-        set xampp_vcredist_name VS16
     } {
     }
     public method packXampp {} {
@@ -1413,30 +1410,69 @@ mssql.secure_connection=Off"
 
 ::itcl::class windowsXamppPortablePhp80 {
     inherit windowsXamppPortablePhp8
+    protected variable shortVersionID {80}
     constructor {environment} {
         chain $environment
-        set version [::xampp::php::getXAMPPVersion 80]
-        set rev [::xampp::php::getXAMPPRevision 80]
     } {
+        set version [::xampp::php::getXAMPPVersion $shortVersionID]
+        set rev [::xampp::php::getXAMPPRevision $shortVersionID]
     }
 }
 
 ::itcl::class windowsXamppPortablePhp81 {
-    inherit windowsXamppPortablePhp8
+    inherit windowsXamppPortablePhp80
     constructor {environment} {
+        set shortVersionID 81
         chain $environment
-        set version [::xampp::php::getXAMPPVersion 81]
-        set rev [::xampp::php::getXAMPPRevision 81]
     } {
     }
 }
 
 ::itcl::class windowsXamppPortablePhp82 {
-    inherit windowsXamppPortablePhp8
+    inherit windowsXamppPortablePhp80
     constructor {environment} {
+        set shortVersionID 82
+        set xampp_vcredist_name VS16
         chain $environment
-        set version [::xampp::php::getXAMPPVersion 82]
-        set rev [::xampp::php::getXAMPPRevision 82]
+    } {
+    }
+}
+
+::itcl::class windowsXamppPortablePhp83 {
+    inherit windowsXamppPortablePhp80
+    constructor {environment} {
+        set shortVersionID 83
+        set xampp_vcredist_name VS16
+        chain $environment
+    } {
+    }
+}
+
+::itcl::class windowsXamppPortablePhp84 {
+    inherit windowsXamppPortablePhp80
+    constructor {environment} {
+        set shortVersionID 84
+        set xampp_vcredist_name VS17
+        chain $environment
+    } {
+    }
+}
+
+::itcl::class windowsXamppPortablePhp85 {
+    inherit windowsXamppPortablePhp80
+    constructor {environment} {
+        set shortVersionID 85
+        set xampp_vcredist_name VS17
+        chain $environment
+    } {
+    }
+}
+::itcl::class windowsXamppPortablePhp86 {
+    inherit windowsXamppPortablePhp80
+    constructor {environment} {
+        set shortVersionID 86
+        set xampp_vcredist_name VS18
+        chain $environment
     } {
     }
 }
