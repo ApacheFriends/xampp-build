@@ -1011,6 +1011,7 @@ return
 ::itcl::class xamppportableinstallerstack {
     inherit product
     protected variable xampp_vcredist_name VC11
+    protected variable shortVersionID {}
     constructor {environment} {
         set shortname xampp
         chain $environment
@@ -1018,8 +1019,10 @@ return
         $targetInstance configure -kind portable
         set fullname "XAMPP Portable Lite"
         set name xampp
-        set version [::xampp::php::getXAMPPVersion 55]
-        set rev [::xampp::php::getXAMPPRevision 55]
+        set version [::xampp::php::getXAMPPVersion $shortVersionID]
+        set rev [::xampp::php::getXAMPPRevision $shortVersionID]
+        set application ::xampp::php$shortVersionID
+        set xampp_vcredist_name VS16
         set projectFile xampp-installer-portable-standalone.xml
         set programming_language PHP
         lappend tags MySQL Apache PHP Tomcat
@@ -1048,8 +1051,12 @@ return
     }
     public method copyStackTxt {} {}
     public method getBaseNameForPlatform {} {
-        return XamppPortableInstallerStack
+        return XamppPortableInstallerPhp${shortVersionID}Stack
     }
+    public method confFileName {} {
+        return xamppinstallerphp${shortVersionID}
+    }
+
     public method preparefordist {} {
         $be configure -setvars "[$be cget -setvars] component(bitnamisettings).parameter(bitnamisettings_windowsxp_support).value=0"
     }
@@ -1063,23 +1070,7 @@ return
         return ${installerName}
     }
 }
-::itcl::class xamppportableinstaller74stack {
-    inherit xamppportableinstallerstack
-    constructor {environment} {
-        chain $environment
-        set version [::xampp::php::getXAMPPVersion 74]
-        set rev [::xampp::php::getXAMPPRevision 74]
-        set application ::xampp::php74
-        set xampp_vcredist_name VC15
-    } {
-    }
-    public method getBaseNameForPlatform {} {
-        return XamppPortableInstallerPhp74Stack
-    }
-    public method confFileName {} {
-        return xamppinstallerphp74
-    }
-}
+
 ::itcl::class xamppportableinstaller80stack {
     inherit xamppportableinstallerstack
     constructor {environment} {
@@ -1114,23 +1105,58 @@ return
         return xamppinstallerphp81
     }
 }
+
 ::itcl::class xamppportableinstaller82stack {
     inherit xamppportableinstallerstack
     constructor {environment} {
+        set shortVersionID 82
         chain $environment
-        set version [::xampp::php::getXAMPPVersion 82]
-        set rev [::xampp::php::getXAMPPRevision 82]
-        set application ::xampp::php82
-        set xampp_vcredist_name VS16
     } {
     }
     public method getBaseNameForPlatform {} {
-        return XamppPortableInstallerPhp82Stack
+        return XamppPortableInstallerPhp${shortVersionID}Stack
     }
     public method confFileName {} {
-        return xamppinstallerphp82
+        return xamppinstallerphp${shortVersionID}
     }
 }
+
+::itcl::class xamppportableinstaller83stack {
+    inherit xamppportableinstallerstack
+    constructor {environment} {
+        set shortVersionID 83
+        chain $environment
+    } {
+    }
+}
+
+::itcl::class xamppportableinstaller84stack {
+    inherit xamppportableinstallerstack
+    constructor {environment} {
+        set shortVersionID 84
+        chain $environment
+    } {
+    }
+}
+
+::itcl::class xamppportableinstaller85stack {
+    inherit xamppportableinstallerstack
+    constructor {environment} {
+        set shortVersionID 85
+        chain $environment
+    } {
+    }
+}
+
+::itcl::class xamppportableinstaller86stack {
+    inherit xamppportableinstallerstack
+    constructor {environment} {
+        set shortVersionID 86
+        chain $environment
+    } {
+    }
+}
+
 ::itcl::class xampp {
     inherit phpBitnamiProgram
     constructor {environment} {

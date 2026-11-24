@@ -993,3 +993,43 @@
 	    windowsXamppPortablePhp82
     }
 }
+::itcl::class windows64XamppPortableInstallerPhp83Stack {
+    inherit windows64XamppPortableInstallerPhp82Stack
+       constructor {environment} {
+        chain $environment
+       } {
+           replaceComponent windowsXamppPortablePhp82 windowsXamppPortablePhp83
+           replaceComponent windows64XamppPhp82 windows64XamppPhp83
+           replaceComponent windows64XamppApachePhp82 windows64XamppApachePhp83
+       }
+}
+::itcl::class windows64XamppPortableInstallerPhp84Stack {
+    inherit windows64XamppPortableInstallerPhp82Stack
+       constructor {environment} {
+        chain $environment
+       } {
+           replaceComponent windowsXamppPortablePhp82 windowsXamppPortablePhp84
+           replaceComponent windows64XamppPhp82 windows64XamppPhp84
+           replaceComponent windows64XamppApachePhp82 windows64XamppApachePhp84
+       }
+}
+::itcl::class windows64XamppPortableInstallerPhp85Stack {
+    inherit windows64XamppPortableInstallerPhp82Stack
+       constructor {environment} {
+        chain $environment
+       } {
+           replaceComponent windowsXamppPortablePhp82 windowsXamppPortablePhp85
+           replaceComponent windows64XamppPhp82 windows64XamppPhp85
+           replaceComponent windows64XamppApachePhp82 windows64XamppApachePhp85
+       }
+}
+::itcl::class windows64XamppPortableInstallerPhp86Stack {
+    inherit windows64XamppPortableInstallerPhp82Stack
+       constructor {environment} {
+        chain $environment
+       } {
+           replaceComponent windowsXamppPortablePhp82 windowsXamppPortablePhp86
+           replaceComponent windows64XamppPhp82 windows64XamppPhp86
+           replaceComponent windows64XamppApachePhp82 windows64XamppApachePhp86
+       }
+}
