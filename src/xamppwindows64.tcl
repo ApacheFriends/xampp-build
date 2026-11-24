@@ -14,7 +14,7 @@
     public method install {} {
         set xamppoutputdir [file join [${be} cget -output] xampp]
         file copy -force [findTarball ${tarballName}] [file join [$be cget -output] vcredist_x64.exe]
-        file copy -force [findTarball test_php_${vcVersion}.bat] [file join [$be cget -output] xampp test_php.bat]
+        file copy -force [file join [xamppworkspacedir] test_php_${vcVersion}.bat] [file join [$be cget -output] xampp test_php.bat]
         setReadmeVersion VCREDIST ${version}
     }
 }
