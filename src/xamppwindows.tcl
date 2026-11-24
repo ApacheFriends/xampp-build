@@ -101,7 +101,8 @@
     } {
         set name windowsXamppVcredist
         set version 2008
-        set vcVersion 9
+        set vcVersion VC9
+        set dirName vcredist
         set licenseRelativePath {}
         set tarballName vcredist_x86_${version}.exe
         lappend additionalFileList test_php_VC${vcVersion}.bat
@@ -109,8 +110,8 @@
         set isReportableAsMainComponent 0
     }
     public method install {} {
-        file copy -force [findTarball vcredist_x86_${version}.exe] [file join [$be cget -output] vcredist_x86.exe]
-        file copy -force [findTarball test_php_VC${vcVersion}.bat] [file join [$be cget -output] xampp test_php.bat]
+        file copy -force [findTarball $tarballName] [file join [$be cget -output] vcredist_x86.exe]
+        file copy -force [file join [xamppworkspacedir] test_php_${vcVersion}.bat] [file join [$be cget -output] xampp test_php.bat]
     }
 }
 
@@ -121,9 +122,9 @@
     } {
         set name windowsXamppVcredist
         set version 2015
-        set vcVersion 14
+        set vcVersion VC14
         set tarballName vcredist_x86_${version}.exe
-        lappend additionalFileList test_php_VC${vcVersion}.bat
+        lappend additionalFileList test_php_${vcVersion}.bat
     }
 }
 
