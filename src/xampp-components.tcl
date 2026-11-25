@@ -1777,8 +1777,7 @@ UseFtpUsers}]
             set version [versions::get "ICU4C" stable]
             set supportsParallelBuild 1
             set licenseRelativePath ../license.html
-            set tVersion [string map {. _} $version]
-            set tarballName icu4c-$tVersion-src
+            set tarballName icu4c-$version-sources
             set licenseNotes http://source.icu-project.org/repos/icu/icu/trunk/license.html
             set supportsParallelBuild 1
 
@@ -1803,14 +1802,8 @@ UseFtpUsers}]
 
         public method build {} {
             cd [srcdir]
-            if {[::xampptcl::util::compareVersions $version 67] >= 0 && [$be cget -target] == "linux-x64"} {
-                useGCC49Env
-            }
             eval logexec ./runConfigureICU [configureOptions]
             eval logexec [make]
-            if {[::xampptcl::util::compareVersions $version 67] >= 0 && [$be cget -target] == "linux-x64"} {
-                unuseGCC49Env
-            }
         }
     }
 
