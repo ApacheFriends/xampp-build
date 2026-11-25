@@ -4,7 +4,7 @@
         chain $environment
     } {
         set name gettext
-        set version 0.19.8.1
+        set version 1.0
         set supportsParallelBuild 1
         set licenseRelativePath COPYING
     }
