@@ -657,7 +657,7 @@ namespace eval xampp {
             chain $environment
         } {
             set name "gettext"
-            set version 0.19.8.1
+            set version 1.0
         }
         public method preparefordist {} {
             file delete -force [file join [prefix] share doc gettext]
