@@ -273,10 +273,8 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
         chain $environment
     } {
         set name libxml2
-        set version 2.9.4
+        set version 2.15.4
         set licenseRelativePath Copyright
-        set patchStrip 0
-        set patchList {CVE-2016-9318.patch}
     }
     public method setEnvironment {} {
         chain
@@ -292,10 +290,7 @@ exec @@XAMPP_COMMON_ROOTDIR@@/bin/openssl.bin "$@"
         if {[string match osx* [$be cget -target]] && [lindex [$this info heritage] 0] == [uplevel namespace current]} {
             error "This component cannot be included in OS X stacks are it conflicts with the system libraries. Please use its native version 'libxml2OsxNative' instead"
         }
-        if { [catch {glob [file join [srcdir] doc examples *.html]} err]} {
-            xampptcl::util::substituteParametersInFile [file join [srcdir] doc examples Makefile.in] \
-                [list {$(srcdir)/*.html} {}]
-        }
+        # Removed old doc/examples/*.html patch libxml2 2.15+ no longer hardcodes it in Makefile.in.
         chain
     }
     public method install {} {
