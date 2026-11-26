@@ -771,9 +771,7 @@ namespace eval xampp {
         constructor {environment} {
             ::libxml2::constructor $environment
         } {
-            set version 2.9.4
-            set patchStrip 0
-            set patchList {CVE-2016-9318.patch}
+            set version 2.15.4
         }
         public method setEnvironment {} {
             set ::opts(libxml2.prefix) [prefix]
@@ -794,14 +792,14 @@ namespace eval xampp {
             chain $environment
         } {
             set name libxslt
-            set version 1.1.33
+            set version 1.1.45
             set licenseRelativePath Copyright
         }
         public method setEnvironment {} {
             set ::opts(libxslt.prefix) [prefix]
         }
         public method configureOptions {} {
-            return [concat [chain] [list --disable-ipv6  --with-libxml-prefix=$::opts(libxml2.prefix)]]
+            return [concat [chain] [list --without-python --with-libxml-prefix=$::opts(libxml2.prefix)]]
         }
     }
     ::itcl::class expatLib {
